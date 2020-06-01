@@ -8,7 +8,7 @@ namespace GlobalHOoks
         [STAThread]
         static void Main(string[] args)
         {          
-            var windowManager = new WindowManager();
+            new WindowManager();
             Application.Run(new ApplicationContext());    
         }     
     }
