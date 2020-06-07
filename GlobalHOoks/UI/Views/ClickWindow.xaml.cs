@@ -29,7 +29,7 @@ namespace GlobalHOoks
             _buttonManager.AddButtons();
             _buttonManager.AddShortCuts();
         }
-        internal void btnShowShortCuts_Click(object sender, RoutedEventArgs e)
+        internal void btnShowShortCuts_Click(object sender, RoutedEventArgs e)        
         {
             _windowManager.ShowShortCuts();
         }

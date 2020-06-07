@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GlobalHOoks.Logic;
+using System;
 using System.Windows.Forms;
 
 namespace GlobalHOoks
@@ -7,9 +8,16 @@ namespace GlobalHOoks
     {
         [STAThread]
         static void Main(string[] args)
-        {          
-            new WindowManager();
-            Application.Run(new ApplicationContext());    
+        {
+            try
+            {
+                var manager = new WindowManager();
+                Application.Run(new ApplicationContext());
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
         }     
     }
 }

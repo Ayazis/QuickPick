@@ -18,9 +18,9 @@ namespace GlobalHOoks
     {
         private SaveLoadManager _saveLoadManager;
         private QuickPickModel _qpm;
-        static ClickWindow ClickWindow = null;
+        public static ClickWindow ClickWindow = null;
         private ButtonManager _buttonManager;
-        static SettingsWindow SettingsWindow = null;
+        private SettingsWindow SettingsWindow = null;
        
         private NotifyIcon _notificationIcon;
         static IntPtr _ActiveWindowHandle;
@@ -43,12 +43,13 @@ namespace GlobalHOoks
             CreateTrayIcon();            
             CreateWindow();
             FindResources();
-            _hotkeys = new HotKeys(_qpm,this);
-           Hook.GlobalEvents().KeyDown += _hotkeys.KeyDown;
-           Hook.GlobalEvents().KeyUp += _hotkeys.KeyUp;
+            _hotkeys = new HotKeys(_qpm,this);            
+          //  Hook.GlobalEvents().KeyDown += _hotkeys.KeyDown;
+          // Hook.GlobalEvents().KeyUp += _hotkeys.KeyUp;
            Hook.GlobalEvents().MouseDown += MouseDown;
-        }  
+        }
 
+    
         private void FindResources()
         {
             this.Hide = ClickWindow.TryFindResource("hideMe") as Storyboard;
@@ -113,7 +114,7 @@ namespace GlobalHOoks
                     if (ClickWindow != null)
                     {
                         Hide.Begin(ClickWindow);
-                        //   Window.Visibility = System.Windows.Visibility.Hidden;
+                        //   Window.Visibility = System.Windows.Visibility.Hidden;Ä
                     }
                 }
                 return;
@@ -142,10 +143,9 @@ namespace GlobalHOoks
         private void CreateWindow()
         {
             _qpm = new QuickPickModel();
-            ClickWindow = new ClickWindow(_qpm, this);
-            
-            _buttonManager = new ButtonManager(_qpm, ClickWindow, this);
-            _saveLoadManager = new SaveLoadManager(_qpm,_buttonManager);
+            ClickWindow = new ClickWindow(_qpm, this);            
+            _buttonManager = new ButtonManager(_qpm, this);
+            _saveLoadManager = new SaveLoadManager(_qpm);
             ClickWindow.Initialize(_buttonManager);                                
             
             ClickWindow.DataContext = _qpm;
@@ -156,7 +156,6 @@ namespace GlobalHOoks
             ClickWindow.Show();
             ClickWindow.Closed += Window_Closed;
         }
-
 
         private void Window_Closed(object sender, EventArgs e)
         {
@@ -188,7 +187,7 @@ namespace GlobalHOoks
             }
             catch (Exception ex)
             {
-                Logger.Log(ex.ToString());
+                Logger.Log(ex);
             }    
         }
 

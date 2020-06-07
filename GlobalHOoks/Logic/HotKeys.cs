@@ -19,35 +19,60 @@ namespace GlobalHOoks.Logic
             this._windowManager = manager;
         }
 
+        public  void KeyPress(object sender, KeyPressEventArgs e)
+        {
+            Task.Run(() => { Debug.WriteLine("Pressed:" + e.KeyChar.ToString()); });
+        }
+
+
         public void KeyDown(object sender, KeyEventArgs e)
         {
-            Task.Run(() => KeyDowned(e.KeyCode));         
+            Debug.WriteLine("Down:" + e.KeyCode.ToString());
+            //Task.Run(() => { Debug.WriteLine("Down:" + e.KeyCode.ToString()); });
+           
+           // Task.Run(() => KeyDowned(e.KeyCode));         
         }
         public void KeyUp(object sender, KeyEventArgs e)
         {
-            Task.Run(() => KeyUpped(e.KeyCode));         
+           // Task.Run(() => { Debug.WriteLine("Up:" + e.KeyCode.ToString()); });
+
+            //Task.Run(() => KeyUpped(e.KeyCode));         
         }
 
 
         private void KeyDowned(Keys key)
         {
-            
-            if (_qpm.HotKeys.Contains(key))
-            {
-                PressedKeys.Add(key);
-                Debug.WriteLine("Down:  " + key.ToString());
 
-                if (PressedKeys.Count == _qpm.HotKeys.Count)
-                    CheckHotKeyCombo();
+            try
+            {
+                if (_qpm.HotKeys.Contains(key))
+                {
+                    PressedKeys.Add(key);
+                    Debug.WriteLine("Down:  " + key.ToString());
+
+                    if (PressedKeys.Count == _qpm.HotKeys.Count)
+                        CheckHotKeyCombo();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
             }
         }
 
         private void KeyUpped(Keys key)
         {
-            if (_qpm.HotKeys.Contains(key))
+            try
             {
-                PressedKeys.Remove(key);
-                Debug.WriteLine("Up: " + key.ToString());
+                if (_qpm.HotKeys.Contains(key))
+                {
+                    PressedKeys.Remove(key);
+                    Debug.WriteLine("Up: " + key.ToString());
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
             }
 
         }
@@ -63,7 +88,7 @@ namespace GlobalHOoks.Logic
             }
             if (allPressed)
             {
-                // Debug.WriteLine("***** SHOWING THE WINDOW *****");
+                 Debug.WriteLine("***** SHOWING THE WINDOW *****");
                  _windowManager.ShowWindow();
             }
         }

@@ -39,7 +39,7 @@ namespace GlobalHOoks
             }
             catch (Exception ex)
             {
-                Logger.Log(ex.ToString());
+                Logger.Log(ex);
             }
         }
 
@@ -52,7 +52,6 @@ namespace GlobalHOoks
 
             OpenFileDialog fileDialog = new OpenFileDialog();
             fileDialog.Title = "Select File";
-//            fileDialog.Filter = "TXT files|*.txt";
             fileDialog.InitialDirectory = @"C:\";
             if (fileDialog.ShowDialog() == true )
             {
@@ -65,7 +64,7 @@ namespace GlobalHOoks
         {
             // save all button settings to disk.
             if (_saveLoadManager == null)
-                _saveLoadManager = new SaveLoadManager(_qpm,_buttonManager);
+                _saveLoadManager = new SaveLoadManager(_qpm);
 
             _saveLoadManager.SaveSettingsToDisk();
 

@@ -2,14 +2,17 @@
 using GlobalHOoks.Enums;
 using GlobalHOoks.Logic;
 using GlobalHOoks.Models;
+using IWshRuntimeLibrary;
 using Shell32;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Drawing;
 using System.IO;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
+using Point = System.Windows.Point;
 
 namespace GlobalHOoks
 {
@@ -17,11 +20,11 @@ namespace GlobalHOoks
     {
         #region Properties
 
-        
+
         private ObservableCollection<Keys> _HotKeys = new ObservableCollection<Keys> {
         Keys.LControlKey,
         Keys.LShiftKey,
-        Keys.LMenu,      
+        Keys.LMenu,
         Keys.Q
         };
         public ObservableCollection<Keys> HotKeys
@@ -56,7 +59,7 @@ namespace GlobalHOoks
             }
         }
 
-  
+
 
         private ObservableCollection<QpButton> _MainButtons = new ObservableCollection<QpButton>();
         public ObservableCollection<QpButton> MainButtons
@@ -97,64 +100,69 @@ namespace GlobalHOoks
         }
         private void GetShortCuts()
         {
-            string pathToFiles = @"C:\Shortcuts\";
-            var files = Directory.GetFiles(pathToFiles);
+            string pathToFiles = @"C:\Shortcuts\"; 
+            //string pathToFiles = @"C:\Shortcuts\Office Related";
+            var files = Directory.GetFiles(pathToFiles, "*", SearchOption.AllDirectories);
 
             foreach (var file in files)
             {
-                var shortcut = new ShortCut();
-                string iconLocation = "";
+                var icon = GetIcon(file);
+                var targetpath = GetTargetPath(file);
 
-                try
+                if (!string.IsNullOrWhiteSpace(targetpath) && icon != null)
                 {
-                    string pathOnly = Path.GetDirectoryName(file);
-                    string filenameOnly = Path.GetFileName(file);
-
-                    Shell shell = new Shell();
-                    Folder folder = shell.NameSpace(pathOnly);
-                    FolderItem folderItem = folder.ParseName(filenameOnly);
-                    if (folderItem != null)
-                    {
-                        ShellLinkObject link = folderItem.GetLink as ShellLinkObject;
-                        if (link == null)
-                            continue;
-
-                        shortcut.TargetPath = link.Path;
-
-
-                        link.GetIconLocation(out iconLocation);
-                        if (string.IsNullOrEmpty(iconLocation))
-                        {
-                            iconLocation = link.Path;
-                        }
-
-
-                        iconLocation = iconLocation.Replace("%SystemRoot%", @"c:\windows");
-
-                        shortcut.IconLocation = iconLocation;
-                        shortcut.Icon = System.Drawing.Icon.ExtractAssociatedIcon(iconLocation);
-
-                    }
+                    ShortCuts.Add(new ShortCut { Icon = icon, TargetPath = targetpath });
                 }
-                catch (Exception ex)
-                {
-
-                    Logger.Log(ex.ToString());
-                    Logger.Log(iconLocation);
-                }
-                finally
-                {
-                    if (!string.IsNullOrWhiteSpace(shortcut.TargetPath))
-                    {
-                        ShortCuts.Add(shortcut);
-                    }
-
-                }
+              
             }
 
         }
 
+        private string GetTargetPath(string path)
+        {
+            try
+            {
+                if (System.IO.File.Exists(path))
+                {
+                    // WshShellClass shell = new WshShellClass();
+                    WshShell shell = new WshShell(); //Create a new WshShell Interface
+                    IWshShortcut link = (IWshShortcut)shell.CreateShortcut(path); //Link the interface to our shortcut
 
+                    return link.TargetPath;
+                }
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+                return null;
+            }
+
+        }
+
+        private Icon GetIcon(string path)
+        {
+            Icon icon = null;
+            try
+            {
+                if (System.IO.File.Exists(path))
+                {
+                    //Create a new WshShell Interface
+                    WshShell shell = new WshShell();
+                    //Link the interface to our shortcut
+                    IWshShortcut link = (IWshShortcut)shell.CreateShortcut(path);
+                    if (string.Empty != link.TargetPath)
+                        icon = Icon.ExtractAssociatedIcon(link.TargetPath);
+                }
+
+                return icon;
+            }
+            catch (Exception)
+            {
+                return icon;
+            }
+        }
 
         #region Notify Property Changed And other Events
         public event PropertyChangedEventHandler PropertyChanged;
