@@ -14,20 +14,18 @@ using System.Windows.Media.Imaging;
 namespace GlobalHOoks
 {
     public class ButtonManager
-    {
-        private ClickWindow _window;
+    {        
         private QuickPickModel _qpm;
         private WindowManager _windowManager;
         private ClickActions _clickActions;
 
-        public ButtonManager(QuickPickModel quickPickModel, ClickWindow window, WindowManager windowManager)
+        public ButtonManager(QuickPickModel quickPickModel, WindowManager windowManager)
         {
-            _window = window;
+            
             _qpm = quickPickModel;
             this._windowManager = windowManager;
-            _clickActions = new ClickActions(_window, _qpm, _windowManager);
+            _clickActions = new ClickActions(_windowManager);
         }
-
 
 
         internal void AddButtons()
@@ -37,7 +35,7 @@ namespace GlobalHOoks
             double angle = 360 / (double)nrOfButtons;
             var i = 0;
 
-            var style = _window.TryFindResource("RoundButton");
+            var style = WindowManager.ClickWindow.TryFindResource("RoundButton");
             foreach (var qpButton in buttons)
             {
                 qpButton.Button.Content = qpButton.Id;
@@ -52,7 +50,7 @@ namespace GlobalHOoks
                 }
 
                 _qpm.MainButtons.Add(qpButton);
-                _window.Canvas.Children.Add(qpButton.Button);
+                WindowManager.ClickWindow.Canvas.Children.Add(qpButton.Button);
                 i++;
             }
 
@@ -154,7 +152,7 @@ namespace GlobalHOoks
                     button.Icon.Margin = CalculateMargin(button, button.Icon.Width, angle, i, 100);
                     _qpm.ShortCutButtons.Add(button);
                     button.Icon.Visibility = Visibility.Hidden;
-                    _window.Canvas.Children.Add(button.Icon);
+                    WindowManager.ClickWindow.Canvas.Children.Add(button.Icon);
                 }
                 catch (Exception)
                 {
@@ -171,9 +169,9 @@ namespace GlobalHOoks
 
                 return imageSource;
             }
-            catch (Exception exx)
+            catch (Exception ex)
             {
-                Logger.Log(exx.ToString());
+                Logger.Log(ex);
                 return null;
             }
         }

@@ -11,16 +11,14 @@ namespace GlobalHOoks.Logic
 {
     internal class SaveLoadManager
     {
-        private QuickPickModel _qpm;
-        private ButtonManager _buttonManager;
+        private QuickPickModel _qpm;        
         private string _saveDirectory = @"c:\temp\quickPick\";
         private string _mains = "qp_saveMains.json";
         private string _shorts = "qp_saveShortCuts.json";
 
-        public SaveLoadManager(QuickPickModel qpm, ButtonManager buttonManager)
+        public SaveLoadManager(QuickPickModel qpm)
         {
-            _qpm = qpm;
-            _buttonManager = buttonManager;
+            _qpm = qpm;         
         }
 
 

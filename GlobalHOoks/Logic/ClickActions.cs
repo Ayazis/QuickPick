@@ -17,14 +17,11 @@ namespace GlobalHOoks.Logic
     public class ClickActions
     {
         public const string FILES_FOLDER = @"C:\Users\FG\source\repos\GlobalHooks\GlobalHOoks\Content\Files\";
-        private ClickWindow _window;
-        private QuickPickModel _qpm;
+      
         private WindowManager _windowManager;
 
-        public ClickActions(ClickWindow window, QuickPickModel qpm, WindowManager windowManager)
-        {
-            this._window = window;
-            this._qpm = qpm;
+        public ClickActions(WindowManager windowManager)
+        {            
             _windowManager = windowManager;
         }
 
@@ -55,11 +52,11 @@ namespace GlobalHOoks.Logic
                 if(!text.ToUpper().Contains("INSERT"))
                     InputSim.F5();
 
-                _windowManager.Hide.Begin(_window);
+                _windowManager.Hide.Begin(WindowManager.ClickWindow);
             }
             catch (Exception ex)
             {
-                Logger.Log(ex.ToString());
+                Logger.Log(ex);
             }
         }
         internal void LaunchApplication(QpButton qpbutton)
@@ -76,16 +73,16 @@ namespace GlobalHOoks.Logic
                 proc.StartInfo = startinfo;
                 proc.Start();
 
-                _windowManager.Hide.Begin(_window);
+                _windowManager.Hide.Begin(WindowManager.ClickWindow);
             }
             catch (Exception ex)
             {
-                Logger.Log(ex.ToString());
+                Logger.Log(ex);
             }
         }
         internal void CloseQuickPick(QpButton button)
         {
-            _window.Close();
+            WindowManager.ClickWindow.Close();
             System.Windows.Forms.Application.Exit();
         }
         internal void TakeScreenSnip(QpButton button)
@@ -100,14 +97,14 @@ namespace GlobalHOoks.Logic
                     };
 
                 InputSim.Simulator.Keyboard.ModifiedKeyStroke(winShift, VirtualKeyCode.VK_S);
-                _window.Visibility = Visibility.Hidden;
+                WindowManager.ClickWindow.Visibility = Visibility.Hidden;
 
-                _windowManager.Hide.Begin(_window);
+                _windowManager.Hide.Begin(WindowManager.ClickWindow);
 
             }
             catch (Exception ex)
             {
-                Logger.Log(ex.ToString());
+                Logger.Log(ex);
             }
 
         

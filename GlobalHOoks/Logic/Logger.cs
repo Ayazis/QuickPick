@@ -32,6 +32,25 @@ namespace GlobalHOoks.Logic
 
         }
 
+        public static void Log(Exception ex)
+        {
+            try
+            {
+                CreateDirectory();
+                SetDutchCulture();
+                var dateNow = DateTime.Now.ToShortDateString();
+
+                File.AppendAllText($@"{logPath}QpLog{dateNow}.txt", ex.ToString());
+            }
+            catch (Exception)
+            {
+                // do nothing..?
+
+            }
+
+
+        }
+
         private static void SetDutchCulture()
         {
             Thread.CurrentThread.CurrentCulture = new CultureInfo("nl-NL");
