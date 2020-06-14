@@ -18,22 +18,34 @@ namespace GlobalHOoks
 {
     public class QuickPickModel : INotifyPropertyChanged
     {
+
+        private string _ShortCutsFolder = @"c:\shortcuts";
+        public string ShortCutsFolder
+        {
+            get { return _ShortCutsFolder; }
+            set
+            {
+                _ShortCutsFolder = value;
+                NotifyPropertyChanged(nameof(ShortCutsFolder));
+            }
+        }
+
         #region Properties
 
 
-        private ObservableCollection<Keys> _HotKeys = new ObservableCollection<Keys> {
+        private ObservableCollection<Keys> _PreDefinedHotKeys = new ObservableCollection<Keys> {
         Keys.LControlKey,
         Keys.LShiftKey,
         Keys.LMenu,
         Keys.Q
         };
-        public ObservableCollection<Keys> HotKeys
+        public ObservableCollection<Keys> PreDefinedHotKeys
         {
-            get { return _HotKeys; }
+            get { return _PreDefinedHotKeys; }
             set
             {
-                _HotKeys = value;
-                NotifyPropertyChanged(nameof(HotKeys));
+                _PreDefinedHotKeys = value;
+                NotifyPropertyChanged(nameof(PreDefinedHotKeys));
             }
         }
 
@@ -58,7 +70,6 @@ namespace GlobalHOoks
                 NotifyPropertyChanged(nameof(ShortCutButtons));
             }
         }
-
 
 
         private ObservableCollection<QpButton> _MainButtons = new ObservableCollection<QpButton>();
@@ -95,74 +106,11 @@ namespace GlobalHOoks
         #endregion
 
         public QuickPickModel()
-        {
-            GetShortCuts();
-        }
-        private void GetShortCuts()
-        {
-            string pathToFiles = @"C:\Shortcuts\"; 
-            //string pathToFiles = @"C:\Shortcuts\Office Related";
-            var files = Directory.GetFiles(pathToFiles, "*", SearchOption.AllDirectories);
-
-            foreach (var file in files)
-            {
-                var icon = GetIcon(file);
-                var targetpath = GetTargetPath(file);
-
-                if (!string.IsNullOrWhiteSpace(targetpath) && icon != null)
-                {
-                    ShortCuts.Add(new ShortCut { Icon = icon, TargetPath = targetpath });
-                }
-              
-            }
-
+        {            
+            ShortCutHandler.GetShortCuts(this);
         }
 
-        private string GetTargetPath(string path)
-        {
-            try
-            {
-                if (System.IO.File.Exists(path))
-                {
-                    // WshShellClass shell = new WshShellClass();
-                    WshShell shell = new WshShell(); //Create a new WshShell Interface
-                    IWshShortcut link = (IWshShortcut)shell.CreateShortcut(path); //Link the interface to our shortcut
 
-                    return link.TargetPath;
-                }
-
-                return null;
-            }
-            catch (Exception ex)
-            {
-                Logger.Log(ex);
-                return null;
-            }
-
-        }
-
-        private Icon GetIcon(string path)
-        {
-            Icon icon = null;
-            try
-            {
-                if (System.IO.File.Exists(path))
-                {
-                    //Create a new WshShell Interface
-                    WshShell shell = new WshShell();
-                    //Link the interface to our shortcut
-                    IWshShortcut link = (IWshShortcut)shell.CreateShortcut(path);
-                    if (string.Empty != link.TargetPath)
-                        icon = Icon.ExtractAssociatedIcon(link.TargetPath);
-                }
-
-                return icon;
-            }
-            catch (Exception)
-            {
-                return icon;
-            }
-        }
 
         #region Notify Property Changed And other Events
         public event PropertyChangedEventHandler PropertyChanged;
@@ -174,7 +122,6 @@ namespace GlobalHOoks
         }
 
         #endregion
-
 
     }
 }

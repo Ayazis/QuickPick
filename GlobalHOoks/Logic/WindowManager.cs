@@ -1,5 +1,6 @@
 ﻿using GlobalHOoks.Classes;
 using GlobalHOoks.Logic;
+using GlobalHOoks.Models;
 using Gma.System.MouseKeyHook;
 using System;
 using System.Collections.Generic;
@@ -16,39 +17,38 @@ namespace GlobalHOoks
 {
     public class WindowManager
     {
-        private SaveLoadManager _saveLoadManager;
-        private QuickPickModel _qpm;
-        public static ClickWindow ClickWindow = null;
-        private ButtonManager _buttonManager;
-        private SettingsWindow SettingsWindow = null;
-       
+        public QuickPick QP { get; set; }
         private NotifyIcon _notificationIcon;
-        static IntPtr _ActiveWindowHandle;
-        private HotKeys _hotkeys;
+        static IntPtr _ActiveWindowHandle;        
+
+        public ClickWindow ClickWindow { get; set; }
+        private SettingsWindow _settingsWindow;
 
         public Storyboard Hide { get; private set; }
         public Storyboard Show { get; private set; }
 
         [DllImport("user32.dll")]
-        static extern IntPtr GetForegroundWindow();
-
-      
+        static extern IntPtr GetForegroundWindow();      
 
         [DllImport("user32.dll", SetLastError = true)]
         static extern bool SetForegroundWindow(IntPtr hWnd);
 
 
-        public WindowManager()
-        {            
-            CreateTrayIcon();            
-            CreateWindow();
-            FindResources();
-            _hotkeys = new HotKeys(_qpm,this);            
-          //  Hook.GlobalEvents().KeyDown += _hotkeys.KeyDown;
-          // Hook.GlobalEvents().KeyUp += _hotkeys.KeyUp;
-           Hook.GlobalEvents().MouseDown += MouseDown;
+        public WindowManager(QuickPick quickPick)
+        {
+            QP = quickPick;
         }
 
+        public void Start()
+        {
+            CreateTrayIcon();
+            CreateWindow();
+            FindResources();
+            Hook.GlobalEvents().MouseDown += MouseDown;
+        }
+
+
+        
     
         private void FindResources()
         {
@@ -93,13 +93,13 @@ namespace GlobalHOoks
 
         private void MnuSettings_Click(object sender, EventArgs e)
         {
-            if (SettingsWindow == null)
+            if (_settingsWindow == null)
             {
-                SettingsWindow = new SettingsWindow(_qpm, this, _buttonManager); ;
+                _settingsWindow = new SettingsWindow(QP); ;
                 //SettingsWindow.WindowStyle = WindowStyle.None;
-                SettingsWindow.DataContext = _qpm;
+                _settingsWindow.DataContext = QP.QuickPickModel;
             }
-            SettingsWindow.Show();
+            _settingsWindow.Show();
         }
      
 
@@ -141,18 +141,18 @@ namespace GlobalHOoks
             }
         }
         private void CreateWindow()
-        {
-            _qpm = new QuickPickModel();
-            ClickWindow = new ClickWindow(_qpm, this);            
-            _buttonManager = new ButtonManager(_qpm, this);
-            _saveLoadManager = new SaveLoadManager(_qpm);
-            ClickWindow.Initialize(_buttonManager);                                
+        {            
+            ClickWindow = new ClickWindow(QP);
+           // ClickWindow.DataContext = QP.QuickPickModel;
+            QP.ButtonManager.AddButtons();
+            QP.ButtonManager.AddShortCuts();
             
-            ClickWindow.DataContext = _qpm;
-            ClickWindow.WindowStartupLocation = System.Windows.WindowStartupLocation.Manual;
-            ClickWindow.WindowStyle = System.Windows.WindowStyle.None;
+            //_saveLoadManager.LoadSettingsFromDisk();
+
+            ClickWindow.WindowStartupLocation =WindowStartupLocation.Manual;
+            ClickWindow.WindowStyle = WindowStyle.None;
             ClickWindow.Topmost = true;
-            ClickWindow.Visibility = System.Windows.Visibility.Hidden;
+            ClickWindow.Visibility =Visibility.Hidden;
             ClickWindow.Show();
             ClickWindow.Closed += Window_Closed;
         }
@@ -197,7 +197,7 @@ namespace GlobalHOoks
             return new System.Windows.Point(point.X, point.Y);
         }
 
-        public static void ReActivateFormerWindow()
+        public void ReActivateFormerWindow()
         {
             try
             {
@@ -237,14 +237,14 @@ namespace GlobalHOoks
 
         public void ShowShortCuts()
         {
-            foreach (var b in _qpm.ShortCutButtons)
+            foreach (var b in QP.QuickPickModel.ShortCutButtons)
             {
                 b.Icon.Visibility = Visibility.Visible;
             }
         }
         public void HideShortCuts()
         {
-            foreach (var b in _qpm.ShortCutButtons)
+            foreach (var b in QP.QuickPickModel.ShortCutButtons)
             {
                 b.Icon.Visibility = Visibility.Hidden;
             }
