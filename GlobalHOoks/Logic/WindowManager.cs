@@ -122,14 +122,7 @@ namespace GlobalHOoks
 
             try
             {
-                try
-                {
-                    SetActiveWindow();
-                }
-                catch (Exception)
-                {
-                }
-
+               
                 if (ClickWindow != null)
                 {
                     ShowWindow();
@@ -137,7 +130,7 @@ namespace GlobalHOoks
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                Logger.Log(ex);
             }
         }
         private void CreateWindow()
@@ -176,6 +169,8 @@ namespace GlobalHOoks
         {
             try
             {
+                SetActiveWindow();
+
                 ClickWindow.Dispatcher.Invoke(() => {
                     HideShortCuts();
                     var mousePosition = GetMousePosition();

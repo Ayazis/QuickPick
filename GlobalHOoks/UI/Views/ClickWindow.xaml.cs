@@ -19,7 +19,6 @@ namespace GlobalHOoks
             this.DataContext = QP.QuickPickModel;
             InitializeComponent();
         }
-
         public void btnShowShortCuts_Click(object sender, RoutedEventArgs e)
         {
             QP.WindowManager.ShowShortCuts();
