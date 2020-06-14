@@ -73,9 +73,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
-  </PropertyGroup>
+  <PropertyGroup />
   <PropertyGroup>
     <ManifestCertificateThumbprint>C0B169F2FE3EB7B82A49781274A7648B2DD8D3F5</ManifestCertificateThumbprint>
   </PropertyGroup>
@@ -141,9 +139,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="app.manifest" />
     <None Include="packages.config" />
-    <None Include="QuickPick_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="UI\Views\SettingsWindow.xaml">
