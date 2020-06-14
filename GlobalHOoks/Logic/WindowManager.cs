@@ -136,11 +136,10 @@ namespace GlobalHOoks
         private void CreateWindow()
         {            
             ClickWindow = new ClickWindow(QP);
-           // ClickWindow.DataContext = QP.QuickPickModel;
-            QP.ButtonManager.AddButtons();
-            QP.ButtonManager.AddShortCuts();
-            
-            //_saveLoadManager.LoadSettingsFromDisk();
+            QP.SaveLoadManager.LoadAndApplySettings();
+            //QP.ButtonManager.AddButtons();
+            //QP.ButtonManager.AddShortCuts();           
+        
 
             ClickWindow.WindowStartupLocation =WindowStartupLocation.Manual;
             ClickWindow.WindowStyle = WindowStyle.None;

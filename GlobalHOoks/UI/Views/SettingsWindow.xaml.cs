@@ -8,19 +8,19 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using WindowsInput;
+using FolderBrowserDialog = System.Windows.Forms.FolderBrowserDialog;
 
 
 namespace GlobalHOoks
 {
 
     public partial class SettingsWindow : Window
-    {    
-        private ButtonManager _buttonManager;
-        private SaveLoadManager _saveLoadManager;
+    {
+        public QuickPick QP { get; }       
 
         public SettingsWindow(QuickPick QP)
-        {          
-            _buttonManager = QP.ButtonManager;
+        {
+            this.QP = QP;
             InitializeComponent();
         }
 
@@ -37,7 +37,7 @@ namespace GlobalHOoks
                 ClickAction action = (ClickAction)comboBox.SelectedItem;
                 QpButton button = comboBox.DataContext as QpButton;
 
-                _buttonManager.SetClickActionOnButton(button, action);
+                QP.ButtonManager.SetClickActionOnButton(button, action);
             }
             catch (Exception ex)
             {
@@ -64,13 +64,21 @@ namespace GlobalHOoks
 
         private void btnExport_Click(object sender, RoutedEventArgs e)
         {          
-            _saveLoadManager.SaveSettingsToDisk();
+            QP.SaveLoadManager.SaveSettingsToDisk();
 
         }
         private void btnLoad_Click(object sender, RoutedEventArgs e)
-        {     
-            _saveLoadManager.LoadSettingsFromDisk();
+        {
+            QP.SaveLoadManager.LoadAndApplySettings();
         }
-        
+
+        private void btnBrowseFolder_Click(object sender, RoutedEventArgs e)
+        {
+            FolderBrowserDialog fbd = new FolderBrowserDialog();
+            if(fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                QP.QuickPickModel.ShortCutsFolder = fbd.SelectedPath;
+            }
+        }
     }
 }

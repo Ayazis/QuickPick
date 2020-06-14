@@ -67,8 +67,15 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        
-        <Button x:Name="btnExport" 
+            <TextBlock Text="Shortcuts folder location:"></TextBlock>
+            <StackPanel Orientation="Horizontal">
+            <TextBox Name="tbShortCutsFolder" IsEnabled="False" IsReadOnly="True"                              
+                     Text="{Binding ShortCutsFolder, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <Button Name="btnBrowseFolder" Content="Browse.." Click="btnBrowseFolder_Click" HorizontalAlignment="Right" Width="50"/>
+            </StackPanel>
+            
+
+            <Button x:Name="btnExport" 
                 Content="Save Settings" 
                 Click="btnExport_Click" 
                 Width="150"/>    

@@ -17,8 +17,8 @@ namespace GlobalHOoks
         {
             try
             {
-                Hook.GlobalEvents().KeyDown += Program_KeyDown;
-                Hook.GlobalEvents().KeyUp += Program_KeyUp;
+               Hook.GlobalEvents().KeyDown += Program_KeyDown;
+               Hook.GlobalEvents().KeyUp += Program_KeyUp;
 
                 _QP = new QuickPick();
                 

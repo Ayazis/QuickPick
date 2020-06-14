@@ -23,6 +23,31 @@ namespace GlobalHOoks
             this.QP = QP;
         }
 
+        public void PlaceButtons()
+        {
+            var buttons = QP.QuickPickModel.MainButtons;
+            var nrOfButtons = buttons.Count;
+            double angle = 360 / (double)nrOfButtons;
+            var i = 0;
+            var buttonStyle = QP.WindowManager.ClickWindow.TryFindResource("RoundButton");
+
+            foreach (var qpButton in buttons)
+            {
+                qpButton.Button.Content = qpButton.Id;
+
+                qpButton.Margin = CalculateMargin(qpButton, qpButton.Button.Width, angle, i);
+                qpButton.Button.Margin = qpButton.Margin;
+
+                if (buttonStyle != null)
+                {
+                    qpButton.Button.Style = buttonStyle as Style;
+                }
+            
+                QP.WindowManager.ClickWindow.Canvas.Children.Add(qpButton.Button);
+                i++;
+            }
+
+        }
         public void AddButtons()
         {
             var buttons = CreateButtons();
@@ -126,6 +151,30 @@ namespace GlobalHOoks
             }
         }
 
+        public QpButton ConfigureButton(QpButton button)
+        {
+            button.Button.ToolTip = button.FileName;
+
+            if (button.ActionType == ClickAction.ExitQuickPick)
+            {
+                button.Act = new QpButton.ActionDelegate(QP.ClickActions.CloseQuickPick);
+            }
+            else if(button.ActionType == ClickAction.RunProcess)
+            {
+                button.Act = new QpButton.ActionDelegate(QP.ClickActions.LaunchApplication);
+            }
+            else if (button.ActionType == ClickAction.RunQuery)
+            {
+                button.Act = new QpButton.ActionDelegate(QP.ClickActions.ReadAndRunQuery);
+            }
+            else if (button.ActionType == ClickAction.TakeSnippet)
+            {
+                button.Act = new QpButton.ActionDelegate(QP.ClickActions.TakeScreenSnip);
+            }
+
+            return button;
+        }
+
         public void AddShortCuts()
         {
             double angle = 360 / (double)QP.QuickPickModel.ShortCuts.Count;
@@ -161,6 +210,8 @@ namespace GlobalHOoks
             }
         }
 
+
+
         public ImageSource ToImage(Icon icon)
         {
             try
@@ -195,6 +246,9 @@ namespace GlobalHOoks
                 button.Act = new QpButton.ActionDelegate(QP.ClickActions.TakeScreenSnip);
             }
         }
+
+
+
     }
 }
 

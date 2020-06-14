@@ -55,7 +55,7 @@ namespace GlobalHOoks.Logic
 
         }
 
-        private static Icon GetIcon(string path)
+        public static Icon GetIcon(string path)
         {
             Icon icon = null;
             try
