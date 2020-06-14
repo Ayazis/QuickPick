@@ -10,6 +10,7 @@ namespace GlobalHOoks.Classes
 {
     public class QpButton : INotifyPropertyChanged
     {
+        [JsonProperty]
         private string _AssociatedFilePath = "-";
         [JsonIgnore]
         public string AssociatedFilePath
@@ -20,6 +21,7 @@ namespace GlobalHOoks.Classes
                 _AssociatedFilePath = value;
                 var fileName = Path.GetFileNameWithoutExtension(value);
                 var fullName = Path.GetFileName(value);
+                fileName = fileName == "" ? ActionType.ToString() : fileName;
                 if (!string.IsNullOrWhiteSpace(fileName))
                 {
                     this.FileName = fullName;
@@ -75,6 +77,8 @@ namespace GlobalHOoks.Classes
         public Button Button { get; set; }
         [JsonIgnore]
         public Thickness Margin { get; set; }
+
+
 
         private int Width { get; set; } = 35;
         private int Height { get; set; } = 35;

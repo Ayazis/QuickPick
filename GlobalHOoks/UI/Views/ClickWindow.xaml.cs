@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using GlobalHOoks.Models;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using WindowsInput;
@@ -9,29 +10,18 @@ namespace GlobalHOoks
     /// Interaction logic for UserControl1.xaml
     /// </summary>
     public partial class ClickWindow : Window
-    {     
-        private WindowManager _windowManager;
-        private QuickPickModel _qpm;
-        internal ButtonManager _buttonManager;
-        private static InputSimulator _sim = new InputSimulator();
+    {
+        public QuickPick QP { get; }
 
-        public ClickWindow(QuickPickModel model, WindowManager manager)
+        public ClickWindow(QuickPick QP)
         {
-            _windowManager = manager;
-            _qpm = model;
-          
-        }    
-
-        internal void Initialize(ButtonManager buttonManager)
-        {
-            _buttonManager = buttonManager;
+            this.QP = QP;
+            this.DataContext = QP.QuickPickModel;
             InitializeComponent();
-            _buttonManager.AddButtons();
-            _buttonManager.AddShortCuts();
         }
-        internal void btnShowShortCuts_Click(object sender, RoutedEventArgs e)        
+        public void btnShowShortCuts_Click(object sender, RoutedEventArgs e)
         {
-            _windowManager.ShowShortCuts();
+            QP.WindowManager.ShowShortCuts();
         }
     }
 }

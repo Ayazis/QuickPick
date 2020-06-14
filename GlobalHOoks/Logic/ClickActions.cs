@@ -17,15 +17,15 @@ namespace GlobalHOoks.Logic
     public class ClickActions
     {
         public const string FILES_FOLDER = @"C:\Users\FG\source\repos\GlobalHooks\GlobalHOoks\Content\Files\";
-      
-        private WindowManager _windowManager;
 
-        public ClickActions(WindowManager windowManager)
-        {            
-            _windowManager = windowManager;
+        public QuickPick QP { get; set; }    
+
+        public ClickActions(QuickPick qp)
+        {
+            this.QP = qp;            
         }
 
-        internal void ButtonClick(QpButton button)
+        public void ButtonClick(QpButton button)
         {
             if (button.Act != null)
                 button.Act(button);
@@ -36,7 +36,7 @@ namespace GlobalHOoks.Logic
         /// </summary>
         /// <param name="file"></param>
         /// <param name="run"></param>
-        internal void ReadAndRunQuery(QpButton qpb)
+        public void ReadAndRunQuery(QpButton qpb)
         {
             try
             {
@@ -45,21 +45,21 @@ namespace GlobalHOoks.Logic
                 Clipboard.SetText(text);
 
                // _window.Visibility = Visibility.Hidden;
-                WindowManager.ReActivateFormerWindow();
+                QP.WindowManager.ReActivateFormerWindow();
                 InputSim.CtrlN();
                 InputSim.Paste();
 
                 if(!text.ToUpper().Contains("INSERT"))
                     InputSim.F5();
 
-                _windowManager.Hide.Begin(WindowManager.ClickWindow);
+                QP.WindowManager.Hide.Begin(QP.WindowManager.ClickWindow);
             }
             catch (Exception ex)
             {
                 Logger.Log(ex);
             }
         }
-        internal void LaunchApplication(QpButton qpbutton)
+        public void LaunchApplication(QpButton qpbutton)
         {
             try
             {
@@ -73,19 +73,19 @@ namespace GlobalHOoks.Logic
                 proc.StartInfo = startinfo;
                 proc.Start();
 
-                _windowManager.Hide.Begin(WindowManager.ClickWindow);
+                QP.WindowManager.Hide.Begin(QP.WindowManager.ClickWindow);
             }
             catch (Exception ex)
             {
                 Logger.Log(ex);
             }
         }
-        internal void CloseQuickPick(QpButton button)
+        public void CloseQuickPick(QpButton button)
         {
-            WindowManager.ClickWindow.Close();
+            QP.WindowManager.ClickWindow.Close();
             System.Windows.Forms.Application.Exit();
         }
-        internal void TakeScreenSnip(QpButton button)
+        public void TakeScreenSnip(QpButton button)
         {
             try
             {
@@ -97,9 +97,9 @@ namespace GlobalHOoks.Logic
                     };
 
                 InputSim.Simulator.Keyboard.ModifiedKeyStroke(winShift, VirtualKeyCode.VK_S);
-                WindowManager.ClickWindow.Visibility = Visibility.Hidden;
+                QP.WindowManager.ClickWindow.Visibility = Visibility.Hidden;
 
-                _windowManager.Hide.Begin(WindowManager.ClickWindow);
+                QP.WindowManager.Hide.Begin(QP.WindowManager.ClickWindow);
 
             }
             catch (Exception ex)

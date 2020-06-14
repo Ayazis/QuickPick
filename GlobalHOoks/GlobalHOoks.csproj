@@ -86,6 +86,9 @@
   <ItemGroup>
     <Compile Include="Logic\HotKeys.cs" />
     <Compile Include="Logic\SaveLoadManager.cs" />
+    <Compile Include="Logic\ShortCutHandler.cs" />
+    <Compile Include="Models\QuickPick.cs" />
+    <Compile Include="Models\QuickPickSettings.cs" />
     <Compile Include="Models\ShortCut.cs" />
     <Compile Include="UI\Converters\CenterToMarginConverter.cs" />
     <Compile Include="Models\Enums.cs" />

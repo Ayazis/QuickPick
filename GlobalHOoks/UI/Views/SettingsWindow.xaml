@@ -67,7 +67,12 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        <Button x:Name="btnExport" Content="Save Settings" Click="btnExport_Click" />
+        
+        <Button x:Name="btnExport" 
+                Content="Save Settings" 
+                Click="btnExport_Click" 
+                Width="150"/>    
+    
         </StackPanel>
     </Grid>
 

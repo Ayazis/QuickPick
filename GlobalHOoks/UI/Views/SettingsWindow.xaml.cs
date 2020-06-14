@@ -1,6 +1,7 @@
 ﻿using GlobalHOoks.Classes;
 using GlobalHOoks.Enums;
 using GlobalHOoks.Logic;
+using GlobalHOoks.Models;
 using Microsoft.Win32;
 using System;
 using System.Windows;
@@ -13,17 +14,13 @@ namespace GlobalHOoks
 {
 
     public partial class SettingsWindow : Window
-    {
-        private QuickPickModel _qpm;
-        private WindowManager _WindowManager;
+    {    
         private ButtonManager _buttonManager;
         private SaveLoadManager _saveLoadManager;
 
-        public SettingsWindow(QuickPickModel model, WindowManager manager, ButtonManager buttonManager)
-        {
-            _qpm = model;
-            _WindowManager = manager;
-            _buttonManager = buttonManager;
+        public SettingsWindow(QuickPick QP)
+        {          
+            _buttonManager = QP.ButtonManager;
             InitializeComponent();
         }
 
@@ -31,7 +28,12 @@ namespace GlobalHOoks
         {
             try
             {
+                
                 var comboBox = sender as ComboBox;
+
+                if (comboBox.SelectedItem == null)
+                    return;
+
                 ClickAction action = (ClickAction)comboBox.SelectedItem;
                 QpButton button = comboBox.DataContext as QpButton;
 
@@ -61,13 +63,14 @@ namespace GlobalHOoks
         }
 
         private void btnExport_Click(object sender, RoutedEventArgs e)
-        {
-            // save all button settings to disk.
-            if (_saveLoadManager == null)
-                _saveLoadManager = new SaveLoadManager(_qpm);
-
+        {          
             _saveLoadManager.SaveSettingsToDisk();
 
         }
+        private void btnLoad_Click(object sender, RoutedEventArgs e)
+        {     
+            _saveLoadManager.LoadSettingsFromDisk();
+        }
+        
     }
 }

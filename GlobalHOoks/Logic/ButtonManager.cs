@@ -1,6 +1,7 @@
 ﻿using GlobalHOoks.Classes;
 using GlobalHOoks.Enums;
 using GlobalHOoks.Logic;
+using GlobalHOoks.Models;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -15,27 +16,21 @@ namespace GlobalHOoks
 {
     public class ButtonManager
     {        
-        private QuickPickModel _qpm;
-        private WindowManager _windowManager;
-        private ClickActions _clickActions;
+        public QuickPick QP { get; set; }
 
-        public ButtonManager(QuickPickModel quickPickModel, WindowManager windowManager)
+        public ButtonManager(QuickPick QP)
         {
-            
-            _qpm = quickPickModel;
-            this._windowManager = windowManager;
-            _clickActions = new ClickActions(_windowManager);
+            this.QP = QP;
         }
 
-
-        internal void AddButtons()
+        public void AddButtons()
         {
             var buttons = CreateButtons();
             var nrOfButtons = buttons.Count;
             double angle = 360 / (double)nrOfButtons;
             var i = 0;
 
-            var style = WindowManager.ClickWindow.TryFindResource("RoundButton");
+            var style = QP.WindowManager.ClickWindow.TryFindResource("RoundButton");
             foreach (var qpButton in buttons)
             {
                 qpButton.Button.Content = qpButton.Id;
@@ -49,8 +44,8 @@ namespace GlobalHOoks
                     qpButton.Button.Style = style as Style;
                 }
 
-                _qpm.MainButtons.Add(qpButton);
-                WindowManager.ClickWindow.Canvas.Children.Add(qpButton.Button);
+                QP.QuickPickModel.MainButtons.Add(qpButton);
+                QP.WindowManager.ClickWindow.Canvas.Children.Add(qpButton.Button);
                 i++;
             }
 
@@ -61,7 +56,7 @@ namespace GlobalHOoks
         {
             var buttons = new List<QpButton>();
 
-            for (int i = 1; i <= _qpm.NrOfButtons; i++)
+            for (int i = 1; i <= QP.QuickPickModel.NrOfButtons; i++)
             {
                 buttons.Add(new QpButton { Id = i });
             }
@@ -70,10 +65,10 @@ namespace GlobalHOoks
 
         private Thickness CalculateMargin(QpButton qpButton, double buttonWidth, double angle, int i, double radius = -1)
         {
-            var cntr = _qpm.Center;
+            var cntr = QP.QuickPickModel.Center;
 
             if (radius == -1)
-                radius = _qpm.CircleRadius;
+                radius = QP.QuickPickModel.CircleRadius;
 
 
             // angle gives angle Between each Button        
@@ -91,7 +86,7 @@ namespace GlobalHOoks
 
         private void ConfigureButtons()
         {
-            var buttons = _qpm.MainButtons;
+            var buttons = QP.QuickPickModel.MainButtons;
             var currentPath = AppDomain.CurrentDomain.BaseDirectory;
             var queryFiles = Directory.GetFiles(currentPath + @"Files\");
 
@@ -102,36 +97,41 @@ namespace GlobalHOoks
                 {
                     var queryToRun = queryFiles.FirstOrDefault(f => Path.GetFileName(f).StartsWith(b.Id.ToString()));
                     b.AssociatedFilePath = queryToRun;
-                    b.Act = new QpButton.ActionDelegate(_clickActions.ReadAndRunQuery);
+                    b.Act = new QpButton.ActionDelegate(QP.ClickActions.ReadAndRunQuery);
                     b.ActionType = ClickAction.RunQuery;
                 }
 
                 if (i == 6)
                 {
+              
                     b.ActionType = ClickAction.None;
+                    b.AssociatedFilePath = "";
                 }
 
                 if (i == 7)
                 {
-                    b.Act = new QpButton.ActionDelegate(_clickActions.TakeScreenSnip);
+               
+                    b.Act = new QpButton.ActionDelegate(QP.ClickActions.TakeScreenSnip);
                     b.ActionType = ClickAction.TakeSnippet;
+                    b.AssociatedFilePath = "";
                 }
 
                 if (i == buttons.Count)
-                {
+                {                  
                     b.Button.Content = 'X';
-                    b.Act = new QpButton.ActionDelegate(_clickActions.CloseQuickPick);
+                    b.Act = new QpButton.ActionDelegate(QP.ClickActions.CloseQuickPick);
                     b.ActionType = ClickAction.ExitQuickPick;
+                    b.AssociatedFilePath = "";
                 }
             }
         }
 
-        internal void AddShortCuts()
+        public void AddShortCuts()
         {
-            double angle = 360 / (double)_qpm.ShortCuts.Count;
+            double angle = 360 / (double)QP.QuickPickModel.ShortCuts.Count;
 
             int i = 0;
-            var withIcons = _qpm.ShortCuts.Where(w => w.Icon != null);
+            var withIcons = QP.QuickPickModel.ShortCuts.Where(w => w.Icon != null);
             foreach (var shortcut in withIcons)
             {
                 try
@@ -146,13 +146,13 @@ namespace GlobalHOoks
                         button.IconLocation = shortcut.IconLocation;
                     }
                     button.ActionType = ClickAction.RunProcess;
-                    button.Act = new QpButton.ActionDelegate(_clickActions.LaunchApplication);
+                    button.Act = new QpButton.ActionDelegate(QP.ClickActions.LaunchApplication);
 
                     button.Icon.Width = button.Icon.Height = 25;
                     button.Icon.Margin = CalculateMargin(button, button.Icon.Width, angle, i, 100);
-                    _qpm.ShortCutButtons.Add(button);
+                    QP.QuickPickModel.ShortCutButtons.Add(button);
                     button.Icon.Visibility = Visibility.Hidden;
-                    WindowManager.ClickWindow.Canvas.Children.Add(button.Icon);
+                    QP.WindowManager.ClickWindow.Canvas.Children.Add(button.Icon);
                 }
                 catch (Exception)
                 {
@@ -176,23 +176,23 @@ namespace GlobalHOoks
             }
         }
 
-        internal void SetClickActionOnButton(QpButton button, ClickAction action)
+        public void SetClickActionOnButton(QpButton button, ClickAction action)
         {
             if (action == ClickAction.ExitQuickPick)
             {
-                button.Act = new QpButton.ActionDelegate(_clickActions.CloseQuickPick);
+                button.Act = new QpButton.ActionDelegate(QP.ClickActions.CloseQuickPick);
             }
             else if (action == ClickAction.RunProcess)
             {
-                button.Act = new QpButton.ActionDelegate(_clickActions.LaunchApplication);
+                button.Act = new QpButton.ActionDelegate(QP.ClickActions.LaunchApplication);
             }
             else if (action == ClickAction.RunQuery)
             {
-                button.Act = new QpButton.ActionDelegate(_clickActions.ReadAndRunQuery);
+                button.Act = new QpButton.ActionDelegate(QP.ClickActions.ReadAndRunQuery);
             }
             else if (action == ClickAction.TakeSnippet)
             {
-                button.Act = new QpButton.ActionDelegate(_clickActions.TakeScreenSnip);
+                button.Act = new QpButton.ActionDelegate(QP.ClickActions.TakeScreenSnip);
             }
         }
     }

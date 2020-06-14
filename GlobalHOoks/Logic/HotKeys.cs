@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GlobalHOoks.Models;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -6,17 +7,20 @@ using System.Windows.Forms;
 
 namespace GlobalHOoks.Logic
 {
-    internal class HotKeys
+    public class HotKeys
     {
         static List<Keys> PressedKeys = new List<Keys>();
+        public QuickPick QP { get; set; }
 
-        private QuickPickModel _qpm;
-        private WindowManager _windowManager;
+        private static QuickPickModel _qpm;
+        private static WindowManager _windowManager;
 
-        public HotKeys(QuickPickModel model, WindowManager manager)
+        public HotKeys(QuickPick quickPick)
         {
-            this._qpm = model;
-            this._windowManager = manager;
+            this.QP = quickPick;
+            _qpm = QP.QuickPickModel;
+            _windowManager = QP.WindowManager;
+            
         }
 
         public  void KeyPress(object sender, KeyPressEventArgs e)
@@ -40,17 +44,16 @@ namespace GlobalHOoks.Logic
         }
 
 
-        private void KeyDowned(Keys key)
+        public static void KeyDowned(Keys key)
         {
-
             try
             {
-                if (_qpm.HotKeys.Contains(key))
+                if (_qpm.PreDefinedHotKeys.Contains(key))
                 {
                     PressedKeys.Add(key);
                     Debug.WriteLine("Down:  " + key.ToString());
 
-                    if (PressedKeys.Count == _qpm.HotKeys.Count)
+                    if (PressedKeys.Count == _qpm.PreDefinedHotKeys.Count)
                         CheckHotKeyCombo();
                 }
             }
@@ -60,11 +63,11 @@ namespace GlobalHOoks.Logic
             }
         }
 
-        private void KeyUpped(Keys key)
+        public static void KeyUpped(Keys key)
         {
             try
             {
-                if (_qpm.HotKeys.Contains(key))
+                if (_qpm.PreDefinedHotKeys.Contains(key))
                 {
                     PressedKeys.Remove(key);
                     Debug.WriteLine("Up: " + key.ToString());
@@ -77,11 +80,11 @@ namespace GlobalHOoks.Logic
 
         }
 
-        private void CheckHotKeyCombo()
+        private static void CheckHotKeyCombo()
         {
             Debug.WriteLine("CHECKING");
             var allPressed = true;
-            foreach (var key in _qpm.HotKeys)
+            foreach (var key in _qpm.PreDefinedHotKeys)
             {
                 if (!PressedKeys.Contains(key))
                     allPressed = false;
