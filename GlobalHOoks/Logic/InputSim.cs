@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using WindowsInput;
 using WindowsInput.Native;
 
-namespace GlobalHOoks.Logic
+namespace QuickPick.Logic
 {
     public static class InputSim
     {

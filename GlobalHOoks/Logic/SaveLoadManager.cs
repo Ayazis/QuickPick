@@ -1,26 +1,21 @@
-﻿using GlobalHOoks.Classes;
-using GlobalHOoks.Models;
+﻿using QuickPick.Classes;
+using QuickPick.Models;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
-namespace GlobalHOoks.Logic
+
+namespace QuickPick.Logic
 {
     public class SaveLoadManager
     {
         public string SettingsPath { get; set; }
 
-        public QuickPick QP { get; set; }
-        public SaveLoadManager(QuickPick qp)
+        public Models.QuickPick QP { get; set; }
+        public SaveLoadManager(Models.QuickPick qp)
         {
             this.QP = qp;
-            this.SettingsPath = AppDomain.CurrentDomain.BaseDirectory + @"Settings.Json";
+            this.SettingsPath = AppDomain.CurrentDomain.BaseDirectory + @"Settings.json";
         }
 
 
@@ -46,6 +41,10 @@ namespace GlobalHOoks.Logic
         {
             try
             {
+                // Clear the canvas
+                QP.ButtonManager.ClearCanvas();
+                QP.ButtonManager.AddCentralButton();
+
                 if (File.Exists(SettingsPath))
                 {
                     // Get SettingsFile From Disk
@@ -55,23 +54,35 @@ namespace GlobalHOoks.Logic
                     QP.QuickPickModel.ShortCutsFolder = settings.ShortCutsFolder;
 
 
-                    // Get Shortcuts from saved folderLocation.
-                    QP.QuickPickModel.ShortCuts.Clear();
-                    ShortCutHandler.GetShortCuts(QP.QuickPickModel);
-                    QP.ButtonManager.AddShortCuts();
+               
 
                     // Create mainButtons.
                     QP.QuickPickModel.MainButtons.Clear();
                     foreach (var button in settings.MainButtons)
                     {
                         QP.ButtonManager.ConfigureButton(button);
-                        QP.QuickPickModel.MainButtons.Add(button);                     
+                        QP.QuickPickModel.MainButtons.Add(button);
                     }
 
-                    QP.ButtonManager.PlaceButtons();
+                    // Get Shortcuts from saved folderLocation.
+                    QP.QuickPickModel.ShortCuts.Clear();
+                    ShortCutHandler.GetShortCuts(QP.QuickPickModel);
+                    QP.ButtonManager.AddShortCuts();                 
+                    
 
                 }
-            
+                else
+                {
+                    for (int i = 0; i < QP.QuickPickModel.NrOfButtons; i++)
+                    {
+                        var button = new QpButton();
+                        button.Id = i + 1;
+                        QP.ButtonManager.ConfigureButton(button);
+                        QP.QuickPickModel.MainButtons.Add(button);
+                    }
+                }
+
+                QP.ButtonManager.PlaceButtonsOnCanvas();
             }
             catch (Exception ex)
             {

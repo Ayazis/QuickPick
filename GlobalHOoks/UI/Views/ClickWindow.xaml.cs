@@ -1,19 +1,19 @@
-﻿using GlobalHOoks.Models;
+﻿using QuickPick.Models;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using WindowsInput;
 
-namespace GlobalHOoks
+namespace QuickPick
 {
     /// <summary>
     /// Interaction logic for UserControl1.xaml
     /// </summary>
     public partial class ClickWindow : Window
     {
-        public QuickPick QP { get; }
+        public Models.QuickPick QP { get; }
 
-        public ClickWindow(QuickPick QP)
+        public ClickWindow(Models.QuickPick QP)
         {
             this.QP = QP;
             this.DataContext = QP.QuickPickModel;

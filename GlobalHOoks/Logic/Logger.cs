@@ -6,8 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 
-namespace GlobalHOoks.Logic
+namespace QuickPick.Logic
 {
     public static class Logger
     {
@@ -23,13 +24,10 @@ namespace GlobalHOoks.Logic
 
                 File.AppendAllText($@"{logPath}QpLog{dateNow}.txt", logEntry);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // do nothing..?
-
+                MessageBox.Show(ex.InnerException.ToString());
             }
-
-
         }
 
         public static void Log(Exception ex)
@@ -42,9 +40,9 @@ namespace GlobalHOoks.Logic
 
                 File.AppendAllText($@"{logPath}QpLog{dateNow}.txt", ex.ToString());
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                // do nothing..?
+                MessageBox.Show(e.InnerException.ToString());
 
             }
 

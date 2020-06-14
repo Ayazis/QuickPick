@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace GlobalHOoks.Enums
+namespace QuickPick.Enums
 { 
     public enum ClickAction
     {

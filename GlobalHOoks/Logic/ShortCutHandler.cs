@@ -1,4 +1,4 @@
-﻿using GlobalHOoks.Models;
+﻿using QuickPick.Models;
 using IWshRuntimeLibrary;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GlobalHOoks.Logic
+namespace QuickPick.Logic
 {
     static class ShortCutHandler
     {        

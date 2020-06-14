@@ -1,6 +1,6 @@
-﻿using GlobalHOoks.Classes;
-using GlobalHOoks.Logic;
-using GlobalHOoks.Models;
+﻿using QuickPick.Classes;
+using QuickPick.Logic;
+using QuickPick.Models;
 using Gma.System.MouseKeyHook;
 using System;
 using System.Collections.Generic;
@@ -13,13 +13,13 @@ using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Media.Animation;
 
-namespace GlobalHOoks
+namespace QuickPick
 {
     public class WindowManager
     {
-        public QuickPick QP { get; set; }
+        public Models.QuickPick QP { get; set; }
         private NotifyIcon _notificationIcon;
-        static IntPtr _ActiveWindowHandle;        
+        static IntPtr _ActiveWindowHandle;
 
         public ClickWindow ClickWindow { get; set; }
         private SettingsWindow _settingsWindow;
@@ -28,13 +28,13 @@ namespace GlobalHOoks
         public Storyboard Show { get; private set; }
 
         [DllImport("user32.dll")]
-        static extern IntPtr GetForegroundWindow();      
+        static extern IntPtr GetForegroundWindow();
 
         [DllImport("user32.dll", SetLastError = true)]
         static extern bool SetForegroundWindow(IntPtr hWnd);
 
 
-        public WindowManager(QuickPick quickPick)
+        public WindowManager(Models.QuickPick quickPick)
         {
             QP = quickPick;
         }
@@ -48,8 +48,8 @@ namespace GlobalHOoks
         }
 
 
-        
-    
+
+
         private void FindResources()
         {
             this.Hide = ClickWindow.TryFindResource("hideMe") as Storyboard;
@@ -83,29 +83,43 @@ namespace GlobalHOoks
             var currentPath = AppDomain.CurrentDomain.BaseDirectory;
             var IconPath = $@"{currentPath}Files\QP_Icon_32px.png";
 
-            var bitmap = new Bitmap(IconPath); 
+            var bitmap = new Bitmap(IconPath);
             var iconHandle = bitmap.GetHicon();
-      
+
             return Icon.FromHandle(iconHandle);
         }
 
-      
+
 
         private void MnuSettings_Click(object sender, EventArgs e)
         {
-            if (_settingsWindow == null)
+            try
             {
                 _settingsWindow = new SettingsWindow(QP); ;
                 //SettingsWindow.WindowStyle = WindowStyle.None;
                 _settingsWindow.DataContext = QP.QuickPickModel;
+
+
+                _settingsWindow.Show();
+
+                var left = _settingsWindow.Left;
+                var top = _settingsWindow.Top;
+                var height = _settingsWindow.Height;
+
+                QP.WindowManager.ClickWindow.Left = left - 50 - QP.WindowManager.ClickWindow.Width;
+                QP.WindowManager.ClickWindow.Top = top;
+                QP.WindowManager.Show.Begin(QP.WindowManager.ClickWindow);
             }
-            _settingsWindow.Show();
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
         }
-     
+
 
         private void MouseDown(object sender, MouseEventArgs e)
         {
-       
+
             // Hide the window it user clicked outside of window.
             if (e.Button != MouseButtons.XButton2)
             {
@@ -122,7 +136,7 @@ namespace GlobalHOoks
 
             try
             {
-               
+
                 if (ClickWindow != null)
                 {
                     ShowWindow();
@@ -134,17 +148,17 @@ namespace GlobalHOoks
             }
         }
         private void CreateWindow()
-        {            
+        {
             ClickWindow = new ClickWindow(QP);
             QP.SaveLoadManager.LoadAndApplySettings();
             //QP.ButtonManager.AddButtons();
             //QP.ButtonManager.AddShortCuts();           
-        
 
-            ClickWindow.WindowStartupLocation =WindowStartupLocation.Manual;
+
+            ClickWindow.WindowStartupLocation = WindowStartupLocation.Manual;
             ClickWindow.WindowStyle = WindowStyle.None;
             ClickWindow.Topmost = true;
-            ClickWindow.Visibility =Visibility.Hidden;
+            ClickWindow.Visibility = Visibility.Hidden;
             ClickWindow.Show();
             ClickWindow.Closed += Window_Closed;
         }
@@ -170,19 +184,20 @@ namespace GlobalHOoks
             {
                 SetActiveWindow();
 
-                ClickWindow.Dispatcher.Invoke(() => {
+                ClickWindow.Dispatcher.Invoke(() =>
+                {
                     HideShortCuts();
                     var mousePosition = GetMousePosition();
                     ClickWindow.Left = mousePosition.X - (ClickWindow.ActualWidth / 2);
                     ClickWindow.Top = mousePosition.Y - (ClickWindow.ActualHeight / 2);
                     Show.Begin(ClickWindow);
                 });
-           
+
             }
             catch (Exception ex)
             {
                 Logger.Log(ex);
-            }    
+            }
         }
 
         private System.Windows.Point GetMousePosition()
@@ -211,9 +226,9 @@ namespace GlobalHOoks
                 StringBuilder Buff = new StringBuilder(nChars);
                 _ActiveWindowHandle = GetForegroundWindow();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
+                Logger.Log(ex);
             }
         }
 
