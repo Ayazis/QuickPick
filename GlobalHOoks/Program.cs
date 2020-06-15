@@ -17,13 +17,18 @@ namespace QuickPick
         {
             try
             {
-               Logger.Log("Started at " + DateTime.Now.ToString()); 
-               Hook.GlobalEvents().KeyDown += Program_KeyDown;
-               Hook.GlobalEvents().KeyUp += Program_KeyUp;
+                KeyHook._hookID = KeyHook.SetHook(KeyHook._proc);
+
+
+                Logger.Log("Started at " + DateTime.Now.ToString());
+               // Hook.GlobalEvents().KeyDown += Program_KeyDown;
+                //Hook.GlobalEvents().KeyUp += Program_KeyUp;
 
                 _QP = new Models.QuickPick();
-                
+
                 Application.Run(new ApplicationContext());
+
+                KeyHook.UnhookWindowsHookEx(KeyHook._hookID);
             }
             catch (Exception ex)
             {
@@ -32,7 +37,7 @@ namespace QuickPick
 
 
         }
-        
+
         private static void Program_KeyUp(object sender, KeyEventArgs e)
         {
             //Debug.WriteLine("Up:" + e.KeyCode.ToString());       

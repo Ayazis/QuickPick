@@ -113,6 +113,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="KeyHook.cs" />
     <Compile Include="Logic\HotKeys.cs" />
     <Compile Include="Logic\SaveLoadManager.cs" />
     <Compile Include="Logic\ShortCutHandler.cs" />
