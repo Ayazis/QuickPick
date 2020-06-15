@@ -1,66 +1,103 @@
-﻿using GlobalHOoks.Classes;
-using GlobalHOoks.Enums;
-using GlobalHOoks.Logic;
-using GlobalHOoks.Models;
+﻿using QuickPick.Classes;
+using QuickPick.Enums;
+using QuickPick.Logic;
+using QuickPick.Models;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace GlobalHOoks
+namespace QuickPick
 {
     public class ButtonManager
-    {        
-        public QuickPick QP { get; set; }
+    {
+        public Models.QuickPick QP { get; set; }
 
-        public ButtonManager(QuickPick QP)
+        public ButtonManager(Models.QuickPick QP)
         {
             this.QP = QP;
         }
 
-        public void AddButtons()
+        public void PlaceButtonsOnCanvas()
         {
-            var buttons = CreateButtons();
-            var nrOfButtons = buttons.Count;
-            double angle = 360 / (double)nrOfButtons;
-            var i = 0;
-
-            var style = QP.WindowManager.ClickWindow.TryFindResource("RoundButton");
-            foreach (var qpButton in buttons)
+            try
             {
-                qpButton.Button.Content = qpButton.Id;
+                var buttons = QP.QuickPickModel.MainButtons;
+                var nrOfButtons = buttons.Count;
+                double angle = 360 / (double)nrOfButtons;
+                var i = 0;
+                var buttonStyle = QP.WindowManager.ClickWindow.TryFindResource("RoundButton");
 
-                qpButton.Margin = CalculateMargin(qpButton, qpButton.Button.Width, angle, i);
-                qpButton.Button.Margin = qpButton.Margin;
-
-
-                if (style != null)
+                foreach (var qpButton in buttons)
                 {
-                    qpButton.Button.Style = style as Style;
-                }
+                    qpButton.Button.Content = qpButton.Id;
 
-                QP.QuickPickModel.MainButtons.Add(qpButton);
-                QP.WindowManager.ClickWindow.Canvas.Children.Add(qpButton.Button);
-                i++;
+                    qpButton.Margin = CalculateMargin(qpButton, qpButton.Button.Width, angle, i);
+                    qpButton.Button.Margin = qpButton.Margin;
+
+                    if (buttonStyle != null)
+                    {
+                        qpButton.Button.Style = buttonStyle as Style;
+                    }
+
+                    QP.WindowManager.ClickWindow.Canvas.Children.Add(qpButton.Button);
+                    i++;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
             }
 
-            ConfigureButtons();
         }
 
-        public List<QpButton> CreateButtons()
+        public void ClearCanvas()
         {
-            var buttons = new List<QpButton>();
+            var canvas = QP.WindowManager.ClickWindow.Canvas;
+            canvas.Children.Clear();
 
-            for (int i = 1; i <= QP.QuickPickModel.NrOfButtons; i++)
-            {
-                buttons.Add(new QpButton { Id = i });
-            }
-            return buttons;
+
+            //try
+            //{
+            //    var count = QP.WindowManager.ClickWindow.Canvas.Children.Count;
+
+            //    for (int i = 0; i < count - 2; i++)
+            //    {
+            //        QP.WindowManager.ClickWindow.Canvas.Children.RemoveAt(i);
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+
+            //    throw;
+            //}
+        }
+
+        public void AddCentralButton()
+        {
+            var centralButton = new Button();
+            double width = 25;
+
+            centralButton.Width = width;
+            centralButton.Height = width;
+            centralButton.HorizontalAlignment = HorizontalAlignment.Center;
+            centralButton.VerticalAlignment = VerticalAlignment.Center;
+            centralButton.Click += QP.WindowManager.ClickWindow.btnShowShortCuts_Click;
+
+            var buttonStyle = QP.WindowManager.ClickWindow.TryFindResource("RoundButton");
+            if (buttonStyle != null)
+                centralButton.Style = buttonStyle as Style;
+            var center = QP.QuickPickModel.Center.X;
+            centralButton.Margin = new Thickness( center - width / 2);
+
+            var canvas = QP.WindowManager.ClickWindow.Canvas;
+            canvas.Children.Add(centralButton);
         }
 
         private Thickness CalculateMargin(QpButton qpButton, double buttonWidth, double angle, int i, double radius = -1)
@@ -84,7 +121,10 @@ namespace GlobalHOoks
             return new Thickness(x, y, 0, 0);
         }
 
-        private void ConfigureButtons()
+        /// <summary>
+        /// Only used by the developer of QuickPick.
+        /// </summary>
+        private void ConfigureAyazisPreDefinedButtons()
         {
             var buttons = QP.QuickPickModel.MainButtons;
             var currentPath = AppDomain.CurrentDomain.BaseDirectory;
@@ -103,27 +143,51 @@ namespace GlobalHOoks
 
                 if (i == 6)
                 {
-              
+
                     b.ActionType = ClickAction.None;
                     b.AssociatedFilePath = "";
                 }
 
                 if (i == 7)
                 {
-               
+
                     b.Act = new QpButton.ActionDelegate(QP.ClickActions.TakeScreenSnip);
                     b.ActionType = ClickAction.TakeSnippet;
                     b.AssociatedFilePath = "";
                 }
 
                 if (i == buttons.Count)
-                {                  
+                {
                     b.Button.Content = 'X';
                     b.Act = new QpButton.ActionDelegate(QP.ClickActions.CloseQuickPick);
                     b.ActionType = ClickAction.ExitQuickPick;
                     b.AssociatedFilePath = "";
                 }
             }
+        }
+
+        public QpButton ConfigureButton(QpButton button)
+        {
+            button.Button.ToolTip = button.FileName;
+
+            if (button.ActionType == ClickAction.ExitQuickPick)
+            {
+                button.Act = new QpButton.ActionDelegate(QP.ClickActions.CloseQuickPick);
+            }
+            else if (button.ActionType == ClickAction.RunProcess)
+            {
+                button.Act = new QpButton.ActionDelegate(QP.ClickActions.LaunchApplication);
+            }
+            else if (button.ActionType == ClickAction.RunQuery)
+            {
+                button.Act = new QpButton.ActionDelegate(QP.ClickActions.ReadAndRunQuery);
+            }
+            else if (button.ActionType == ClickAction.TakeSnippet)
+            {
+                button.Act = new QpButton.ActionDelegate(QP.ClickActions.TakeScreenSnip);
+            }
+
+            return button;
         }
 
         public void AddShortCuts()
@@ -161,6 +225,8 @@ namespace GlobalHOoks
             }
         }
 
+
+
         public ImageSource ToImage(Icon icon)
         {
             try
@@ -195,6 +261,6 @@ namespace GlobalHOoks
                 button.Act = new QpButton.ActionDelegate(QP.ClickActions.TakeScreenSnip);
             }
         }
+
     }
 }
-

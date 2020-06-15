@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 
-namespace GlobalHOoks.Converters
+namespace QuickPick.Converters
 {
     class CenterToMarginConverter : IValueConverter
     {

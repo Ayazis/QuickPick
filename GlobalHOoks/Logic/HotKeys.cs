@@ -1,21 +1,21 @@
-﻿using GlobalHOoks.Models;
+﻿using QuickPick.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace GlobalHOoks.Logic
+namespace QuickPick.Logic
 {
     public class HotKeys
     {
         static List<Keys> PressedKeys = new List<Keys>();
-        public QuickPick QP { get; set; }
+        public Models.QuickPick QP { get; set; }
 
         private static QuickPickModel _qpm;
         private static WindowManager _windowManager;
 
-        public HotKeys(QuickPick quickPick)
+        public HotKeys(Models.QuickPick quickPick)
         {
             this.QP = quickPick;
             _qpm = QP.QuickPickModel;
@@ -51,7 +51,7 @@ namespace GlobalHOoks.Logic
                 if (_qpm.PreDefinedHotKeys.Contains(key))
                 {
                     PressedKeys.Add(key);
-                    Debug.WriteLine("Down:  " + key.ToString());
+                   // Debug.WriteLine("Down:  " + key.ToString());
 
                     if (PressedKeys.Count == _qpm.PreDefinedHotKeys.Count)
                         CheckHotKeyCombo();
@@ -77,22 +77,31 @@ namespace GlobalHOoks.Logic
             {
                 Logger.Log(ex);
             }
-
         }
 
         private static void CheckHotKeyCombo()
         {
-            Debug.WriteLine("CHECKING");
-            var allPressed = true;
-            foreach (var key in _qpm.PreDefinedHotKeys)
+            try
             {
-                if (!PressedKeys.Contains(key))
-                    allPressed = false;
+                Logger.Log("checking hotkeycombo");
+
+                Debug.WriteLine("CHECKING");
+                var allPressed = true;
+                foreach (var key in _qpm.PreDefinedHotKeys)
+                {
+                    if (!PressedKeys.Contains(key))
+                        allPressed = false;
+                }
+                if (allPressed)
+                {
+                    Debug.WriteLine("***** SHOWING THE WINDOW *****");
+                    Logger.Log("showing the window...");
+                    _windowManager.ShowWindow();
+                }
             }
-            if (allPressed)
+            catch (Exception ex)
             {
-                 Debug.WriteLine("***** SHOWING THE WINDOW *****");
-                 _windowManager.ShowWindow();
+                Logger.Log(ex);
             }
         }
 

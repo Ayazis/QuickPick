@@ -1,82 +1,93 @@
-﻿using GlobalHOoks.Classes;
-using GlobalHOoks.Models;
+﻿using QuickPick.Classes;
+using QuickPick.Models;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
-namespace GlobalHOoks.Logic
+
+namespace QuickPick.Logic
 {
     public class SaveLoadManager
-    {       
-        private const string SETTINGS_PATH = @"c:\temp\quickPick\qp_settings.json";
+    {
+        public string SettingsPath { get; set; }
 
-        public QuickPick QP{ get; set; }
-        public SaveLoadManager(QuickPick qp)
+        public Models.QuickPick QP { get; set; }
+        public SaveLoadManager(Models.QuickPick qp)
         {
             this.QP = qp;
+            this.SettingsPath = AppDomain.CurrentDomain.BaseDirectory + @"Settings.json";
         }
 
 
         public void SaveSettingsToDisk()
         {
-            if (!Directory.Exists(SETTINGS_PATH))
-                Directory.CreateDirectory(SETTINGS_PATH);
-            //string mainButtonsAsJson = JsonConvert.SerializeObject(QP.QuickPickModel.MainButtons, Formatting.Indented, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore});        
-            
-            //string shortcutButtonsJson = JsonConvert.SerializeObject(QP.QuickPickModel.ShortCutButtons, Formatting.Indented, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
-            //File.WriteAllText($@"{_saveDirectory}{_shorts}", shortcutButtonsJson); 
-            var settings = new QuickPickSettings(QP.QuickPickModel);
-            string settingsAsJson = JsonConvert.SerializeObject(settings, Formatting.Indented, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore});        
-
-            File.WriteAllText(SETTINGS_PATH, settingsAsJson);
-        }
-
-        public void LoadSettingsFromDisk()
-        {
             try
-            {              
-                if (File.Exists(SETTINGS_PATH))
-                {
-                    var SettingsAsJson = File.ReadAllText(SETTINGS_PATH);
-                    QuickPickSettings settings = JsonConvert.DeserializeObject<QuickPickSettings>(SettingsAsJson);
-                    
-                    QP.QuickPickModel.NrOfButtons = settings.NrOfMainButtons;
-                    QP.QuickPickModel.ShortCutsFolder = settings.ShortCutsFolder;
+            {   
+                if (!Directory.Exists(Path.GetDirectoryName(SettingsPath)))
+                    Directory.CreateDirectory(Path.GetDirectoryName(SettingsPath));
 
-                    QP.QuickPickModel.MainButtons.Clear();
-                    foreach (var button in QP.QuickPickModel.MainButtons)
-                    {
-                        QP.QuickPickModel.MainButtons.Add(button);
-                    }
+                var settings = new QuickPickSettings(QP.QuickPickModel);
+                string settingsAsJson = JsonConvert.SerializeObject(settings, Formatting.Indented, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
 
-                    ShortCutHandler.GetShortCuts(QP.QuickPickModel);
-
-                }                
-
-                //string shortCutButtonsFilePath = $@"{SETTINGS_PATH}{_shorts}";
-
-                //if (File.Exists(shortCutButtonsFilePath))
-                //{
-                //    var shortsAsJson = File.ReadAllText(shortCutButtonsFilePath);
-                //    List<QpButton> ShortcutButtons = JsonConvert.DeserializeObject<List<QpButton>>(shortsAsJson);
-
-                //    QP.QuickPickModel.ShortCutButtons.Clear();
-                //    foreach (var shortcut in ShortcutButtons)
-                //    {
-                //        QP.QuickPickModel.ShortCutButtons.Add(shortcut);
-                //    }                   
-                //}
+                File.WriteAllText(SettingsPath, settingsAsJson);
             }
             catch (Exception ex)
             {
                 Logger.Log(ex);
             }
-        }      
+        }
+
+        public void LoadAndApplySettings()
+        {
+            try
+            {
+                // Clear the canvas
+                QP.ButtonManager.ClearCanvas();
+                QP.ButtonManager.AddCentralButton();
+
+                if (File.Exists(SettingsPath))
+                {
+                    // Get SettingsFile From Disk
+                    var SettingsAsJson = File.ReadAllText(SettingsPath);
+                    QuickPickSettings settings = JsonConvert.DeserializeObject<QuickPickSettings>(SettingsAsJson);
+                    QP.QuickPickModel.NrOfButtons = settings.NrOfMainButtons;
+                    QP.QuickPickModel.ShortCutsFolder = settings.ShortCutsFolder;
+
+
+               
+
+                    // Create mainButtons.
+                    QP.QuickPickModel.MainButtons.Clear();
+                    foreach (var button in settings.MainButtons)
+                    {
+                        QP.ButtonManager.ConfigureButton(button);
+                        QP.QuickPickModel.MainButtons.Add(button);
+                    }
+
+                    // Get Shortcuts from saved folderLocation.
+                    QP.QuickPickModel.ShortCuts.Clear();
+                    ShortCutHandler.GetShortCuts(QP.QuickPickModel);
+                    QP.ButtonManager.AddShortCuts();                 
+                    
+
+                }
+                else
+                {
+                    for (int i = 0; i < QP.QuickPickModel.NrOfButtons; i++)
+                    {
+                        var button = new QpButton();
+                        button.Id = i + 1;
+                        QP.ButtonManager.ConfigureButton(button);
+                        QP.QuickPickModel.MainButtons.Add(button);
+                    }
+                }
+
+                QP.ButtonManager.PlaceButtonsOnCanvas();
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+        }
     }
 }

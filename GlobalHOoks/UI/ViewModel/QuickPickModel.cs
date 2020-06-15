@@ -1,7 +1,7 @@
-﻿using GlobalHOoks.Classes;
-using GlobalHOoks.Enums;
-using GlobalHOoks.Logic;
-using GlobalHOoks.Models;
+﻿using QuickPick.Classes;
+using QuickPick.Enums;
+using QuickPick.Logic;
+using QuickPick.Models;
 using IWshRuntimeLibrary;
 using Shell32;
 using System;
@@ -14,10 +14,11 @@ using System.Windows.Forms;
 using System.Windows.Input;
 using Point = System.Windows.Point;
 
-namespace GlobalHOoks
+namespace QuickPick
 {
     public class QuickPickModel : INotifyPropertyChanged
     {
+        public string Title = "QuickPick v.1.0alpha";
 
         private string _ShortCutsFolder = @"c:\shortcuts";
         public string ShortCutsFolder
@@ -103,13 +104,7 @@ namespace GlobalHOoks
         {
             get { return 200; }
         }
-        #endregion
-
-        public QuickPickModel()
-        {            
-            ShortCutHandler.GetShortCuts(this);
-        }
-
+        #endregion    
 
 
         #region Notify Property Changed And other Events

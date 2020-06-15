@@ -1,4 +1,4 @@
-﻿using GlobalHOoks.Classes;
+﻿using QuickPick.Classes;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GlobalHOoks.Models
+namespace QuickPick.Models
 {
     public class QuickPickSettings
     {
@@ -14,13 +14,18 @@ namespace GlobalHOoks.Models
         {
             NrOfMainButtons = qpm.NrOfButtons;
             ShortCutsFolder = qpm.ShortCutsFolder;
-            Mainbuttons = qpm.MainButtons;
+            MainButtons = qpm.MainButtons;
+        }
+
+        public QuickPickSettings()
+        {
+
         }
 
 
         public int NrOfMainButtons { get; set; }
         public string ShortCutsFolder { get; set; }
-        public ObservableCollection<QpButton> Mainbuttons{ get; set; }
+        public ObservableCollection<QpButton> MainButtons{ get; set; }
 
     }
 }

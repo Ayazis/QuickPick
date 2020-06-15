@@ -1,5 +1,5 @@
-﻿using GlobalHOoks.Classes;
-using GlobalHOoks.Models;
+﻿using QuickPick.Classes;
+using QuickPick.Models;
 using Shell32;
 using System;
 using System.Collections.Generic;
@@ -12,15 +12,15 @@ using System.Windows;
 using WindowsInput;
 using WindowsInput.Native;
 
-namespace GlobalHOoks.Logic
+namespace QuickPick.Logic
 {
     public class ClickActions
     {
         public const string FILES_FOLDER = @"C:\Users\FG\source\repos\GlobalHooks\GlobalHOoks\Content\Files\";
 
-        public QuickPick QP { get; set; }    
+        public Models.QuickPick QP { get; set; }    
 
-        public ClickActions(QuickPick qp)
+        public ClickActions(Models.QuickPick qp)
         {
             this.QP = qp;            
         }

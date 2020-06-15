@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace GlobalHOoks.Models
+namespace QuickPick.Models
 {
     public struct ShortCut
     {

@@ -1,9 +1,9 @@
-﻿<Window x:Class="GlobalHOoks.SettingsWindow"
+﻿<Window x:Class="QuickPick.SettingsWindow"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:GlobalHOoks"               
+             xmlns:local="clr-namespace:QuickPick"               
              mc:Ignorable="d"               
              SizeToContent="WidthAndHeight"             
              ShowInTaskbar="False"  
@@ -18,7 +18,11 @@
 
     <Grid  Margin="25">
         <StackPanel>
-        <ListView x:Name="lvButtons"
+            <StackPanel Orientation="Horizontal">       
+                <Button x:Name="btnRemoveButton" Content="-" Click="btnRemoveButton_Click" Width="30" Margin="10" Visibility="Collapsed"/>
+                <Button x:Name="btnAddButton" Content="+" Click="btnAddButton_Click" Width="30" Margin="10" Visibility="Collapsed"/>
+            </StackPanel>
+            <ListView x:Name="lvButtons"
                                ItemsSource="{Binding MainButtons}"                       
                                ScrollViewer.VerticalScrollBarVisibility="Visible"                                
                                MinWidth="200"
@@ -66,12 +70,20 @@
                     </GridViewColumn>
                 </GridView>
             </ListView.View>
-        </ListView>
-        
-        <Button x:Name="btnExport" 
-                Content="Save Settings" 
+        </ListView>           
+            <TextBlock Margin="10" Text="Shortcuts folder location:"></TextBlock>
+      
+            
+            <StackPanel Orientation="Horizontal">
+            <TextBox Margin="10" Name="tbShortCutsFolder" IsEnabled="False" IsReadOnly="True"                              
+                     Text="{Binding ShortCutsFolder, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MinWidth="150"/>
+                <Button Name="btnBrowseFolder" Content="Browse.." Click="btnBrowseFolder_Click" HorizontalAlignment="Right" Width="50" Height="25"/>
+            </StackPanel>            
+
+            <Button x:Name="btnExport" 
+                Content="Save" 
                 Click="btnExport_Click" 
-                Width="150"/>    
+                Width="100"/>    
     
         </StackPanel>
     </Grid>
