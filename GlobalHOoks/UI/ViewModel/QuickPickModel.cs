@@ -36,9 +36,9 @@ namespace QuickPick
 
         private ObservableCollection<Keys> _PreDefinedHotKeys = new ObservableCollection<Keys> {
         Keys.LControlKey,
-        Keys.LShiftKey,
-        Keys.LMenu,
-        Keys.Q
+        Keys.LShiftKey,     
+        Keys.Q,
+        Keys.P
         };
         public ObservableCollection<Keys> PreDefinedHotKeys
         {
