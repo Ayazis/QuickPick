@@ -96,6 +96,7 @@ namespace QuickPick.Logic
                 {
                     Debug.WriteLine("***** SHOWING THE WINDOW *****");
                     Logger.Log("showing the window...");
+                    PressedKeys.Clear();
                     _windowManager.ShowWindow();
                 }
             }
