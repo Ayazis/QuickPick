@@ -19,7 +19,6 @@ namespace QuickPick
             {
                 KeyHook._hookID = KeyHook.SetHook(KeyHook._proc);
 
-
                 Logger.Log("Started at " + DateTime.Now.ToString());            
 
                 _QP = new Models.QuickPick();
@@ -32,20 +31,6 @@ namespace QuickPick
             {
                 Logger.Log(ex);
             }
-
-
-        }
-
-        private static void Program_KeyUp(object sender, KeyEventArgs e)
-        {
-            //Debug.WriteLine("Up:" + e.KeyCode.ToString());                   
-            HotKeys.KeyUpped(e.KeyCode);
-        }
-
-        private static void Program_KeyDown(object sender, KeyEventArgs e)
-        {
-            //Debug.WriteLine("Down:" + e.KeyCode.ToString());            
-            HotKeys.KeyDowned(e.KeyCode);
-        }
+        }    
     }
 }

@@ -30,6 +30,9 @@ namespace QuickPick.Logic
                 string settingsAsJson = JsonConvert.SerializeObject(settings, Formatting.Indented, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
 
                 File.WriteAllText(SettingsPath, settingsAsJson);
+
+                LoadAndApplySettings();
+
             }
             catch (Exception ex)
             {
@@ -51,10 +54,7 @@ namespace QuickPick.Logic
                     var SettingsAsJson = File.ReadAllText(SettingsPath);
                     QuickPickSettings settings = JsonConvert.DeserializeObject<QuickPickSettings>(SettingsAsJson);
                     QP.QuickPickModel.NrOfButtons = settings.NrOfMainButtons;
-                    QP.QuickPickModel.ShortCutsFolder = settings.ShortCutsFolder;
-
-
-               
+                    QP.QuickPickModel.ShortCutsFolder = settings.ShortCutsFolder;               
 
                     // Create mainButtons.
                     QP.QuickPickModel.MainButtons.Clear();

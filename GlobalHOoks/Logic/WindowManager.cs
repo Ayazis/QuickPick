@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Media.Animation;
+using System.Windows.Forms.Integration;
 
 namespace QuickPick
 {
@@ -46,9 +47,6 @@ namespace QuickPick
             FindResources();
             Hook.GlobalEvents().MouseDown += MouseDown;
         }
-
-
-
 
         private void FindResources()
         {
@@ -90,12 +88,12 @@ namespace QuickPick
         }
 
 
-
         private void MnuSettings_Click(object sender, EventArgs e)
         {
             try
             {
-                _settingsWindow = new SettingsWindow(QP); ;
+                _settingsWindow = new SettingsWindow(QP);
+
                 //SettingsWindow.WindowStyle = WindowStyle.None;
                 _settingsWindow.DataContext = QP.QuickPickModel;
 
@@ -119,32 +117,37 @@ namespace QuickPick
 
         private void MouseDown(object sender, MouseEventArgs e)
         {
-
             // Hide the window it user clicked outside of window.
-            if (e.Button != MouseButtons.XButton2)
+            if (QP.QuickPickModel.Hotkey == Enums.HotKey.XMouse1 && e.Button != MouseButtons.XButton1 ||
+                QP.QuickPickModel.Hotkey == Enums.HotKey.XMouse2 && e.Button != MouseButtons.XButton2)
             {
                 if (MouseIsOutsideWindow())
                 {
                     if (ClickWindow != null)
                     {
                         Hide.Begin(ClickWindow);
-                        //   Window.Visibility = System.Windows.Visibility.Hidden;Ä
+                        //   Window.Visibility = System.Windows.Visibility.Hidden;
                     }
                 }
                 return;
             }
 
-            try
+            else if (QP.QuickPickModel.Hotkey == Enums.HotKey.XMouse1 && e.Button == MouseButtons.XButton1 ||
+                     QP.QuickPickModel.Hotkey == Enums.HotKey.XMouse2 && e.Button == MouseButtons.XButton2)
             {
 
-                if (ClickWindow != null)
+                try
                 {
-                    ShowWindow();
+
+                    if (ClickWindow != null)
+                    {
+                        ShowWindow();
+                    }
                 }
-            }
-            catch (Exception ex)
-            {
-                Logger.Log(ex);
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
+                }
             }
         }
         private void CreateWindow()

@@ -9,7 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using WindowsInput;
 using FolderBrowserDialog = System.Windows.Forms.FolderBrowserDialog;
-
+using System.Windows.Forms.Integration;
 
 namespace QuickPick
 {
@@ -22,6 +22,7 @@ namespace QuickPick
         {
             this.QP = QP;
             InitializeComponent();
+            ElementHost.EnableModelessKeyboardInterop(this);
         }
 
         private void cmbClickAction_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
@@ -94,6 +95,21 @@ namespace QuickPick
         {
             var count = QP.QuickPickModel.MainButtons.Count;
             QP.QuickPickModel.MainButtons.RemoveAt(count - 1);
+        }
+
+        private void rdbXMouse1_Checked(object sender, RoutedEventArgs e)
+        {
+            QP.QuickPickModel.Hotkey = HotKey.XMouse1;
+        }
+
+        private void rdbXMouse2_Checked(object sender, RoutedEventArgs e)
+        {
+            QP.QuickPickModel.Hotkey = HotKey.XMouse2;
+        }
+
+        private void rdbKeys_Checked(object sender, RoutedEventArgs e)
+        {
+            QP.QuickPickModel.Hotkey = HotKey.KeyCombination;
         }
     }
 }

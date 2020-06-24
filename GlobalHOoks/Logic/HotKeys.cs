@@ -23,37 +23,18 @@ namespace QuickPick.Logic
             
         }
 
-        public  void KeyPress(object sender, KeyPressEventArgs e)
-        {
-            Task.Run(() => { Debug.WriteLine("Pressed:" + e.KeyChar.ToString()); });
-        }
-
-
-        public void KeyDown(object sender, KeyEventArgs e)
-        {
-            Debug.WriteLine("Down:" + e.KeyCode.ToString());
-            //Task.Run(() => { Debug.WriteLine("Down:" + e.KeyCode.ToString()); });
-           
-           // Task.Run(() => KeyDowned(e.KeyCode));         
-        }
-        public void KeyUp(object sender, KeyEventArgs e)
-        {
-           // Task.Run(() => { Debug.WriteLine("Up:" + e.KeyCode.ToString()); });
-
-            //Task.Run(() => KeyUpped(e.KeyCode));         
-        }
 
 
         public static void KeyDowned(Keys key)
         {
             try
             {
-                if (_qpm.PreDefinedHotKeys.Contains(key))
+                if (_qpm.Hotkey == Enums.HotKey.KeyCombination &&  _qpm.HotKeys.Contains(key))
                 {
                     PressedKeys.Add(key);
                    // Debug.WriteLine("Down:  " + key.ToString());
 
-                    if (PressedKeys.Count == _qpm.PreDefinedHotKeys.Count)
+                    if (PressedKeys.Count == _qpm.HotKeys.Count)
                         CheckHotKeyCombo();
                 }
             }
@@ -67,7 +48,7 @@ namespace QuickPick.Logic
         {
             try
             {
-                if (_qpm.PreDefinedHotKeys.Contains(key))
+                if (_qpm.Hotkey == Enums.HotKey.KeyCombination &&  _qpm.HotKeys.Contains(key))
                 {
                     PressedKeys.Remove(key);
                     Debug.WriteLine("Up: " + key.ToString());
@@ -87,7 +68,7 @@ namespace QuickPick.Logic
 
                 Debug.WriteLine("CHECKING");
                 var allPressed = true;
-                foreach (var key in _qpm.PreDefinedHotKeys)
+                foreach (var key in _qpm.HotKeys)
                 {
                     if (!PressedKeys.Contains(key))
                         allPressed = false;
@@ -104,8 +85,7 @@ namespace QuickPick.Logic
             {
                 Logger.Log(ex);
             }
-        }
-
+        }      
 
     }
 }
