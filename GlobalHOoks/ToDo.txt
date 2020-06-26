@@ -1,4 +1,8 @@
-﻿  - Replace fileLink to StringProperty when using TextToClipboard  
-  - Save Settings, Load Settings.
+﻿  
+  - Could it be run as Non-Admin?
+  - Create BugReport option
+  - Replace fileLink to StringProperty when using TextToClipboard    
   - Show Open windows  
   - Set custom hotkeys
+  - Fix COM object Shell casting (when creating shortcut icons)
+  

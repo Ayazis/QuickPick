@@ -111,5 +111,16 @@ namespace QuickPick
         {
             QP.QuickPickModel.Hotkey = HotKey.KeyCombination;
         }
+     
+        private void rdbOnCenter_Checked(object sender, RoutedEventArgs e)
+        {
+            QP.QuickPickModel.InstantShortCuts = false;
+
+        }
+
+        private void rdbInstant_Checked(object sender, RoutedEventArgs e)
+        {
+            QP.QuickPickModel.InstantShortCuts = true;
+        }
     }
 }

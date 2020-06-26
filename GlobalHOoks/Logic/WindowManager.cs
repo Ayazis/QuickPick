@@ -119,7 +119,8 @@ namespace QuickPick
         {
             // Hide the window it user clicked outside of window.
             if (QP.QuickPickModel.Hotkey == Enums.HotKey.XMouse1 && e.Button != MouseButtons.XButton1 ||
-                QP.QuickPickModel.Hotkey == Enums.HotKey.XMouse2 && e.Button != MouseButtons.XButton2)
+                QP.QuickPickModel.Hotkey == Enums.HotKey.XMouse2 && e.Button != MouseButtons.XButton2 ||
+                    QP.QuickPickModel.Hotkey == Enums.HotKey.KeyCombination)
             {
                 if (MouseIsOutsideWindow())
                 {
@@ -152,18 +153,22 @@ namespace QuickPick
         }
         private void CreateWindow()
         {
-            ClickWindow = new ClickWindow(QP);
-            QP.SaveLoadManager.LoadAndApplySettings();
-            //QP.ButtonManager.AddButtons();
-            //QP.ButtonManager.AddShortCuts();           
+            try
+            {
+                ClickWindow = new ClickWindow(QP);
+                QP.SaveLoadManager.LoadAndApplySettings();
 
-
-            ClickWindow.WindowStartupLocation = WindowStartupLocation.Manual;
-            ClickWindow.WindowStyle = WindowStyle.None;
-            ClickWindow.Topmost = true;
-            ClickWindow.Visibility = Visibility.Hidden;
-            ClickWindow.Show();
-            ClickWindow.Closed += Window_Closed;
+                ClickWindow.WindowStartupLocation = WindowStartupLocation.Manual;
+                ClickWindow.WindowStyle = WindowStyle.None;
+                ClickWindow.Topmost = true;
+                ClickWindow.Show();
+                ClickWindow.Visibility = Visibility.Hidden;
+                ClickWindow.Closed += Window_Closed;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
         }
 
         private void Window_Closed(object sender, EventArgs e)
@@ -195,6 +200,11 @@ namespace QuickPick
                     ClickWindow.Top = mousePosition.Y - (ClickWindow.ActualHeight / 2);
                     Show.Begin(ClickWindow);
                 });
+
+                if(QP.QuickPickModel.InstantShortCuts)
+                {
+                   ShowShortCuts();
+                }
 
             }
             catch (Exception ex)

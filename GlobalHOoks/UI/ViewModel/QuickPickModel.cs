@@ -19,7 +19,11 @@ namespace QuickPick
 {
     public class QuickPickModel : INotifyPropertyChanged
     {
-        public string Title = "QuickPick v.1.0alpha";
+        private string _Title = "QuickPick Settings                v.1.0alpha";
+        public string Title
+        {
+            get { return _Title; }
+        }
 
         private string _ShortCutsFolder = @"c:\shortcuts";
         public string ShortCutsFolder
@@ -34,13 +38,14 @@ namespace QuickPick
 
         public HotKey Hotkey { get; set; } = HotKey.KeyCombination;
 
+        public bool InstantShortCuts { get; set; } = true;
 
         #region Properties        
         private ObservableCollection<Keys> _HotKeys = new ObservableCollection<Keys> {
         Keys.LControlKey,
         Keys.LMenu,
         Keys.LShiftKey,
-        Keys.Q,      
+        Keys.Q,
         };
         public ObservableCollection<Keys> HotKeys
         {

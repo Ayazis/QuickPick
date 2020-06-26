@@ -34,7 +34,8 @@ namespace QuickPick.Logic
         {
             try
             {
-                MessageBox.Show(ex.ToString());
+
+                //MessageBox.Show(ex.ToString());
                 Log(ex.ToString());                
             }
             catch (Exception e)

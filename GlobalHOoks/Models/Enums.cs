@@ -22,4 +22,7 @@ namespace QuickPick.Enums
         XMouse1,
         XMouse2
     }
+
+
+
 }
