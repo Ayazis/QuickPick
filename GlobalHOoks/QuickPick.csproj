@@ -49,7 +49,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject />
+    <StartupObject>QuickPick.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
@@ -87,7 +87,7 @@
     <SignManifests>true</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>qp_icon.ico</ApplicationIcon>
+    <ApplicationIcon>SRC\qp_icon.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <NoWin32Manifest>true</NoWin32Manifest>
@@ -120,61 +120,64 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="KeyHook.cs" />
-    <Compile Include="Logic\HotKeys.cs" />
-    <Compile Include="Logic\SaveLoadManager.cs" />
-    <Compile Include="Logic\ShortCutHandler.cs" />
-    <Compile Include="Models\QuickPick.cs" />
-    <Compile Include="Models\QuickPickSettings.cs" />
-    <Compile Include="Models\ShortCut.cs" />
-    <Compile Include="UI\Converters\CenterToMarginConverter.cs" />
-    <Compile Include="Models\Enums.cs" />
-    <Compile Include="Models\QpButton.cs" />
-    <Compile Include="Logic\ButtonManager.cs" />
-    <Compile Include="Logic\InputSim.cs" />
-    <Compile Include="Logic\ClickActions.cs" />
-    <Compile Include="Logic\Logger.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="SRC\KeyHook.cs" />
+    <Compile Include="SRC\Logic\HotKeys.cs" />
+    <Compile Include="SRC\Logic\SaveLoadManager.cs" />
+    <Compile Include="SRC\Logic\ShortCutHandler.cs" />
+    <Compile Include="SRC\Models\QuickPick.cs" />
+    <Compile Include="SRC\Models\QuickPickSettings.cs" />
+    <Compile Include="SRC\Models\ShortCut.cs" />
+    <Compile Include="SRC\Converters\CenterToMarginConverter.cs" />
+    <Compile Include="SRC\Models\Enums.cs" />
+    <Compile Include="SRC\Models\QpButton.cs" />
+    <Compile Include="SRC\Logic\ButtonManager.cs" />
+    <Compile Include="SRC\Logic\InputSim.cs" />
+    <Compile Include="SRC\Logic\ClickActions.cs" />
+    <Compile Include="SRC\Logic\Logger.cs" />
+    <Compile Include="SRC\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UI\Views\SettingsWindow.xaml.cs">
+    <Compile Include="SRC\Views\SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\Views\ClickWindow.xaml.cs">
+    <Compile Include="SRC\Views\ClickWindow.xaml.cs">
       <DependentUpon>ClickWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\ViewModel\QuickPickModel.cs" />
-    <Compile Include="Logic\WindowManager.cs" />
+    <Compile Include="SRC\ViewModel\QuickPickModel.cs" />
+    <Compile Include="SRC\Logic\WindowManager.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-    <None Include="packages.config" />
+    <None Include="SRC\App.config" />
+    <None Include="SRC\packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="UI\Views\SettingsWindow.xaml">
+    <Page Include="SRC\Views\SettingsWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="UI\Views\ClickWindow.xaml">
+    <Page Include="SRC\Views\ClickWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Files\QP_Icon.png">
+    <Content Include="Readme.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Files\QP_Icon_32px.png">
+    <Content Include="SRC\Files\QP_Icon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Files\Snip.png">
+    <Content Include="SRC\Files\QP_Icon_32px.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Files\ssms.ico">
+    <Content Include="SRC\Files\Snip.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="qp_icon.ico" />
-    <Content Include="Snip.png" />
-    <Content Include="ToDo.txt" />
+    <Content Include="SRC\Files\ssms.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SRC\qp_icon.ico" />
+    <Content Include="SRC\Snip.png" />
+    <Content Include="SRC\ToDo.txt" />
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="IWshRuntimeLibrary">

@@ -79,7 +79,7 @@ namespace QuickPick
         private Icon CreateIcon()
         {
             var currentPath = AppDomain.CurrentDomain.BaseDirectory;
-            var IconPath = $@"{currentPath}Files\QP_Icon_32px.png";
+            var IconPath = $@"{currentPath}\SRC\Files\QP_Icon_32px.png";
 
             var bitmap = new Bitmap(IconPath);
             var iconHandle = bitmap.GetHicon();

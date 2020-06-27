@@ -15,8 +15,7 @@ using WindowsInput.Native;
 namespace QuickPick.Logic
 {
     public class ClickActions
-    {
-        public const string FILES_FOLDER = @"C:\Users\FG\source\repos\GlobalHooks\GlobalHOoks\Content\Files\";
+    {       
 
         public Models.QuickPick QP { get; set; }    
 
@@ -49,8 +48,8 @@ namespace QuickPick.Logic
                 InputSim.CtrlN();
                 InputSim.Paste();
 
-                if(!text.ToUpper().Contains("INSERT"))
-                    InputSim.F5();
+                //if(!text.ToUpper().Contains("INSERT"))
+                //    InputSim.F5();
 
                 QP.WindowManager.Hide.Begin(QP.WindowManager.ClickWindow);
             }

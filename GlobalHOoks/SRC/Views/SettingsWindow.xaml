@@ -94,7 +94,7 @@
             </StackPanel>
 
             <TextBlock Margin="10,10,0,0" Text="Show shortcuts :"/>
-            <RadioButton Margin="10,0,0,0" GroupName="ShowShortcuts" Content="Istantly" Name="rdbInstant" IsEnabled="True" Checked="rdbInstant_Checked" />
+            <RadioButton Margin="10,0,0,0" GroupName="ShowShortcuts" Content="Istantly" Name="rdbInstant" Checked="rdbInstant_Checked" IsChecked="True"/>
             <RadioButton Margin="10,0,0,0" GroupName="ShowShortcuts" Content="On center click" Name="rdbOnCenter" Checked="rdbOnCenter_Checked" />
 
 
