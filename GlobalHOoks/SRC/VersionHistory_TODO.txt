@@ -1,0 +1,16 @@
+﻿  - Fix critical erros on qpbuttons.
+  
+  - Create BugReport option
+  - Replace fileLink to StringProperty when using TextToClipboard    
+  - Show Open windows  
+  - Set custom hotkeys
+  - Fix COM object Shell casting (when creating shortcut icons)
+  
+
+
+  History
+  v1.1alpha
+  - Fix bug where DPI scaling made the UI show up in the wrong place.
+
+  v1.0
+  - first alpha stage test release

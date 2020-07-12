@@ -7,10 +7,10 @@ using System.Windows.Forms;
 
 namespace QuickPick
 {
-    class Program
+    public class Program
     {
         // Must have a variable to Keep the program running.
-        private static Models.QuickPick _QP;
+        public static Models.QuickPick _QP;
 
         [STAThread]
         static void Main(string[] args)
@@ -18,7 +18,6 @@ namespace QuickPick
             try
             {
                 KeyHook._hookID = KeyHook.SetHook(KeyHook._proc);
-
 
                 Logger.Log("Started at " + DateTime.Now.ToString());            
 
@@ -32,20 +31,6 @@ namespace QuickPick
             {
                 Logger.Log(ex);
             }
-
-
-        }
-
-        private static void Program_KeyUp(object sender, KeyEventArgs e)
-        {
-            //Debug.WriteLine("Up:" + e.KeyCode.ToString());                   
-            HotKeys.KeyUpped(e.KeyCode);
-        }
-
-        private static void Program_KeyDown(object sender, KeyEventArgs e)
-        {
-            //Debug.WriteLine("Down:" + e.KeyCode.ToString());            
-            HotKeys.KeyDowned(e.KeyCode);
-        }
+        }    
     }
 }

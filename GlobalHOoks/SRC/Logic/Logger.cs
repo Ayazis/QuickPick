@@ -26,7 +26,10 @@ namespace QuickPick.Logic
             }
             catch (Exception ex)
             {
+#if DEBUG
                 MessageBox.Show(ex.InnerException.ToString());
+
+#endif
             }
         }
 
@@ -34,15 +37,13 @@ namespace QuickPick.Logic
         {
             try
             {
-                CreateDirectory();
-                SetDutchCulture();
-                var dateNow = DateTime.Now.ToShortDateString();
 
-                File.AppendAllText($@"{logPath}QpLog{dateNow}.txt", ex.ToString());
+                //MessageBox.Show(ex.ToString());
+                Log(ex.ToString());                
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.InnerException.ToString());
+                
 
             }
 

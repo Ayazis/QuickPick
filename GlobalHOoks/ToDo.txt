@@ -1,4 +1,0 @@
-﻿  - Replace fileLink to StringProperty when using TextToClipboard  
-  - Save Settings, Load Settings.
-  - Show Open windows  
-  - Set custom hotkeys

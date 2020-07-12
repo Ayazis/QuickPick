@@ -13,12 +13,17 @@ using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
 using Point = System.Windows.Point;
+using System.Linq;
 
 namespace QuickPick
 {
     public class QuickPickModel : INotifyPropertyChanged
     {
-        public string Title = "QuickPick v.1.0alpha";
+        private string _Title = "QuickPick Settings                v.1.1alpha";
+        public string Title
+        {
+            get { return _Title; }
+        }
 
         private string _ShortCutsFolder = @"c:\shortcuts";
         public string ShortCutsFolder
@@ -31,22 +36,24 @@ namespace QuickPick
             }
         }
 
-        #region Properties
+        public HotKey Hotkey { get; set; } = HotKey.KeyCombination;
 
+        public bool InstantShortCuts { get; set; } = true;
 
-        private ObservableCollection<Keys> _PreDefinedHotKeys = new ObservableCollection<Keys> {
+        #region Properties        
+        private ObservableCollection<Keys> _HotKeys = new ObservableCollection<Keys> {
         Keys.LControlKey,
-        Keys.LShiftKey,     
+        Keys.LMenu,
+        Keys.LShiftKey,
         Keys.Q,
-        Keys.P
         };
-        public ObservableCollection<Keys> PreDefinedHotKeys
+        public ObservableCollection<Keys> HotKeys
         {
-            get { return _PreDefinedHotKeys; }
+            get { return _HotKeys; }
             set
             {
-                _PreDefinedHotKeys = value;
-                NotifyPropertyChanged(nameof(PreDefinedHotKeys));
+                _HotKeys = value;
+                NotifyPropertyChanged(nameof(HotKeys));
             }
         }
 

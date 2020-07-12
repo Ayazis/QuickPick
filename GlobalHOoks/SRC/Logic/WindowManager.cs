@@ -47,9 +47,6 @@ namespace QuickPick
             Hook.GlobalEvents().MouseDown += MouseDown;
         }
 
-
-
-
         private void FindResources()
         {
             this.Hide = ClickWindow.TryFindResource("hideMe") as Storyboard;
@@ -81,7 +78,7 @@ namespace QuickPick
         private Icon CreateIcon()
         {
             var currentPath = AppDomain.CurrentDomain.BaseDirectory;
-            var IconPath = $@"{currentPath}Files\QP_Icon_32px.png";
+            var IconPath = $@"{currentPath}\SRC\Files\QP_Icon_32px.png";
 
             var bitmap = new Bitmap(IconPath);
             var iconHandle = bitmap.GetHicon();
@@ -90,12 +87,12 @@ namespace QuickPick
         }
 
 
-
         private void MnuSettings_Click(object sender, EventArgs e)
         {
             try
             {
-                _settingsWindow = new SettingsWindow(QP); ;
+                _settingsWindow = new SettingsWindow(QP);
+
                 //SettingsWindow.WindowStyle = WindowStyle.None;
                 _settingsWindow.DataContext = QP.QuickPickModel;
 
@@ -119,48 +116,58 @@ namespace QuickPick
 
         private void MouseDown(object sender, MouseEventArgs e)
         {
-
             // Hide the window it user clicked outside of window.
-            if (e.Button != MouseButtons.XButton2)
+            if (QP.QuickPickModel.Hotkey == Enums.HotKey.XMouse1 && e.Button != MouseButtons.XButton1 ||
+                QP.QuickPickModel.Hotkey == Enums.HotKey.XMouse2 && e.Button != MouseButtons.XButton2 ||
+                    QP.QuickPickModel.Hotkey == Enums.HotKey.KeyCombination)
             {
                 if (MouseIsOutsideWindow())
                 {
                     if (ClickWindow != null)
                     {
                         Hide.Begin(ClickWindow);
-                        //   Window.Visibility = System.Windows.Visibility.Hidden;Ä
+                        //   Window.Visibility = System.Windows.Visibility.Hidden;
                     }
                 }
                 return;
             }
 
-            try
+            else if (QP.QuickPickModel.Hotkey == Enums.HotKey.XMouse1 && e.Button == MouseButtons.XButton1 ||
+                     QP.QuickPickModel.Hotkey == Enums.HotKey.XMouse2 && e.Button == MouseButtons.XButton2)
             {
 
-                if (ClickWindow != null)
+                try
                 {
-                    ShowWindow();
+
+                    if (ClickWindow != null)
+                    {
+                        ShowWindow();
+                    }
                 }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
+                }
+            }
+        }
+        private void CreateWindow()
+        {
+            try
+            {
+                ClickWindow = new ClickWindow(QP);
+                QP.SaveLoadManager.LoadAndApplySettings();
+
+                ClickWindow.WindowStartupLocation = WindowStartupLocation.Manual;
+                ClickWindow.WindowStyle = WindowStyle.None;
+                ClickWindow.Topmost = true;
+                ClickWindow.Show();
+                ClickWindow.Visibility = Visibility.Hidden;
+                ClickWindow.Closed += Window_Closed;
             }
             catch (Exception ex)
             {
                 Logger.Log(ex);
             }
-        }
-        private void CreateWindow()
-        {
-            ClickWindow = new ClickWindow(QP);
-            QP.SaveLoadManager.LoadAndApplySettings();
-            //QP.ButtonManager.AddButtons();
-            //QP.ButtonManager.AddShortCuts();           
-
-
-            ClickWindow.WindowStartupLocation = WindowStartupLocation.Manual;
-            ClickWindow.WindowStyle = WindowStyle.None;
-            ClickWindow.Topmost = true;
-            ClickWindow.Visibility = Visibility.Hidden;
-            ClickWindow.Show();
-            ClickWindow.Closed += Window_Closed;
         }
 
         private void Window_Closed(object sender, EventArgs e)
@@ -193,6 +200,11 @@ namespace QuickPick
                     Show.Begin(ClickWindow);
                 });
 
+                if(QP.QuickPickModel.InstantShortCuts)
+                {
+                   ShowShortCuts();
+                }
+
             }
             catch (Exception ex)
             {
@@ -202,8 +214,7 @@ namespace QuickPick
 
         private System.Windows.Point GetMousePosition()
         {
-            System.Drawing.Point point = Control.MousePosition;
-            return new System.Windows.Point(point.X, point.Y);
+            return MousePosition.GetCursorPosition();      
         }
 
         public void ReActivateFormerWindow()

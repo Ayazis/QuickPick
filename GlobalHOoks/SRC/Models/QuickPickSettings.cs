@@ -15,6 +15,7 @@ namespace QuickPick.Models
             NrOfMainButtons = qpm.NrOfButtons;
             ShortCutsFolder = qpm.ShortCutsFolder;
             MainButtons = qpm.MainButtons;
+            InstantShortcuts = qpm.InstantShortCuts;
         }
 
         public QuickPickSettings()
@@ -22,7 +23,7 @@ namespace QuickPick.Models
 
         }
 
-
+        public bool InstantShortcuts { get; set; }
         public int NrOfMainButtons { get; set; }
         public string ShortCutsFolder { get; set; }
         public ObservableCollection<QpButton> MainButtons{ get; set; }

@@ -14,8 +14,8 @@ namespace QuickPick.Logic
         public Models.QuickPick QP { get; set; }
         public SaveLoadManager(Models.QuickPick qp)
         {
-            this.QP = qp;
-            this.SettingsPath = AppDomain.CurrentDomain.BaseDirectory + @"Settings.json";
+             QP = qp;
+             SettingsPath = AppDomain.CurrentDomain.BaseDirectory + @"QuickPickSettings.json";
         }
 
 
@@ -30,6 +30,9 @@ namespace QuickPick.Logic
                 string settingsAsJson = JsonConvert.SerializeObject(settings, Formatting.Indented, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
 
                 File.WriteAllText(SettingsPath, settingsAsJson);
+
+            
+
             }
             catch (Exception ex)
             {
@@ -42,6 +45,7 @@ namespace QuickPick.Logic
             try
             {
                 // Clear the canvas
+                QP.QuickPickModel.MainButtons.Clear();
                 QP.ButtonManager.ClearCanvas();
                 QP.ButtonManager.AddCentralButton();
 
@@ -52,24 +56,15 @@ namespace QuickPick.Logic
                     QuickPickSettings settings = JsonConvert.DeserializeObject<QuickPickSettings>(SettingsAsJson);
                     QP.QuickPickModel.NrOfButtons = settings.NrOfMainButtons;
                     QP.QuickPickModel.ShortCutsFolder = settings.ShortCutsFolder;
+                    QP.QuickPickModel.InstantShortCuts = settings.InstantShortcuts;
 
-
-               
-
-                    // Create mainButtons.
-                    QP.QuickPickModel.MainButtons.Clear();
+                    // Create mainButtons.                
                     foreach (var button in settings.MainButtons)
                     {
                         QP.ButtonManager.ConfigureButton(button);
                         QP.QuickPickModel.MainButtons.Add(button);
-                    }
-
-                    // Get Shortcuts from saved folderLocation.
-                    QP.QuickPickModel.ShortCuts.Clear();
-                    ShortCutHandler.GetShortCuts(QP.QuickPickModel);
-                    QP.ButtonManager.AddShortCuts();                 
+                    }                      
                     
-
                 }
                 else
                 {
@@ -83,6 +78,13 @@ namespace QuickPick.Logic
                 }
 
                 QP.ButtonManager.PlaceButtonsOnCanvas();
+
+                // Get Shortcuts from saved folderLocation.
+                QP.QuickPickModel.ShortCuts.Clear();
+                ShortCutHandler.GetShortCuts(QP.QuickPickModel);
+                QP.ButtonManager.AddShortCuts();
+                
+
             }
             catch (Exception ex)
             {

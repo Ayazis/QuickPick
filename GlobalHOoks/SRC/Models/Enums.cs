@@ -15,4 +15,14 @@ namespace QuickPick.Enums
         [Display(Name = "Close QuickPick")]
         ExitQuickPick
     }
+
+    public enum HotKey
+    {
+        KeyCombination,
+        XMouse1,
+        XMouse2
+    }
+
+
+
 }
