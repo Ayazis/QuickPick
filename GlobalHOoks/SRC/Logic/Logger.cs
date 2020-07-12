@@ -26,7 +26,10 @@ namespace QuickPick.Logic
             }
             catch (Exception ex)
             {
+#if DEBUG
                 MessageBox.Show(ex.InnerException.ToString());
+
+#endif
             }
         }
 

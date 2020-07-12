@@ -122,6 +122,7 @@
   <ItemGroup>
     <Compile Include="SRC\KeyHook.cs" />
     <Compile Include="SRC\Logic\HotKeys.cs" />
+    <Compile Include="SRC\Logic\MousePosition.cs" />
     <Compile Include="SRC\Logic\SaveLoadManager.cs" />
     <Compile Include="SRC\Logic\ShortCutHandler.cs" />
     <Compile Include="SRC\Models\QuickPick.cs" />
@@ -177,7 +178,7 @@
     </Content>
     <Content Include="SRC\qp_icon.ico" />
     <Content Include="SRC\Snip.png" />
-    <Content Include="SRC\ToDo.txt" />
+    <Content Include="SRC\VersionHistory_TODO.txt" />
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="IWshRuntimeLibrary">

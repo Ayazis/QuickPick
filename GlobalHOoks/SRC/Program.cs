@@ -7,10 +7,10 @@ using System.Windows.Forms;
 
 namespace QuickPick
 {
-    class Program
+    public class Program
     {
         // Must have a variable to Keep the program running.
-        private static Models.QuickPick _QP;
+        public static Models.QuickPick _QP;
 
         [STAThread]
         static void Main(string[] args)

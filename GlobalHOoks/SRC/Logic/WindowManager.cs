@@ -12,7 +12,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Media.Animation;
-using System.Windows.Forms.Integration;
 
 namespace QuickPick
 {
@@ -215,8 +214,7 @@ namespace QuickPick
 
         private System.Windows.Point GetMousePosition()
         {
-            System.Drawing.Point point = Control.MousePosition;
-            return new System.Windows.Point(point.X, point.Y);
+            return MousePosition.GetCursorPosition();      
         }
 
         public void ReActivateFormerWindow()

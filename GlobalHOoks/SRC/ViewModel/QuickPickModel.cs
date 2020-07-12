@@ -19,7 +19,7 @@ namespace QuickPick
 {
     public class QuickPickModel : INotifyPropertyChanged
     {
-        private string _Title = "QuickPick Settings                v.1.0alpha";
+        private string _Title = "QuickPick Settings                v.1.1alpha";
         public string Title
         {
             get { return _Title; }
