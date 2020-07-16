@@ -17,8 +17,17 @@
     </Window.Resources>
 
     <Grid  Margin="25">
-        <StackPanel>
-            <TextBlock Text="QuickPick in still in development phase. Expect bugs. Everywhere."  Foreground="DarkRed"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="317*"/>
+            <ColumnDefinition Width="28*"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.ColumnSpan="2">
+            <TextBlock  FontStyle="Italic"
+                        FontSize="10" 
+                        Text="QuickPick in still in development phase. Bugs are to be expected." 
+                        Foreground="DarkRed"
+                        HorizontalAlignment="Center"
+                        />
             <StackPanel Orientation="Horizontal">
                 <Button x:Name="btnRemoveButton" Content="-" Click="btnRemoveButton_Click" Width="30" Margin="10" Visibility="Collapsed"/>
                 <Button x:Name="btnAddButton" Content="+" Click="btnAddButton_Click" Width="30" Margin="10" Visibility="Collapsed"/>
@@ -85,7 +94,8 @@
                 <TextBox Margin="10,0,0,0" Name="tbShortCutsFolder" IsEnabled="true" IsReadOnly="false" Padding="4"                             
                      Text="{Binding ShortCutsFolder, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MinWidth="150"/>
                 <Button Name="btnBrowseFolder" Content="Browse.." Click="btnBrowseFolder_Click" HorizontalAlignment="Right" Width="50" Height="25"/>
-            </StackPanel>      
+
+            </StackPanel>
             <StackPanel>
                 <TextBlock Margin="10,10,0,0" Text="Show QuickPick on:" ></TextBlock>
                 <RadioButton GroupName="hotkey" Name="rdbXMouse1" Content="X-Mouse1" Margin="10,0,0,0"  Checked="rdbXMouse1_Checked" />
@@ -97,12 +107,12 @@
             <RadioButton Margin="10,0,0,0" GroupName="ShowShortcuts" Content="Istantly" Name="rdbInstant" Checked="rdbInstant_Checked" IsChecked="True"/>
             <RadioButton Margin="10,0,0,0" GroupName="ShowShortcuts" Content="On center click" Name="rdbOnCenter" Checked="rdbOnCenter_Checked" />
 
-
             <Button x:Name="btnExport" 
-                    Margin="25"
+                    Margin="25,25,25,0"
                 Content="Save" 
                 Click="btnExport_Click" 
                 Width="100"/>
+            <Button Name="btnLoadSettings"   Margin="10" Content="Load" Click="btnLoadSettings_Click" Width="100"/>
         </StackPanel>
     </Grid>
 </Window>

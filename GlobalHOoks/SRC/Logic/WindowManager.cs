@@ -155,7 +155,7 @@ namespace QuickPick
             try
             {
                 ClickWindow = new ClickWindow(QP);
-                QP.SaveLoadManager.LoadAndApplySettings();
+                QP.SaveLoadManager.LoadSettingsFile();
 
                 ClickWindow.WindowStartupLocation = WindowStartupLocation.Manual;
                 ClickWindow.WindowStyle = WindowStyle.None;

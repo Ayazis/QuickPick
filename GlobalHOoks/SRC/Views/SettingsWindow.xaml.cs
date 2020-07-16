@@ -10,6 +10,7 @@ using System.Windows.Input;
 using WindowsInput;
 using FolderBrowserDialog = System.Windows.Forms.FolderBrowserDialog;
 using System.Windows.Forms.Integration;
+using Newtonsoft.Json;
 
 namespace QuickPick
 {
@@ -66,13 +67,13 @@ namespace QuickPick
         private void btnExport_Click(object sender, RoutedEventArgs e)
         {          
             QP.SaveLoadManager.SaveSettingsToDisk();
-            QP.SaveLoadManager.LoadAndApplySettings();
+            QP.SaveLoadManager.LoadSettingsFile();
 
 
         }
         private void btnLoad_Click(object sender, RoutedEventArgs e)
         {
-            QP.SaveLoadManager.LoadAndApplySettings();
+            QP.SaveLoadManager.LoadSettingsFile();
         }
 
         private void btnBrowseFolder_Click(object sender, RoutedEventArgs e)
@@ -121,6 +122,21 @@ namespace QuickPick
         private void rdbInstant_Checked(object sender, RoutedEventArgs e)
         {
             QP.QuickPickModel.InstantShortCuts = true;
+        }
+
+        private void btnLoadSettings_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog fileDialog = new OpenFileDialog
+            {
+                Title = "Select Settings File",
+                InitialDirectory = @"C:\",
+                Filter = "QuickPick settings (*.json) | *.json"
+            };
+            if (fileDialog.ShowDialog() == true)
+            {
+                var filePath = fileDialog.FileName;
+                QP.SaveLoadManager.LoadSettingsFile(filePath);
+            }
         }
     }
 }
