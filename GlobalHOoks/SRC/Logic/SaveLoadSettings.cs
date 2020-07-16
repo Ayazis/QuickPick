@@ -7,17 +7,15 @@ using System.IO;
 
 namespace QuickPick.Logic
 {
-    public class SaveLoadManager
+    public class SaveLoadSettings
     {
-        public string SettingsPath { get; set; }
+        public string SettingsPath { get; set; } = @"C:\Temp\QuickPickSettings.json";
 
         public Models.QuickPick QP { get; set; }
-        public SaveLoadManager(Models.QuickPick qp)
+        public SaveLoadSettings(Models.QuickPick qp)
         {
-             QP = qp;
-             SettingsPath = AppDomain.CurrentDomain.BaseDirectory + @"QuickPickSettings.json";
+             QP = qp;             
         }
-
 
         public void SaveSettingsToDisk()
         {
@@ -29,14 +27,11 @@ namespace QuickPick.Logic
                 var settings = new QuickPickSettings(QP.QuickPickModel);
                 string settingsAsJson = JsonConvert.SerializeObject(settings, Formatting.Indented, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
 
-                File.WriteAllText(SettingsPath, settingsAsJson);
-
-            
-
+                File.WriteAllText(SettingsPath, settingsAsJson);           
             }
             catch (Exception ex)
             {
-                Logger.Log(ex);
+                Logs.Logger.Log(ex);
             }
         }
 
@@ -88,7 +83,7 @@ namespace QuickPick.Logic
             }
             catch (Exception ex)
             {
-                Logger.Log(ex);
+                Logs.Logger.Log(ex);
             }
         }
     }

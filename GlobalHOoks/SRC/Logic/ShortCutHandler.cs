@@ -20,12 +20,16 @@ namespace QuickPick.Logic
 
             foreach (var file in files)
             {
-                var icon = GetIcon(file);
-                var targetpath = GetTargetPath(file);
+                var targetPath = GetTargetPath(file);
+                var icon = GetIcon(targetPath) ?? GetIcon(file);           
 
-                if (!string.IsNullOrWhiteSpace(targetpath) && icon != null)
+                if (!string.IsNullOrWhiteSpace(targetPath) && icon != null)
                 {
-                    qpm.ShortCuts.Add(new ShortCut { Icon = icon, TargetPath = targetpath });
+                    qpm.ShortCuts.Add(new ShortCut { Icon = icon, TargetPath = targetPath });
+                }
+                else
+                {
+
                 }
 
             }
@@ -38,18 +42,23 @@ namespace QuickPick.Logic
             {
                 if (System.IO.File.Exists(path))
                 {
-                    // WshShellClass shell = new WshShellClass();
-                    WshShell shell = new WshShell(); //Create a new WshShell Interface
-                    IWshShortcut link = (IWshShortcut)shell.CreateShortcut(path); //Link the interface to our shortcut
+                    string targetPath = null;
 
-                    return link.TargetPath;
+                    WshShell shell = new WshShell();
+
+                    dynamic newShortCut = shell.CreateShortcut(path);
+
+                    // Both IwshShortCut and IwshURlShortCut have the TargetPath Property.
+                    targetPath = newShortCut.TargetPath;                   
+                    
+                    return targetPath;                   
                 }
 
                 return null;
             }
             catch (Exception ex)
             {
-                Logger.Log(ex);
+                Logs.Logger.Log(ex);
                 return null;
             }
 
@@ -57,25 +66,10 @@ namespace QuickPick.Logic
 
         public static Icon GetIcon(string path)
         {
-            Icon icon = null;
-            try
-            {
-                if (System.IO.File.Exists(path))
-                {
-                    //Create a new WshShell Interface
-                    WshShell shell = new WshShell();
-                    //Link the interface to our shortcut
-                    IWshShortcut link = (IWshShortcut)shell.CreateShortcut(path);
-                    if (string.Empty != link.TargetPath)
-                        icon = Icon.ExtractAssociatedIcon(link.TargetPath);
-                }
+            if (string.IsNullOrWhiteSpace(path))
+                return null;
 
-                return icon;
-            }
-            catch (Exception)
-            {
-                return icon;
-            }
+            return Icon.ExtractAssociatedIcon(path);            
         }
     }
 }

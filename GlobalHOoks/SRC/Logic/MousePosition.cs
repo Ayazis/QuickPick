@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using System.Windows; // Or use whatever point class you like for the implicit cast operator
+using System.Windows; 
 using Graphics = System.Drawing.Graphics;
 
 namespace QuickPick.Logic
@@ -21,8 +21,6 @@ namespace QuickPick.Logic
                 return new Point(point.X, point.Y);
             }
         }
-
-
         public static Point GetCursorPosition()
         {
             POINT lpPoint;

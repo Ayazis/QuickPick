@@ -109,7 +109,7 @@ namespace QuickPick
             }
             catch (Exception ex)
             {
-                Logger.Log(ex);
+                Logs.Logger.Log(ex);
             }
         }
 
@@ -146,7 +146,7 @@ namespace QuickPick
                 }
                 catch (Exception ex)
                 {
-                    Logger.Log(ex);
+                    Logs.Logger.Log(ex);
                 }
             }
         }
@@ -166,7 +166,7 @@ namespace QuickPick
             }
             catch (Exception ex)
             {
-                Logger.Log(ex);
+                Logs.Logger.Log(ex);
             }
         }
 
@@ -208,7 +208,7 @@ namespace QuickPick
             }
             catch (Exception ex)
             {
-                Logger.Log(ex);
+                Logs.Logger.Log(ex);
             }
         }
 
@@ -239,7 +239,7 @@ namespace QuickPick
             }
             catch (Exception ex)
             {
-                Logger.Log(ex);
+                Logs.Logger.Log(ex);
             }
         }
 

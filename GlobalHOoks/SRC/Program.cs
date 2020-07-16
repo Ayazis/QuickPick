@@ -4,6 +4,8 @@ using Gma.System.MouseKeyHook;
 using System;
 using System.Diagnostics;
 using System.Windows.Forms;
+using System.Linq;
+
 
 namespace QuickPick
 {
@@ -14,12 +16,12 @@ namespace QuickPick
 
         [STAThread]
         static void Main(string[] args)
-        {
+        {          
             try
             {
                 KeyHook._hookID = KeyHook.SetHook(KeyHook._proc);
 
-                Logger.Log("Started at " + DateTime.Now.ToString());            
+                //Logs.Logger.Log("Started at " + DateTime.Now.ToString());            
 
                 _QP = new Models.QuickPick();
 
@@ -29,7 +31,7 @@ namespace QuickPick
             }
             catch (Exception ex)
             {
-                Logger.Log(ex);
+                Logs.Logger.Log(ex);              
             }
         }    
     }

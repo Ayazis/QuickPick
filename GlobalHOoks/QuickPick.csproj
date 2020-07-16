@@ -87,8 +87,9 @@
     <SignManifests>true</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>SRC\qp_icon.ico</ApplicationIcon>
+    <ApplicationIcon>qp_icon.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup />
   <PropertyGroup>
     <NoWin32Manifest>true</NoWin32Manifest>
   </PropertyGroup>
@@ -121,20 +122,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="SRC\KeyHook.cs" />
+    <Compile Include="SRC\Logic\ActiveApps.cs" />
     <Compile Include="SRC\Logic\HotKeys.cs" />
     <Compile Include="SRC\Logic\MousePosition.cs" />
-    <Compile Include="SRC\Logic\SaveLoadManager.cs" />
+    <Compile Include="SRC\Logic\SaveLoadSettings.cs" />
     <Compile Include="SRC\Logic\ShortCutHandler.cs" />
     <Compile Include="SRC\Models\QuickPick.cs" />
     <Compile Include="SRC\Models\QuickPickSettings.cs" />
     <Compile Include="SRC\Models\ShortCut.cs" />
-    <Compile Include="SRC\Converters\CenterToMarginConverter.cs" />
+    <Compile Include="SRC\Views\Converters\CenterToMarginConverter.cs" />
     <Compile Include="SRC\Models\Enums.cs" />
     <Compile Include="SRC\Models\QpButton.cs" />
     <Compile Include="SRC\Logic\ButtonManager.cs" />
     <Compile Include="SRC\Logic\InputSim.cs" />
-    <Compile Include="SRC\Logic\ClickActions.cs" />
-    <Compile Include="SRC\Logic\Logger.cs" />
+    <Compile Include="SRC\Logic\ButtonActions.cs" />
+    <Compile Include="SRC\Logic\Logs.cs" />
     <Compile Include="SRC\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SRC\Views\SettingsWindow.xaml.cs">
@@ -161,6 +163,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="qp_icon.ico" />
     <Content Include="Readme.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -176,8 +179,6 @@
     <Content Include="SRC\Files\ssms.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SRC\qp_icon.ico" />
-    <Content Include="SRC\Snip.png" />
     <Content Include="SRC\VersionHistory_TODO.txt" />
   </ItemGroup>
   <ItemGroup>

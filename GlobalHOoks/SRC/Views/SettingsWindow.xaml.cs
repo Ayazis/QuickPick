@@ -42,7 +42,7 @@ namespace QuickPick
             }
             catch (Exception ex)
             {
-                Logger.Log(ex);
+                Logs.Logger.Log(ex);
             }
         }
 

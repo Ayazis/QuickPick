@@ -1,10 +1,16 @@
-﻿  - Fix critical erros on qpbuttons.
+﻿ FEATURES: 
+ - Create BugReport option
+ - Create Auto Update Feature.
+ - Show Open windows/ applications
   
-  - Create BugReport option
+  BUGS
+  - Fix critical erros on qpbuttons.
+  - Fix ThisPC.lnk and LastPass.lnk not working
+
+  UPDATES
   - Replace fileLink to StringProperty when using TextToClipboard    
-  - Show Open windows  
-  - Set custom hotkeys
-  - Fix COM object Shell casting (when creating shortcut icons)
+
+
   
 
 
@@ -13,4 +19,4 @@
   - Fix bug where DPI scaling made the UI show up in the wrong place.
 
   v1.0
-  - first alpha stage test release
+  - First alpha stage test release

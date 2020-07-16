@@ -13,20 +13,19 @@ namespace QuickPick.Models
     {
         public QuickPickModel QuickPickModel { get; set; }
         public ButtonManager ButtonManager { get; set; }
-        public ClickActions ClickActions { get; set; }
+        public ButtonActions ClickActions { get; set; }
         public HotKeys HotKeys { get; set; }        
-        public SaveLoadManager SaveLoadManager { get; set; }        
+        public SaveLoadSettings SaveLoadManager { get; set; }        
         public WindowManager WindowManager{ get; set; }
 
         public QuickPick()
         {          
-
             QuickPickModel = new QuickPickModel();
             ButtonManager = new ButtonManager(this);         
             WindowManager = new WindowManager(this);
             HotKeys = new HotKeys(this);
-            SaveLoadManager = new SaveLoadManager(this);
-            ClickActions = new ClickActions(this);
+            SaveLoadManager = new SaveLoadSettings(this);
+            ClickActions = new ButtonActions(this);
 
             WindowManager.Start();
         
