@@ -14,20 +14,19 @@ using WindowsInput.Native;
 
 namespace QuickPick.Logic
 {
-    public class ClickActions
+    public class ButtonActions
     {       
 
         public Models.QuickPick QP { get; set; }    
 
-        public ClickActions(Models.QuickPick qp)
+        public ButtonActions(Models.QuickPick qp)
         {
             this.QP = qp;            
         }
 
         public void ButtonClick(QpButton button)
         {
-            if (button.Act != null)
-                button.Act(button);
+            button.Act?.Invoke(button);
         }
 
         /// <summary>
@@ -55,7 +54,7 @@ namespace QuickPick.Logic
             }
             catch (Exception ex)
             {
-                Logger.Log(ex);
+                Logs.Logger.Log(ex);
             }
         }
         public void LaunchApplication(QpButton qpbutton)
@@ -76,13 +75,8 @@ namespace QuickPick.Logic
             }
             catch (Exception ex)
             {
-                Logger.Log(ex);
+                Logs.Logger.Log(ex);
             }
-        }
-        public void CloseQuickPick(QpButton button)
-        {
-            QP.WindowManager.ClickWindow.Close();
-            System.Windows.Forms.Application.Exit();
         }
         public void TakeScreenSnip(QpButton button)
         {
@@ -103,16 +97,19 @@ namespace QuickPick.Logic
             }
             catch (Exception ex)
             {
-                Logger.Log(ex);
+                Logs.Logger.Log(ex);
             }
 
-        
+
 
 
 
         }
+        public void CloseQuickPick(QpButton button)
+        {
+            QP.WindowManager.ClickWindow.Close();
+            System.Windows.Forms.Application.Exit();
+        }   
        
-
-
     }
 }

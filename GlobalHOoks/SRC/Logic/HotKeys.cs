@@ -40,7 +40,7 @@ namespace QuickPick.Logic
             }
             catch (Exception ex)
             {
-                Logger.Log(ex);
+                Logs.Logger.Log(ex);
             }
         }
 
@@ -56,7 +56,7 @@ namespace QuickPick.Logic
             }
             catch (Exception ex)
             {
-                Logger.Log(ex);
+                Logs.Logger.Log(ex);
             }
         }
 
@@ -64,7 +64,7 @@ namespace QuickPick.Logic
         {
             try
             {
-                Logger.Log("checking hotkeycombo");
+                Logs.Logger.Log("checking hotkeycombo");
 
                 Debug.WriteLine("CHECKING");
                 var allPressed = true;
@@ -76,14 +76,14 @@ namespace QuickPick.Logic
                 if (allPressed)
                 {
                     Debug.WriteLine("***** SHOWING THE WINDOW *****");
-                    Logger.Log("showing the window...");
+                    Logs.Logger.Log("showing the window...");
                     PressedKeys.Clear();
                     _windowManager.ShowWindow();
                 }
             }
             catch (Exception ex)
             {
-                Logger.Log(ex);
+                Logs.Logger.Log(ex);
             }
         }      
 
