@@ -66,14 +66,14 @@ namespace QuickPick
 
         private void btnExport_Click(object sender, RoutedEventArgs e)
         {          
-            QP.SaveLoadManager.SaveSettingsToDisk();
-            QP.SaveLoadManager.LoadSettingsFile();
+            QP.SaveLoader.SaveSettingsToDisk();
+            QP.SaveLoader.LoadSettingsFile();
 
 
         }
         private void btnLoad_Click(object sender, RoutedEventArgs e)
         {
-            QP.SaveLoadManager.LoadSettingsFile();
+            QP.SaveLoader.LoadSettingsFile();
         }
 
         private void btnBrowseFolder_Click(object sender, RoutedEventArgs e)
@@ -135,7 +135,7 @@ namespace QuickPick
             if (fileDialog.ShowDialog() == true)
             {
                 var filePath = fileDialog.FileName;
-                QP.SaveLoadManager.LoadSettingsFile(filePath);
+                QP.SaveLoader.LoadSettingsFile(filePath);
             }
         }
     }

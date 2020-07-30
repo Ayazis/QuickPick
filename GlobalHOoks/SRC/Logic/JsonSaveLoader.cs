@@ -8,10 +8,11 @@ using System.Windows;
 
 namespace QuickPick.Logic
 {
-    public class SaveLoadSettings
-    {   
+    public class JsonSaveLoader : ISaveLoader
+    {
         public Models.QuickPick QP { get; set; }
-        public SaveLoadSettings(Models.QuickPick qp)
+
+        public JsonSaveLoader(Models.QuickPick qp)
         {
             QP = qp;
         }
@@ -102,7 +103,7 @@ namespace QuickPick.Logic
         }
 
         private void RemoveExistingButtons()
-        {         
+        {
             QP.QuickPickModel.MainButtons.Clear();
             QP.ButtonManager.ClearCanvas();
             QP.ButtonManager.AddCentralButton();
