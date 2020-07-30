@@ -5,12 +5,11 @@ using System;
 using System.IO;
 using System.Windows;
 
+
 namespace QuickPick.Logic
 {
     public class SaveLoadSettings
-    {
-        public string SettingsPath { get; set; } = @"C:\Temp\QuickPickSettings.json";
-
+    {   
         public Models.QuickPick QP { get; set; }
         public SaveLoadSettings(Models.QuickPick qp)
         {
@@ -21,16 +20,29 @@ namespace QuickPick.Logic
         {
             try
             {
-                if (!Directory.Exists(Path.GetDirectoryName(SettingsPath)))
-                    Directory.CreateDirectory(Path.GetDirectoryName(SettingsPath));
+                if (!Directory.Exists(Path.GetDirectoryName(QP.QuickPickModel.SettingsPath)))
+                    Directory.CreateDirectory(Path.GetDirectoryName(QP.QuickPickModel.SettingsPath));
 
                 var settings = new QuickPickSettings(QP.QuickPickModel);
                 string settingsAsJson = JsonConvert.SerializeObject(settings, Formatting.Indented, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
 
+                string fileName = "";
+                var saveDialog = new System.Windows.Forms.SaveFileDialog
+                {
+                    InitialDirectory = QP.QuickPickModel.SettingsPath,
+                    Filter = "JSON files(*.json)|*.json"
+                };
+
+                if (saveDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    fileName = saveDialog.FileName;
+                    QP.QuickPickModel.SettingsPath = fileName;
+                }
 
 
 
-                File.WriteAllText(SettingsPath, settingsAsJson);
+                string finalPath = fileName != "" ? fileName : QP.QuickPickModel.SettingsPath;
+                File.WriteAllText(finalPath, settingsAsJson);
             }
             catch (Exception ex)
             {
@@ -48,7 +60,7 @@ namespace QuickPick.Logic
         }
         public void LoadSettingsFile()
         {
-            var settings = DeserialiseSettingsFile(SettingsPath);
+            var settings = DeserialiseSettingsFile(QP.QuickPickModel.SettingsPath);
             ApplySettings(settings);
 
         }
@@ -56,6 +68,7 @@ namespace QuickPick.Logic
         {
             if (settings == null)
             {
+                RemoveExistingButtons();
                 for (int i = 0; i < QP.QuickPickModel.NrOfButtons; i++)
                 {
                     var button = new QpButton();
@@ -66,10 +79,7 @@ namespace QuickPick.Logic
             }
             else
             {
-                // Clear the canvas
-                QP.QuickPickModel.MainButtons.Clear();
-                QP.ButtonManager.ClearCanvas();
-                QP.ButtonManager.AddCentralButton();
+                RemoveExistingButtons();
 
                 QP.QuickPickModel.NrOfButtons = settings.NrOfMainButtons;
                 QP.QuickPickModel.ShortCutsFolder = settings.ShortCutsFolder;
@@ -91,6 +101,13 @@ namespace QuickPick.Logic
             QP.ButtonManager.AddShortCuts();
         }
 
+        private void RemoveExistingButtons()
+        {         
+            QP.QuickPickModel.MainButtons.Clear();
+            QP.ButtonManager.ClearCanvas();
+            QP.ButtonManager.AddCentralButton();
+        }
+
         private QuickPickSettings DeserialiseSettingsFile(string filePath)
         {
             try
@@ -98,7 +115,7 @@ namespace QuickPick.Logic
                 if (!File.Exists(filePath))
                     return null;
 
-                var SettingsAsJson = File.ReadAllText(SettingsPath);
+                var SettingsAsJson = File.ReadAllText(QP.QuickPickModel.SettingsPath);
                 QuickPickSettings settings = JsonConvert.DeserializeObject<QuickPickSettings>(SettingsAsJson);
                 return settings;
             }

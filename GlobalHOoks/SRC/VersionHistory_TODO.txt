@@ -1,4 +1,5 @@
 ﻿ FEATURES: 
+ - Create More flexible way to save/store settings
  - Create Custom Save/Load location options
  - Create BugReport option
  - Create Auto Update Feature.
@@ -10,8 +11,6 @@
 
   UPDATES
   - Replace fileLink to StringProperty when using TextToClipboard    
-
-
   
 
 

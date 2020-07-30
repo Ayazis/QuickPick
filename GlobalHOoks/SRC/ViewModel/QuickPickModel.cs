@@ -19,6 +19,8 @@ namespace QuickPick
 {
     public class QuickPickModel : INotifyPropertyChanged
     {
+        public string SettingsPath { get; set; } = @"C:\Temp\QuickPickSettings.json";
+
         private string _Title = "QuickPick Settings                v.1.1alpha";
         public string Title
         {
