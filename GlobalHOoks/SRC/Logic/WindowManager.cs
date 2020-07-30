@@ -95,17 +95,8 @@ namespace QuickPick
 
                 //SettingsWindow.WindowStyle = WindowStyle.None;
                 _settingsWindow.DataContext = QP.QuickPickModel;
-
-
                 _settingsWindow.Show();
-
-                var left = _settingsWindow.Left;
-                var top = _settingsWindow.Top;
-                var height = _settingsWindow.Height;
-
-                QP.WindowManager.ClickWindow.Left = left - 50 - QP.WindowManager.ClickWindow.Width;
-                QP.WindowManager.ClickWindow.Top = top;
-                QP.WindowManager.Show.Begin(QP.WindowManager.ClickWindow);
+       
             }
             catch (Exception ex)
             {
@@ -125,6 +116,7 @@ namespace QuickPick
                 {
                     if (ClickWindow != null)
                     {
+                        ClickWindow.WindowStyle = WindowStyle.None;
                         Hide.Begin(ClickWindow);
                         //   Window.Visibility = System.Windows.Visibility.Hidden;
                     }
@@ -197,6 +189,8 @@ namespace QuickPick
                     var mousePosition = GetMousePosition();
                     ClickWindow.Left = mousePosition.X - (ClickWindow.ActualWidth / 2);
                     ClickWindow.Top = mousePosition.Y - (ClickWindow.ActualHeight / 2);
+                    
+                    ClickWindow.WindowStyle = WindowStyle.None;
                     Show.Begin(ClickWindow);
                 });
 
@@ -242,12 +236,7 @@ namespace QuickPick
                 Logs.Logger.Log(ex);
             }
         }
-
-        public void HideWindow(QpButton button)
-        {
-            if (Hide != null)
-                Hide.Begin();
-        }
+    
         private void mnuExit_Click(object sender, EventArgs e)
         {
             _notificationIcon.Visible = false;

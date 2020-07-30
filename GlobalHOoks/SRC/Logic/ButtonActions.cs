@@ -50,6 +50,7 @@ namespace QuickPick.Logic
                 //if(!text.ToUpper().Contains("INSERT"))
                 //    InputSim.F5();
 
+                QP.WindowManager.ClickWindow.WindowStyle = WindowStyle.None;
                 QP.WindowManager.Hide.Begin(QP.WindowManager.ClickWindow);
             }
             catch (Exception ex)
@@ -71,6 +72,7 @@ namespace QuickPick.Logic
                 proc.StartInfo = startinfo;
                 proc.Start();
 
+                QP.WindowManager.ClickWindow.WindowStyle = WindowStyle.None;
                 QP.WindowManager.Hide.Begin(QP.WindowManager.ClickWindow);
             }
             catch (Exception ex)
@@ -92,6 +94,7 @@ namespace QuickPick.Logic
                 InputSim.Simulator.Keyboard.ModifiedKeyStroke(winShift, VirtualKeyCode.VK_S);
                 QP.WindowManager.ClickWindow.Visibility = Visibility.Hidden;
 
+                QP.WindowManager.ClickWindow.WindowStyle = WindowStyle.None;
                 QP.WindowManager.Hide.Begin(QP.WindowManager.ClickWindow);
 
             }
