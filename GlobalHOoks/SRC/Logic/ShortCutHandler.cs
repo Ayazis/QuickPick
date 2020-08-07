@@ -66,10 +66,18 @@ namespace QuickPick.Logic
 
         public static Icon GetIcon(string path)
         {
-            if (string.IsNullOrWhiteSpace(path))
-                return null;
+            try
+            {
+                if (string.IsNullOrWhiteSpace(path))
+                    return null;
 
-            return Icon.ExtractAssociatedIcon(path);            
+                return Icon.ExtractAssociatedIcon(path);
+            }
+            catch (Exception)
+            {
+
+                return null;
+            }   
         }
     }
 }
