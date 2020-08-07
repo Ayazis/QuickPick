@@ -116,7 +116,8 @@ namespace QuickPick.Logic
                 if (!File.Exists(filePath))
                     return null;
 
-                var SettingsAsJson = File.ReadAllText(QP.QuickPickModel.SettingsPath);
+
+                var SettingsAsJson = File.ReadAllText(filePath);
                 QuickPickSettings settings = JsonConvert.DeserializeObject<QuickPickSettings>(SettingsAsJson);
                 return settings;
             }
