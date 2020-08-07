@@ -117,6 +117,7 @@ namespace QuickPick.Logic
                     return null;
 
 
+
                 var SettingsAsJson = File.ReadAllText(filePath);
                 QuickPickSettings settings = JsonConvert.DeserializeObject<QuickPickSettings>(SettingsAsJson);
                 return settings;
