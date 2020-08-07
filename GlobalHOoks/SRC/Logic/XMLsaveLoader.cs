@@ -11,58 +11,60 @@ using System.Xml.Serialization;
 
 namespace QuickPick.SRC.Logic
 {
-    class XMLsaveLoader : ISaveLoader
-    {
-        public Models.QuickPick QP { get; set; }
+    //class XMLsaveLoader : ISaveLoader
+    //{
+    //    private string xmlSettings;
 
-        public void LoadSettingsFile()
-        {
+    //    public Models.QuickPick QP { get; set; }
+
+    //    public void LoadSettingsFile()
+    //    {
     
-        }
+    //    }
 
-        public void LoadSettingsFile(string filePath)
-        {
+    //    public void LoadSettingsFile(string filePath)
+    //    {
        
-        }
+    //    }
 
-        public void SaveSettingsToDisk()
-        {
-            try
-            {
-                if (!Directory.Exists(Path.GetDirectoryName(QP.QuickPickModel.SettingsPath)))
-                    Directory.CreateDirectory(Path.GetDirectoryName(QP.QuickPickModel.SettingsPath));
+    //    public void SaveSettingsToDisk()
+    //    {
+    //        //try
+    //        //{
+    //        //    if (!Directory.Exists(Path.GetDirectoryName(QP.QuickPickModel.SettingsPath)))
+    //        //        Directory.CreateDirectory(Path.GetDirectoryName(QP.QuickPickModel.SettingsPath));
 
                        
 
-                string fileName = "";
-                var saveDialog = new System.Windows.Forms.SaveFileDialog
-                {
-                    InitialDirectory = QP.QuickPickModel.SettingsPath,
-                    Filter = "XML files(*.xml)|*.xml"
-                };
+    //        //    string fileName = "";
+    //        //    var saveDialog = new System.Windows.Forms.SaveFileDialog
+    //        //    {
+    //        //        InitialDirectory = QP.QuickPickModel.SettingsPath,
+    //        //        Filter = "XML files(*.xml)|*.xml"
+    //        //    };
 
-                if (saveDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                {
-                    fileName = saveDialog.FileName;
-                    QP.QuickPickModel.SettingsPath = fileName;
+    //        //    if (saveDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+    //        //    {
+    //        //        fileName = saveDialog.FileName;
+    //        //        QP.QuickPickModel.SettingsPath = fileName;
 
-                    // put current model into new settingsClass
-                    var settings = new QuickPickSettings(QP.QuickPickModel);
-                    var xs = new XmlSerializer(typeof(QuickPickSettings));
-                    TextWriter writer = new StreamWriter(Path.GetDirectoryName(fileName));
-                    xs.Serialize(writer, settings);
-                }
+    //        //        // put current model into new settingsClass
+    //        //        var settings = new QuickPickSettings(QP.QuickPickModel);
+    //        //        var xs = new XmlSerializer(typeof(QuickPickSettings));
+    //        //        TextWriter writer = new StreamWriter(Path.GetDirectoryName(fileName));
+    //        //        xs.Serialize(writer, settings);
+    //        //    }
 
 
 
-                string finalPath = fileName != "" ? fileName : QP.QuickPickModel.SettingsPath;
-                File.WriteAllText(finalPath, settingsAsJson);
-            }
-            catch (Exception ex)
-            {
-                Logs.Logger.Log(ex);
-            }
+    //        //    string finalPath = fileName != "" ? fileName : QP.QuickPickModel.SettingsPath;
+    //        //    File.WriteAllText(finalPath, xmlSettings);
+    //        //}
+    //        //catch (Exception ex)
+    //        //{
+    //        //    Logs.Logger.Log(ex);
+    //        //}
 
-        }
-    }
+    //    }
+    //}
 }

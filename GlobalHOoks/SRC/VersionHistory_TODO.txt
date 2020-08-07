@@ -1,6 +1,4 @@
 ﻿ FEATURES: 
- - Create More flexible way to save/store settings
- - Create Custom Save/Load location options
  - Create BugReport option
  - Create Auto Update Feature.
  - Show Open windows/ applications
@@ -11,12 +9,17 @@
 
   UPDATES
   - Replace fileLink to StringProperty when using TextToClipboard    
+  - Create More flexible way to save/store settings
+
+  REFACTORING
+  - Hide/Show Animations
+  - More use of static classes?
   
 
 
   History
   v1.1alpha
-  - Fix bug where DPI scaling made the UI show up in the wrong place.
+  - Fix bug where DPI scaling made the UI show up in the wrong place. 
 
   v1.0
   - First alpha stage test release
