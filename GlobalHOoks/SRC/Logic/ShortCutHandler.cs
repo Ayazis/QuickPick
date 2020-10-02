@@ -15,7 +15,11 @@ namespace QuickPick.Logic
         public static void GetShortCuts(QuickPickModel qpm)
         {            
 
-            string pathToFiles = qpm.ShortCutsFolder;     
+            string pathToFiles = qpm.ShortCutsFolder;
+
+            if (!Directory.Exists(pathToFiles))
+                return;
+
             var files = Directory.GetFiles(pathToFiles, "*", SearchOption.AllDirectories);
 
             foreach (var file in files)

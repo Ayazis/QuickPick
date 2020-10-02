@@ -151,8 +151,6 @@
     <Compile Include="SRC\Logic\WindowManager.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-    <None Include="QuickPick_1_TemporaryKey.pfx" />
     <None Include="SRC\App.config" />
     <None Include="SRC\packages.config" />
   </ItemGroup>

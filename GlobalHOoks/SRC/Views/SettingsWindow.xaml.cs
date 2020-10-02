@@ -66,7 +66,7 @@ namespace QuickPick
 
         private void btnExport_Click(object sender, RoutedEventArgs e)
         {          
-            QP.SaveLoader.SaveSettingsToDisk();
+            QP.SaveLoader.ExportSettings();
             QP.SaveLoader.LoadSettingsFile();
 
 
@@ -124,7 +124,7 @@ namespace QuickPick
             QP.QuickPickModel.InstantShortCuts = true;
         }
 
-        private void btnLoadSettings_Click(object sender, RoutedEventArgs e)
+        private void btnImportSettings_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog fileDialog = new OpenFileDialog
             {
@@ -137,6 +137,11 @@ namespace QuickPick
                 var filePath = fileDialog.FileName;
                 QP.SaveLoader.LoadSettingsFile(filePath);
             }
+        }
+
+        private void btnApplySettings_Click(object sender, RoutedEventArgs e)
+        {
+            QP.SaveLoader.SaveSettings();
         }
     }
 }

@@ -4,6 +4,8 @@
  - Show Open windows/ applications
   
   BUGS
+  - Import automatically applies the settings. (no cancel option.)
+  - Not re-loading shortcuts upon settings change.
   - Fix critical erros on qpbuttons.
   - Fix ThisPC.lnk and LastPass.lnk not working
 
@@ -18,6 +20,9 @@
 
 
   History
+  v1.2alpha
+  - changed save/load to export/import and added Apply button.
+
   v1.1alpha
   - Fix bug where DPI scaling made the UI show up in the wrong place. 
 

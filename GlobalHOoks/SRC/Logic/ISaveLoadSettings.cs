@@ -7,6 +7,7 @@ namespace QuickPick.Logic
 
         void LoadSettingsFile();
         void LoadSettingsFile(string filePath);
-        void SaveSettingsToDisk();
+        void ExportSettings();
+        void SaveSettings();
     }
 }

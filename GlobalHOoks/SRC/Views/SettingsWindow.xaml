@@ -107,12 +107,14 @@
             <RadioButton Margin="10,0,0,0" GroupName="ShowShortcuts" Content="Istantly" Name="rdbInstant" Checked="rdbInstant_Checked" IsChecked="True"/>
             <RadioButton Margin="10,0,0,0" GroupName="ShowShortcuts" Content="On center click" Name="rdbOnCenter" Checked="rdbOnCenter_Checked" />
 
+            <Button x:Name="btnApplySettings" Content="Apply" Margin="10" Width="100" Click="btnApplySettings_Click"/>
+           
+            <Button Name="btnImportSettings"   Margin="10" Content="Import" Click="btnImportSettings_Click" Width="100"/>
             <Button x:Name="btnExport" 
-                    Margin="25,25,25,0"
-                Content="Save" 
+                    Margin="25,0,25,0"
+                Content="Export" 
                 Click="btnExport_Click" 
                 Width="100"/>
-            <Button Name="btnLoadSettings"   Margin="10" Content="Load" Click="btnLoadSettings_Click" Width="100"/>
         </StackPanel>
     </Grid>
 </Window>

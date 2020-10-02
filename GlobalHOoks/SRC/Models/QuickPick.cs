@@ -15,7 +15,7 @@ namespace QuickPick.Models
         public ButtonManager ButtonManager { get; set; }
         public ButtonActions ClickActions { get; set; }
         public HotKeys HotKeys { get; set; }        
-        public ISaveLoader SaveLoader { get; set; }        
+        public JsonSaveLoader SaveLoader { get; set; }        
         public WindowManager WindowManager{ get; set; }
 
         public QuickPick()
