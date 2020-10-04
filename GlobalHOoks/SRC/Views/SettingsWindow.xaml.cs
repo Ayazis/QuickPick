@@ -82,6 +82,17 @@ namespace QuickPick
             if(fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 QP.QuickPickModel.ShortCutsFolder = fbd.SelectedPath;
+
+                // Get Shortcuts from saved folderLocation.
+                // Get Shortcuts from saved folderLocation.
+                QP.QuickPickModel.ShortCuts.Clear();
+                ShortCutHandler.GetShortCuts(QP.QuickPickModel);
+                QP.ButtonManager.AddShortCuts();
+
+                QP.ButtonManager.ClearCanvas();
+                QP.ButtonManager.AddCentralButton();
+                QP.ButtonManager.PlaceButtonsOnCanvas();
+                QP.ButtonManager.AddShortCuts();
             }
         }
 

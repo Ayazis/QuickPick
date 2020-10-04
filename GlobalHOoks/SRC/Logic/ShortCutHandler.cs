@@ -22,6 +22,8 @@ namespace QuickPick.Logic
 
             var files = Directory.GetFiles(pathToFiles, "*", SearchOption.AllDirectories);
 
+            var newshortCuts = new List<ShortCut>();
+
             foreach (var file in files)
             {
                 var targetPath = GetTargetPath(file);
@@ -29,7 +31,7 @@ namespace QuickPick.Logic
 
                 if (!string.IsNullOrWhiteSpace(targetPath) && icon != null)
                 {
-                    qpm.ShortCuts.Add(new ShortCut { Icon = icon, TargetPath = targetPath });
+                    newshortCuts.Add(new ShortCut { Icon = icon, TargetPath = targetPath });
                 }
                 else
                 {
@@ -38,6 +40,13 @@ namespace QuickPick.Logic
 
             }
 
+            if (newshortCuts.Count>0)
+            {
+                qpm.ShortCuts = new System.Collections.ObjectModel.ObservableCollection<ShortCut>(newshortCuts);
+
+
+                
+            }
         }
 
         private static string GetTargetPath(string path)

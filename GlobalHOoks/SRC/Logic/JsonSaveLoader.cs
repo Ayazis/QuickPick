@@ -109,7 +109,7 @@ namespace QuickPick.Logic
             QP.ButtonManager.AddShortCuts();
         }
 
-        private void RemoveExistingButtons()
+        public void RemoveExistingButtons()
         {
             QP.QuickPickModel.MainButtons.Clear();
             QP.ButtonManager.ClearCanvas();

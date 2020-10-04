@@ -14,6 +14,7 @@
   - Create More flexible way to save/store settings
 
   REFACTORING
+  - Refactor the whole thing because it's becoming chaos.
   - Hide/Show Animations
   - More use of static classes?
   

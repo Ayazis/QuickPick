@@ -107,7 +107,7 @@
             <RadioButton Margin="10,0,0,0" GroupName="ShowShortcuts" Content="Istantly" Name="rdbInstant" Checked="rdbInstant_Checked" IsChecked="True"/>
             <RadioButton Margin="10,0,0,0" GroupName="ShowShortcuts" Content="On center click" Name="rdbOnCenter" Checked="rdbOnCenter_Checked" />
 
-            <Button x:Name="btnApplySettings" Content="Apply" Margin="10" Width="100" Click="btnApplySettings_Click"/>
+            <Button x:Name="btnApplySettings" Content="Apply" Margin="10" Width="100" Click="btnApplySettings_Click" Visibility="Collapsed"/>
            
             <Button Name="btnImportSettings"   Margin="10" Content="Import" Click="btnImportSettings_Click" Width="100"/>
             <Button x:Name="btnExport" 
