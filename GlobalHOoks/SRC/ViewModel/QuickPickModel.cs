@@ -19,7 +19,15 @@ namespace QuickPick
 {
     public class QuickPickModel : INotifyPropertyChanged
     {
-        private string _Title = "QuickPick Settings                v.1.1alpha";
+        public string SettingsPath
+        {
+            get
+            {
+                return Directory.GetCurrentDirectory() + "/QuickPickSettings.Json";
+            }
+        }
+
+        private string _Title = "QuickPick Settings                v.1.2.1alpha";
         public string Title
         {
             get { return _Title; }

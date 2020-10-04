@@ -59,24 +59,16 @@ namespace QuickPick
 
         public void ClearCanvas()
         {
-            var canvas = QP.WindowManager.ClickWindow.Canvas;
-            canvas.Children.Clear();
-
-
-            //try
-            //{
-            //    var count = QP.WindowManager.ClickWindow.Canvas.Children.Count;
-
-            //    for (int i = 0; i < count - 2; i++)
-            //    {
-            //        QP.WindowManager.ClickWindow.Canvas.Children.RemoveAt(i);
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-
-            //    throw;
-            //}
+            try
+            {
+                var canvas = QP.WindowManager.ClickWindow.Canvas;
+                canvas.Children.Clear();
+            }
+            catch (Exception ex)
+            {
+                Logs.Logger.Log(ex);
+                
+            }    
         }
 
         public void AddCentralButton()

@@ -15,8 +15,14 @@ namespace QuickPick.Logic
         public static void GetShortCuts(QuickPickModel qpm)
         {            
 
-            string pathToFiles = qpm.ShortCutsFolder;     
+            string pathToFiles = qpm.ShortCutsFolder;
+
+            if (!Directory.Exists(pathToFiles))
+                return;
+
             var files = Directory.GetFiles(pathToFiles, "*", SearchOption.AllDirectories);
+
+            var newshortCuts = new List<ShortCut>();
 
             foreach (var file in files)
             {
@@ -25,7 +31,7 @@ namespace QuickPick.Logic
 
                 if (!string.IsNullOrWhiteSpace(targetPath) && icon != null)
                 {
-                    qpm.ShortCuts.Add(new ShortCut { Icon = icon, TargetPath = targetPath });
+                    newshortCuts.Add(new ShortCut { Icon = icon, TargetPath = targetPath });
                 }
                 else
                 {
@@ -34,6 +40,13 @@ namespace QuickPick.Logic
 
             }
 
+            if (newshortCuts.Count>0)
+            {
+                qpm.ShortCuts = new System.Collections.ObjectModel.ObservableCollection<ShortCut>(newshortCuts);
+
+
+                
+            }
         }
 
         private static string GetTargetPath(string path)
@@ -66,10 +79,18 @@ namespace QuickPick.Logic
 
         public static Icon GetIcon(string path)
         {
-            if (string.IsNullOrWhiteSpace(path))
-                return null;
+            try
+            {
+                if (string.IsNullOrWhiteSpace(path))
+                    return null;
 
-            return Icon.ExtractAssociatedIcon(path);            
+                return Icon.ExtractAssociatedIcon(path);
+            }
+            catch (Exception)
+            {
+
+                return null;
+            }   
         }
     }
 }

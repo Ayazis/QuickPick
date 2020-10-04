@@ -75,16 +75,16 @@
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup>
-    <ManifestCertificateThumbprint>C0B169F2FE3EB7B82A49781274A7648B2DD8D3F5</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>F2534DC3035A607ECAE643001AC743487B90E878</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>QuickPick_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>QuickPick_1_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>true</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>true</SignManifests>
+    <SignManifests>false</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>qp_icon.ico</ApplicationIcon>
@@ -124,9 +124,11 @@
     <Compile Include="SRC\KeyHook.cs" />
     <Compile Include="SRC\Logic\ActiveApps.cs" />
     <Compile Include="SRC\Logic\HotKeys.cs" />
+    <Compile Include="SRC\Logic\ISaveLoadSettings.cs" />
     <Compile Include="SRC\Logic\MousePosition.cs" />
-    <Compile Include="SRC\Logic\SaveLoadSettings.cs" />
+    <Compile Include="SRC\Logic\JsonSaveLoader.cs" />
     <Compile Include="SRC\Logic\ShortCutHandler.cs" />
+    <Compile Include="SRC\Logic\XMLsaveLoader.cs" />
     <Compile Include="SRC\Models\QuickPick.cs" />
     <Compile Include="SRC\Models\QuickPickSettings.cs" />
     <Compile Include="SRC\Models\ShortCut.cs" />

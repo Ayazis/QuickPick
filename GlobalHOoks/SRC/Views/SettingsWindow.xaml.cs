@@ -10,6 +10,7 @@ using System.Windows.Input;
 using WindowsInput;
 using FolderBrowserDialog = System.Windows.Forms.FolderBrowserDialog;
 using System.Windows.Forms.Integration;
+using Newtonsoft.Json;
 
 namespace QuickPick
 {
@@ -65,14 +66,14 @@ namespace QuickPick
 
         private void btnExport_Click(object sender, RoutedEventArgs e)
         {          
-            QP.SaveLoadManager.SaveSettingsToDisk();
-            QP.SaveLoadManager.LoadAndApplySettings();
+            QP.SaveLoader.ExportSettings();
+            QP.SaveLoader.LoadSettingsFile();
 
 
         }
         private void btnLoad_Click(object sender, RoutedEventArgs e)
         {
-            QP.SaveLoadManager.LoadAndApplySettings();
+            QP.SaveLoader.LoadSettingsFile();
         }
 
         private void btnBrowseFolder_Click(object sender, RoutedEventArgs e)
@@ -81,6 +82,17 @@ namespace QuickPick
             if(fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 QP.QuickPickModel.ShortCutsFolder = fbd.SelectedPath;
+
+                // Get Shortcuts from saved folderLocation.
+                // Get Shortcuts from saved folderLocation.
+                QP.QuickPickModel.ShortCuts.Clear();
+                ShortCutHandler.GetShortCuts(QP.QuickPickModel);
+                QP.ButtonManager.AddShortCuts();
+
+                QP.ButtonManager.ClearCanvas();
+                QP.ButtonManager.AddCentralButton();
+                QP.ButtonManager.PlaceButtonsOnCanvas();
+                QP.ButtonManager.AddShortCuts();
             }
         }
 
@@ -121,6 +133,26 @@ namespace QuickPick
         private void rdbInstant_Checked(object sender, RoutedEventArgs e)
         {
             QP.QuickPickModel.InstantShortCuts = true;
+        }
+
+        private void btnImportSettings_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog fileDialog = new OpenFileDialog
+            {
+                Title = "Select Settings File",
+                InitialDirectory = @"C:\",
+                Filter = "QuickPick settings (*.json) | *.json"
+            };
+            if (fileDialog.ShowDialog() == true)
+            {
+                var filePath = fileDialog.FileName;
+                QP.SaveLoader.LoadSettingsFile(filePath);
+            }
+        }
+
+        private void btnApplySettings_Click(object sender, RoutedEventArgs e)
+        {
+            QP.SaveLoader.SaveSettings();
         }
     }
 }
