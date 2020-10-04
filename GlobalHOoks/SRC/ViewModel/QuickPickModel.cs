@@ -27,7 +27,7 @@ namespace QuickPick
             }
         }
 
-        private string _Title = "QuickPick Settings                v.1.2alpha";
+        private string _Title = "QuickPick Settings                v.1.2.1alpha";
         public string Title
         {
             get { return _Title; }
