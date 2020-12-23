@@ -19,6 +19,8 @@ namespace QuickPick
 {
     public class QuickPickModel : INotifyPropertyChanged
     {
+
+
         public string SettingsPath
         {
             get
@@ -44,9 +46,22 @@ namespace QuickPick
             }
         }
 
+
+        private bool _SettingsAreSaved = false;
+
+        public bool SettingsAreSaved
+        {
+            get { return _SettingsAreSaved; }
+            set
+            {
+                _SettingsAreSaved = value;
+                NotifyPropertyChanged(nameof(SettingsAreSaved));
+            }
+        }
+
         public HotKey Hotkey { get; set; } = HotKey.KeyCombination;
 
-        public bool InstantShortCuts { get; set; } = true;
+        public bool InstantShortCuts { get; set; } = false;
 
         #region Properties        
         private ObservableCollection<Keys> _HotKeys = new ObservableCollection<Keys> {

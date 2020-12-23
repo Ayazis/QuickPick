@@ -37,8 +37,7 @@ namespace QuickPick.Logic
         public void ReadAndRunQuery(QpButton qpb)
         {
             try
-            {
-                
+            {                
                 var text = File.ReadAllText(qpb.AssociatedFilePath);
                 Clipboard.SetText(text);
 
@@ -113,6 +112,26 @@ namespace QuickPick.Logic
             QP.WindowManager.ClickWindow.Close();
             System.Windows.Forms.Application.Exit();
         }   
+
+        public void PasteText(QpButton button)
+        {
+            try
+            {
+                var text = button.PredefinedText;
+                Clipboard.SetText(text);
+
+                // _window.Visibility = Visibility.Hidden;
+                QP.WindowManager.ReActivateFormerWindow();                
+                InputSim.Paste();                
+
+                QP.WindowManager.ClickWindow.WindowStyle = WindowStyle.None;
+                QP.WindowManager.Hide.Begin(QP.WindowManager.ClickWindow);
+            }
+            catch (Exception ex)
+            {
+                Logs.Logger.Log(ex);
+            }
+        }
        
     }
 }

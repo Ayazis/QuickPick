@@ -16,11 +16,14 @@
         <CollectionViewSource x:Key="ActionTypes" Source="{Binding Path=ClickActions}" />
     </Window.Resources>
 
-    <Grid  Margin="25">
+    <Grid Margin="25">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="317*"/>
-            <ColumnDefinition Width="28*"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
         </Grid.ColumnDefinitions>
+        <Button x:Name="btnClose" Content="X" Width="25" Height="25" VerticalAlignment="Top" HorizontalAlignment="Right" Grid.ColumnSpan="3" Margin="-25" 
+                Click="btnClose_Click"/>
         <StackPanel Grid.ColumnSpan="2">
             <TextBlock  FontStyle="Italic"
                         FontSize="10" 
@@ -39,7 +42,8 @@
                                MinHeight="20"
                                Margin="10"
                                Background="Transparent"
-                               SelectionMode="Single"  >
+                               SelectionMode="Single"
+                               SelectionChanged="lvButtons_SelectionChanged">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Width="auto">
@@ -77,15 +81,7 @@
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                             <GridViewColumnHeader Content=""  />
-                        </GridViewColumn>
-                        <!--<GridViewColumn Width="auto"  >
-                            <GridViewColumnHeader Content="Text" />
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBox Text="{Binding StringToUse, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MinWidth="100" Visibility="Collapsed"/>
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>-->
+                        </GridViewColumn>                
                     </GridView>
                 </ListView.View>
             </ListView>
@@ -107,7 +103,7 @@
             <RadioButton Margin="10,0,0,0" GroupName="ShowShortcuts" Content="Istantly" Name="rdbInstant" Checked="rdbInstant_Checked" IsChecked="True"/>
             <RadioButton Margin="10,0,0,0" GroupName="ShowShortcuts" Content="On center click" Name="rdbOnCenter" Checked="rdbOnCenter_Checked" />
 
-            <Button x:Name="btnApplySettings" Content="Apply" Margin="10" Width="100" Click="btnApplySettings_Click" Visibility="Collapsed"/>
+            <Button x:Name="btnApplySettings" Content="Apply" Margin="10" Width="100" Click="btnApplySettings_Click"/>
            
             <Button Name="btnImportSettings"   Margin="10" Content="Import" Click="btnImportSettings_Click" Width="100"/>
             <Button x:Name="btnExport" 
@@ -115,6 +111,12 @@
                 Content="Export" 
                 Click="btnExport_Click" 
                 Width="100"/>
+        </StackPanel>
+        <StackPanel x:Name="stkPPredefText" Grid.Column="2"  Visibility="Collapsed" >
+            <TextBox Name="txPredefText" Grid.Column="2" Width="250" Margin="10,10,0,50" Height="300" VerticalScrollBarVisibility="Auto"/>
+            <Button x:Name="btnSetTextOnButton" 
+                Content="Set text" Grid.Column="2" Margin="5" Width="75" Height="25" VerticalAlignment="Bottom"
+                Click="btnSetTextOnButton_Click"/>
         </StackPanel>
     </Grid>
 </Window>

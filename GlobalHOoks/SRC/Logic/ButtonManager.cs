@@ -178,6 +178,10 @@ namespace QuickPick
             {
                 button.Act = new QpButton.ActionDelegate(QP.ClickActions.TakeScreenSnip);
             }
+            else if(button.ActionType == ClickAction.PasteText)
+            {
+                button.Act = new QpButton.ActionDelegate(QP.ClickActions.PasteText);
+            }
 
             return button;
         }
@@ -216,8 +220,6 @@ namespace QuickPick
                 }
             }
         }
-
-
 
         public ImageSource ToImage(Icon icon)
         {

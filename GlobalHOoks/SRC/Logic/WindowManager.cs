@@ -92,8 +92,7 @@ namespace QuickPick
             try
             {
                 _settingsWindow = new SettingsWindow(QP);
-
-                //SettingsWindow.WindowStyle = WindowStyle.None;
+                _settingsWindow.WindowStyle = WindowStyle.None;
                 _settingsWindow.DataContext = QP.QuickPickModel;
                 _settingsWindow.Show();
        

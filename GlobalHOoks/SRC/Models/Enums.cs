@@ -7,13 +7,15 @@ namespace QuickPick.Enums
     {
         None,
         [Display(Name="SQL query")]
-        RunQuery,
+        RunQuery,     
         [Display(Name = "Launch Process")]
         RunProcess,
         [Display(Name = "Screen Snippet")]
         TakeSnippet,
         [Display(Name = "Close QuickPick")]
-        ExitQuickPick
+        ExitQuickPick,
+        [Display(Name = "Paste text")]
+        PasteText,
     }
 
     public enum HotKey

@@ -11,20 +11,26 @@ using WindowsInput;
 using FolderBrowserDialog = System.Windows.Forms.FolderBrowserDialog;
 using System.Windows.Forms.Integration;
 using Newtonsoft.Json;
+using Forms = System.Windows.Forms;
 
 namespace QuickPick
 {
-
     public partial class SettingsWindow : Window
     {
-        public Models.QuickPick QP { get; }       
+               
+        public Models.QuickPick QP { get; }
 
+        private QuickPickSettings _settings;
         public SettingsWindow(Models.QuickPick QP)
         {
             this.QP = QP;
+            this.QP.QuickPickModel.SettingsAreSaved = false;
             InitializeComponent();
             ElementHost.EnableModelessKeyboardInterop(this);
+            _settings = new QuickPickSettings(QP.QuickPickModel);
         }
+
+    
 
         private void cmbClickAction_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
@@ -153,6 +159,53 @@ namespace QuickPick
         private void btnApplySettings_Click(object sender, RoutedEventArgs e)
         {
             QP.SaveLoader.SaveSettings();
+        }
+
+        private void btnSetTextOnButton_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var selectedItem = ((QpButton)lvButtons.SelectedItem);
+                selectedItem.PredefinedText = txPredefText.Text;
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+
+        }
+
+        private void lvButtons_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            stkPPredefText.Visibility = Visibility.Visible;
+            var selectedItem = ((QpButton)lvButtons?.SelectedItem);
+            txPredefText.Text = selectedItem?.PredefinedText ?? "";
+        }
+
+        private void btnClose_Click(object sender, RoutedEventArgs e)
+        {
+            if (QP.QuickPickModel.SettingsAreSaved == false)
+            {
+                var dialogResult = Forms.MessageBox.Show("Do you want to apply current settings?", "Apply settings?", Forms.MessageBoxButtons.YesNoCancel);
+                if (dialogResult == Forms.DialogResult.Yes)
+                {
+                    QP.SaveLoader.SaveSettings();
+                    this.Close();
+                }
+                else if (dialogResult == Forms.DialogResult.No)
+                {
+                    this.Close();
+                }
+                else if (dialogResult == Forms.DialogResult.Cancel)
+                {
+                  // do nothing.
+                }
+            }
+            else
+            {
+                this.Close();
+            }
         }
     }
 }

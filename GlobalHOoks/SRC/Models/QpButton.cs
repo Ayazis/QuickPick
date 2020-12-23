@@ -12,6 +12,7 @@ namespace QuickPick.Classes
     {
         [JsonProperty]
         private string _AssociatedFilePath = "-";
+
         [JsonIgnore]
         public string AssociatedFilePath
         {
@@ -45,7 +46,9 @@ namespace QuickPick.Classes
             ,ClickAction.RunProcess
             ,ClickAction.RunQuery
             ,ClickAction.TakeSnippet
+            ,ClickAction.PasteText
             ,ClickAction.ExitQuickPick
+            
         };
         [JsonIgnore]
         public ObservableCollection<ClickAction> ClickActions
@@ -79,6 +82,17 @@ namespace QuickPick.Classes
         public Thickness Margin { get; set; }
 
 
+        private string _PredefinedText = "";
+
+        public string PredefinedText
+        {
+            get { return _PredefinedText; }
+            set
+            {
+                _PredefinedText = value;
+                NotifyPropertyChanged(nameof(PredefinedText));
+            }
+        }
 
         private int Width { get; set; } = 35;
         private int Height { get; set; } = 35;

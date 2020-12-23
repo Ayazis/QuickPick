@@ -51,12 +51,11 @@ namespace QuickPick.Logic
             return settingsAsJson;
         }
         public void SaveSettings()
-        {
-            if (!Directory.Exists(Path.GetDirectoryName(QP.QuickPickModel.SettingsPath)))
-                Directory.CreateDirectory(Path.GetDirectoryName(QP.QuickPickModel.SettingsPath));
-
+        {   
             string settingsAsJson = SerialiseSettings();
             File.WriteAllText(QP.QuickPickModel.SettingsPath, settingsAsJson);
+
+            QP.QuickPickModel.SettingsAreSaved = true;
         }
         public void LoadSettingsFile(string filePath)
         {
@@ -122,8 +121,6 @@ namespace QuickPick.Logic
             {
                 if (!File.Exists(filePath))
                     return null;
-
-
 
                 var SettingsAsJson = File.ReadAllText(filePath);
                 QuickPickSettings settings = JsonConvert.DeserializeObject<QuickPickSettings>(SettingsAsJson);

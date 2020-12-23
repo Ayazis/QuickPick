@@ -11,7 +11,7 @@ namespace QuickPick
 {
     public class Program
     {
-        // Must have a variable to Keep the program running.
+        // Must have a variable to Keep the program running. ?
         public static Models.QuickPick _QP;
 
         [STAThread]
