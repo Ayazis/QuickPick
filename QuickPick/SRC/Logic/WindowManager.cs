@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Media.Animation;
+using QuickPick.SRC.Logic;
 
 namespace QuickPick
 {
@@ -180,6 +181,8 @@ namespace QuickPick
         {
             try
             {
+               
+
                 SetActiveWindow();
 
                 ClickWindow.Dispatcher.Invoke(() =>

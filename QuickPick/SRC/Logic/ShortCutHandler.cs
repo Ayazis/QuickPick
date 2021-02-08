@@ -43,8 +43,6 @@ namespace QuickPick.Logic
             if (newshortCuts.Count>0)
             {
                 qpm.ShortCuts = new System.Collections.ObjectModel.ObservableCollection<ShortCut>(newshortCuts);
-
-
                 
             }
         }
@@ -84,9 +82,12 @@ namespace QuickPick.Logic
                 if (string.IsNullOrWhiteSpace(path))
                     return null;
 
+                if (!System.IO.File.Exists(path))
+                    return null;
+
                 return Icon.ExtractAssociatedIcon(path);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
                 return null;

@@ -1,0 +1,34 @@
+﻿ FEATURES: 
+ - Create BugReport option
+ - Create Auto Update Feature.
+ - Show Open windows/ applications 
+  
+  BUGS
+  - Import automatically applies the settings. (no cancel option.)  
+  - Fix critical erros on qpbuttons.
+  - Fix ThisPC.lnk and LastPass.lnk not working
+  - Fix pc lagging when QP is exited.
+
+  UPDATES
+  - Replace fileLink to StringProperty when using TextToClipboard    
+  - Create More flexible way to save/store settings
+
+  REFACTORING
+  - Refactor the whole thing because it's becoming chaos.
+  - Hide/Show Animations
+  - More use of static classes?
+  
+
+
+  History
+  v1.2.1alpha 
+  - bugfix for shortcutsFolder
+
+  v1.2alpha
+  - changed save/load to export/import and added Apply button.
+
+  v1.1alpha
+  - Fix bug where DPI scaling made the UI show up in the wrong place. 
+
+  v1.0
+  - First alpha stage test release
