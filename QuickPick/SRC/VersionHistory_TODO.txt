@@ -1,12 +1,13 @@
 ﻿ FEATURES: 
  - Create BugReport option
  - Create Auto Update Feature.
- - Show Open windows/ applications
+ - Show Open windows/ applications 
   
   BUGS
   - Import automatically applies the settings. (no cancel option.)  
   - Fix critical erros on qpbuttons.
   - Fix ThisPC.lnk and LastPass.lnk not working
+  - Fix pc lagging when QP is exited.
 
   UPDATES
   - Replace fileLink to StringProperty when using TextToClipboard    

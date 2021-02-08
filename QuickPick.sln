@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29728.190
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickPick", "GlobalHOoks\QuickPick.csproj", "{73EA9CEC-DCA9-4E35-A3FF-C0FC7F473F5A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickPick", "QuickPick\QuickPick.csproj", "{73EA9CEC-DCA9-4E35-A3FF-C0FC7F473F5A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

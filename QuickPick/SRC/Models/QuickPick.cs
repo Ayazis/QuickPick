@@ -19,7 +19,11 @@ namespace QuickPick.Models
         public WindowManager WindowManager{ get; set; }
 
         public QuickPick()
-        {          
+        {
+            // Set Keyboard and Mouse Hooks for click Events.
+            KeyHook._hookID = KeyHook.SetHook(KeyHook._proc);
+
+
             QuickPickModel = new QuickPickModel();
             ButtonManager = new ButtonManager(this);         
             WindowManager = new WindowManager(this);
@@ -27,8 +31,7 @@ namespace QuickPick.Models
             SaveLoader = new JsonSaveLoader(this);
             ClickActions = new ButtonActions(this);
 
-            WindowManager.Start();
-        
+            WindowManager.Start();        
         }
 
     }

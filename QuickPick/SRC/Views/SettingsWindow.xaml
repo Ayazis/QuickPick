@@ -96,7 +96,7 @@
                 <TextBlock Margin="10,10,0,0" Text="Show QuickPick on:" ></TextBlock>
                 <RadioButton GroupName="hotkey" Name="rdbXMouse1" Content="X-Mouse1" Margin="10,0,0,0"  Checked="rdbXMouse1_Checked" />
                 <RadioButton GroupName="hotkey" Name="rdbXMouse2" Content="X-Mouse2" Margin="10,0,0,0" Checked="rdbXMouse2_Checked" />
-                <RadioButton GroupName="hotkey" Name="rdbKeys" Content="Lctrl + Lalt + Lshift + Q" Margin="10,0,0,0" Checked="rdbKeys_Checked" IsChecked="True"/>
+                <RadioButton GroupName="hotkey" Name="rdbKeys" Content="Lalt + Lshift + F11" Margin="10,0,0,0" Checked="rdbKeys_Checked" IsChecked="True"/>
             </StackPanel>
 
             <TextBlock Margin="10,10,0,0" Text="Show shortcuts :"/>

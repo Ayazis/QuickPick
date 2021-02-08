@@ -19,8 +19,6 @@ namespace QuickPick
 {
     public class QuickPickModel : INotifyPropertyChanged
     {
-
-
         public string SettingsPath
         {
             get
@@ -65,10 +63,10 @@ namespace QuickPick
 
         #region Properties        
         private ObservableCollection<Keys> _HotKeys = new ObservableCollection<Keys> {
-        Keys.LControlKey,
+     //   Keys.LControlKey,
         Keys.LMenu,
         Keys.LShiftKey,
-        Keys.Q,
+        Keys.F11,
         };
         public ObservableCollection<Keys> HotKeys
         {

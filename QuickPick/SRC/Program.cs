@@ -5,7 +5,7 @@ using System;
 using System.Diagnostics;
 using System.Windows.Forms;
 using System.Linq;
-
+using QuickPick.SRC.Logic;
 
 namespace QuickPick
 {
@@ -19,13 +19,16 @@ namespace QuickPick
         {          
             try
             {
-                KeyHook._hookID = KeyHook.SetHook(KeyHook._proc);
+                //ActiveApps.GetAllOpenWindows();
 
-                //Logs.Logger.Log("Started at " + DateTime.Now.ToString());            
 
                 _QP = new Models.QuickPick();
 
-                Application.Run(new ApplicationContext());
+                using (var context = new ApplicationContext())
+                {
+                    Application.Run(context);
+                }
+            
 
                 KeyHook.UnhookWindowsHookEx(KeyHook._hookID);
             }
