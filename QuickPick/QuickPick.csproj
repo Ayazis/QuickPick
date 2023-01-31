@@ -113,22 +113,22 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="SRC\Logic\KeyHook.cs" />
+    <Compile Include="SRC\Logic\Mouse and Keyboard\KeyHook.cs" />
     <Compile Include="SRC\Logic\ActiveApps.cs" />
-    <Compile Include="SRC\Logic\HotKeys.cs" />
-    <Compile Include="SRC\Logic\ISaveLoadSettings.cs" />
-    <Compile Include="SRC\Logic\MousePosition.cs" />
-    <Compile Include="SRC\Logic\JsonSaveLoader.cs" />
+    <Compile Include="SRC\Logic\Mouse and Keyboard\HotKeys.cs" />
+    <Compile Include="SRC\Logic\Saving and Loading settings\ISaveLoadSettings.cs" />
+    <Compile Include="SRC\Logic\Mouse and Keyboard\MousePosition.cs" />
+    <Compile Include="SRC\Logic\Saving and Loading settings\JsonSaveLoader.cs" />
     <Compile Include="SRC\Logic\ShortCutHandler.cs" />
-    <Compile Include="SRC\Logic\XMLsaveLoader.cs" />
+    <Compile Include="SRC\Logic\Saving and Loading settings\XMLsaveLoader.cs" />
     <Compile Include="SRC\QuickPick.cs" />
     <Compile Include="SRC\Models\QuickPickSettings.cs" />
     <Compile Include="SRC\Models\ShortCut.cs" />
     <Compile Include="SRC\Views\Converters\CenterToMarginConverter.cs" />
     <Compile Include="SRC\Models\Enums.cs" />
     <Compile Include="SRC\Models\QpButton.cs" />
-    <Compile Include="SRC\Logic\ButtonManager.cs" />
-    <Compile Include="SRC\Logic\InputSim.cs" />
+    <Compile Include="SRC\Logic\UI\ButtonManager.cs" />
+    <Compile Include="SRC\Logic\Mouse and Keyboard\InputSim.cs" />
     <Compile Include="SRC\Logic\ButtonActions.cs" />
     <Compile Include="SRC\Logic\Logs.cs" />
     <Compile Include="SRC\Program.cs" />
@@ -140,7 +140,7 @@
       <DependentUpon>ClickWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="SRC\ViewModel\QuickPickModel.cs" />
-    <Compile Include="SRC\Logic\WindowManager.cs" />
+    <Compile Include="SRC\Logic\UI\WindowManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SRC\App.config" />
@@ -160,16 +160,16 @@
     <Content Include="Readme.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SRC\Files\QP_Icon.png">
+    <Content Include="SRC\Assets\QP_Icon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SRC\Files\QP_Icon_32px.png">
+    <Content Include="SRC\Assets\QP_Icon_32px.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SRC\Files\Snip.png">
+    <Content Include="SRC\Assets\Snip.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SRC\Files\ssms.ico">
+    <Content Include="SRC\Assets\ssms.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="SRC\VersionHistory_TODO.txt" />
