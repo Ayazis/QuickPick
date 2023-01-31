@@ -113,7 +113,7 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="SRC\KeyHook.cs" />
+    <Compile Include="SRC\Logic\KeyHook.cs" />
     <Compile Include="SRC\Logic\ActiveApps.cs" />
     <Compile Include="SRC\Logic\HotKeys.cs" />
     <Compile Include="SRC\Logic\ISaveLoadSettings.cs" />
@@ -121,7 +121,7 @@
     <Compile Include="SRC\Logic\JsonSaveLoader.cs" />
     <Compile Include="SRC\Logic\ShortCutHandler.cs" />
     <Compile Include="SRC\Logic\XMLsaveLoader.cs" />
-    <Compile Include="SRC\Models\QuickPick.cs" />
+    <Compile Include="SRC\QuickPick.cs" />
     <Compile Include="SRC\Models\QuickPickSettings.cs" />
     <Compile Include="SRC\Models\ShortCut.cs" />
     <Compile Include="SRC\Views\Converters\CenterToMarginConverter.cs" />
@@ -144,7 +144,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="SRC\App.config" />
-    <None Include="SRC\packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="SRC\Views\SettingsWindow.xaml">
