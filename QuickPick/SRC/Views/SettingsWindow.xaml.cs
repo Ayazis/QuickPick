@@ -113,23 +113,8 @@ namespace QuickPick
         {
             var count = QP.QuickPickModel.MainButtons.Count;
             QP.QuickPickModel.MainButtons.RemoveAt(count - 1);
-        }
+        }     
 
-        private void rdbXMouse1_Checked(object sender, RoutedEventArgs e)
-        {
-            QP.QuickPickModel.Hotkey = HotKey.XMouse1;
-        }
-
-        private void rdbXMouse2_Checked(object sender, RoutedEventArgs e)
-        {
-            QP.QuickPickModel.Hotkey = HotKey.XMouse2;
-        }
-
-        private void rdbKeys_Checked(object sender, RoutedEventArgs e)
-        {
-            QP.QuickPickModel.Hotkey = HotKey.KeyCombination;
-        }
-     
         private void rdbOnCenter_Checked(object sender, RoutedEventArgs e)
         {
             QP.QuickPickModel.InstantShortCuts = false;

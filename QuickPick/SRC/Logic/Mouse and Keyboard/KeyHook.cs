@@ -3,6 +3,9 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using QuickPick.Logic;
+using QuickPick;
+using System.Windows;
+using Gma.System.MouseKeyHook;
 
 internal static class KeyHook
 {
@@ -15,17 +18,7 @@ internal static class KeyHook
     internal static IntPtr _hookID = IntPtr.Zero;
 
 
-    //public static void Main()
-    //{
-
-    //    _hookID = SetHook(_proc);
-    //    Application.Run();
-    //    UnhookWindowsHookEx(_hookID);
-
-    //}
-
-
-    internal static IntPtr SetHook(LowLevelKeyboardProc proc)
+    internal static void SetKeyboardHook()
     {
 
         using (Process curProcess = Process.GetCurrentProcess())
@@ -34,16 +27,35 @@ internal static class KeyHook
 
         {
 
-            return SetWindowsHookEx(WH_KEYBOARD_LL, proc,
+			_hookID = SetWindowsHookEx(WH_KEYBOARD_LL, _proc,
 
                 GetModuleHandle(curModule.ModuleName), 0);
 
         }
-
     }
 
+    internal static void SetMouseHooks()
+    {
+        Hook.GlobalEvents().MouseDown += MouseDown;
+        Hook.GlobalEvents().MouseUp += MouseUp;
+    }
 
-    internal delegate IntPtr LowLevelKeyboardProc(
+	private static void MouseDown(object sender, MouseEventArgs e)
+	{
+		Keys key = e.Button == MouseButtons.Left ? Keys.LButton : Keys.RButton;
+		HotKeys.KeyDowned(key);
+	}
+
+
+	private static void MouseUp(object sender, MouseEventArgs e)
+	{
+		Keys key = e.Button == MouseButtons.Left ? Keys.LButton : Keys.RButton;
+		HotKeys.KeyUpped(key);
+	}
+
+
+
+	internal delegate IntPtr LowLevelKeyboardProc(
 
         int nCode, IntPtr wParam, IntPtr lParam);
 
@@ -51,21 +63,19 @@ internal static class KeyHook
     private static IntPtr HookCallback(
         int nCode, IntPtr wParam, IntPtr lParam)
     {
-
         if (nCode >= 0 && wParam == (IntPtr)WM_KEYDOWN || wParam == (IntPtr)WM_SYSKEYDOWN)
         {
-
             int vkCode = Marshal.ReadInt32(lParam);
 
-            Console.WriteLine("DOWN: "+(Keys)vkCode);            
+            //Debug.WriteLine("DOWN: "+(Keys)vkCode);            
             HotKeys.KeyDowned((Keys)vkCode);
 
         }
         else if (wParam ==(IntPtr)WM_KEYUP)
         {
             int vkCode = Marshal.ReadInt32(lParam);
-            Console.WriteLine("Up: "+(Keys)vkCode);
-            HotKeys.KeyUpped((Keys)vkCode);
+			//Debug.WriteLine("Up: "+(Keys)vkCode);
+			HotKeys.KeyUpped((Keys)vkCode);
         }
 
         return CallNextHookEx(_hookID, nCode, wParam, lParam);

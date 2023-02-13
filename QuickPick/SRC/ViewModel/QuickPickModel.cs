@@ -55,18 +55,15 @@ namespace QuickPick
                 _SettingsAreSaved = value;
                 NotifyPropertyChanged(nameof(SettingsAreSaved));
             }
-        }
-
-        public HotKey Hotkey { get; set; } = HotKey.KeyCombination;
+        }    
 
         public bool InstantShortCuts { get; set; } = false;
 
         #region Properties        
         private ObservableCollection<Keys> _HotKeys = new ObservableCollection<Keys> {
      //   Keys.LControlKey,
-        Keys.LMenu,
-        Keys.LShiftKey,
-        Keys.F11,
+            Keys.LMenu,
+            Keys.RButton
         };
         public ObservableCollection<Keys> HotKeys
         {

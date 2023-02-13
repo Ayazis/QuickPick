@@ -18,13 +18,4 @@ namespace QuickPick.Enums
         PasteText,
     }
 
-    public enum HotKey
-    {
-        KeyCombination,
-        XMouse1,
-        XMouse2
-    }
-
-
-
 }

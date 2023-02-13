@@ -19,10 +19,13 @@ namespace QuickPick
         {          
             try
             {
-                //ActiveApps.GetAllOpenWindows();
+				//ActiveApps.GetAllOpenWindows();
 
+				// Set Keyboard and Mouse Hooks for click Events.
+				KeyHook.SetKeyboardHook();
+                KeyHook.SetMouseHooks();
 
-                _QP = new Models.QuickPick();
+				_QP = new Models.QuickPick();
 
                 using (var context = new ApplicationContext())
                 {
