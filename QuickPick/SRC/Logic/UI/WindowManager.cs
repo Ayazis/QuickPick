@@ -44,7 +44,8 @@ namespace QuickPick
 		{
 			CreateTrayIcon();
 			CreateWindow();
-			FindResources();				
+			FindResources();
+			
 		}
 
 		private void FindResources()
