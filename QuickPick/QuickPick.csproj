@@ -113,14 +113,13 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="SRC\Logic\Mouse and Keyboard\KeyHook.cs" />
+    <Compile Include="SRC\Logic\Mouse and Keyboard\CaptureKeyBoardAndMouse.cs" />
     <Compile Include="SRC\Logic\ActiveApps.cs" />
     <Compile Include="SRC\Logic\Mouse and Keyboard\HotKeys.cs" />
     <Compile Include="SRC\Logic\Saving and Loading settings\ISaveLoadSettings.cs" />
     <Compile Include="SRC\Logic\Mouse and Keyboard\MousePosition.cs" />
     <Compile Include="SRC\Logic\Saving and Loading settings\JsonSaveLoader.cs" />
     <Compile Include="SRC\Logic\ShortCutHandler.cs" />
-    <Compile Include="SRC\Logic\Saving and Loading settings\XMLsaveLoader.cs" />
     <Compile Include="SRC\QuickPick.cs" />
     <Compile Include="SRC\Models\QuickPickSettings.cs" />
     <Compile Include="SRC\Models\ShortCut.cs" />

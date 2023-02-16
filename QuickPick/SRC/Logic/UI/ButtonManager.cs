@@ -31,7 +31,7 @@ namespace QuickPick
                 var buttons = QP.QuickPickModel.MainButtons;
                 var nrOfButtons = buttons.Count;
                 double angle = 360 / (double)nrOfButtons;
-                var i = 0;
+				int i = 0;
                 var buttonStyle = QP.WindowManager.ClickWindow.TryFindResource("RoundButton");
 
                 foreach (var qpButton in buttons)
