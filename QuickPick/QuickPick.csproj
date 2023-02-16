@@ -113,7 +113,7 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="SRC\Logic\Mouse and Keyboard\KeyHook.cs" />
+    <Compile Include="SRC\Logic\Mouse and Keyboard\CaptureKeyBoardAndMouse.cs" />
     <Compile Include="SRC\Logic\ActiveApps.cs" />
     <Compile Include="SRC\Logic\Mouse and Keyboard\HotKeys.cs" />
     <Compile Include="SRC\Logic\Saving and Loading settings\ISaveLoadSettings.cs" />

@@ -22,8 +22,8 @@ namespace QuickPick
 				//ActiveApps.GetAllOpenWindows();
 
 				// Set Keyboard and Mouse Hooks for click Events.
-				KeyHook.SetKeyboardHook();
-                KeyHook.SetMouseHooks();
+				CaptureKeyBoardAndMouse.SetInputHooks();
+                CaptureKeyBoardAndMouse.SetInputHooks();
 
 				_QP = new Models.QuickPick();
 
@@ -33,8 +33,9 @@ namespace QuickPick
                 }
             
 
-                KeyHook.UnhookWindowsHookEx(KeyHook._hookID);
-            }
+                CaptureKeyBoardAndMouse.UnhookWindowsHookEx(CaptureKeyBoardAndMouse._keyboardHookID);
+				CaptureKeyBoardAndMouse.UnhookWindowsHookEx(CaptureKeyBoardAndMouse._mouseHookId);
+			}
             catch (Exception ex)
             {
                 Logs.Logger.Log(ex);              
