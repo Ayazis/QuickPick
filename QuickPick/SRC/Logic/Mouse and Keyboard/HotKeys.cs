@@ -38,7 +38,7 @@ namespace QuickPick.Logic
                     // Don't add it again if it's already there. This may happen when a user holds down a key.
                     if(!PressedKeys.Contains(key))
                         PressedKeys.Add(key);
-                    Debug.WriteLine("Down:  " + key.ToString());
+                   // Debug.WriteLine("Down:  " + key.ToString());
 
                     if (PressedKeys.Count == _qpm.HotKeys.Count)
                         CheckHotKeyCombo();
