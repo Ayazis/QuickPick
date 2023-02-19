@@ -40,6 +40,7 @@ namespace QuickPick.Logic
 
         private static POINT CorrectForScaling(POINT lpPoint)
         {
+            // Todo: Multiple screens, multiple scaling!
             using (Graphics graphics = Graphics.FromHwnd(IntPtr.Zero))
             {
                 float dpiX = graphics.DpiX;
