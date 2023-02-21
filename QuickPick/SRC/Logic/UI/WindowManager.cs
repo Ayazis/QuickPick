@@ -171,7 +171,7 @@ namespace QuickPick
 			}
 		}
 
-		private System.Windows.Point GetMousePosition()
+		private System.Drawing.Point GetMousePosition()
 		{
 			return MousePosition.GetCursorPosition();
 		}
