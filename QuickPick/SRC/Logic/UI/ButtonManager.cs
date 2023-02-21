@@ -199,9 +199,9 @@ namespace QuickPick
             int i = 0;
             foreach (var app in allActiveApps)
             {
-				app.Thumbnail.Width = 25;
-				app.Thumbnail.Height= 25;
-				app.Thumbnail.Margin = CalculateMargin(25, angle, i, 200);
+				//app.Thumbnail.Width = 25;
+				//app.Thumbnail.Height= 25;
+				//app.Thumbnail.Margin = CalculateMargin(25, angle, i, 200);
 				//QP.WindowManager.ClickWindow.Canvas.Children.Add(app.Thumbnail);
 			}
 

@@ -1,67 +1,85 @@
-﻿using System;
-using System.Drawing;
+﻿using PInvoke;
 using System.Runtime.InteropServices;
-namespace QuickPick.Logic.ActiveApps
+using System;
+using System.Windows;
+
+namespace ThumbnailLogic;
+
+public class Thumbnails
 {
+    private const int DWM_TNP_VISIBLE = 0x8;
+    private const int DWM_TNP_RECTDESTINATION = 0x1;
+    private const int DWM_TNP_OPACITY = 0x4;    
+    private static DWM_THUMBNAIL_PROPERTIES thumbnailProperties;
 
-	public class ThumbnailGetter
-	{
-		[DllImport("user32.dll")]
-		public static extern IntPtr GetWindow(IntPtr hWnd, uint uCmd);
+    [DllImport("dwmapi.dll")]
+    public static extern int DwmRegisterThumbnail(IntPtr dest, IntPtr src, out IntPtr thumb);
 
-		[DllImport("dwmapi.dll")]
-		public static extern int DwmGetWindowAttribute(IntPtr hwnd, uint dwAttribute, out RECT pvAttribute, int cbAttribute);
+    [DllImport("dwmapi.dll")]
+    public static extern int DwmUnregisterThumbnail(IntPtr thumb);
 
-		[StructLayout(LayoutKind.Sequential)]
-		public struct RECT
-		{
-			public int left;
-			public int top;
-			public int right;
-			public int bottom;
-		}
+    public static IntPtr GetThumbnailRelations(IntPtr hwndSource, IntPtr hwndDestination)
+    {      
+        IntPtr thumb = IntPtr.Zero;
 
-		public static Image GetThumbnail(IntPtr hWnd)
-		{
-			if (IsIconic(hWnd) || !IsWindowVisible(hWnd))
-			{
-				return null;
-			}
-			RECT rect;
-			DwmGetWindowAttribute(hWnd, 9, out rect, Marshal.SizeOf(typeof(RECT)));
+        int result = DwmRegisterThumbnail(hwndDestination, hwndSource, out thumb);
 
-			int width = rect.right - rect.left;
-			int height = rect.bottom - rect.top;
+        if (result == 0 && thumb != IntPtr.Zero)
+        {
+            // Successfully registered thumbnail, do something with it
 
-			if (width == 0 || height == 0)
-				return null;
+            return thumb;
 
-			Bitmap bmp = new Bitmap(width, height);
-			Graphics gfx = Graphics.FromImage(bmp);
+            // Unregister thumbnail when done
+            //DwmUnregisterThumbnail(thumb);
+        }
+        else
+        {
+            return default;// Failed to register thumbnail
+        }
+    }
 
-			IntPtr hdc = gfx.GetHdc();
-			bool success = PrintWindow(hWnd, hdc, 0);
-			gfx.ReleaseHdc(hdc);
+    internal static void CreateThumbnail(IntPtr thumbHandle, RECT target)
+    {
+        // Set the properties of the thumbnail.
+        thumbnailProperties = new DWM_THUMBNAIL_PROPERTIES();
+        thumbnailProperties.dwFlags = DWM_TNP_VISIBLE | DWM_TNP_RECTDESTINATION | DWM_TNP_OPACITY;
+        thumbnailProperties.opacity = 255;
+        thumbnailProperties.fVisible = true;
+        thumbnailProperties.rcDestination = target; // Set the size and position of the thumbnail here.
 
-			if (success)
-			{
-				return bmp;
-			}
-			else
-			{
-				bmp.Dispose();
-				return null;
-			}
-		}
+        int result = DwmUpdateThumbnailProperties(thumbHandle, ref thumbnailProperties);
+    }
 
-		[DllImport("user32.dll")]
-		public static extern bool IsIconic(IntPtr hWnd);
 
-		[DllImport("user32.dll")]
-		public static extern bool IsWindowVisible(IntPtr hWnd);
+    [DllImport("dwmapi.dll")]
+    private static extern int DwmUpdateThumbnailProperties(IntPtr hThumbnailId, ref DWM_THUMBNAIL_PROPERTIES ptnProperties);
+}
 
-		[DllImport("user32.dll")]
-		public static extern bool PrintWindow(IntPtr hwnd, IntPtr hdcBlt, uint nFlags);
-	}
+[StructLayout(LayoutKind.Sequential)]
+public struct DWM_THUMBNAIL_PROPERTIES
+{
+    public int dwFlags;
+    public RECT rcDestination;
+    public RECT rcSource;
+    public byte opacity;
+    public bool fVisible;
+    public bool fSourceClientAreaOnly;
+}
 
+[StructLayout(LayoutKind.Sequential)]
+public struct RECT
+{
+    public int Left;
+    public int Top;
+    public int Right;
+    public int Bottom;
+
+    public RECT(int left, int top, int right, int bottom)
+    {
+        Left = left;
+        Top = top;
+        Right = right;
+        Bottom = bottom;
+    }
 }

@@ -1,8 +1,12 @@
 using NUnit.Framework;
 using QuickPick.SRC.Logic;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Threading;
+using ThumbnailLogic;
 
 namespace QuickPick.Tests
 {
@@ -14,9 +18,10 @@ namespace QuickPick.Tests
 		}
 
 		[Test]
-		public void Test1()
+        [Apartment(ApartmentState.STA)]
+        public void Test1()
 		{
-			var thumnails = ActiveApps.GetAllOpenWindows().ToList();
+			
 			
 		}
 	}

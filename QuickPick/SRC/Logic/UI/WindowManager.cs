@@ -13,6 +13,7 @@ using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Media.Animation;
 using QuickPick.SRC.Logic;
+using ThumbnailLogic;
 
 namespace QuickPick
 {
@@ -144,8 +145,6 @@ namespace QuickPick
 		{
 			try
 			{
-
-
 				SetActiveWindow();
 
 				ClickWindow.Dispatcher.Invoke(() =>
@@ -164,6 +163,8 @@ namespace QuickPick
 					ShowShortCuts();
 				}
 
+				ShowPreviews();
+
 			}
 			catch (Exception ex)
 			{
@@ -171,7 +172,33 @@ namespace QuickPick
 			}
 		}
 
-		private System.Drawing.Point GetMousePosition()
+        private void ShowPreviews()
+        {
+			var processes = System.Diagnostics.Process.GetProcesses().Where(w => !string.IsNullOrEmpty(w.MainWindowTitle));
+			var windowHandle = processes.First(f => f.MainWindowHandle != IntPtr.Zero).MainWindowHandle;
+			var currentProcess = System.Diagnostics.Process.GetCurrentProcess();
+			windowHandle = currentProcess.MainWindowHandle;
+
+			var allOpenWindows = ActiveApps.GetAllOpenWindows();
+
+			int size = 300;
+			int x = 0;
+			int y = 0;
+			int xmax = size;
+			int ymax = size;
+			foreach (var process in allOpenWindows)
+			{
+				var thumbHandle = ThumbnailLogic.Thumbnails.GetThumbnailRelations(process.MainWindowHandle, windowHandle);
+				if (thumbHandle == default) 
+					continue;
+				RECT rect = new RECT(x, y, xmax, ymax);
+				Thumbnails.CreateThumbnail(thumbHandle, rect);
+				x += size;
+				xmax += size;
+			}
+		}
+
+        private System.Drawing.Point GetMousePosition()
 		{
 			return MousePosition.GetCursorPosition();
 		}
