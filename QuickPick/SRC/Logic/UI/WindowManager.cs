@@ -14,6 +14,7 @@ using System.Windows.Forms;
 using System.Windows.Media.Animation;
 using QuickPick.SRC.Logic;
 using ThumbnailLogic;
+using System.Diagnostics;
 
 namespace QuickPick
 {
@@ -46,6 +47,7 @@ namespace QuickPick
 			CreateTrayIcon();
 			CreateWindow();
 			FindResources();
+			this.ClickWindow.ShowInTaskbar = false;
 			
 		}
 
@@ -109,24 +111,52 @@ namespace QuickPick
 		private void CreateWindow()
 		{
 			try
-			{
-				ClickWindow = new ClickWindow(QP);
-				QP.SaveLoader.LoadSettingsFile();
+            {
+                ClickWindow = new ClickWindow(QP);
+                QP.SaveLoader.LoadSettingsFile();
 
-				ClickWindow.WindowStartupLocation = WindowStartupLocation.Manual;
-				ClickWindow.WindowStyle = WindowStyle.None;
-				ClickWindow.Topmost = true;
-				ClickWindow.Show();
-				ClickWindow.Visibility = Visibility.Hidden;
-				ClickWindow.Closed += Window_Closed;
-			}
-			catch (Exception ex)
+                ClickWindow.WindowStartupLocation = WindowStartupLocation.Manual;
+                ClickWindow.WindowStyle = WindowStyle.None;
+                ClickWindow.Topmost = true;
+                ClickWindow.Show();
+
+                SetThumbnailReletions();
+
+                ClickWindow.Visibility = Visibility.Hidden;
+                ClickWindow.Closed += Window_Closed;
+            }
+            catch (Exception ex)
 			{
 				Logs.Logger.Log(ex);
 			}
 		}
 
-		private void Window_Closed(object sender, EventArgs e)
+        private static void SetThumbnailReletions()
+        {
+            var processes = Process.GetProcesses().Where(w => !string.IsNullOrEmpty(w.MainWindowTitle));            
+            var currentProcess = Process.GetCurrentProcess();
+            var windowHandle = currentProcess.MainWindowHandle;
+
+            var allOpenWindows = ActiveApps.GetAllOpenWindows();
+
+            int size = 300;
+            int x = 0;
+            int y = 0;
+            int xmax = size;
+            int ymax = size;
+            foreach (var process in allOpenWindows)
+            {
+                var thumbHandle = Thumbnails.GetThumbnailRelations(process.MainWindowHandle, windowHandle);
+                if (thumbHandle == default) 
+					continue;
+                RECT rect = new RECT(x, y, xmax, ymax);
+                Thumbnails.CreateThumbnail(thumbHandle, rect);
+                x += size;
+                xmax += size;
+            }
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
 		{
 			_notificationIcon.Dispose();
 		}
