@@ -49,7 +49,7 @@ namespace QuickPick
 			CreateWindow();
 			FindResources();
 			this.ClickWindow.ShowInTaskbar = false;
-			
+
 		}
 
 		private void FindResources()
@@ -112,28 +112,28 @@ namespace QuickPick
 		private void CreateWindow()
 		{
 			try
-            {
-                ClickWindow = new ClickWindow(QP);
-                QP.SaveLoader.LoadSettingsFile();
+			{
+				ClickWindow = new ClickWindow(QP);
+				QP.SaveLoader.LoadSettingsFile();
 
-                ClickWindow.WindowStartupLocation = WindowStartupLocation.Manual;
-                ClickWindow.WindowStyle = WindowStyle.None;
-                ClickWindow.Topmost = true;
-                ClickWindow.Show();
+				ClickWindow.WindowStartupLocation = WindowStartupLocation.Manual;
+				ClickWindow.WindowStyle = WindowStyle.None;
+				ClickWindow.Topmost = true;
+				ClickWindow.Show();
 
 				SetQuickPicksMainWindowHandle();
 
 				ClickWindow.Visibility = Visibility.Hidden;
-                ClickWindow.Closed += Window_Closed;
-            }
-            catch (Exception ex)
+				ClickWindow.Closed += Window_Closed;
+			}
+			catch (Exception ex)
 			{
 				Logs.Logger.Log(ex);
 			}
 		}
 
 
-		private  void SetQuickPicksMainWindowHandle()
+		private void SetQuickPicksMainWindowHandle()
 		{
 			// Getting the window handle only works when the app is shown in the taskbar.
 			// hHe handle remains usable after setting this to false.
@@ -142,9 +142,9 @@ namespace QuickPick
 			_quickPickMainWindowHandle = currentProcess.MainWindowHandle;
 			ClickWindow.ShowInTaskbar = false;
 
-		}   
+		}
 
-        private void Window_Closed(object sender, EventArgs e)
+		private void Window_Closed(object sender, EventArgs e)
 		{
 			_notificationIcon.Dispose();
 		}
@@ -190,29 +190,29 @@ namespace QuickPick
 			}
 		}
 
-        private void ShowPreviews()
-        {
-
+		private void ShowPreviews()
+		{
 			var allOpenWindows = ActiveApps.GetAllOpenWindows();
 
-			int size = 300;
-			int x = 0;
-			int y = 0;
-			int xmax = size;
-			int ymax = size;
+			double sizeFactor = 0.1;
+
+			double x = 0;
+			double y = 0;
+			double xmax = 1920 * sizeFactor;
+			double ymax = 1080 * sizeFactor;
 			foreach (var process in allOpenWindows)
 			{
 				var thumbHandle = ThumbnailLogic.Thumbnails.GetThumbnailRelations(process.MainWindowHandle, _quickPickMainWindowHandle);
-				if (thumbHandle == default) 
+				if (thumbHandle == default)
 					continue;
-				RECT rect = new RECT(x, y, xmax, ymax);
+				RECT rect = new RECT((int)x, (int)y, (int)xmax, (int)ymax);
 				Thumbnails.CreateThumbnail(thumbHandle, rect);
-				x += size;
-				xmax += size;
+				x += xmax;
+				xmax += xmax;
 			}
 		}
 
-        private System.Drawing.Point GetMousePosition()
+		private System.Drawing.Point GetMousePosition()
 		{
 			return MousePosition.GetCursorPosition();
 		}
