@@ -30,7 +30,6 @@ namespace QuickPick
 
 				// Set Keyboard and Mouse Hooks for click Events.
 				CaptureKeyBoardAndMouse.SetInputHooks();
-                CaptureKeyBoardAndMouse.SetInputHooks();
 
 				_QP = new Models.QuickPick();
                 

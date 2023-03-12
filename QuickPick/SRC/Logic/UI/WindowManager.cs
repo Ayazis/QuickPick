@@ -139,6 +139,8 @@ namespace QuickPick
 
             var allOpenWindows = ActiveApps.GetAllOpenWindows();
 
+
+			// Todo: Make size relative to screenratio, add title, make clickable
             int size = 300;
             int x = 0;
             int y = 0;
