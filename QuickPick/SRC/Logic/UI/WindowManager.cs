@@ -22,10 +22,11 @@ namespace QuickPick
 	{
 		public Models.QuickPick QP { get; set; }
 		private NotifyIcon _notificationIcon;
-		static IntPtr _ActiveWindowHandle;
+		IntPtr _ActiveWindowHandle; // used to store the current application whenever quickPick is activated.
 
 		public ClickWindow ClickWindow { get; set; }
 		private SettingsWindow _settingsWindow;
+		IntPtr _quickPickMainWindowHandle;
 
 		public Storyboard Hide { get; private set; }
 		public Storyboard Show { get; private set; }
@@ -120,9 +121,9 @@ namespace QuickPick
                 ClickWindow.Topmost = true;
                 ClickWindow.Show();
 
-                SetThumbnailReletions();
+				SetQuickPicksMainWindowHandle();
 
-                ClickWindow.Visibility = Visibility.Hidden;
+				ClickWindow.Visibility = Visibility.Hidden;
                 ClickWindow.Closed += Window_Closed;
             }
             catch (Exception ex)
@@ -131,32 +132,17 @@ namespace QuickPick
 			}
 		}
 
-        private static void SetThumbnailReletions()
-        {
-            var processes = Process.GetProcesses().Where(w => !string.IsNullOrEmpty(w.MainWindowTitle));            
-            var currentProcess = Process.GetCurrentProcess();
-            var windowHandle = currentProcess.MainWindowHandle;
 
-            var allOpenWindows = ActiveApps.GetAllOpenWindows();
+		private  void SetQuickPicksMainWindowHandle()
+		{
+			// Getting the window handle only works when the app is shown in the taskbar.
+			// hHe handle remains usable after setting this to false.
+			ClickWindow.ShowInTaskbar = true;
+			Process currentProcess = Process.GetCurrentProcess();
+			_quickPickMainWindowHandle = currentProcess.MainWindowHandle;
+			ClickWindow.ShowInTaskbar = false;
 
-
-			// Todo: Make size relative to screenratio, add title, make clickable
-            int size = 300;
-            int x = 0;
-            int y = 0;
-            int xmax = size;
-            int ymax = size;
-            foreach (var process in allOpenWindows)
-            {
-                var thumbHandle = Thumbnails.GetThumbnailRelations(process.MainWindowHandle, windowHandle);
-                if (thumbHandle == default) 
-					continue;
-                RECT rect = new RECT(x, y, xmax, ymax);
-                Thumbnails.CreateThumbnail(thumbHandle, rect);
-                x += size;
-                xmax += size;
-            }
-        }
+		}   
 
         private void Window_Closed(object sender, EventArgs e)
 		{
@@ -206,10 +192,6 @@ namespace QuickPick
 
         private void ShowPreviews()
         {
-			var processes = System.Diagnostics.Process.GetProcesses().Where(w => !string.IsNullOrEmpty(w.MainWindowTitle));
-			var windowHandle = processes.First(f => f.MainWindowHandle != IntPtr.Zero).MainWindowHandle;
-			var currentProcess = System.Diagnostics.Process.GetCurrentProcess();
-			windowHandle = currentProcess.MainWindowHandle;
 
 			var allOpenWindows = ActiveApps.GetAllOpenWindows();
 
@@ -220,7 +202,7 @@ namespace QuickPick
 			int ymax = size;
 			foreach (var process in allOpenWindows)
 			{
-				var thumbHandle = ThumbnailLogic.Thumbnails.GetThumbnailRelations(process.MainWindowHandle, windowHandle);
+				var thumbHandle = ThumbnailLogic.Thumbnails.GetThumbnailRelations(process.MainWindowHandle, _quickPickMainWindowHandle);
 				if (thumbHandle == default) 
 					continue;
 				RECT rect = new RECT(x, y, xmax, ymax);

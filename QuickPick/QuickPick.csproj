@@ -115,6 +115,7 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SRC\Logic\UI\RunningApp.cs" />
     <Compile Include="SRC\Logic\Mouse and Keyboard\CaptureKeyBoardAndMouse.cs" />
     <Compile Include="SRC\Logic\ActiveApps.cs" />
     <Compile Include="SRC\Logic\Mouse and Keyboard\HotKeys.cs" />
