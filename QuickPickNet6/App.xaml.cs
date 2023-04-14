@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Application = System.Windows.Application;
 using System.Windows.Forms;
 using System.Windows;
+using System.Diagnostics;
 
 namespace QuickPickNet6;
 /// <summary>
@@ -30,9 +31,9 @@ public partial class App : Application
 
 		
 
-		// Create the main window and show it
-		var mainWindow = new MainWindow();
-		mainWindow.Show();
+		//// Create the main window and show it
+		//var mainWindow = new MainWindow();
+		//mainWindow.Show();
 
 
 		// Todo: Set Mainwindow Handle (needed for displaying thumbnails)
@@ -41,11 +42,11 @@ public partial class App : Application
 
 	private void HotKeys_LeftMouseClicked()
 	{
-		throw new NotImplementedException();
+		Debug.WriteLine("Left mouse!");
 	}
 
 	private void HotKeys_KeyCombinationHit()
 	{
-		throw new NotImplementedException();
+		Debug.WriteLine("KeyCombo!");
 	}
 }

@@ -50,8 +50,7 @@ public static class HotKeys
 			{
 				// Don't add it again if it's already there. This may happen when a user holds down a key.
 				if (!PressedKeys.Contains(key))
-					PressedKeys.Add(key);
-				Debug.WriteLine("Down:  " + key.ToString());
+					PressedKeys.Add(key);			
 
 				if (PressedKeys.Count == _presetKeyCombination.Count)
 					CheckHotKeyCombo();
@@ -69,8 +68,7 @@ public static class HotKeys
 		{
 			if (_presetKeyCombination.Contains(key))
 			{
-				PressedKeys.Remove(key);
-				Debug.WriteLine("Up: " + key.ToString());
+				PressedKeys.Remove(key);				
 			}
 		}
 		catch (Exception ex)
@@ -84,8 +82,6 @@ public static class HotKeys
 	{
 		try
 		{
-
-			Debug.WriteLine("CHECKING");
 			bool allPressed = true;
 			foreach (Keys key in _presetKeyCombination)
 			{
@@ -93,8 +89,7 @@ public static class HotKeys
 					allPressed = false;
 			}
 			if (allPressed)
-			{
-				Debug.WriteLine("***** SHOWING THE WINDOW *****");
+			{				
 				PressedKeys.Clear();
 				KeyCombinationHit?.Invoke();
 			}
