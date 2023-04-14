@@ -120,7 +120,7 @@
     <Compile Include="SRC\Logic\ActiveApps.cs" />
     <Compile Include="SRC\Logic\Mouse and Keyboard\HotKeys.cs" />
     <Compile Include="SRC\Logic\Saving and Loading settings\ISaveLoadSettings.cs" />
-    <Compile Include="SRC\Logic\Mouse and Keyboard\MousePosition.cs" />
+    <Compile Include="SRC\Logic\MousePosition.cs" />
     <Compile Include="SRC\Logic\Saving and Loading settings\JsonSaveLoader.cs" />
     <Compile Include="SRC\Logic\ScreenCaptures\ScreenUtils.cs" />
     <Compile Include="SRC\Logic\ShortCutHandler.cs" />
@@ -135,7 +135,7 @@
     <Compile Include="SRC\Models\Enums.cs" />
     <Compile Include="SRC\Models\QpButton.cs" />
     <Compile Include="SRC\Logic\UI\ButtonManager.cs" />
-    <Compile Include="SRC\Logic\Mouse and Keyboard\InputSim.cs" />
+    <Compile Include="SRC\Logic\InputSim.cs" />
     <Compile Include="SRC\Logic\ButtonActions.cs" />
     <Compile Include="SRC\Logic\Logs.cs" />
     <Compile Include="SRC\Program.cs" />
