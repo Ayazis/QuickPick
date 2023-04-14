@@ -6,7 +6,6 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using System.Linq;
 using QuickPick.SRC.Logic;
-using MyApp;
 using ThumbnailLogic;
 using System.Windows.Interop;
 using System.Windows.Media.Imaging;

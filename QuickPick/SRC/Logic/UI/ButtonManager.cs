@@ -50,8 +50,7 @@ namespace QuickPick
                     QP.WindowManager.ClickWindow.Canvas.Children.Add(qpButton.Button);
                     i++;
                 }
-
-                AddActiveAppThumbnails();
+            
             }
             catch (Exception ex)
             {
@@ -191,21 +190,6 @@ namespace QuickPick
             return button;
         }
 
-        public void AddActiveAppThumbnails()
-        {
-            var allActiveApps = ActiveApps.GetAllOpenWindows();
-			double angle = 360 / allActiveApps.Count();
-
-            int i = 0;
-            foreach (var app in allActiveApps)
-            {
-				//app.Thumbnail.Width = 25;
-				//app.Thumbnail.Height= 25;
-				//app.Thumbnail.Margin = CalculateMargin(25, angle, i, 200);
-				//QP.WindowManager.ClickWindow.Canvas.Children.Add(app.Thumbnail);
-			}
-
-        }
         public void AddShortCuts()
         {
             double angle = 360 / (double)QP.QuickPickModel.ShortCuts.Count;

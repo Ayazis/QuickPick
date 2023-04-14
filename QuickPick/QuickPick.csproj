@@ -128,7 +128,10 @@
     <Compile Include="SRC\QuickPick.cs" />
     <Compile Include="SRC\Models\QuickPickSettings.cs" />
     <Compile Include="SRC\Models\ShortCut.cs" />
-    <Compile Include="SRC\Views\Converters\CenterToMarginConverter.cs" />
+    <Compile Include="SRC\Views\OpenAppsWindow.xaml.cs">
+      <DependentUpon>OpenAppsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SRC\Converters\CenterToMarginConverter.cs" />
     <Compile Include="SRC\Models\Enums.cs" />
     <Compile Include="SRC\Models\QpButton.cs" />
     <Compile Include="SRC\Logic\UI\ButtonManager.cs" />
@@ -140,28 +143,28 @@
     <Compile Include="SRC\Views\SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SRC\Views\ClickWindow.xaml.cs">
+    <Compile Include="SRC\Views\QuickPickWindow\ClickWindow.xaml.cs">
       <DependentUpon>ClickWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SRC\ViewModel\QuickPickModel.cs" />
+    <Compile Include="SRC\Views\QuickPickWindow\QuickPickModel.cs" />
     <Compile Include="SRC\Logic\UI\WindowManager.cs" />
-    <Compile Include="MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Monikers.imagemanifest">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <None Include="SRC\App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="SRC\Views\OpenAppsWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="SRC\Views\SettingsWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="SRC\Views\ClickWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="MainWindow.xaml">
+    <Page Include="SRC\Views\QuickPickWindow\ClickWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

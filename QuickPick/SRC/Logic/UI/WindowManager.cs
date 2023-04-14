@@ -202,7 +202,7 @@ namespace QuickPick
 			double ymax = 1080 * sizeFactor;
 			foreach (var process in allOpenWindows)
 			{
-				var thumbHandle = ThumbnailLogic.Thumbnails.GetThumbnailRelations(process.MainWindowHandle, _quickPickMainWindowHandle);
+				var thumbHandle = Thumbnails.GetThumbnailRelations(process.MainWindowHandle, _quickPickMainWindowHandle);
 				if (thumbHandle == default)
 					continue;
 				RECT rect = new RECT((int)x, (int)y, (int)xmax, (int)ymax);
