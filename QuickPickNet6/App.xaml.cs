@@ -21,19 +21,31 @@ public partial class App : Application
 
 		// Set Keyboard hooks
 		List<Keys> keyCombination = new List<Keys> { Keys.LMenu, Keys.RButton };
-
-
 		HotKeys.SubscribeToKeyEvents(keyCombination);
 
-		// Perform any initialization tasks here
-		// For example, you can create objects and set properties, or show a splash screen
+		// Two main events that need handling for UI purposes.
+		// The logic for these should not remain within this class.
+		HotKeys.KeyCombinationHit += HotKeys_KeyCombinationHit;
+		HotKeys.LeftMouseClicked += HotKeys_LeftMouseClicked;
+
+		
 
 		// Create the main window and show it
 		var mainWindow = new MainWindow();
 		mainWindow.Show();
 
 
-		// Set Mainwindow Handle (needed for displaying thumbnails)
+		// Todo: Set Mainwindow Handle (needed for displaying thumbnails)
 
+	}
+
+	private void HotKeys_LeftMouseClicked()
+	{
+		throw new NotImplementedException();
+	}
+
+	private void HotKeys_KeyCombinationHit()
+	{
+		throw new NotImplementedException();
 	}
 }
