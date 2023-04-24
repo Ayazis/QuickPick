@@ -16,6 +16,7 @@ namespace QuickPickNet6;
 /// </summary>
 public partial class App : Application
 {
+	MainWindow _mainWindow;
 	protected override void OnStartup(StartupEventArgs e)
 	{
 		base.OnStartup(e);
@@ -27,17 +28,27 @@ public partial class App : Application
 		// Two main events that need handling for UI purposes.
 		// The logic for these should not remain within this class.
 		HotKeys.KeyCombinationHit += HotKeys_KeyCombinationHit;
-		HotKeys.LeftMouseClicked += HotKeys_LeftMouseClicked;
+		HotKeys.LeftMouseClicked += HotKeys_LeftMouseClicked;	
+				
+		_mainWindow = new MainWindow();
 
-		
-
-		//// Create the main window and show it
-		//var mainWindow = new MainWindow();
-		//mainWindow.Show();
-
+		var mainHandle = SetQuickPicksMainWindowHandle();
 
 		// Todo: Set Mainwindow Handle (needed for displaying thumbnails)
 
+	}
+
+	private IntPtr SetQuickPicksMainWindowHandle()
+	{
+		_mainWindow.Show();
+		// Getting the window handle only works when the app is shown in the taskbar.
+		//thHe handle remains usable after setting this to false.
+		_mainWindow.ShowInTaskbar = true;
+		Process currentProcess = Process.GetCurrentProcess();
+		var quickPickMainWindowHandle = currentProcess.MainWindowHandle;
+		_mainWindow.ShowInTaskbar = false;
+		_mainWindow.Hide();
+		return quickPickMainWindowHandle;		
 	}
 
 	private void HotKeys_LeftMouseClicked()
