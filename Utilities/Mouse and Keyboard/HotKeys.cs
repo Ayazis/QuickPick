@@ -1,4 +1,5 @@
 ﻿
+using Ayazis.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -22,9 +23,9 @@ public static class HotKeys
 		_presetKeyCombination = presetKeyCombination.ToList();
 
 		// Connect House and Keyboard input events to current class.
-		CaptureKeyBoardAndMouse.HookIntoMouseAndKeyBoard();
-		CaptureKeyBoardAndMouse.KeyDowned += CaptureKeyBoardAndMouse_KeyDowned;
-		CaptureKeyBoardAndMouse.KeyUpped += CaptureKeyBoardAndMouse_KeyUpped;
+		MouseAndKeysCapture.HookIntoMouseAndKeyBoard();
+		MouseAndKeysCapture.KeyDowned += CaptureKeyBoardAndMouse_KeyDowned;
+		MouseAndKeysCapture.KeyUpped += CaptureKeyBoardAndMouse_KeyUpped;
 
 	}
 	private static void CaptureKeyBoardAndMouse_KeyDowned(object? sender, KeyEventArgs e)

@@ -92,21 +92,7 @@ namespace QuickPick
 		}
 
 
-		private void MnuSettings_Click(object sender, EventArgs e)
-		{
-			try
-			{
-				_settingsWindow = new SettingsWindow(QP);
-				_settingsWindow.WindowStyle = WindowStyle.None;
-				_settingsWindow.DataContext = QP.QuickPickModel;
-				_settingsWindow.Show();
-
-			}
-			catch (Exception ex)
-			{
-				Logs.Logger.Log(ex);
-			}
-		}
+	
 
 
 		private void CreateWindow()

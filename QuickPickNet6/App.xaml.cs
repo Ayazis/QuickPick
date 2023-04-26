@@ -34,15 +34,15 @@ public partial class App : Application
 
 		var mainHandle = SetQuickPicksMainWindowHandle();
 
-		// Todo: Set Mainwindow Handle (needed for displaying thumbnails)
+		new TrayIcon().CreateTrayIcon();
 
 	}
 
 	private IntPtr SetQuickPicksMainWindowHandle()
-	{
+	{		
+		// Getting the window handle only works when the app is shown in the taskbar & the mainwindow is shown.
+		// The handle remains usable after setting this to false.
 		_mainWindow.Show();
-		// Getting the window handle only works when the app is shown in the taskbar.
-		//thHe handle remains usable after setting this to false.
 		_mainWindow.ShowInTaskbar = true;
 		Process currentProcess = Process.GetCurrentProcess();
 		var quickPickMainWindowHandle = currentProcess.MainWindowHandle;
@@ -60,4 +60,6 @@ public partial class App : Application
 	{
 		Debug.WriteLine("KeyCombo!");
 	}
+
+
 }
