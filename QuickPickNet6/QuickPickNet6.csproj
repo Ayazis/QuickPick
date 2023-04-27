@@ -29,13 +29,11 @@
     </Content>
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup>	  
 	  <PackageReference Include="Microsoft.Windows.Compatibility" Version="6.0.4" />
 	  <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
-	  <ProjectReference Include="..\Utilities\Utilities.csproj" />
-	  <Reference Include="System.Windows.Forms">
-      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Windows.Forms.dll</HintPath>
-    </Reference>
+	  <PackageReference Include="System.Windows.Forms" />
+	  <ProjectReference Include="..\Utilities\Utilities.csproj" />    
   </ItemGroup>
 
 </Project>
