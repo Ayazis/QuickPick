@@ -22,6 +22,28 @@
         </ResourceDictionary>
     </Window.Resources>
     <Grid>
+        <Grid.RowDefinitions >
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <!--#region CreateCircle-->
+        <Path                
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center"            
+                Stroke="Black" StrokeThickness="0" Fill="#955e5e5e"  >
+            <Path.Data>
+                <GeometryGroup FillRule="EvenOdd">
+                    <EllipseGeometry RadiusX="{Binding CircleRadius}" RadiusY="{Binding CircleRadius}" Center="{Binding Center}"/>
+                </GeometryGroup>
+            </Path.Data>
+        </Path>
+        <!--#endregion-->
+        <Button Style="{StaticResource  ResourceKey=RoundButton}"  
+                Visibility="Visible" 
+                Name="btnCenter" 
+                Width="25" Height="25" 
+                Margin="{Binding WidthHeight, Mode=OneTime, Converter={StaticResource ResourceKey=CenterToMarginConverter}, ConverterParameter=25}"
+                Click="btnShowShortCuts_Click" 
+              />
         <ItemsControl ItemsSource="{Binding ButtonLabels}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
