@@ -1,12 +1,38 @@
-﻿<Window x:Class="QuickPickNet6.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:QuickPickNet6"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+﻿<Window x:Class="QuickPick.ClickWindow"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:QuickPick"                         
+             xmlns:converters="clr-namespace:QuickPick.Converters"
+             xmlns:custom="clr-namespace:QuickPick.Custom"
+             mc:Ignorable="d"               
+             SizeToContent="WidthAndHeight"
+             Background="#00ffffff"         
+             ShowInTaskbar="true"
+             AllowsTransparency="True" >
+    <Window.DataContext>
+        <local:QuickPickMainWindowModel/>
+    </Window.DataContext>
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
     <Grid>
-
+        <ItemsControl ItemsSource="{Binding ButtonLabels}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <custom:CircularPanel x:Name="CircularButtonPanel" Width="300" Height="300" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Button Content="{Binding}" Style="{StaticResource RoundButton}" Width="40" Height="40" />
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
     </Grid>
 </Window>

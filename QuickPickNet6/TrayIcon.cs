@@ -3,7 +3,7 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 
-namespace QuickPickNet6;
+namespace QuickPick;
 internal class TrayIcon
 {
 	private NotifyIcon _trayIcon;

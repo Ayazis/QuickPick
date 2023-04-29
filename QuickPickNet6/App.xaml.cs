@@ -10,7 +10,7 @@ using System.Windows.Forms;
 using System.Windows;
 using System.Diagnostics;
 
-namespace QuickPickNet6;
+namespace QuickPick;
 /// <summary>
 /// Interaction logic for App.xaml
 /// </summary>
