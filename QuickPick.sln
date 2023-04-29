@@ -5,13 +5,11 @@ VisualStudioVersion = 17.4.33403.182
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickPick", "QuickPick\QuickPick.csproj", "{73EA9CEC-DCA9-4E35-A3FF-C0FC7F473F5A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuickPick.Tests", "QuickPick.Tests\QuickPick.Tests.csproj", "{068ECC79-DB48-461A-9515-93CAF8917E1C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuickPickNet6", "QuickPickNet6\QuickPickNet6.csproj", "{5F33AEE5-9A6D-4203-8670-BE007D34CECF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickPickNet6", "QuickPickNet6\QuickPickNet6.csproj", "{5F33AEE5-9A6D-4203-8670-BE007D34CECF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MouseAndKeyBoardHooks", "MouseAndKeyBoardHooks\MouseAndKeyBoardHooks.csproj", "{31907C99-613A-4458-8E51-175BF501B2BE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MouseAndKeyBoardHooks", "MouseAndKeyBoardHooks\MouseAndKeyBoardHooks.csproj", "{31907C99-613A-4458-8E51-175BF501B2BE}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utilities", "Utilities\Utilities.csproj", "{380562C2-FE4D-4885-81D3-1A173BF84E1D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utilities", "Utilities\Utilities.csproj", "{380562C2-FE4D-4885-81D3-1A173BF84E1D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,14 +27,6 @@ Global
 		{73EA9CEC-DCA9-4E35-A3FF-C0FC7F473F5A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{73EA9CEC-DCA9-4E35-A3FF-C0FC7F473F5A}.Release|x64.ActiveCfg = Release|x64
 		{73EA9CEC-DCA9-4E35-A3FF-C0FC7F473F5A}.Release|x64.Build.0 = Release|x64
-		{068ECC79-DB48-461A-9515-93CAF8917E1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{068ECC79-DB48-461A-9515-93CAF8917E1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{068ECC79-DB48-461A-9515-93CAF8917E1C}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{068ECC79-DB48-461A-9515-93CAF8917E1C}.Debug|x64.Build.0 = Debug|Any CPU
-		{068ECC79-DB48-461A-9515-93CAF8917E1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{068ECC79-DB48-461A-9515-93CAF8917E1C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{068ECC79-DB48-461A-9515-93CAF8917E1C}.Release|x64.ActiveCfg = Release|Any CPU
-		{068ECC79-DB48-461A-9515-93CAF8917E1C}.Release|x64.Build.0 = Release|Any CPU
 		{5F33AEE5-9A6D-4203-8670-BE007D34CECF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5F33AEE5-9A6D-4203-8670-BE007D34CECF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5F33AEE5-9A6D-4203-8670-BE007D34CECF}.Debug|x64.ActiveCfg = Debug|Any CPU
