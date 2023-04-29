@@ -30,10 +30,18 @@
   </ItemGroup>
 
   <ItemGroup>	  
-	  <PackageReference Include="Microsoft.Windows.Compatibility" Version="6.0.4" />
+	  <PackageReference Include="Microsoft.Windows.Compatibility" Version="6.0.4" />	  
+	  <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 	  <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
 	  <PackageReference Include="System.Windows.Forms" />
 	  <ProjectReference Include="..\Utilities\Utilities.csproj" />    
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Views\QuickPickView\Resources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
 </Project>
