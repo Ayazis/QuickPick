@@ -12,7 +12,7 @@ namespace QuickPick
 {
     public class QuickPickMainWindowModel : INotifyPropertyChanged
     {
-        public ObservableCollection<string> ButtonLabels { get; set; } = new ObservableCollection<string>() { "1", "2", "3", "4", "5", "7", "8", "9", "10" };
+        public ObservableCollection<string> ButtonLabels { get; set; } = new ObservableCollection<string>() { "1", "2", "3", "4", /*"5", "7", "8", "9", "10"*/ };
 
 
         private int _CircleRadius = 50;
