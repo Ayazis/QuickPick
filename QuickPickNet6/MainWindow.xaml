@@ -24,30 +24,17 @@
     <Grid>
         <Grid.RowDefinitions >
             <RowDefinition Height="auto"/>
-        </Grid.RowDefinitions>
-        <!--#region CreateCircle-->
-        <Path                
-                VerticalAlignment="Center"
-                HorizontalAlignment="Center"            
-                Stroke="Black" StrokeThickness="0" Fill="#955e5e5e"  >
-            <Path.Data>
-                <GeometryGroup FillRule="EvenOdd">
-                    <EllipseGeometry RadiusX="{Binding CircleRadius}" RadiusY="{Binding CircleRadius}" Center="{Binding Center}"/>
-                </GeometryGroup>
-            </Path.Data>
-        </Path>
+        </Grid.RowDefinitions>   
         <!--#endregion-->
         <Button Style="{StaticResource  ResourceKey=RoundButton}"  
                 Visibility="Visible" 
                 Name="btnCenter" 
-                Width="25" Height="25" 
-                Margin="{Binding WidthHeight, Mode=OneTime, Converter={StaticResource ResourceKey=CenterToMarginConverter}, ConverterParameter=25}"
-                Click="btnShowShortCuts_Click" 
+                Width="45" Height="45"                               
               />
         <ItemsControl ItemsSource="{Binding ButtonLabels}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <custom:CircularPanel x:Name="CircularButtonPanel" Width="300" Height="300" />
+                    <custom:CircularPanel x:Name="CircularButtonPanel" Width="{Binding WidthHeight}" Height="{Binding WidthHeight}" />
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
