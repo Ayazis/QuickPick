@@ -30,33 +30,9 @@ public partial class App : Application
 		// Two main events that need handling for UI purposes.
 		// The logic for these should not remain within this class.
 		HotKeys.KeyCombinationHit += HotKeys_KeyCombinationHit;
-		HotKeys.LeftMouseClicked += HotKeys_LeftMouseClicked;
-
-		
-        var apps = TaskbarPinnedApps.GetPinnedTaskbarApps();
-		var qpm = new QuickPickMainWindowModel();
-		qpm.PinnedApps = new ObservableCollection<PinnedAppInfo>(apps);
-
-
-        clickWindow = new ClickWindow(qpm);
-
-		var mainHandle = SetQuickPicksMainWindowHandle();
-
-		new TrayIcon().CreateTrayIcon();		
-
-	}
-
-	private IntPtr SetQuickPicksMainWindowHandle()
-	{		
-		// Getting the window handle only works when the app is shown in the taskbar & the mainwindow is shown.
-		// The handle remains usable after setting this to false.
-		clickWindow.Show();
-		clickWindow.ShowInTaskbar = true;
-		Process currentProcess = Process.GetCurrentProcess();
-		var quickPickMainWindowHandle = currentProcess.MainWindowHandle;
-		clickWindow.ShowInTaskbar = false;
-		clickWindow.Hide();
-		return quickPickMainWindowHandle;		
+		HotKeys.LeftMouseClicked += HotKeys_LeftMouseClicked;        
+        
+		new TrayIconManager().CreateTrayIcon();		
 	}
 
 	private void HotKeys_LeftMouseClicked()

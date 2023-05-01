@@ -4,7 +4,7 @@ using System.IO;
 using System.Windows.Forms;
 
 namespace QuickPick;
-internal class TrayIcon
+internal class TrayIconManager
 {
 	private NotifyIcon _trayIcon;
 	private ContextMenuStrip _contextMenu;
@@ -16,6 +16,9 @@ internal class TrayIcon
 		_contextMenu.Items.Add(new ToolStripSeparator());
 		_contextMenu.Items.Add("Exit", null, OnExitClick);
 
+#if DEBUG
+        AppDomain.CurrentDomain.ProcessExit += OnExitClick;
+#endif
 		_trayIcon = new NotifyIcon
 		{
 			Icon = CreateIcon(),
@@ -23,7 +26,6 @@ internal class TrayIcon
 			ContextMenuStrip = _contextMenu
 		};
 	}
-
 	private Icon CreateIcon()
 	{
 		var currentPath = AppDomain.CurrentDomain.BaseDirectory;
@@ -41,6 +43,7 @@ internal class TrayIcon
 	{
 		_trayIcon.Visible = false;
 		_trayIcon.Dispose();
+		_trayIcon = null;
 		System.Windows.Application.Current.Shutdown();
 	}
 
