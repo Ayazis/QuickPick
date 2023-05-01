@@ -28,7 +28,7 @@ public class CircularPanel : Panel
     {
         if (Children.Count == 0) return finalSize;
 
-        double angleStep = 10; // Set the desired angle step between buttons (in degrees)
+        double angleStep = 7; // Set the desired angle step between buttons (in degrees)
         double totalAngle = 360; // Set the total angle (in degrees) for the circle
         double radius = Math.Min(finalSize.Width, finalSize.Height) / 2;
 
@@ -48,7 +48,7 @@ public class CircularPanel : Panel
         int numButtons = (int)Math.Floor(totalAngle / angleStep); // Calculate the number of buttons that can fit in the circle
         angleStep = totalAngle / numButtons; // Recalculate the angle step based on the number of buttons
 
-        double angle = 0;
+        double angle = -90;
         foreach (UIElement child in Children)
         {
             double x = (finalSize.Width / 2) + (radius * Math.Cos(angle * Math.PI / 180)) - (child.DesiredSize.Width / 2);
