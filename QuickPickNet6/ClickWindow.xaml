@@ -22,29 +22,30 @@
         </ResourceDictionary>
     </Window.Resources>
     <Grid>
-        <Grid.RowDefinitions >
+        <Grid.RowDefinitions >            
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>   
         <!--#endregion-->
         <Button Style="{StaticResource  ResourceKey=RoundButton}"  
                 Visibility="Visible" 
-                Name="btnCenter" 
-                Width="45" Height="45"                               
+                Name="ButtonCenter" 
+                Width="45" Height="45"         
+                Click="btnCenterClick"
               />
-        <ItemsControl ItemsSource="{Binding ButtonLabels}">
+        <ItemsControl ItemsSource="{Binding PinnedApps}" Grid.Row="1">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <custom:CircularPanel x:Name="CircularButtonPanel" Width="{Binding WidthHeight}" Height="{Binding WidthHeight}" />
+                    <custom:CircularPanel x:Name="AppsCircularPanel" Width="{Binding WidthHeight}" Height="{Binding WidthHeight}" />
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Button Content="{Binding}" Style="{StaticResource RoundButton}" Width="40" Height="40" />
+                    <Image Source="{Binding AppIcon}" Width="40" Height="40" />
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
 
-        <ItemsControl ItemsSource="{Binding PinnedApps}">
+        <!--<ItemsControl ItemsSource="{Binding ButtonLabels}" Visibility="Hidden">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <custom:CircularPanel x:Name="CircularButtonPanel" Width="{Binding WidthHeight}" Height="{Binding WidthHeight}" />
@@ -55,6 +56,8 @@
                     <Button Content="{Binding}" Style="{StaticResource RoundButton}" Width="40" Height="40" />
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
-        </ItemsControl>
+        </ItemsControl>-->
+
+   
     </Grid>
 </Window>

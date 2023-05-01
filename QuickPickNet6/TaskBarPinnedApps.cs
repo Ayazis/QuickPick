@@ -4,17 +4,22 @@ using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+
+public class PinnedAppInfo
+{
+    public string Name { get; set; }
+    public string TargetPath { get; set; }
+    public ImageSource AppIcon { get; set; }
+}
 
 public class TaskbarPinnedApps
 {
     private const string TASKBAR_FOLDERPATH = @"Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar";
 
-    public class PinnedAppInfo
-    {
-        public string Name { get; set; }
-        public string TargetPath { get; set; }
-        public Icon AppIcon { get; set; }
-    }
+    
 
     public static List<PinnedAppInfo> GetPinnedTaskbarApps()
     {
@@ -39,7 +44,7 @@ public class TaskbarPinnedApps
                 {
                     Name = Path.GetFileNameWithoutExtension(targetPath),
                     TargetPath = targetPath,
-                    AppIcon = ExtractIcon(targetPath)
+                    AppIcon = GetImage(targetPath)
                 };
 
                 pinnedApps.Add(appInfo);
@@ -47,6 +52,27 @@ public class TaskbarPinnedApps
         }
 
         return pinnedApps;
+    }
+
+    private static ImageSource GetImage(string path)
+    {
+        var icon = ExtractIcon(path);
+        return IconToImageSource(icon);
+    }
+    public static BitmapImage IconToImageSource(Icon icon)
+    {
+        using (MemoryStream memoryStream = new MemoryStream())
+        {
+            icon.ToBitmap().Save(memoryStream, System.Drawing.Imaging.ImageFormat.Png);
+            memoryStream.Position = 0;
+            BitmapImage bitmapImage = new BitmapImage();
+            bitmapImage.BeginInit();
+            bitmapImage.StreamSource = memoryStream;
+            bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+            bitmapImage.EndInit();
+            bitmapImage.Freeze(); // Optional, but recommended for better performance
+            return bitmapImage;
+        }
     }
 
     private static Icon ExtractIcon(string targetPath)

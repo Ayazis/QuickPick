@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using static TaskbarPinnedApps;
 
 namespace QuickPick
 {
@@ -15,6 +16,8 @@ namespace QuickPick
     {
         public string Title => "QuickPick Settings                v.1.3 alpha";
 
+
+        public ObservableCollection<PinnedAppInfo> PinnedApps { get; set; } = new ObservableCollection<PinnedAppInfo>();
         public ObservableCollection<string> ButtonLabels { get; set; } = new ObservableCollection<string>() { "1", "2", "3", "4", /*"5", "7", "8", "9", "10"*/ };
 
 
