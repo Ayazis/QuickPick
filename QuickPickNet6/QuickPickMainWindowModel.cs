@@ -8,7 +8,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using static TaskbarPinnedApps;
+using QuickPick.PinnedApps;
+using static QuickPick.PinnedApps.TaskbarPinnedApps;
 
 namespace QuickPick
 {

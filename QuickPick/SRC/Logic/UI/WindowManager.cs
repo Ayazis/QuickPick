@@ -76,7 +76,7 @@ namespace QuickPick
 			};
 
 			mnuExit.Click += new EventHandler(mnuExit_Click);
-			mnuSettings.Click += MnuSettings_Click;
+			//mnuSettings.Click += MnuSettings_Click;
 			_notificationIcon.Visible = true;
 		}
 

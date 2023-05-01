@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.Windows;
 using System.Diagnostics;
 using System.Collections.ObjectModel;
+using QuickPick.PinnedApps;
 
 namespace QuickPick;
 /// <summary>

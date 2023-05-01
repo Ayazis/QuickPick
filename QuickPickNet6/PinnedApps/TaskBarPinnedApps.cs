@@ -7,19 +7,13 @@ using System.Text;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Input;
 
-public class PinnedAppInfo
-{
-    public string Name { get; set; }
-    public string TargetPath { get; set; }
-    public ImageSource AppIcon { get; set; }
-}
+namespace QuickPick.PinnedApps;
 
 public class TaskbarPinnedApps
 {
     private const string TASKBAR_FOLDERPATH = @"Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar";
-
-    
 
     public static List<PinnedAppInfo> GetPinnedTaskbarApps()
     {
@@ -44,7 +38,8 @@ public class TaskbarPinnedApps
                 {
                     Name = Path.GetFileNameWithoutExtension(targetPath),
                     TargetPath = targetPath,
-                    AppIcon = GetImage(targetPath)
+                    AppIcon = GetImage(targetPath),
+                    ClickCommand = new RelayCommand(PinnedAppInfo.AppClicked)
                 };
 
                 pinnedApps.Add(appInfo);
