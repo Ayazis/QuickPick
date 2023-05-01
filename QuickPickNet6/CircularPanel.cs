@@ -45,8 +45,8 @@ public class CircularPanel : Panel
         // Calculate the actual spacing based on the minimum size of the children
         double actualSpacing = 2 * radius * Math.Sin((angleStep / 2) * (Math.PI / 180)) + Math.Max(minWidth, minHeight);
 
-        int numButtons = (int)Math.Floor(totalAngle / angleStep); // Calculate the number of buttons that can fit in the circle
-        angleStep = totalAngle / numButtons; // Recalculate the angle step based on the number of buttons
+        int numItems = (int)Math.Floor(totalAngle / angleStep); // Calculate the number of buttons that can fit in the circle
+        angleStep = totalAngle / numItems; // Recalculate the angle step based on the number of buttons
 
         double angle = -90;
         foreach (UIElement child in Children)
