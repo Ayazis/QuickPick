@@ -21,8 +21,11 @@ public partial class App : Application
 	{
 		base.OnStartup(e);
 
-		// Set Keyboard hooks
-		List<Keys> keyCombination = new List<Keys> { Keys.LMenu, Keys.RButton };
+		TaskbarPinnedApps.GetPinnedTaskbarApps();
+
+
+        // Set Keyboard hooks
+        List<Keys> keyCombination = new List<Keys> { Keys.LMenu, Keys.RButton };
 		HotKeys.SubscribeToKeyEvents(keyCombination);
 
 		// Two main events that need handling for UI purposes.

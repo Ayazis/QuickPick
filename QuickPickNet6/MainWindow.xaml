@@ -10,7 +10,7 @@
              SizeToContent="WidthAndHeight"
              Background="#00ffffff"         
              ShowInTaskbar="true"
-             AllowsTransparency="True" >
+             AllowsTransparency="True" WindowStyle="None" >
     <Window.DataContext>
         <local:QuickPickMainWindowModel/>
     </Window.DataContext>
