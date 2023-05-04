@@ -28,43 +28,9 @@
     <Grid>
         <Grid.RowDefinitions >
             <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <!--#endregion-->
-        <Button Style="{StaticResource ResourceKey=RoundButton}"  
-            Grid.Row="1"
-            Visibility="Visible" 
-            Name="ButtonCenter" 
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            Width="45" Height="45"         
-            Click="btnCenterClick"/>
-
-        <!-- Overlay buttons -->
-        <Button Name="ButtonTop" 
-            Width="45" Height="45"
-            HorizontalAlignment="Center" VerticalAlignment="Top"
-            Opacity="50"
-            Click="btnTopClick"/>
-
-        <Button Name="ButtonRight" 
-            Width="45" Height="45"
-            HorizontalAlignment="Right" VerticalAlignment="Center"
-            Opacity="50"
-            Click="btnRightClick"/>
-
-        <Button Name="ButtonBottom" 
-            Width="45" Height="45"
-            HorizontalAlignment="Center" VerticalAlignment="Bottom"
-            Opacity="50"
-            Click="btnBottomClick"/>
-
-        <Button Name="ButtonLeft" 
-            Width="45" Height="45"
-            HorizontalAlignment="Left" VerticalAlignment="Center"
-            Opacity="0"
-            Click="btnLeftClick"/>
-    </Grid>
-    <ItemsControl ItemsSource="{Binding PinnedApps}" >
+        </Grid.RowDefinitions>   
+   
+        <ItemsControl ItemsSource="{Binding PinnedApps}" >
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <custom:CircularPanel x:Name="AppsCircularPanel" Width="250" Height="250" />
