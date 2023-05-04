@@ -41,13 +41,45 @@
                     <EllipseGeometry Center="50,50" RadiusX="20" RadiusY="20" />
                 </GeometryGroup>
             </Grid.Clip>
-            <Button x:Name="BackgroundButton2" Style="{StaticResource ResourceKey=RoundButton}"
-            HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.RowSpan="2" Grid.ColumnSpan="2"/>         
+            <Button x:Name="BackgroundButton0" Style="{StaticResource ResourceKey=RoundButton}"
+            Width="80" Height="80" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <Path Fill="Transparent"  Data="M0,0 L50,0 A50,50,0,0,1,0,50 Z" Stretch="Fill" Margin="50,50,12,12" RenderTransformOrigin="0.5,0.5"/>
+            <Path Fill="Transparent" Data="M0,0 L50,0 A50,50,0,0,1,0,50 Z" Stretch="Fill" Margin="12,50,50,12" RenderTransformOrigin="0.5,0.5">
+                <Path.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform Angle="90"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Path.RenderTransform>
+            </Path>
+            <Path Fill="Transparent" Data="M0,0 L50,0 A50,50,0,0,1,0,50 Z" Stretch="Fill" Margin="12,12,50,50" RenderTransformOrigin="0.5,0.5">
+                <Path.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform Angle="180"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Path.RenderTransform>
+            </Path>
+            <Path Fill="Transparent" Data="M0,0 L50,0 A50,50,0,0,1,0,50 Z" Stretch="Fill" Margin="50,12,12,50" RenderTransformOrigin="0.5,0.5">
+                <Path.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform Angle="270"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Path.RenderTransform>
+            </Path>
         </Grid>
 
         <Button x:Name="BackgroundButton" Style="{StaticResource ResourceKey=RoundButton}"
             Width="30" Height="30" Margin="35" HorizontalAlignment="Center" VerticalAlignment="Center"
-            Panel.ZIndex="1"/>        
-        
+            Panel.ZIndex="1"/>
+
+
     </Grid>
 </UserControl>
