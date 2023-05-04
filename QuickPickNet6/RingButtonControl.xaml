@@ -13,10 +13,23 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid>
-        <Button Style="{StaticResource ResourceKey=RoundButton}" 
-                Name="CenterButton" 
-                HorizontalAlignment="Center" VerticalAlignment="Center"
-                Width="100" Height="100" />       
+    <Grid Width="100" Height="100">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Button x:Name="BackgroundButton2" Style="{StaticResource ResourceKey=RoundButton}"
+            HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.RowSpan="2" Grid.ColumnSpan="2"/>
+        <Rectangle Fill="Gray" Width="2" HorizontalAlignment="Center" Grid.RowSpan="2" Grid.ColumnSpan="2"/>
+        <Rectangle Fill="Gray" Height="2" VerticalAlignment="Center" Grid.RowSpan="2" Grid.ColumnSpan="2"/>     
+        <Button x:Name="BackgroundButton" Style="{StaticResource ResourceKey=RoundButton}"
+            Width="30" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.RowSpan="2" Grid.ColumnSpan="2"/>
+        
+
     </Grid>
 </UserControl>
