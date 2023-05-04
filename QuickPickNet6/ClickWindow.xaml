@@ -7,6 +7,8 @@
              xmlns:converters="clr-namespace:QuickPick.Converters"
              xmlns:custom="clr-namespace:QuickPick.Custom"
              mc:Ignorable="d"               
+             MinWidth="300"
+             MinHeight="300"
              SizeToContent="WidthAndHeight"
              Background="#00ffffff"         
              ShowInTaskbar="true"
@@ -24,37 +26,64 @@
         </ResourceDictionary>
     </Window.Resources>
     <Grid>
-        <Grid.RowDefinitions >            
-            <RowDefinition Height="auto"/>
-        </Grid.RowDefinitions>   
+        <Grid.RowDefinitions >
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
         <!--#endregion-->
-        <Button Style="{StaticResource  ResourceKey=RoundButton}"  
-                Visibility="Visible" 
-                Name="ButtonCenter" 
-                Width="45" Height="45"         
-                Click="btnCenterClick"
-              />
-        <ItemsControl ItemsSource="{Binding PinnedApps}" Grid.Row="1">
+        <Button Style="{StaticResource ResourceKey=RoundButton}"  
+            Grid.Row="1"
+            Visibility="Visible" 
+            Name="ButtonCenter" 
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Width="45" Height="45"         
+            Click="btnCenterClick"/>
+
+        <!-- Overlay buttons -->
+        <Button Name="ButtonTop" 
+            Width="45" Height="45"
+            HorizontalAlignment="Center" VerticalAlignment="Top"
+            Opacity="50"
+            Click="btnTopClick"/>
+
+        <Button Name="ButtonRight" 
+            Width="45" Height="45"
+            HorizontalAlignment="Right" VerticalAlignment="Center"
+            Opacity="50"
+            Click="btnRightClick"/>
+
+        <Button Name="ButtonBottom" 
+            Width="45" Height="45"
+            HorizontalAlignment="Center" VerticalAlignment="Bottom"
+            Opacity="50"
+            Click="btnBottomClick"/>
+
+        <Button Name="ButtonLeft" 
+            Width="45" Height="45"
+            HorizontalAlignment="Left" VerticalAlignment="Center"
+            Opacity="0"
+            Click="btnLeftClick"/>
+    </Grid>
+    <ItemsControl ItemsSource="{Binding PinnedApps}" >
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <custom:CircularPanel x:Name="AppsCircularPanel" Width="{Binding WidthHeight}" Height="{Binding WidthHeight}" />
+                    <custom:CircularPanel x:Name="AppsCircularPanel" Width="250" Height="250" />
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Button Command="{Binding ClickCommand}" CommandParameter="{Binding}">
-                        <StackPanel Orientation="Vertical">
-                            <Image Source="{Binding AppIcon}" Width="64" Height="64" />                            
-                        </StackPanel>
-                    </Button>
+                    <StackPanel Orientation="Vertical">
+                        <Button Command="{Binding ClickCommand}" CommandParameter="{Binding}"/>
+                        <Image Source="{Binding AppIcon}" Width="40" Height="40" />
+                    </StackPanel>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
 
-        <!--<ItemsControl ItemsSource="{Binding ButtonLabels}" Visibility="Hidden">
+        <ItemsControl ItemsSource="{Binding ButtonLabels}" Visibility="Visible">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <custom:CircularPanel x:Name="CircularButtonPanel" Width="{Binding WidthHeight}" Height="{Binding WidthHeight}" />
+                    <custom:CircularPanel x:Name="CircularButtonPanel" Width="150" Height="150" />
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
@@ -62,8 +91,8 @@
                     <Button Content="{Binding}" Style="{StaticResource RoundButton}" Width="40" Height="40" />
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
-        </ItemsControl>-->
+        </ItemsControl>
 
-   
+
     </Grid>
 </Window>
