@@ -3,6 +3,7 @@ using System;
 using System.Windows;
 using QuickPick.PinnedApps;
 using System.Collections.ObjectModel;
+using Ayazis.KeyHooks;
 
 namespace QuickPick;
 /// <summary>
@@ -19,15 +20,20 @@ public partial class ClickWindow : Window
 
         InitializeComponent();
         var handle = GetMainWindowHandle();
-        DataContext = _qpm;
-
-        
+        DataContext = _qpm;        
         ContentRendered += ClickWindow_SourceInitialized; ;
+
+        HotKeys.KeyCombinationHit += HotKeys_KeyCombinationHit;    
+    }
+
+    private void HotKeys_KeyCombinationHit()
+    {
+        this.ShowDialog();
     }
 
     private void ClickWindow_SourceInitialized(object sender, EventArgs e)
     {
-        Show();
+     //   Show();
     }
 
     private IntPtr GetMainWindowHandle()

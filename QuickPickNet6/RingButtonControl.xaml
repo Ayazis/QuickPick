@@ -43,41 +43,44 @@
             </Grid.Clip>
             <Button x:Name="BackgroundButton0" Style="{StaticResource ResourceKey=RoundButton}"
                     Width="80" Height="80" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <Path Name="BottomRight" Fill="Transparent"  Data="M0,0 L50,0 A50,50,0,0,1,0,50 Z" Stretch="Fill" Margin="50,50,12,12" RenderTransformOrigin="0.5,0.5"
-                MouseEnter="BottomRight_MouseEnter" MouseLeave="BottomRight_MouseLeave"/>
-            <Path Name="BottomLeft" Fill="Transparent" Data="M0,0 L50,0 A50,50,0,0,1,0,50 Z" Stretch="Fill" Margin="12,50,50,12" RenderTransformOrigin="0.5,0.5"
-          MouseEnter="BottomLeft_MouseEnter" MouseLeave="BottomLeft_MouseLeave">
-                <Path.RenderTransform>
-                    <TransformGroup>
-                        <ScaleTransform/>
-                        <SkewTransform/>
-                        <RotateTransform Angle="90"/>
-                        <TranslateTransform/>
-                    </TransformGroup>
-                </Path.RenderTransform>
-            </Path>
-            <Path Name="TopLeft" Fill="Transparent" Data="M0,0 L50,0 A50,50,0,0,1,0,50 Z" Stretch="Fill" Margin="12,12,50,50" RenderTransformOrigin="0.5,0.5"
-          MouseEnter="TopLeft_MouseEnter" MouseLeave="TopLeft_MouseLeave">
-                <Path.RenderTransform>
-                    <TransformGroup>
-                        <ScaleTransform/>
-                        <SkewTransform/>
-                        <RotateTransform Angle="180"/>
-                        <TranslateTransform/>
-                    </TransformGroup>
-                </Path.RenderTransform>
-            </Path>
-            <Path Name="TopRight" Fill="Transparent" Data="M0,0 L50,0 A50,50,0,0,1,0,50 Z" Stretch="Fill" Margin="50,12,12,50" RenderTransformOrigin="0.5,0.5"
-          MouseEnter="TopRight_MouseEnter" MouseLeave="TopRight_MouseLeave">
-                <Path.RenderTransform>
-                    <TransformGroup>
-                        <ScaleTransform/>
-                        <SkewTransform/>
-                        <RotateTransform Angle="270"/>
-                        <TranslateTransform/>
-                    </TransformGroup>
-                </Path.RenderTransform>
-            </Path>
+            <Grid>
+                <Path Name="BottomRight" Fill="Transparent"  Data="M0,0 L50,0 A50,50,0,0,1,0,50 Z" Stretch="Fill" Margin="50,50,12,12" RenderTransformOrigin="0.5,0.5"
+          MouseEnter="Path_MouseEnter" MouseLeave="Path_MouseLeave" MouseUp="Path_MouseUp"/>
+                <Path Name="BottomLeft" Fill="Transparent" Data="M0,0 L50,0 A50,50,0,0,1,0,50 Z" Stretch="Fill" Margin="12,50,50,12" RenderTransformOrigin="0.5,0.5"
+          MouseEnter="Path_MouseEnter" MouseLeave="Path_MouseLeave" MouseUp="Path_MouseUp">
+                    <Path.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform Angle="90"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Path.RenderTransform>
+                </Path>
+                <Path Name="TopLeft" Fill="Transparent" Data="M0,0 L50,0 A50,50,0,0,1,0,50 Z" Stretch="Fill" Margin="12,12,50,50" RenderTransformOrigin="0.5,0.5"
+          MouseEnter="Path_MouseEnter" MouseLeave="Path_MouseLeave" MouseUp="Path_MouseUp">
+                    <Path.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform Angle="180"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Path.RenderTransform>
+                </Path>
+                <Path Name="TopRight" Fill="Transparent" Data="M0,0 L50,0 A50,50,0,0,1,0,50 Z" Stretch="Fill" Margin="50,12,12,50" RenderTransformOrigin="0.5,0.5"
+          MouseEnter="Path_MouseEnter" MouseLeave="Path_MouseLeave" MouseUp="Path_MouseUp">
+                    <Path.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform Angle="270"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Path.RenderTransform>
+                </Path>
+            </Grid>
+
         </Grid>
 
         <Button x:Name="SmallMiddleButton" Style="{StaticResource ResourceKey=RoundButton}"

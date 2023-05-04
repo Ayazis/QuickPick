@@ -17,8 +17,7 @@ namespace QuickPick;
 /// Interaction logic for App.xaml
 /// </summary>
 public partial class App : Application
-{
-	ClickWindow clickWindow;
+{	
 	protected override void OnStartup(StartupEventArgs e)
 	{
 		base.OnStartup(e);	
