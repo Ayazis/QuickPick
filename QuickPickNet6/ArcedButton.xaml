@@ -6,26 +6,15 @@
              xmlns:local="clr-namespace:QuickPick"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-        <Button Width="100" Height="100" Click="Button_Click">
+    
+        <Button Width="50" Height="50">
             <Button.Template>
                 <ControlTemplate TargetType="Button">
                     <Grid>
-                        <Path Fill="{TemplateBinding Background}" Stroke="{TemplateBinding BorderBrush}" StrokeThickness="1">
-                            <Path.Data>
-                                <PathGeometry>
-                                    <PathFigure StartPoint="0,100">
-                                        <LineSegment Point="100,100" />
-                                        <ArcSegment Point="50,0" Size="50,50" SweepDirection="Clockwise" />
-                                        <LineSegment Point="0,100" />
-                                    </PathFigure>
-                                </PathGeometry>
-                            </Path.Data>
-                        </Path>
-                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Path Fill="Gray" Data="M0,0 L50,0 A50,50,0,0,1,0,50 Z"/>                        
                     </Grid>
                 </ControlTemplate>
             </Button.Template>
-        </Button>
-    </Grid>
+            <TextBlock Text="Click me"/>
+        </Button>    
 </UserControl>
