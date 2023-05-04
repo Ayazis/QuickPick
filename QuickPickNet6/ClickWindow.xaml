@@ -28,8 +28,9 @@
     <Grid>
         <Grid.RowDefinitions >
             <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>   
-   
+        </Grid.RowDefinitions>
+        <local:RingButtonControl Width="100" Height="100" Margin="50"/>
+
         <ItemsControl ItemsSource="{Binding PinnedApps}" >
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>

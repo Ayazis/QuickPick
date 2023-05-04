@@ -22,10 +22,22 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Grid.Clip>
-                <GeometryGroup>                    
-                    <RectangleGeometry Rect="0,0,100,100" />                    
-                    <RectangleGeometry Rect="0,49,100,1" />
-                    <RectangleGeometry Rect="49,0,2,100" />
+                <GeometryGroup>
+                    <!-- The clipping rectangle that covers the entire area except the circle -->
+                    <RectangleGeometry Rect="0,0,100,100" />
+
+                    <!-- The horizontal line that's just above the center of the circle -->
+                    <RectangleGeometry Rect="0,49,30,5" />
+
+                    <!-- The horizontal line that's just below the center of the circle -->
+                    <RectangleGeometry Rect="70,49,30,5" />
+
+                    <!-- The vertical line that's just to the left of the center of the circle -->
+                    <RectangleGeometry Rect="49,0,5,30" />
+
+                    <!-- The vertical line that's just to the right of the center of the circle -->
+                    <RectangleGeometry Rect="49,70,5,30" />
+                    <!-- The small circle coutout in the middle -->
                     <EllipseGeometry Center="50,50" RadiusX="20" RadiusY="20" />
                 </GeometryGroup>
             </Grid.Clip>
@@ -35,6 +47,7 @@
 
         <Button x:Name="BackgroundButton" Style="{StaticResource ResourceKey=RoundButton}"
             Width="30" Height="30" Margin="35" HorizontalAlignment="Center" VerticalAlignment="Center"
-            Panel.ZIndex="1"/>
+            Panel.ZIndex="1"/>        
+        
     </Grid>
 </UserControl>
