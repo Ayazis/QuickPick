@@ -13,7 +13,9 @@
 
 
 	<ItemGroup>
-		<PackageReference Include="System.Windows.Forms" />	  
+		<PackageReference Include="System.Windows.Forms" />
+		<PackageReference Include="WindowsAPICodePack-Core" Version="1.1.2" />
+		<PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1" />	  
 	</ItemGroup>
 
 
