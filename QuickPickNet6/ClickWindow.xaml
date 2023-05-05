@@ -30,11 +30,11 @@
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions >
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>   
-       <local:RingButtonControl Width="100" Height="100" Margin="50"/>
+            <RowDefinition Height="300"/>
+        </Grid.RowDefinitions>
+        <local:RingButtonControl Width="100" Height="100" Margin="50"/>
 
-        <ItemsControl ItemsSource="{Binding PinnedApps}" >
+        <ItemsControl ItemsSource="{Binding PinnedApps, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" >
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <custom:CircularPanel x:Name="AppsCircularPanel" Width="250" Height="250" />
@@ -43,7 +43,7 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Vertical">
-                        <Button Command="{Binding ClickCommand}" CommandParameter="{Binding}"/>
+                        <Button Command="{Binding ClickCommand}" CommandParameter="{Binding}" Opacity="0"/>
                         <Image Source="{Binding AppIcon}" Width="40" Height="40" />
                     </StackPanel>
                 </DataTemplate>

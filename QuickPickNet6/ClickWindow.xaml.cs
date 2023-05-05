@@ -18,19 +18,33 @@ public partial class ClickWindow : Window
     public Storyboard HideAnimation { get; private set; }
     public Storyboard ShowAnimation { get; private set; }
     public ClickWindow()
-    {   
+    {        
         InitializeComponent();
         var handle = GetMainWindowHandle();
         DataContext = _qpm;
 
         HideAnimation = TryFindResource("hideMe") as Storyboard;
-        ShowAnimation = TryFindResource("showMe") as Storyboard;
+        ShowAnimation = TryFindResource("showMe") as Storyboard;        
         
-        
-        HotKeys.KeyCombinationHit += HotKeys_KeyCombinationHit;      
+        HotKeys.KeyCombinationHit += HotKeys_KeyCombinationHit;
+        HotKeys.LeftMouseClicked += HotKeys_LeftMouseClicked;
         ShowWindowInvisible();
     }
 
+    private void HotKeys_LeftMouseClicked()
+    {
+        if (MouseIsOutsideWindow())
+            HideAnimation.Begin(this);
+    }
+    public bool MouseIsOutsideWindow()
+    {
+        var mouse = MousePosition.GetCursorPosition();
+
+        bool isOutside = (mouse.X < this.Left || mouse.X > this.Left + this.ActualWidth)
+                        || (mouse.Y < this.Top || mouse.Y > this.Top + this.ActualHeight);
+
+        return isOutside;
+    }
     private void ShowWindowInvisible()
     {
         Opacity = 0;
@@ -41,14 +55,21 @@ public partial class ClickWindow : Window
 
     private void HotKeys_KeyCombinationHit()
     {
-        ShowAnimation.Begin(this);
+        UpdatePinnedApps();
+        ShowWindow();
+    }
+
+    private void UpdatePinnedApps()
+    {
+        var apps = TaskbarPinnedApps.GetPinnedTaskbarApps();
+        _qpm.PinnedApps = new ObservableCollection<PinnedAppInfo>(apps);
+        _qpm.NotifyPropertyChanged(nameof(_qpm.PinnedApps));
     }
 
     public void ShowWindow()
     {
         try
-        {
-            
+        {            
             //SetActiveWindow();
 
             this.Dispatcher.Invoke(() =>
@@ -56,9 +77,7 @@ public partial class ClickWindow : Window
                 //HideShortCuts();
                 var mousePosition = MousePosition.GetCursorPosition();
                 this.Left = mousePosition.X - (this.ActualWidth / 2);
-                this.Top = mousePosition.Y - (this.ActualHeight / 2);
-
-                this.WindowStyle = WindowStyle.None;
+                this.Top = mousePosition.Y - (this.ActualHeight / 2);                
                 ShowAnimation.Begin(this);
             });
 
