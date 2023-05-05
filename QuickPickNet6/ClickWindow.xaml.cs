@@ -7,6 +7,7 @@ using Ayazis.KeyHooks;
 using System.Windows.Media.Animation;
 using MouseAndKeyBoardHooks;
 using Ayazis.Utilities;
+using System.Drawing;
 
 namespace QuickPick;
 /// <summary>
@@ -107,4 +108,8 @@ public partial class ClickWindow : Window
 
     }
 
+    private void AppInfo_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        PinnedAppInfo appInfo = (sender as System.Windows.Controls.Image).DataContext as PinnedAppInfo;        
+    }
 }
