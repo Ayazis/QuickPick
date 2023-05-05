@@ -16,8 +16,6 @@ namespace QuickPick
     public class QuickPickMainWindowModel : INotifyPropertyChanged
     {
         public string Title => "QuickPick Settings                v.1.3 alpha";
-
-
         public ObservableCollection<PinnedAppInfo> PinnedApps { get; set; } = new ObservableCollection<PinnedAppInfo>()
         {
             new PinnedAppInfo{ },

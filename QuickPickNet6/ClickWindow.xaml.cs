@@ -4,6 +4,9 @@ using System.Windows;
 using QuickPick.PinnedApps;
 using System.Collections.ObjectModel;
 using Ayazis.KeyHooks;
+using System.Windows.Media.Animation;
+using MouseAndKeyBoardHooks;
+using Ayazis.Utilities;
 
 namespace QuickPick;
 /// <summary>
@@ -12,35 +15,65 @@ namespace QuickPick;
 public partial class ClickWindow : Window
 {
     private QuickPickMainWindowModel _qpm = new QuickPickMainWindowModel();
-
+    public Storyboard HideAnimation { get; private set; }
+    public Storyboard ShowAnimation { get; private set; }
     public ClickWindow()
-    {
-        var apps = TaskbarPinnedApps.GetPinnedTaskbarApps();
-        _qpm.PinnedApps = new ObservableCollection<PinnedAppInfo>(apps);
-
+    {   
         InitializeComponent();
         var handle = GetMainWindowHandle();
-        DataContext = _qpm;        
-        ContentRendered += ClickWindow_SourceInitialized; ;
+        DataContext = _qpm;
 
-        HotKeys.KeyCombinationHit += HotKeys_KeyCombinationHit;    
+        HideAnimation = TryFindResource("hideMe") as Storyboard;
+        ShowAnimation = TryFindResource("showMe") as Storyboard;
+        
+        
+        HotKeys.KeyCombinationHit += HotKeys_KeyCombinationHit;      
+        ShowWindowInvisible();
+    }
+
+    private void ShowWindowInvisible()
+    {
+        Opacity = 0;
+        Show();
+        Visibility = Visibility.Hidden;
+        Opacity = 1;
     }
 
     private void HotKeys_KeyCombinationHit()
     {
-        this.ShowDialog();
+        ShowAnimation.Begin(this);
     }
 
-    private void ClickWindow_SourceInitialized(object sender, EventArgs e)
+    public void ShowWindow()
     {
-     //   Show();
-    }
+        try
+        {
+            
+            //SetActiveWindow();
+
+            this.Dispatcher.Invoke(() =>
+            {
+                //HideShortCuts();
+                var mousePosition = MousePosition.GetCursorPosition();
+                this.Left = mousePosition.X - (this.ActualWidth / 2);
+                this.Top = mousePosition.Y - (this.ActualHeight / 2);
+
+                this.WindowStyle = WindowStyle.None;
+                ShowAnimation.Begin(this);
+            });
+
+        }
+        catch (Exception ex)
+        {
+            Logs.Logger.Log(ex);
+        }
+    }   
 
     private IntPtr GetMainWindowHandle()
     {
         // Getting the window handle only works when the app is shown in the taskbar & the mainwindow is shown.
         // The handle remains usable after setting this to false.
-        this.Show();
+
         ShowInTaskbar = true;
         Process currentProcess = Process.GetCurrentProcess();
         var quickPickMainWindowHandle = currentProcess.MainWindowHandle;

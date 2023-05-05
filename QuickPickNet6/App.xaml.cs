@@ -24,25 +24,9 @@ public partial class App : Application
 
         // Set Keyboard hooks
         List<Keys> keyCombination = new List<Keys> { Keys.LMenu, Keys.RButton };
-		HotKeys.SubscribeToKeyEvents(keyCombination);
-
-		// Two main events that need handling for UI purposes.
-		// The logic for these should not remain within this class.
-		HotKeys.KeyCombinationHit += HotKeys_KeyCombinationHit;
-		HotKeys.LeftMouseClicked += HotKeys_LeftMouseClicked;        
+		HotKeys.SubscribeToKeyEvents(keyCombination);		  
         
 		new TrayIconManager().CreateTrayIcon();		
 	}
-
-	private void HotKeys_LeftMouseClicked()
-	{
-		//Debug.WriteLine("Left mouse!");
-	}
-
-	private void HotKeys_KeyCombinationHit()
-	{
-		//Debug.WriteLine("KeyCombo!");
-	}
-
 
 }

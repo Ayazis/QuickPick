@@ -12,7 +12,10 @@
              SizeToContent="WidthAndHeight"
              Background="#00ffffff"         
              ShowInTaskbar="true"
-             AllowsTransparency="True" WindowStyle="None" 
+             AllowsTransparency="True" 
+             WindowStyle="None" 
+             WindowStartupLocation="Manual"
+             Topmost="True"
              >
 
     <Window.DataContext>
