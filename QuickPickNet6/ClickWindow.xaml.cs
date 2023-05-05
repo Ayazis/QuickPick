@@ -8,6 +8,9 @@ using System.Windows.Media.Animation;
 using MouseAndKeyBoardHooks;
 using Ayazis.Utilities;
 using System.Drawing;
+using System.Runtime.InteropServices;
+using System.IO;
+using System.Text;
 
 namespace QuickPick;
 /// <summary>
@@ -110,6 +113,8 @@ public partial class ClickWindow : Window
 
     private void AppInfo_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
-        PinnedAppInfo appInfo = (sender as System.Windows.Controls.Image).DataContext as PinnedAppInfo;        
+        PinnedAppInfo appInfo = (sender as System.Windows.Controls.Image).DataContext as PinnedAppInfo;
+        WindowActivator.ActivateWindowOnCurrentVirtualDesktop(appInfo.TargetPath);
     }
+
 }

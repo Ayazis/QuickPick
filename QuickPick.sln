@@ -11,6 +11,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MouseAndKeyBoardHooks", "Mo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utilities", "Utilities\Utilities.csproj", "{380562C2-FE4D-4885-81D3-1A173BF84E1D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickPick.Tests", "QuickPick.Tests\QuickPick.Tests.csproj", "{DB2EBD7C-ABB1-4654-AB98-32613432A567}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utilities.Tests", "Utilities.Tests\Utilities.Tests.csproj", "{8E4863BB-D477-4113-AE40-F50FCB68890E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +55,22 @@ Global
 		{380562C2-FE4D-4885-81D3-1A173BF84E1D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{380562C2-FE4D-4885-81D3-1A173BF84E1D}.Release|x64.ActiveCfg = Release|Any CPU
 		{380562C2-FE4D-4885-81D3-1A173BF84E1D}.Release|x64.Build.0 = Release|Any CPU
+		{DB2EBD7C-ABB1-4654-AB98-32613432A567}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB2EBD7C-ABB1-4654-AB98-32613432A567}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB2EBD7C-ABB1-4654-AB98-32613432A567}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{DB2EBD7C-ABB1-4654-AB98-32613432A567}.Debug|x64.Build.0 = Debug|Any CPU
+		{DB2EBD7C-ABB1-4654-AB98-32613432A567}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB2EBD7C-ABB1-4654-AB98-32613432A567}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB2EBD7C-ABB1-4654-AB98-32613432A567}.Release|x64.ActiveCfg = Release|Any CPU
+		{DB2EBD7C-ABB1-4654-AB98-32613432A567}.Release|x64.Build.0 = Release|Any CPU
+		{8E4863BB-D477-4113-AE40-F50FCB68890E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E4863BB-D477-4113-AE40-F50FCB68890E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8E4863BB-D477-4113-AE40-F50FCB68890E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{8E4863BB-D477-4113-AE40-F50FCB68890E}.Debug|x64.Build.0 = Debug|Any CPU
+		{8E4863BB-D477-4113-AE40-F50FCB68890E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8E4863BB-D477-4113-AE40-F50FCB68890E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8E4863BB-D477-4113-AE40-F50FCB68890E}.Release|x64.ActiveCfg = Release|Any CPU
+		{8E4863BB-D477-4113-AE40-F50FCB68890E}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
