@@ -25,13 +25,13 @@ public class WindowActivator
 
     private delegate bool EnumWindowsProc(IntPtr hWnd, IntPtr lParam);
 
-    public static void ActivateWindowOnCurrentVirtualDesktop(string executablePath)
+    public static void ActivateWindowOnCurrentVirtualDesktop(string executablePath, string arguments)
     {
         var matchingProcesses = GetProcessesByExecutablePath(executablePath);
         if (matchingProcesses.Length == 0)
         {
             // Start the process if it is not already running
-            Process.Start(executablePath);
+            Process.Start(executablePath, arguments);
             return;
         }
 

@@ -11,6 +11,7 @@ public class PinnedAppInfo
     public string TargetPath { get; set; }
     public ImageSource AppIcon { get; set; }
     public ICommand ClickCommand { get; set; }
+    public string Arguments { get; set; }
 
     public static void AppClicked(object parameter)
     {

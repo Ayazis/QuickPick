@@ -114,7 +114,7 @@ public partial class ClickWindow : Window
     private void AppInfo_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
         PinnedAppInfo appInfo = (sender as System.Windows.Controls.Image).DataContext as PinnedAppInfo;
-        WindowActivator.ActivateWindowOnCurrentVirtualDesktop(appInfo.TargetPath);
+        WindowActivator.ActivateWindowOnCurrentVirtualDesktop(appInfo.TargetPath, appInfo.Arguments);
     }
 
 }

@@ -29,14 +29,17 @@ public class TaskbarPinnedApps
 
         foreach (string pinnedAppPath in pinnedAppPaths)
         {
-            var shortcut = new Shell32.Shell().NameSpace(Path.GetDirectoryName(pinnedAppPath)).ParseName(Path.GetFileName(pinnedAppPath));
-            string targetPath = shortcut.GetLink.Target.Path;
+            var shell = new IWshRuntimeLibrary.WshShell();
+            var shortcut = (IWshRuntimeLibrary.IWshShortcut)shell.CreateShortcut(pinnedAppPath);
+            string targetPath = shortcut.TargetPath;
+            string arguments = shortcut.Arguments;           
 
             if (!string.IsNullOrEmpty(targetPath))
             {
                 PinnedAppInfo appInfo = new PinnedAppInfo()
                 {
                     Name = Path.GetFileNameWithoutExtension(targetPath),
+                    Arguments = arguments,
                     TargetPath = targetPath,
                     AppIcon = GetImage(targetPath),
                     ClickCommand = new RelayCommand(PinnedAppInfo.AppClicked)
