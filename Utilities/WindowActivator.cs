@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
@@ -79,7 +80,25 @@ public class WindowActivator
     }
     private static Process[] GetProcessesByExecutablePath(string executablePath)
     {
-        return Process.GetProcessesByName(System.IO.Path.GetFileNameWithoutExtension(executablePath));
+        var processes = Process.GetProcesses();
+        var matchingProcesses = new List<Process>();
+
+        foreach (var process in processes)
+        {
+            try
+            {
+                if (process.MainModule.FileName.Equals(executablePath, StringComparison.OrdinalIgnoreCase))
+                {
+                    matchingProcesses.Add(process);
+                }
+            }
+            catch (Win32Exception)
+            {
+                // Ignore processes that we don't have access to
+            }
+        }
+
+        return matchingProcesses.ToArray();
     }
 
     private static IntPtr[] GetProcessWindows(int processId)
