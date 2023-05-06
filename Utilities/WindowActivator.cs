@@ -27,6 +27,13 @@ public class WindowActivator
     public static void ActivateWindowOnCurrentVirtualDesktop(string executablePath)
     {
         var matchingProcesses = GetProcessesByExecutablePath(executablePath);
+        if (matchingProcesses.Length == 0)
+        {
+            // Start the process if it is not already running
+            Process.Start(executablePath);
+            return;
+        }
+
 
         Guid currentVirtualDesktopId = GetCurrentVirtualDesktop();
 
@@ -46,14 +53,28 @@ public class WindowActivator
     [DllImport("user32.dll")]
     static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
+    // Constants for ShowWindow
     private static int SW_SHOWNOACTIVATE = 4;
+    const int SW_MINIMIZE = 6;
 
+    // Declare the IsIconic function from user32.dll
+    [DllImport("user32.dll")]
+    private static extern bool IsIconic(IntPtr hWnd);
     public static void ActivateWindow(IntPtr hWnd, int? showCommandInteger = null)
     {
         if (hWnd != IntPtr.Zero)
         {
-            ShowWindow(hWnd, showCommandInteger ?? SW_SHOWNOACTIVATE);
-            SetForegroundWindow(hWnd);
+            if (IsIconic(hWnd))
+            { 
+                // Window is currently minimized - restore it
+                ShowWindow(hWnd, showCommandInteger ?? SW_SHOWNOACTIVATE);
+                SetForegroundWindow(hWnd);
+            }
+            else
+            {
+                // Window is currently restored - minimize it
+                ShowWindow(hWnd, SW_MINIMIZE);
+            }
         }
     }
     private static Process[] GetProcessesByExecutablePath(string executablePath)
