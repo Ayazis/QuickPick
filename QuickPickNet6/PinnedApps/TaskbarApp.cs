@@ -5,20 +5,21 @@ using System;
 
 namespace QuickPick.PinnedApps;
 
-public class PinnedAppInfo
+public class TaskBarApp
 {
+    public TaskBarApp()
+    {
+        ClickCommand = new RelayCommand(parameter => AppClicked(this));
+    }
     public string Name { get; set; }
     public string TargetPath { get; set; }
     public ImageSource AppIcon { get; set; }
     public ICommand ClickCommand { get; set; }
     public string Arguments { get; set; }
 
-    public static void AppClicked(object parameter)
+    public static void AppClicked(TaskBarApp appInfo)
     {
-        if (parameter is PinnedAppInfo app)
-        {
-            // Handle app click logic here, e.g., launch the app using app.TargetPath
-        }
+        WindowActivator.ActivateWindowOnCurrentVirtualDesktop(appInfo.TargetPath, appInfo.Arguments);
     }
 }
 

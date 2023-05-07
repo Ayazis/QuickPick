@@ -16,16 +16,16 @@ namespace QuickPick
     public class QuickPickMainWindowModel : INotifyPropertyChanged
     {
         public string Title => "QuickPick Settings                v.1.3 alpha";
-        public ObservableCollection<PinnedAppInfo> PinnedApps { get; set; } = new ObservableCollection<PinnedAppInfo>()
+        public ObservableCollection<TaskBarApp> PinnedApps { get; set; } = new ObservableCollection<TaskBarApp>()
         {
-            new PinnedAppInfo{ },
-            new PinnedAppInfo{ },
-            new PinnedAppInfo{ },
-            new PinnedAppInfo{ },
-            new PinnedAppInfo{ },
-            new PinnedAppInfo{ },
-            new PinnedAppInfo{ },
-            new PinnedAppInfo{ },
+            new TaskBarApp{ },
+            new TaskBarApp{ },
+            new TaskBarApp{ },
+            new TaskBarApp{ },
+            new TaskBarApp{ },
+            new TaskBarApp{ },
+            new TaskBarApp{ },
+            new TaskBarApp{ },
         };
         public ObservableCollection<string> ButtonLabels { get; set; } = new ObservableCollection<string>() { "1", "2", "3", "4", /*"5", "7", "8", "9", "10"*/ };
 
