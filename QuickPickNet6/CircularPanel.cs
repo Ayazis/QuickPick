@@ -36,8 +36,6 @@ public class CircularPanel : Panel
 		double maxAngleStep = totalAngle / numItems;
 		angleStep = Math.Min(maxAngleStep, angleStep);
 
-
-
 		// Calculate the minimum size required for each child
 		double minWidth = 0;
 		double minHeight = 0;
