@@ -40,10 +40,18 @@ public static class VirtualDesktopHelper
 
     public static bool IsWindowOnVirtualDesktop(IntPtr hWnd, Guid currentVirtualDesktopId)
     {
-        IVirtualDesktopManager virtualDesktopManager = (IVirtualDesktopManager) new VirtualDesktopManager();
-        Guid windowDesktopId = virtualDesktopManager.GetWindowDesktopId(hWnd);
+        try
+        {
+            IVirtualDesktopManager virtualDesktopManager = (IVirtualDesktopManager)new VirtualDesktopManager();
+            Guid windowDesktopId = virtualDesktopManager.GetWindowDesktopId(hWnd);
 
-        return windowDesktopId == currentVirtualDesktopId;
+            return windowDesktopId == currentVirtualDesktopId;
+        }
+        catch (Exception)
+        {
+            return false;
+            
+        }
     }
 
     // Declare the Windows API functions for getting the foreground window handle

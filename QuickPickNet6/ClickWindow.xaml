@@ -37,13 +37,13 @@
         <ItemsControl ItemsSource="{Binding PinnedApps, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" >
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <custom:CircularPanel x:Name="AppsCircularPanel" Width="250" Height="250" />
+                    <custom:CircularPanel x:Name="AppsCircularPanel" Width="150" Height="150" />
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Vertical">
-                        <Image Source="{Binding AppIcon}" Width="40" Height="40" >
+                        <Image Source="{Binding AppIcon}" Width="30" Height="30" >
                             <Image.InputBindings>
                                 <MouseBinding Gesture="LeftClick" Command="{Binding ClickCommand}" />
                             </Image.InputBindings>
@@ -53,10 +53,10 @@
             </ItemsControl.ItemTemplate>
         </ItemsControl>
 
-        <ItemsControl ItemsSource="{Binding ButtonLabels}" Visibility="Visible">
+        <ItemsControl ItemsSource="{Binding ButtonLabels}" Visibility="Hidden">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <custom:CircularPanel x:Name="CircularButtonPanel" Width="150" Height="150" />
+                    <custom:CircularPanel x:Name="CircularButtonPanel" Width="75" Height="75" />
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>

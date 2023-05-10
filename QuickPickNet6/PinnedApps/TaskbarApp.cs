@@ -20,6 +20,7 @@ public class TaskBarApp
     public static void AppClicked(TaskBarApp appInfo)
     {
         WindowActivator.ActivateWindowOnCurrentVirtualDesktop(appInfo.TargetPath, appInfo.Arguments);
+        ClickWindow.HideWindow();
     }
 }
 
