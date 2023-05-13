@@ -61,6 +61,7 @@ public partial class ClickWindow : Window
 
 	private void HotKeys_KeyCombinationHit()
 	{
+		var currentDeskTop = VirtualDesktopHelper.GetCurrentVirtualDesktop();
 		UpdatePinnedApps();
 		ShowWindow();
 	}

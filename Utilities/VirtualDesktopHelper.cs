@@ -24,19 +24,41 @@ public static class VirtualDesktopHelper
     {
     }
 
+
     public static Guid GetCurrentVirtualDesktop()
     {
-        IVirtualDesktopManager virtualDesktopManager = (IVirtualDesktopManager)new VirtualDesktopManager();
-        IntPtr hwnd = IntPtr.Zero;
+        Guid currentDeskTopGuid = Guid.Empty;
+        Thread newThread = new Thread(() =>
+        {
+            IVirtualDesktopManager virtualDesktopManager = (IVirtualDesktopManager)new VirtualDesktopManager();
+            IntPtr hwnd = IntPtr.Zero;
 
-        // Get the current window handle
-        hwnd = GetForegroundWindow();
+            // Get the current window handle
+            hwnd = GetForegroundWindow();
 
-        // Get the desktop ID for the current window
-        Guid desktopId = virtualDesktopManager.GetWindowDesktopId(hwnd);
+            // Get the desktop ID for the current window
+            try
+            {
+                Guid desktopId = virtualDesktopManager.GetWindowDesktopId(hwnd);
+                currentDeskTopGuid = desktopId;
+            }
+            catch (Exception e)
+            {
+                // when  HWND is not an active  window?
+                currentDeskTopGuid = Guid.Empty;                
+            }
 
-        return desktopId;
+            
+        });
+
+        newThread.SetApartmentState(ApartmentState.STA); // Set the thread to STA, needed for some COM objects, and necessary in this case.
+        newThread.Start();
+
+        return currentDeskTopGuid;
+        
     }
+
+
 
     public static bool IsWindowOnVirtualDesktop(IntPtr hWnd, Guid currentVirtualDesktopId)
     {
@@ -57,4 +79,6 @@ public static class VirtualDesktopHelper
     // Declare the Windows API functions for getting the foreground window handle
     [DllImport("user32.dll")]
     private static extern IntPtr GetForegroundWindow();
+
+
 }
