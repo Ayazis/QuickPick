@@ -2,6 +2,8 @@
 using System.Windows.Media.Imaging;
 using System.Windows.Input;
 using System;
+using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace QuickPick.PinnedApps;
 
@@ -16,11 +18,26 @@ public class TaskBarApp
     public ImageSource AppIcon { get; set; }
     public ICommand ClickCommand { get; set; }
     public string Arguments { get; set; }
+    public bool HasWindowActiveOnCurrentDesktop { get; set; }
 
     public static void AppClicked(TaskBarApp appInfo)
     {
-        WindowActivator.ActivateWindowOnCurrentVirtualDesktop(appInfo.TargetPath, appInfo.Arguments);
+        var currentDeskTopId  = VirtualDesktopHelper.GetCurrentVirtualDesktop();
+        var windowHandle = WindowActivator.GetActiveWindow(appInfo.TargetPath, currentDeskTopId);
+        if(windowHandle != default)                    
+            WindowActivator.ActivateWindow(windowHandle);   
+        else
+            Task.Run(() => { Process.Start(appInfo.TargetPath, appInfo.Arguments); });
+        //WindowActivator.ActivateWindowOnCurrentVirtualDesktop(appInfo.TargetPath, appInfo.Arguments);
         ClickWindow.HideWindow();
+    }
+
+    /// <summary>
+    /// Checks if there is an active window on the CurrentDeskTop
+    /// </summary>
+    public void UpdateWindowStatus()
+    {
+//        WindowActivator.ActivateWindowOnCurrentVirtualDesktop
     }
 }
 
