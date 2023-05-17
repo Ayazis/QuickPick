@@ -23,7 +23,7 @@ public class TaskBarApp
     public static void AppClicked(TaskBarApp appInfo)
     {
         var currentDeskTopId  = VirtualDesktopHelper.GetCurrentVirtualDesktop();
-        var windowHandle = WindowActivator.GetActiveWindow(appInfo.TargetPath, currentDeskTopId);
+        var windowHandle = WindowActivator.GetActiveWindow(appInfo.TargetPath, (Guid)currentDeskTopId);
         if(windowHandle != default)                    
             WindowActivator.ActivateWindow(windowHandle);   
         else

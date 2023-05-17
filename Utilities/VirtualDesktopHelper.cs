@@ -53,7 +53,7 @@ public static class VirtualDesktopHelper
 
         newThread.SetApartmentState(ApartmentState.STA); // Set the thread to STA, needed for some COM objects, and necessary in this case.
         newThread.Start();
-
+        newThread.Join();
         return currentDeskTopGuid;
         
     }
@@ -62,7 +62,10 @@ public static class VirtualDesktopHelper
 
     public static bool IsWindowOnVirtualDesktop(IntPtr hWnd, Guid currentVirtualDesktopId)
     {
-		Guid windowDesktopId = Guid.Empty;
+        if (currentVirtualDesktopId == default)
+            return false;
+
+        Guid windowDesktopId = Guid.Empty;
 		Thread newThread = new Thread(() =>
 		{			
 			try
@@ -78,7 +81,7 @@ public static class VirtualDesktopHelper
 
 		newThread.SetApartmentState(ApartmentState.STA); // Set the thread to STA, needed for some COM objects, and necessary in this case.
 		newThread.Start();
-
+		newThread.Join();
 		return windowDesktopId == currentVirtualDesktopId;	
     }
 

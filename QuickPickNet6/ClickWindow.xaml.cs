@@ -69,6 +69,7 @@ public partial class ClickWindow : Window
 	{
 		var apps = TaskbarPinnedApps.GetPinnedTaskbarApps();
 		var currentDesktop = VirtualDesktopHelper.GetCurrentVirtualDesktop();
+
 		foreach ( var app in apps ) 
 		{
 			var handle = WindowActivator.GetActiveWindow(app.TargetPath, currentDesktop);

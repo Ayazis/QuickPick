@@ -50,8 +50,8 @@
                                 <MouseBinding Gesture="LeftClick" Command="{Binding ClickCommand}" />
                             </Image.InputBindings>
                         </Image>
-                        <Rectangle Height="2" VerticalAlignment="Bottom" Fill="LightBlue"/>
-                        <!--Visibility="{Binding HasWindowActiveOnCurrentDesktop, Converter={StaticResource BooleanToVisibilityConverter}}"-->
+                        <Rectangle Height="2" VerticalAlignment="Bottom" Fill="LightBlue" Visibility="{Binding HasWindowActiveOnCurrentDesktop, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                        
                     </Grid>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
