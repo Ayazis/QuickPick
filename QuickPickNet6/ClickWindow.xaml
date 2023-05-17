@@ -26,6 +26,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Resources.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+            <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         </ResourceDictionary>
     </Window.Resources>
     <Grid>
@@ -42,12 +43,15 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Grid>                      
-                        <Image Source="{Binding AppIcon}" Width="25" Height="25" Stretch="UniformToFill">                          
+                    <Grid>
+                      
+                        <Image Source="{Binding AppIcon}" Width="25" Height="25" Stretch="UniformToFill" >                          
                             <Image.InputBindings>
                                 <MouseBinding Gesture="LeftClick" Command="{Binding ClickCommand}" />
                             </Image.InputBindings>
                         </Image>
+                        <Rectangle Height="2" VerticalAlignment="Bottom" Fill="LightBlue"/>
+                        <!--Visibility="{Binding HasWindowActiveOnCurrentDesktop, Converter={StaticResource BooleanToVisibilityConverter}}"-->
                     </Grid>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
