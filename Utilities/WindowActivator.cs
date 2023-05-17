@@ -32,14 +32,13 @@ public class WindowActivator
 
         Process[] matchingProcesses = Process.GetProcessesByName(fileName);
         if (matchingProcesses == null || matchingProcesses.Length == 0)
-            return default;
-        
+            return default;        
 
         foreach (var process in matchingProcesses)
         {
             var processWindows = GetProcessWindows(process.Id);
             foreach (IntPtr hWnd in processWindows)
-            {
+            {             
                 if (VirtualDesktopHelper.IsWindowOnVirtualDesktop(hWnd, currentVirtualDesktopId))
                 {                    
                     return hWnd;
@@ -48,38 +47,7 @@ public class WindowActivator
         }
 
         return default;
-    }
-
-    //public static void ActivateWindowOnCurrentVirtualDesktop(string executablePath, string arguments)
-    //{
-    //    string fileName = Path.GetFileNameWithoutExtension(executablePath);
-
-    //    Process[] matchingProcesses = Process.GetProcessesByName(fileName);
-    //    if (matchingProcesses == null || matchingProcesses.Length == 0)
-    //    {
-    //        matchingProcesses = GetProcessesByExecutablePath(executablePath);
-    //        if (matchingProcesses.Length == 0)
-    //        {
-    //            // Start the process if it is not already running
-    //            Task.Run(() => { Process.Start(executablePath, arguments); });
-    //            return;
-    //        }
-    //    }
-    //    Guid currentVirtualDesktopId = GetCurrentVirtualDesktop();
-
-    //    foreach (var process in matchingProcesses)
-    //    {
-    //        var processWindows = GetProcessWindows(process.Id);
-    //        foreach (var hWnd in processWindows)
-    //        {
-    //            if (VirtualDesktopHelper.IsWindowOnVirtualDesktop(hWnd, currentVirtualDesktopId))
-    //            {
-    //                ActivateWindow(hWnd);
-    //                return;
-    //            }
-    //        }
-    //    }
-    //}
+    }    
 
     [DllImport("user32.dll")]
     static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);

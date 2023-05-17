@@ -24,13 +24,13 @@ public static class VirtualDesktopHelper
     {
     }
 
+    private static IVirtualDesktopManager _virtualDesktopManager = (IVirtualDesktopManager)new VirtualDesktopManager();
 
     public static Guid GetCurrentVirtualDesktop()
     {
         Guid currentDeskTopGuid = Guid.Empty;
         Thread newThread = new Thread(() =>
-        {
-            IVirtualDesktopManager virtualDesktopManager = (IVirtualDesktopManager)new VirtualDesktopManager();
+        {            
             IntPtr hwnd = IntPtr.Zero;
 
             // Get the current window handle
@@ -39,7 +39,7 @@ public static class VirtualDesktopHelper
             // Get the desktop ID for the current window
             try
             {
-                Guid desktopId = virtualDesktopManager.GetWindowDesktopId(hwnd);
+                Guid desktopId = _virtualDesktopManager.GetWindowDesktopId(hwnd);
                 currentDeskTopGuid = desktopId;
             }
             catch (Exception e)
@@ -62,18 +62,24 @@ public static class VirtualDesktopHelper
 
     public static bool IsWindowOnVirtualDesktop(IntPtr hWnd, Guid currentVirtualDesktopId)
     {
-        try
-        {
-            IVirtualDesktopManager virtualDesktopManager = (IVirtualDesktopManager)new VirtualDesktopManager();
-            Guid windowDesktopId = virtualDesktopManager.GetWindowDesktopId(hWnd);
+		Guid windowDesktopId = Guid.Empty;
+		Thread newThread = new Thread(() =>
+		{			
+			try
+			{
+				windowDesktopId = _virtualDesktopManager.GetWindowDesktopId(hWnd);
+			}
+			catch (Exception e)
+			{
+                // Random guid will return false.
+				windowDesktopId = Guid.NewGuid();
+			}
+		});
 
-            return windowDesktopId == currentVirtualDesktopId;
-        }
-        catch (Exception)
-        {
-            return false;
-            
-        }
+		newThread.SetApartmentState(ApartmentState.STA); // Set the thread to STA, needed for some COM objects, and necessary in this case.
+		newThread.Start();
+
+		return windowDesktopId == currentVirtualDesktopId;	
     }
 
     // Declare the Windows API functions for getting the foreground window handle

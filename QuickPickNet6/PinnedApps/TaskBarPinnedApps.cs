@@ -17,6 +17,7 @@ public class TaskbarPinnedApps
 
     public static List<TaskBarApp> GetPinnedTaskbarApps()
     {
+
         List<TaskBarApp> pinnedApps = new List<TaskBarApp>();
 
         string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);

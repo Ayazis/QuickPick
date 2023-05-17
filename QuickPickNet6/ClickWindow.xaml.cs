@@ -60,15 +60,21 @@ public partial class ClickWindow : Window
 	}
 
 	private void HotKeys_KeyCombinationHit()
-	{
-		var currentDeskTop = VirtualDesktopHelper.GetCurrentVirtualDesktop();
-		UpdatePinnedApps();
+	{				
 		ShowWindow();
+		UpdatePinnedApps();	
 	}
 
 	private void UpdatePinnedApps()
 	{
 		var apps = TaskbarPinnedApps.GetPinnedTaskbarApps();
+		var currentDesktop = VirtualDesktopHelper.GetCurrentVirtualDesktop();
+		foreach ( var app in apps ) 
+		{
+			var handle = WindowActivator.GetActiveWindow(app.TargetPath, currentDesktop);
+			if (handle != default)
+				app.HasWindowActiveOnCurrentDesktop = true;
+		}
 		_qpm.PinnedApps = new ObservableCollection<TaskBarApp>(apps);
 		_qpm.NotifyPropertyChanged(nameof(_qpm.PinnedApps));
 	}
