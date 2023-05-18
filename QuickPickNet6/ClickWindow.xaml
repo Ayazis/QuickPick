@@ -44,7 +44,7 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Grid>
-                        <Button Style="{StaticResource RoundButton}" Width="35" Height="35" />
+                        <Button Style="{StaticResource RoundButtonNoMouseOver}" Width="35" Height="35" />
                         <Image Source="{Binding AppIcon}" Width="23" Height="23">                          
                             <Image.InputBindings>
                                 <MouseBinding Gesture="LeftClick" Command="{Binding ClickCommand}" />
