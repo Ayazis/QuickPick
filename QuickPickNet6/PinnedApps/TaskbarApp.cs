@@ -4,6 +4,8 @@ using System.Windows.Input;
 using System;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using Utilities.VirtualDesktop;
+using WindowsDesktop;
 
 namespace QuickPick.PinnedApps;
 
@@ -22,8 +24,7 @@ public class TaskBarApp
 
     public static void AppClicked(TaskBarApp appInfo)
     {
-        var currentDeskTopId  = VirtualDesktopHelper.GetCurrentVirtualDesktop();
-        var windowHandle = WindowActivator.GetActiveWindow(appInfo.TargetPath, (Guid)currentDeskTopId);
+        var windowHandle = WindowActivator.GetActiveWindow(appInfo.TargetPath);
         if(windowHandle != default)                    
             WindowActivator.ActivateWindow(windowHandle);   
         else

@@ -57,7 +57,7 @@ public static class HotKeys
 		}
 		catch (Exception ex)
 		{
-			Logs.Logger.Log(ex);
+			//Logs.Logger.Log(ex);
 		}
 	}
 
@@ -72,7 +72,7 @@ public static class HotKeys
 		}
 		catch (Exception ex)
 		{
-			Logs.Logger.Log(ex);
+			//Logs.Logger.Log(ex);
 		}
 	}
 
@@ -95,7 +95,7 @@ public static class HotKeys
 		}
 		catch (Exception ex)
 		{
-			Logs.Logger.Log(ex);
+			//Logs.Logger.Log(ex);
 		}
 	}
 

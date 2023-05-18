@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using Utilities.VirtualDesktop;
 
 public class WindowActivator
 {
@@ -26,7 +27,7 @@ public class WindowActivator
     private delegate bool EnumWindowsProc(IntPtr hWnd, IntPtr lParam);
 
 
-    public static IntPtr GetActiveWindow(string filePath, Guid currentVirtualDesktopId)
+    public static IntPtr GetActiveWindow(string filePath)
     {
         string fileName = Path.GetFileNameWithoutExtension(filePath);
 
@@ -39,7 +40,7 @@ public class WindowActivator
             var processWindows = GetProcessWindows(process.Id);
             foreach (IntPtr hWnd in processWindows)
             {             
-                if (VirtualDesktopHelper.IsWindowOnVirtualDesktop(hWnd, currentVirtualDesktopId))
+                if (VirtualDesktopHelper.IsWindowOnVirtualDesktop(hWnd))
                 {                    
                     return hWnd;
                 }
@@ -52,16 +53,17 @@ public class WindowActivator
     [DllImport("user32.dll")]
     static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
-    // Constants for ShowWindow
-    private static int SW_SHOWNOACTIVATE = 4;
-    const int SW_MINIMIZE = 6;
 
     // Declare the IsIconic function from user32.dll
     [DllImport("user32.dll")]
     private static extern bool IsIconic(IntPtr hWnd);
     public static void ActivateWindow(IntPtr hWnd, int? showCommandInteger = null)
     {
-        if (hWnd != IntPtr.Zero)
+		// Constants for ShowWindow
+		const int SW_SHOWNOACTIVATE = 4;
+		const int SW_MINIMIZE = 6;
+
+		if (hWnd != IntPtr.Zero)
         {
             if (IsIconic(hWnd))
             {
@@ -76,32 +78,11 @@ public class WindowActivator
             }
         }
     }
-    private static Process[] GetProcessesByExecutablePath(string executablePath)
-    {
-        var processes = Process.GetProcesses();
-        var matchingProcesses = new List<Process>();
 
-        foreach (var process in processes)
-        {
-            try
-            {
-                if (process.MainModule.FileName.Equals(executablePath, StringComparison.OrdinalIgnoreCase))
-                {
-                    matchingProcesses.Add(process);
-                }
-            }
-            catch (Exception)
-            {
-                // Ignore processes that we don't have access to
-            }
-        }
-
-        return matchingProcesses.ToArray();
-    }
 
     private static IntPtr[] GetProcessWindows(int processId)
     {
-        var windows = new System.Collections.Generic.List<IntPtr>();
+        var windows = new List<IntPtr>();
 
         EnumWindows((hWnd, lParam) =>
         {
