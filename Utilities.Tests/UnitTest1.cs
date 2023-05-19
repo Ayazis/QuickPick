@@ -19,7 +19,7 @@ namespace Utilities.Tests
             // Maximise: works
             //WindowActivator.ActivateWindow(intptrValue,3);
 
-            ActiveWindows.ActivateWindow(intptrValue, 4);
+            ActiveWindows.ToggleWindow(intptrValue);
 
 
             //Assert.Pass();

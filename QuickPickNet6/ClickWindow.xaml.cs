@@ -72,7 +72,7 @@ public partial class ClickWindow : Window
 
 		foreach ( var app in apps ) 
 		{
-			var handle = ActiveWindows.GetActiveWindow(app.TargetPath);
+			var handle = ActiveWindows.GetActiveWindowOnCurentDesktop(app.TargetPath);
 			if (handle != default)
 				app.HasWindowActiveOnCurrentDesktop = true;
 		}

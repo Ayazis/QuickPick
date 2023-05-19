@@ -21,9 +21,9 @@ public class AppShortCut
 
     public static void AppClicked(AppShortCut appInfo)
     {
-        IntPtr windowHandle = ActiveWindows.GetActiveWindow(appInfo.TargetPath);
+        IntPtr windowHandle = ActiveWindows.GetActiveWindowOnCurentDesktop(appInfo.TargetPath);
         if(windowHandle != default)                    
-            ActiveWindows.ActivateWindow(windowHandle);   
+            ActiveWindows.ToggleWindow(windowHandle);   
         else
             Task.Run(() => { Process.Start(appInfo.TargetPath, appInfo.Arguments); });        
         ClickWindow.HideWindow();
