@@ -3,10 +3,26 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Utilities.VirtualDesktop;
+using WindowsDesktop;
 
 public class ActiveWindows
-{  
-
+{
+    public static IEnumerable<Process> GetAllOpenWindows()
+    {
+        foreach (var process in Process.GetProcesses()
+               .Where(w => IsWindow(w.MainWindowHandle)
+            && !string.IsNullOrEmpty(w.MainWindowTitle)))
+        {
+            IntPtr hWnd = process.MainWindowHandle;
+            if (hWnd != IntPtr.Zero)
+            {
+                if (VirtualDesktopWrapper.IsWindowOnVirtualDesktop(hWnd))
+                {
+                    yield return process;
+                }
+            }
+        }
+    }
     public static IntPtr GetActiveWindowOnCurentDesktop(string filePath)
     {
         string fileName = Path.GetFileNameWithoutExtension(filePath);
@@ -67,8 +83,11 @@ public class ActiveWindows
         return windows.ToArray();
     }
 
+
     #region DllImports
-    // Windows API imports
+    [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+    public static extern bool IsWindow(IntPtr hWnd);
+    
     [DllImport("user32.dll")]
     private static extern IntPtr GetForegroundWindow();
 
