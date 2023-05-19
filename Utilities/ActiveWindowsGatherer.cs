@@ -17,7 +17,7 @@ namespace Utilities
                 IntPtr hWnd = process.MainWindowHandle;
                 if (hWnd != IntPtr.Zero)
                 {
-                    if (VirtualDesktop.VirtualDesktopHelper.IsWindowOnVirtualDesktop(hWnd))
+                    if (VirtualDesktop.VirtualDesktopWrapper.IsWindowOnVirtualDesktop(hWnd))
                     {
                         yield return process;
                     }

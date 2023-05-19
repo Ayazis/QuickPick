@@ -2,7 +2,7 @@
 
 namespace ThumbnailLogic;
 
-public class Thumbnails
+public class ThumbnailCreator
 {
     private const int DWM_TNP_VISIBLE = 0x8;
     private const int DWM_TNP_RECTDESTINATION = 0x1;

@@ -21,9 +21,9 @@ public class AppShortCut
 
     public static void AppClicked(AppShortCut appInfo)
     {
-        IntPtr windowHandle = WindowActivator.GetActiveWindow(appInfo.TargetPath);
+        IntPtr windowHandle = ActiveWindows.GetActiveWindow(appInfo.TargetPath);
         if(windowHandle != default)                    
-            WindowActivator.ActivateWindow(windowHandle);   
+            ActiveWindows.ActivateWindow(windowHandle);   
         else
             Task.Run(() => { Process.Start(appInfo.TargetPath, appInfo.Arguments); });        
         ClickWindow.HideWindow();

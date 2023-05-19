@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Utilities.VirtualDesktop;
 
-public class WindowActivator
+public class ActiveWindows
 {
     // Windows API imports
     [DllImport("user32.dll")]
@@ -40,7 +40,7 @@ public class WindowActivator
             var processWindows = GetProcessWindows(process.Id);
             foreach (IntPtr hWnd in processWindows)
             {             
-                if (VirtualDesktopHelper.IsWindowOnVirtualDesktop(hWnd))
+                if (VirtualDesktopWrapper.IsWindowOnVirtualDesktop(hWnd))
                 {                    
                     return hWnd;
                 }

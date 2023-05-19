@@ -1,6 +1,6 @@
 ﻿namespace Utilities.VirtualDesktop;
 
-public static class VirtualDesktopHelper
+public static class VirtualDesktopWrapper
 {
     public static bool IsWindowOnVirtualDesktop(IntPtr hwnd)
     {
