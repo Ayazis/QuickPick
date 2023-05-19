@@ -1,17 +1,13 @@
-﻿using System.Diagnostics;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using QuickPick.PinnedApps;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using Ayazis.KeyHooks;
 using System.Windows.Media.Animation;
 using MouseAndKeyBoardHooks;
 using Ayazis.Utilities;
-using System.Drawing;
-using System.Runtime.InteropServices;
-using System.IO;
-using System.Text;
-using Utilities;
 
 namespace QuickPick;
 /// <summary>
@@ -62,13 +58,12 @@ public partial class ClickWindow : Window
 	private void HotKeys_KeyCombinationHit()
 	{				
 		ShowWindow();
-		UpdatePinnedApps();	
+		UpdateTaskbarShortCut();	
 	}
 
-	private void UpdatePinnedApps()
+	private void UpdateTaskbarShortCut()
 	{
-		var apps = TaskbarPinnedApps.GetPinnedTaskbarApps();
-		var openWindows = ActiveApps.GetAllOpenWindows();
+		List<TaskbarShortCut> apps = TaskbarApps.GetPinnedAppsAndActiveWindows();	
 
 		foreach ( var app in apps ) 
 		{
@@ -76,7 +71,7 @@ public partial class ClickWindow : Window
 			if (handle != default)
 				app.HasWindowActiveOnCurrentDesktop = true;
 		}
-		_qpm.PinnedApps = new ObservableCollection<AppShortCut>(apps);
+		_qpm.PinnedApps = new ObservableCollection<TaskbarShortCut>(apps);
 		_qpm.NotifyPropertyChanged(nameof(_qpm.PinnedApps));
 	}
 

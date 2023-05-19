@@ -9,23 +9,23 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using QuickPick.PinnedApps;
-using static QuickPick.PinnedApps.TaskbarPinnedApps;
+using static QuickPick.PinnedApps.TaskbarApps;
 
 namespace QuickPick
 {
     public class QuickPickMainWindowModel : INotifyPropertyChanged
     {
         public string Title => "QuickPick Settings                v.1.3 alpha";
-        public ObservableCollection<AppShortCut> PinnedApps { get; set; } = new ObservableCollection<AppShortCut>()
+        public ObservableCollection<TaskbarShortCut> PinnedApps { get; set; } = new ObservableCollection<TaskbarShortCut>()
         {
-            new AppShortCut{ },
-            new AppShortCut{ },
-            new AppShortCut{ },
-            new AppShortCut{ },
-            new AppShortCut{ },
-            new AppShortCut{ },
-            new AppShortCut{ },
-            new AppShortCut{ },
+            new TaskbarShortCut{ },
+            new TaskbarShortCut{ },
+            new TaskbarShortCut{ },
+            new TaskbarShortCut{ },
+            new TaskbarShortCut{ },
+            new TaskbarShortCut{ },
+            new TaskbarShortCut{ },
+            new TaskbarShortCut{ },
         };
         public ObservableCollection<string> ButtonLabels { get; set; } = new ObservableCollection<string>() { "1", "2", "3", "4", /*"5", "7", "8", "9", "10"*/ };
 

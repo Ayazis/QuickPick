@@ -5,10 +5,12 @@ using System.Diagnostics;
 using System;
 
 namespace QuickPick.PinnedApps;
-
-public class AppShortCut
-{
-    public AppShortCut()
+/// <summary>
+/// Wrapper for ShortCut to PinnedApps & open Windows, includes Icon.
+/// </summary>
+public class TaskbarShortCut
+{ 
+    public TaskbarShortCut()
     {
         ClickCommand = new RelayCommand(parameter => AppClicked(this));
     }
@@ -19,7 +21,7 @@ public class AppShortCut
     public string Arguments { get; set; }
     public bool HasWindowActiveOnCurrentDesktop { get; set; }
 
-    public static void AppClicked(AppShortCut appInfo)
+    public static void AppClicked(TaskbarShortCut appInfo)
     {
         IntPtr windowHandle = ActiveWindows.GetActiveWindowOnCurentDesktop(appInfo.TargetPath);
         if(windowHandle != default)                    
@@ -29,13 +31,5 @@ public class AppShortCut
         ClickWindow.HideWindow();
     }    
 
-    public AppShortCut FromRunningProcess(Process p)
-    {
-        return new AppShortCut()
-        {
-            
-            
 
-        };
-    }
 }
