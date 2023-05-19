@@ -7,12 +7,11 @@ public static class VirtualDesktopWrapper
         bool isOnCurrentDesktop = false;
         Thread thread = new Thread(() =>
         {
-            isOnCurrentDesktop = WindowsDesktop.VirtualDesktop.IsCurrentVirtualDesktop(hwnd);
-            // Do something with the result
+            isOnCurrentDesktop = WindowsDesktop.VirtualDesktop.IsCurrentVirtualDesktop(hwnd);            
         });
 
-        thread.SetApartmentState(ApartmentState.STA); // Set the thread's apartment state to STA
-        thread.Start(); // Start the thread
+        thread.SetApartmentState(ApartmentState.STA); 
+        thread.Start();
 
         thread.Join(); // Wait for the thread to complete
 
