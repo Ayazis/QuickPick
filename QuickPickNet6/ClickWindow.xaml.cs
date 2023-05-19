@@ -11,6 +11,7 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.IO;
 using System.Text;
+using Utilities;
 
 namespace QuickPick;
 /// <summary>
@@ -24,8 +25,7 @@ public partial class ClickWindow : Window
 	public Storyboard ShowAnimation { get; private set; }
 	public ClickWindow()
 	{
-		InitializeComponent();
-		var handle = GetMainWindowHandle();
+		InitializeComponent();		
 		DataContext = _qpm;
 
 		HideAnimation = TryFindResource("hideMe") as Storyboard;
@@ -68,6 +68,7 @@ public partial class ClickWindow : Window
 	private void UpdatePinnedApps()
 	{
 		var apps = TaskbarPinnedApps.GetPinnedTaskbarApps();
+		var openWindows = ActiveApps.GetAllOpenWindows();
 
 		foreach ( var app in apps ) 
 		{
@@ -75,7 +76,7 @@ public partial class ClickWindow : Window
 			if (handle != default)
 				app.HasWindowActiveOnCurrentDesktop = true;
 		}
-		_qpm.PinnedApps = new ObservableCollection<TaskBarApp>(apps);
+		_qpm.PinnedApps = new ObservableCollection<AppShortCut>(apps);
 		_qpm.NotifyPropertyChanged(nameof(_qpm.PinnedApps));
 	}
 
@@ -116,24 +117,4 @@ public partial class ClickWindow : Window
 			Logs.Logger.Log(ex);
 		}
 	}
-
-	private IntPtr GetMainWindowHandle()
-	{
-		// Getting the window handle only works when the app is shown in the taskbar & the mainwindow is shown.
-		// The handle remains usable after setting this to false.
-
-		ShowInTaskbar = true;
-		Process currentProcess = Process.GetCurrentProcess();
-		var quickPickMainWindowHandle = currentProcess.MainWindowHandle;
-		ShowInTaskbar = false;
-		Hide();
-		return quickPickMainWindowHandle;
-	}
-
-	private void btnCenterClick(object sender, RoutedEventArgs e)
-	{
-
-
-	}
-
 }

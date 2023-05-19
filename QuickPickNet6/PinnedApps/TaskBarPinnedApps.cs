@@ -15,10 +15,10 @@ public class TaskbarPinnedApps
 {
     private const string TASKBAR_FOLDERPATH = @"Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar";
 
-    public static List<TaskBarApp> GetPinnedTaskbarApps()
+    public static List<AppShortCut> GetPinnedTaskbarApps()
     {
 
-        List<TaskBarApp> pinnedApps = new List<TaskBarApp>();
+        List<AppShortCut> pinnedApps = new List<AppShortCut>();
 
         string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
         string taskbarFolder = Path.Combine(appData, TASKBAR_FOLDERPATH);
@@ -37,7 +37,7 @@ public class TaskbarPinnedApps
 
             if (!string.IsNullOrEmpty(targetPath))
             {
-                TaskBarApp appInfo = new TaskBarApp()
+                AppShortCut appInfo = new AppShortCut()
                 {
                     Name = Path.GetFileNameWithoutExtension(targetPath),
                     Arguments = arguments,

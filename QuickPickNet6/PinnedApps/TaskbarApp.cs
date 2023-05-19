@@ -1,17 +1,14 @@
 ﻿using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Input;
-using System;
 using System.Threading.Tasks;
 using System.Diagnostics;
-using Utilities.VirtualDesktop;
-using WindowsDesktop;
+using System;
 
 namespace QuickPick.PinnedApps;
 
-public class TaskBarApp
+public class AppShortCut
 {
-    public TaskBarApp()
+    public AppShortCut()
     {
         ClickCommand = new RelayCommand(parameter => AppClicked(this));
     }
@@ -22,51 +19,23 @@ public class TaskBarApp
     public string Arguments { get; set; }
     public bool HasWindowActiveOnCurrentDesktop { get; set; }
 
-    public static void AppClicked(TaskBarApp appInfo)
+    public static void AppClicked(AppShortCut appInfo)
     {
-        var windowHandle = WindowActivator.GetActiveWindow(appInfo.TargetPath);
+        IntPtr windowHandle = WindowActivator.GetActiveWindow(appInfo.TargetPath);
         if(windowHandle != default)                    
             WindowActivator.ActivateWindow(windowHandle);   
         else
-            Task.Run(() => { Process.Start(appInfo.TargetPath, appInfo.Arguments); });
-        //WindowActivator.ActivateWindowOnCurrentVirtualDesktop(appInfo.TargetPath, appInfo.Arguments);
+            Task.Run(() => { Process.Start(appInfo.TargetPath, appInfo.Arguments); });        
         ClickWindow.HideWindow();
-    }
+    }    
 
-    /// <summary>
-    /// Checks if there is an active window on the CurrentDeskTop
-    /// </summary>
-    public void UpdateWindowStatus()
+    public AppShortCut FromRunningProcess(Process p)
     {
-//        WindowActivator.ActivateWindowOnCurrentVirtualDesktop
-    }
-}
+        return new AppShortCut()
+        {
+            
+            
 
-
-public class RelayCommand : ICommand
-{
-    private readonly Action<object> _execute;
-    private readonly Predicate<object> _canExecute;
-
-    public RelayCommand(Action<object> execute, Predicate<object> canExecute = null)
-    {
-        _execute = execute ?? throw new ArgumentNullException(nameof(execute));
-        _canExecute = canExecute;
-    }
-
-    public bool CanExecute(object parameter)
-    {
-        return _canExecute == null || _canExecute(parameter);
-    }
-
-    public void Execute(object parameter)
-    {
-        _execute(parameter);
-    }
-
-    public event EventHandler CanExecuteChanged
-    {
-        add => CommandManager.RequerySuggested += value;
-        remove => CommandManager.RequerySuggested -= value;
+        };
     }
 }
