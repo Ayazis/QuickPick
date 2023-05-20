@@ -7,15 +7,11 @@ public interface IVirtualDesktopWrapper
 
 public class VirtualDesktopWrapper : IVirtualDesktopWrapper
 {
-    /// <summary>
-    /// Wrapper for VirtualDesktop. These calls need to be done in an STA thread to avoid exceptions when handling events.
-    /// </summary>
-    /// <param name="hwnd"></param>
-    /// <returns></returns>
     public bool IsWindowOnVirtualDesktop(IntPtr hwnd)
     {        
         bool isOnCurrentDesktop = false;
-        Thread thread = new Thread(() =>
+        //These calls need to be done in an STA thread to avoid exceptions when handling events.
+       Thread thread = new Thread(() =>
         {
             isOnCurrentDesktop = WindowsDesktop.VirtualDesktop.IsCurrentVirtualDesktop(hwnd);
         });
