@@ -7,6 +7,20 @@ using WindowsDesktop;
 
 public class ActiveWindows
 {
+    private static IVirtualDesktopWrapper _virtualDesktopWrapper;
+
+    public ActiveWindows(IVirtualDesktopWrapper virtualDesktopWrapper)
+    {
+        _virtualDesktopWrapper = virtualDesktopWrapper;
+    } 
+    
+    static ActiveWindows()
+    {
+        
+        _virtualDesktopWrapper = new VirtualDesktopWrapper();   
+    }
+
+
     public static IEnumerable<Process> GetAllOpenWindows()
     {
         foreach (var process in Process.GetProcesses()
@@ -16,7 +30,7 @@ public class ActiveWindows
             IntPtr hWnd = process.MainWindowHandle;
             if (hWnd != IntPtr.Zero)
             {
-                if (VirtualDesktopWrapper.IsWindowOnVirtualDesktop(hWnd))
+                if (_virtualDesktopWrapper.IsWindowOnVirtualDesktop(hWnd))
                 {
                     yield return process;
                 }
@@ -29,34 +43,34 @@ public class ActiveWindows
 
         Process[] matchingProcesses = Process.GetProcessesByName(fileName);
         if (matchingProcesses == null || matchingProcesses.Length == 0)
-            return default;        
+            return default;
 
         foreach (var process in matchingProcesses)
         {
             var processWindows = GetProcessWindows(process.Id);
             foreach (IntPtr hWnd in processWindows)
-            {             
-                if (VirtualDesktopWrapper.IsWindowOnVirtualDesktop(hWnd))
-                {                    
+            {
+                if (_virtualDesktopWrapper.IsWindowOnVirtualDesktop(hWnd))
+                {
                     return hWnd;
                 }
             }
         }
 
         return default;
-    }    
+    }
     public static void ToggleWindow(IntPtr hWnd)
     {
-		// Constants for ShowWindow, from Microsoft documentation.
-		const int SW_SHOWNOACTIVATE = 4;
-		const int SW_MINIMIZE = 6;
+        // Constants for ShowWindow, from Microsoft documentation.
+        const int SW_SHOWNOACTIVATE = 4;
+        const int SW_MINIMIZE = 6;
 
-		if (hWnd != IntPtr.Zero)
+        if (hWnd != IntPtr.Zero)
         {
             if (IsIconic(hWnd))
             {
                 // Window is currently minimized - restore it
-                ShowWindow(hWnd,SW_SHOWNOACTIVATE);
+                ShowWindow(hWnd, SW_SHOWNOACTIVATE);
                 SetForegroundWindow(hWnd);
             }
             else
@@ -87,7 +101,7 @@ public class ActiveWindows
     #region DllImports
     [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
     public static extern bool IsWindow(IntPtr hWnd);
-    
+
     [DllImport("user32.dll")]
     private static extern IntPtr GetForegroundWindow();
 

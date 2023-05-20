@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System;
 
 namespace QuickPick.PinnedApps;
+[DebuggerDisplay("{Name} - {TargetPath}")]
 /// <summary>
 /// Wrapper for ShortCut to PinnedApps & open Windows, includes Icon.
 /// </summary>

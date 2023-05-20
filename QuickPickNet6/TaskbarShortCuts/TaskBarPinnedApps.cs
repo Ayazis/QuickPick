@@ -78,11 +78,15 @@ public class TaskbarApps
                 }
                 catch (Exception)
                 {
+                    Console.WriteLine($"Unable to acces {process.ProcessName}");                
                     continue;
                 }
                 var appIcon = IconCreator.GetImage(filePath);
                 if (appIcon == null)
+                {
+                    Console.WriteLine($"Could not get icon for {filePath}");
                     continue;
+                }
 
 				TaskbarShortCut activeWindow = new TaskbarShortCut()
 				{

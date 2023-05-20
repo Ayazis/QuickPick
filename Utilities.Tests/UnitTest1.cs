@@ -1,3 +1,6 @@
+using QuickPick.PinnedApps;
+using System.Diagnostics;
+
 namespace Utilities.Tests
 {
     public class Tests
@@ -10,19 +13,14 @@ namespace Utilities.Tests
         [Test]
         public void Test1()
         {
-            string path = "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe";
-            //WindowActivator.ActivateWindowOnCurrentVirtualDesktop(path);
-            string hexValue = "0x000000000001046c";
-            long longValue = Convert.ToInt64(hexValue, 16);
-            IntPtr intptrValue = new IntPtr(longValue);
+            List<TaskbarShortCut> openWindows = TaskbarApps.GetPinnedAppsAndActiveWindows();
+            Console.WriteLine();
+            Console.WriteLine(openWindows.Count + " open windows on current Desktop");
+            foreach (var item in openWindows)
+            {
+                Console.WriteLine(item.Name);
+            }
 
-            // Maximise: works
-            //WindowActivator.ActivateWindow(intptrValue,3);
-
-            ActiveWindows.ToggleWindow(intptrValue);
-
-
-            //Assert.Pass();
         }
     }
 }
