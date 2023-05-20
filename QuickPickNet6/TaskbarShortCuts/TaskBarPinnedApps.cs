@@ -14,7 +14,7 @@ public class TaskbarApps
 
 
 	private static List<TaskbarShortCut> _pinnedApps = new List<TaskbarShortCut>();
-	static List<TaskbarShortCut> _activeWindows;
+	static List<TaskbarShortCut> _activeWindows = new List<TaskbarShortCut>();
 
 	/* Todo:
 	 * Refactor as follows:
@@ -26,10 +26,12 @@ public class TaskbarApps
 
 
 
-
 	public static List<TaskbarShortCut> GetPinnedAppsAndActiveWindows()
 	{
-		List<TaskbarShortCut> allShortCuts = new List<TaskbarShortCut>();
+		_pinnedApps.Clear();
+        _activeWindows.Clear();
+
+        List<TaskbarShortCut> allShortCuts = new List<TaskbarShortCut>();
 		_pinnedApps = GetPinnedTaskbarApps();
 		_activeWindows = GetTaskBarAppsForActiveApplications();
 
@@ -89,6 +91,9 @@ public class TaskbarApps
 
 		foreach (var activeProcess in openProcesses)
 		{
+			if (_pinnedApps.Any(a => a.WindowHandle == activeProcess.handle))
+				continue;
+
 			var process = activeProcess.process;
 			string filePath = string.Empty;
 			if (process.MainWindowHandle != IntPtr.Zero)  // Exclude processes without a main window

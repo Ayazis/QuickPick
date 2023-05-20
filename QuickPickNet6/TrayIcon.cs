@@ -41,10 +41,13 @@ internal class TrayIconManager
 
 	public void OnExitClick(object sender, EventArgs e)
 	{
-		_trayIcon.Visible = false;
-		_trayIcon.Dispose();
-		_trayIcon = null;
-		System.Windows.Application.Current.Shutdown();
+		if (_trayIcon != null)
+		{
+			_trayIcon.Visible = false;
+			_trayIcon.Dispose();
+			_trayIcon = null;
+		}
+		System.Windows.Application.Current?.Shutdown();
 	}
 
 	public delegate void SettingsMenuClickedEventHandler(object sender, EventArgs e);

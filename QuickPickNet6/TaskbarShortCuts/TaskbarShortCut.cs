@@ -3,9 +3,10 @@ using System.Windows.Input;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using System;
+using Newtonsoft.Json;
 
 namespace QuickPick.PinnedApps;
-[DebuggerDisplay("{Name} - {TargetPath}")]
+[DebuggerDisplay("{Name} - {WindowHandle} - {TargetPath}")]
 /// <summary>
 /// Wrapper for ShortCut to PinnedApps & open Windows, includes Icon.
 /// </summary>
@@ -22,6 +23,8 @@ public class TaskbarShortCut
     public string Arguments { get; set; }
     public bool HasWindowActiveOnCurrentDesktop { get; set; }
     public IntPtr WindowHandle { get; set; }
+
+    public string Info => $"{Name} - {WindowHandle} - {TargetPath}";
 
     public static void AppClicked(TaskbarShortCut appInfo)
     {
