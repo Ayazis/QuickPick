@@ -21,6 +21,7 @@ public class TaskbarShortCut
     public ICommand ClickCommand { get; set; }
     public string Arguments { get; set; }
     public bool HasWindowActiveOnCurrentDesktop { get; set; }
+    public IntPtr WindowHandle { get; set; }
 
     public static void AppClicked(TaskbarShortCut appInfo)
     {

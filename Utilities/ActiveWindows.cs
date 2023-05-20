@@ -21,7 +21,7 @@ public class ActiveWindows
     }
 
 
-    public static IEnumerable<Process> GetAllOpenWindows()
+    public static IEnumerable<(IntPtr handle, Process process)> GetAllOpenWindows()
     {
         foreach (var process in Process.GetProcesses()
                .Where(w => IsWindow(w.MainWindowHandle)
@@ -32,32 +32,39 @@ public class ActiveWindows
             {
                 if (_virtualDesktopWrapper.IsWindowOnVirtualDesktop(hWnd))
                 {
-                    yield return process;
+                    yield return (hWnd, process);
                 }
             }
         }
     }
     public static IntPtr GetActiveWindowOnCurentDesktop(string filePath)
-    {
-        string fileName = Path.GetFileNameWithoutExtension(filePath);
-
-        Process[] matchingProcesses = Process.GetProcessesByName(fileName);
-        if (matchingProcesses == null || matchingProcesses.Length == 0)
-            return default;
-
-        foreach (var process in matchingProcesses)
+    {       
+        try
         {
-            var processWindows = GetProcessWindows(process.Id);
-            foreach (IntPtr hWnd in processWindows)
+            string fileName = Path.GetFileNameWithoutExtension(filePath);
+
+            Process[] matchingProcesses = Process.GetProcessesByName(fileName);
+            if (matchingProcesses == null || matchingProcesses.Length == 0)
+                return default;
+
+            foreach (var process in matchingProcesses)
             {
-                if (_virtualDesktopWrapper.IsWindowOnVirtualDesktop(hWnd))
+                var processWindows = GetProcessWindows(process.Id);
+                foreach (IntPtr hWnd in processWindows)
                 {
-                    return hWnd;
+                    if (_virtualDesktopWrapper.IsWindowOnVirtualDesktop(hWnd))
+                    {
+                        return hWnd;
+                    }
                 }
             }
-        }
 
-        return default;
+            return IntPtr.Zero;
+        }
+        catch (Exception)
+        {
+			return IntPtr.Zero;
+		}
     }
     public static void ToggleWindow(IntPtr hWnd)
     {
