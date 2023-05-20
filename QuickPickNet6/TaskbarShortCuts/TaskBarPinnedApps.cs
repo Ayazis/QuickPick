@@ -62,8 +62,6 @@ public class TaskbarApps
 			if (!string.IsNullOrEmpty(targetPath))
 			{
 				IntPtr windowHandle = ActiveWindows.GetActiveWindowOnCurentDesktop(targetPath);
-				if (_pinnedApps.Any(s => s.WindowHandle == windowHandle))
-					continue; // If this window is a pinnedApp, it's already in the list.
 
 				TaskbarShortCut appInfo = new TaskbarShortCut()
 				{
