@@ -83,7 +83,7 @@
 
         </Grid>
 
-        <Button x:Name="SmallMiddleButton" Style="{StaticResource ResourceKey=RoundButton}"
+        <Button x:Name="SmallMiddleButton" Style="{StaticResource ResourceKey=RoundButton}" Click="SmallMiddleButton_Click"
             Width="30" Height="30" Margin="35" HorizontalAlignment="Center" VerticalAlignment="Center"
             Panel.ZIndex="1"/>
 
