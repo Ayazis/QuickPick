@@ -34,13 +34,14 @@ internal static class MouseAndKeysCapture
 		using (ProcessModule curModule = curProcess.MainModule)
 		{
 			_keyboardHookID = SetWindowsHookEx(WH_KEYBOARD_LL, _keyboardProc, GetModuleHandle(curModule.ModuleName), 0);
-			_keyboardHookID = SetWindowsHookEx(WH_MOUSE_LL, _mouseProc, GetModuleHandle(curModule.ModuleName), 0);
+			_mouseHookId = SetWindowsHookEx(WH_MOUSE_LL, _mouseProc, GetModuleHandle(curModule.ModuleName), 0);
 		}
 	}
 
 
 	private static IntPtr MouseHookCallBack(int nCode, IntPtr wParam, IntPtr lParam)
 	{
+		Debug.WriteLine(nameof(MouseHookCallBack));
 		if (nCode < 0)
 			return CallNextHookEx(_mouseHookId, nCode, wParam, lParam);
 
@@ -59,12 +60,14 @@ internal static class MouseAndKeysCapture
 			KeyUpped?.Invoke(null, new KeyEventArgs(Keys.RButton));
 
 
+
 		return CallNextHookEx(_mouseHookId, nCode, wParam, lParam);
 
 	}
 
 	private static IntPtr KeyBoardHookCallback(int nCode, IntPtr wParam, IntPtr lParam)
 	{
+		Debug.WriteLine(nameof(KeyBoardHookCallback));
 		if (nCode >= 0 && wParam == (IntPtr)WM_KEYDOWN || wParam == (IntPtr)WM_SYSKEYDOWN)
 		{
 			int vkCode = Marshal.ReadInt32(lParam);
