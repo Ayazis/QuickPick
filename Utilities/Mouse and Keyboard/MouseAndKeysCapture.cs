@@ -41,7 +41,7 @@ internal static class MouseAndKeysCapture
 
 	private static IntPtr MouseHookCallBack(int nCode, IntPtr wParam, IntPtr lParam)
 	{
-		Debug.WriteLine(nameof(MouseHookCallBack));
+
 		if (nCode < 0)
 			return CallNextHookEx(_mouseHookId, nCode, wParam, lParam);
 
@@ -67,7 +67,7 @@ internal static class MouseAndKeysCapture
 
 	private static IntPtr KeyBoardHookCallback(int nCode, IntPtr wParam, IntPtr lParam)
 	{
-		Debug.WriteLine(nameof(KeyBoardHookCallback));
+		
 		if (nCode >= 0 && wParam == (IntPtr)WM_KEYDOWN || wParam == (IntPtr)WM_SYSKEYDOWN)
 		{
 			int vkCode = Marshal.ReadInt32(lParam);
