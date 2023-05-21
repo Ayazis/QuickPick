@@ -6,6 +6,13 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using System.Linq;
 using QuickPick.SRC.Logic;
+using ThumbnailLogic;
+using System.Windows.Interop;
+using System.Windows.Media.Imaging;
+using System.Windows.Controls;
+using System.Windows;
+using QuickPick.SRC.Logic.ScreenCaptures;
+using System.Drawing;
 
 namespace QuickPick
 {
@@ -13,23 +20,22 @@ namespace QuickPick
     {
         // Must have a variable to Keep the program running. ?
         public static Models.QuickPick _QP;
-
         [STAThread]
         static void Main(string[] args)
-        {          
+        {
             try
             {
 				//ActiveApps.GetAllOpenWindows();
 
 				// Set Keyboard and Mouse Hooks for click Events.
 				CaptureKeyBoardAndMouse.SetInputHooks();
-                CaptureKeyBoardAndMouse.SetInputHooks();
 
 				_QP = new Models.QuickPick();
+                
 
                 using (var context = new ApplicationContext())
                 {
-                    Application.Run(context);
+                    System.Windows.Forms.Application.Run(context);
                 }
             
 

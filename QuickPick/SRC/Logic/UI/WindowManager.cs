@@ -13,6 +13,8 @@ using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Media.Animation;
 using QuickPick.SRC.Logic;
+using ThumbnailLogic;
+using System.Diagnostics;
 
 namespace QuickPick
 {
@@ -20,10 +22,11 @@ namespace QuickPick
 	{
 		public Models.QuickPick QP { get; set; }
 		private NotifyIcon _notificationIcon;
-		static IntPtr _ActiveWindowHandle;
+		IntPtr _ActiveWindowHandle; // used to store the current application whenever quickPick is activated.
 
 		public ClickWindow ClickWindow { get; set; }
 		private SettingsWindow _settingsWindow;
+		IntPtr _quickPickMainWindowHandle;
 
 		public Storyboard Hide { get; private set; }
 		public Storyboard Show { get; private set; }
@@ -44,7 +47,9 @@ namespace QuickPick
 		{
 			CreateTrayIcon();
 			CreateWindow();
-			FindResources();				
+			FindResources();
+			this.ClickWindow.ShowInTaskbar = false;
+
 		}
 
 		private void FindResources()
@@ -71,7 +76,7 @@ namespace QuickPick
 			};
 
 			mnuExit.Click += new EventHandler(mnuExit_Click);
-			mnuSettings.Click += MnuSettings_Click;
+			//mnuSettings.Click += MnuSettings_Click;
 			_notificationIcon.Visible = true;
 		}
 
@@ -87,21 +92,7 @@ namespace QuickPick
 		}
 
 
-		private void MnuSettings_Click(object sender, EventArgs e)
-		{
-			try
-			{
-				_settingsWindow = new SettingsWindow(QP);
-				_settingsWindow.WindowStyle = WindowStyle.None;
-				_settingsWindow.DataContext = QP.QuickPickModel;
-				_settingsWindow.Show();
-
-			}
-			catch (Exception ex)
-			{
-				Logs.Logger.Log(ex);
-			}
-		}
+	
 
 
 		private void CreateWindow()
@@ -115,6 +106,9 @@ namespace QuickPick
 				ClickWindow.WindowStyle = WindowStyle.None;
 				ClickWindow.Topmost = true;
 				ClickWindow.Show();
+
+				SetQuickPicksMainWindowHandle();
+
 				ClickWindow.Visibility = Visibility.Hidden;
 				ClickWindow.Closed += Window_Closed;
 			}
@@ -122,6 +116,18 @@ namespace QuickPick
 			{
 				Logs.Logger.Log(ex);
 			}
+		}
+
+
+		private void SetQuickPicksMainWindowHandle()
+		{
+			// Getting the window handle only works when the app is shown in the taskbar.
+			// hHe handle remains usable after setting this to false.
+			ClickWindow.ShowInTaskbar = true;
+			Process currentProcess = Process.GetCurrentProcess();
+			_quickPickMainWindowHandle = currentProcess.MainWindowHandle;
+			ClickWindow.ShowInTaskbar = false;
+
 		}
 
 		private void Window_Closed(object sender, EventArgs e)
@@ -143,8 +149,6 @@ namespace QuickPick
 		{
 			try
 			{
-
-
 				SetActiveWindow();
 
 				ClickWindow.Dispatcher.Invoke(() =>
@@ -163,6 +167,8 @@ namespace QuickPick
 					ShowShortCuts();
 				}
 
+				ShowPreviews();
+
 			}
 			catch (Exception ex)
 			{
@@ -170,7 +176,29 @@ namespace QuickPick
 			}
 		}
 
-		private System.Windows.Point GetMousePosition()
+		private void ShowPreviews()
+		{
+			var allOpenWindows = ActiveApps.GetAllOpenWindows();
+
+			double sizeFactor = 0.1;
+
+			double x = 0;
+			double y = 0;
+			double xmax = 1920 * sizeFactor;
+			double ymax = 1080 * sizeFactor;
+			foreach (var process in allOpenWindows)
+			{
+				var thumbHandle = Thumbnails.GetThumbnailRelations(process.MainWindowHandle, _quickPickMainWindowHandle);
+				if (thumbHandle == default)
+					continue;
+				RECT rect = new RECT((int)x, (int)y, (int)xmax, (int)ymax);
+				Thumbnails.CreateThumbnail(thumbHandle, rect);
+				x += xmax;
+				xmax += xmax;
+			}
+		}
+
+		private System.Drawing.Point GetMousePosition()
 		{
 			return MousePosition.GetCursorPosition();
 		}

@@ -2,6 +2,7 @@
 using QuickPick.Enums;
 using QuickPick.Logic;
 using QuickPick.Models;
+using QuickPick.SRC.Logic;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -38,7 +39,7 @@ namespace QuickPick
                 {
                     qpButton.Button.Content = qpButton.Id;
 
-                    qpButton.Margin = CalculateMargin(qpButton, qpButton.Button.Width, angle, i);
+                    qpButton.Margin = CalculateMargin(qpButton.Button.Width, angle, i);
                     qpButton.Button.Margin = qpButton.Margin;
 
                     if (buttonStyle != null)
@@ -49,11 +50,14 @@ namespace QuickPick
                     QP.WindowManager.ClickWindow.Canvas.Children.Add(qpButton.Button);
                     i++;
                 }
+            
             }
             catch (Exception ex)
             {
                 Logs.Logger.Log(ex);
             }
+
+
 
         }
 
@@ -92,7 +96,7 @@ namespace QuickPick
             canvas.Children.Add(centralButton);
         }
 
-        private Thickness CalculateMargin(QpButton qpButton, double buttonWidth, double angle, int i, double radius = -1)
+        private Thickness CalculateMargin( double buttonWidth, double angle, int i, double radius = -1)
         {
             var cntr = QP.QuickPickModel.Center;
 
@@ -209,7 +213,7 @@ namespace QuickPick
                     button.Act = new QpButton.ActionDelegate(QP.ClickActions.LaunchApplication);
 
                     button.Icon.Width = button.Icon.Height = 25;
-                    button.Icon.Margin = CalculateMargin(button, button.Icon.Width, angle, i, 100);
+                    button.Icon.Margin = CalculateMargin(button.Icon.Width, angle, i, 100);
                     QP.QuickPickModel.ShortCutButtons.Add(button);
                     button.Icon.Visibility = Visibility.Hidden;
                     QP.WindowManager.ClickWindow.Canvas.Children.Add(button.Icon);

@@ -9,6 +9,8 @@
     <RootNamespace>QuickPick</RootNamespace>
     <AssemblyName>QuickPick</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <LangVersion>latest</LangVersion>
+    <RuntimeIdentifiers>win</RuntimeIdentifiers>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
@@ -113,21 +115,27 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SRC\Logic\UI\RunningApp.cs" />
     <Compile Include="SRC\Logic\Mouse and Keyboard\CaptureKeyBoardAndMouse.cs" />
     <Compile Include="SRC\Logic\ActiveApps.cs" />
     <Compile Include="SRC\Logic\Mouse and Keyboard\HotKeys.cs" />
     <Compile Include="SRC\Logic\Saving and Loading settings\ISaveLoadSettings.cs" />
-    <Compile Include="SRC\Logic\Mouse and Keyboard\MousePosition.cs" />
+    <Compile Include="SRC\Logic\MousePosition.cs" />
     <Compile Include="SRC\Logic\Saving and Loading settings\JsonSaveLoader.cs" />
+    <Compile Include="SRC\Logic\ScreenCaptures\ScreenUtils.cs" />
     <Compile Include="SRC\Logic\ShortCutHandler.cs" />
+    <Compile Include="SRC\Logic\Thumbnails.cs" />
     <Compile Include="SRC\QuickPick.cs" />
     <Compile Include="SRC\Models\QuickPickSettings.cs" />
     <Compile Include="SRC\Models\ShortCut.cs" />
-    <Compile Include="SRC\Views\Converters\CenterToMarginConverter.cs" />
+    <Compile Include="SRC\Views\OpenAppsWindow.xaml.cs">
+      <DependentUpon>OpenAppsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SRC\Converters\CenterToMarginConverter.cs" />
     <Compile Include="SRC\Models\Enums.cs" />
     <Compile Include="SRC\Models\QpButton.cs" />
     <Compile Include="SRC\Logic\UI\ButtonManager.cs" />
-    <Compile Include="SRC\Logic\Mouse and Keyboard\InputSim.cs" />
+    <Compile Include="SRC\Logic\InputSim.cs" />
     <Compile Include="SRC\Logic\ButtonActions.cs" />
     <Compile Include="SRC\Logic\Logs.cs" />
     <Compile Include="SRC\Program.cs" />
@@ -135,21 +143,35 @@
     <Compile Include="SRC\Views\SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SRC\Views\ClickWindow.xaml.cs">
+    <Compile Include="SRC\Views\QuickPickWindow\ClickWindow.xaml.cs">
       <DependentUpon>ClickWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SRC\ViewModel\QuickPickModel.cs" />
+    <Compile Include="SRC\Views\QuickPickWindow\QuickPickModel.cs" />
     <Compile Include="SRC\Logic\UI\WindowManager.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Monikers.imagemanifest">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <None Include="..\.editorconfig">
+      <Link>.editorconfig</Link>
+    </None>
     <None Include="SRC\App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="SRC\Views\OpenAppsWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="SRC\Views\Resources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="SRC\Views\SettingsWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="SRC\Views\ClickWindow.xaml">
+    <Page Include="SRC\Views\QuickPickWindow\ClickWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -214,6 +236,9 @@
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.2</Version>
+    </PackageReference>
+    <PackageReference Include="PInvoke.Windows.Core">
+      <Version>0.7.124</Version>
     </PackageReference>
     <PackageReference Include="Win32Interop.WinHandles">
       <Version>2.0.0</Version>
