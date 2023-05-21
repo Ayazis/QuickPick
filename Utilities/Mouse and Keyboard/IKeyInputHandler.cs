@@ -1,17 +1,26 @@
-﻿using System.Windows.Forms;
+﻿using System.Diagnostics;
+using System.Windows.Forms;
 
 namespace Utilities.Mouse_and_Keyboard
 {
 	public interface IKeyInputHandler
 	{
+		/// <summary>
+		/// Determines if the pressed key results in the preset keycombination.
+		/// </summary>
+		/// <param name="key"></param>
+		/// <returns></returns>
 		bool IsPresetKeyCombinationHit(Keys key);
 		void KeyReleased(Keys keys);
+		delegate void KeyCombinationHitEventHandler();
+		event KeyCombinationHitEventHandler KeyCombinationHit;
 	}
 
 	public class KeyInputHandler : IKeyInputHandler
 	{
 		private HashSet<Keys> _pressedKeys = new HashSet<Keys>();
 		private HashSet<Keys> _presetKeyCombination;
+
 
 		public KeyInputHandler(IEnumerable<Keys> presetKeyCombination)
 		{
@@ -22,6 +31,8 @@ namespace Utilities.Mouse_and_Keyboard
 
 			_presetKeyCombination = new HashSet<Keys>(presetKeyCombination);
 		}
+
+		public event IKeyInputHandler.KeyCombinationHitEventHandler KeyCombinationHit;
 
 		public bool IsPresetKeyCombinationHit(Keys key)
 		{
@@ -34,7 +45,6 @@ namespace Utilities.Mouse_and_Keyboard
 					return IsHotKeyCombinationHit();
 				}
 			}
-
 			return false;
 		}
 
@@ -50,6 +60,7 @@ namespace Utilities.Mouse_and_Keyboard
 			if (allPressed)
 			{
 				_pressedKeys.Clear();
+				KeyCombinationHit?.Invoke();
 				return true;
 			}
 

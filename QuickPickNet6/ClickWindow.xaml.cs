@@ -8,6 +8,8 @@ using Ayazis.KeyHooks;
 using System.Windows.Media.Animation;
 using MouseAndKeyBoardHooks;
 using Ayazis.Utilities;
+using Utilities.Mouse_and_Keyboard;
+using System.Windows.Forms;
 
 namespace QuickPick;
 /// <summary>
@@ -27,11 +29,16 @@ public partial class ClickWindow : Window
 		HideAnimation = TryFindResource("hideMe") as Storyboard;
 		ShowAnimation = TryFindResource("showMe") as Storyboard;
 
-		HotKeys.KeyCombinationHit += HotKeys_KeyCombinationHit;
-		HotKeys.LeftMouseClicked += HotKeys_LeftMouseClicked;
+		List<Keys> keyCombination = new List<Keys> { Keys.LMenu, Keys.RButton };
+		var keyInputHandler = new KeyInputHandler(keyCombination);
+		var inputCapture = new MouseAndKeysCapture(keyInputHandler);
+		inputCapture.HookIntoMouseAndKeyBoard();
+		keyInputHandler.KeyCombinationHit += OnKeyCombinationHit;
 		ShowWindowInvisible();
 		_instance = this;
 	}
+
+
 
 	private void HotKeys_LeftMouseClicked()
 	{
@@ -55,7 +62,7 @@ public partial class ClickWindow : Window
 		Opacity = 1;
 	}
 
-	private void HotKeys_KeyCombinationHit()
+	private void OnKeyCombinationHit()
 	{				
 		ShowWindow();
 		UpdateTaskbarShortCut();	

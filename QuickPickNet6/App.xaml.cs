@@ -20,13 +20,7 @@ public partial class App : Application
 {	
 	protected override void OnStartup(StartupEventArgs e)
 	{
-		base.OnStartup(e);	
-
-        // Set Keyboard hooks
-        List<Keys> keyCombination = new List<Keys> { Keys.LMenu, Keys.RButton };
-		HotKeys.SubscribeToKeyEvents(keyCombination);		  
-        
+		base.OnStartup(e);	       
 		new TrayIconManager().CreateTrayIcon();		
 	}
-
 }

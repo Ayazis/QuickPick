@@ -1,11 +1,11 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
+using Utilities.Mouse_and_Keyboard;
 
 namespace Ayazis.KeyHooks;
 
-internal static class MouseAndKeysCapture
+public class MouseAndKeysCapture
 {
 	private enum MouseMessages
 	{
@@ -22,13 +22,20 @@ internal static class MouseAndKeysCapture
 	private const int WM_KEYUP = 0x101;
 	private const int WM_SYSKEYDOWN = 0x0104;
 
-	internal static LowLevelKeyboardProc _keyboardProc = KeyBoardHookCallback;
-	internal static LowLevelMouseProc _mouseProc = MouseHookCallBack;
-	internal static IntPtr _keyboardHookID = IntPtr.Zero;
-	internal static IntPtr _mouseHookId = IntPtr.Zero;
+	internal LowLevelKeyboardProc _keyboardProc;
+	internal LowLevelMouseProc _mouseProc;
+	internal IntPtr _keyboardHookID = IntPtr.Zero;
+	internal IntPtr _mouseHookId = IntPtr.Zero;
+	IKeyInputHandler _keyInputHandler;
 
+	public MouseAndKeysCapture(IKeyInputHandler keyInputHandler)
+	{
+		_keyInputHandler = keyInputHandler;
+		_keyboardProc = KeyBoardHookCallback;
+		_mouseProc = MouseHookCallBack;
+	}
 
-	public static void HookIntoMouseAndKeyBoard()
+	public void HookIntoMouseAndKeyBoard()
 	{
 		using (Process curProcess = Process.GetCurrentProcess())
 		using (ProcessModule curModule = curProcess.MainModule)
@@ -39,61 +46,68 @@ internal static class MouseAndKeysCapture
 	}
 
 
-	private static IntPtr MouseHookCallBack(int nCode, IntPtr wParam, IntPtr lParam)
+	private IntPtr MouseHookCallBack(int nCode, IntPtr wParam, IntPtr lParam)
 	{
-
+		bool keyCombinationHit = false;
 		if (nCode < 0)
 			return CallNextHookEx(_mouseHookId, nCode, wParam, lParam);
 
 		MouseMessages input = (MouseMessages)wParam;
 
 		if (input == MouseMessages.WM_LBUTTONDOWN)
-			KeyDowned?.Invoke(null, new KeyEventArgs(Keys.LButton));
+			keyCombinationHit = KeyPressed(Keys.LButton);
 
 		else if (input == MouseMessages.WM_RBUTTONDOWN)
-			KeyDowned?.Invoke(null, new KeyEventArgs(Keys.RButton));
+			keyCombinationHit = KeyPressed(Keys.RButton);
 
 		if (input == MouseMessages.WM_LBUTTONUP)
-			KeyUpped?.Invoke(null, new KeyEventArgs(Keys.LButton));
+			KeyReleased(Keys.LButton);
 
 		else if (input == MouseMessages.WM_RBUTTONUP)
-			KeyUpped?.Invoke(null, new KeyEventArgs(Keys.RButton));
+			KeyReleased(Keys.RButton);
 
-
+		if (keyCombinationHit)
+		{			
+			return IntPtr.Zero; // Do not forward event, this will prevent other software (or windows) to do something with the KeyInput.
+		}
 
 		return CallNextHookEx(_mouseHookId, nCode, wParam, lParam);
-
 	}
 
-	private static IntPtr KeyBoardHookCallback(int nCode, IntPtr wParam, IntPtr lParam)
+	private IntPtr KeyBoardHookCallback(int nCode, IntPtr wParam, IntPtr lParam)
 	{
-		
+		bool keyCombinationHit = false;
+
 		if (nCode >= 0 && wParam == (IntPtr)WM_KEYDOWN || wParam == (IntPtr)WM_SYSKEYDOWN)
 		{
 			int vkCode = Marshal.ReadInt32(lParam);
-			KeyDowned?.Invoke(null, new KeyEventArgs((Keys)vkCode));
-
+			keyCombinationHit = KeyPressed((Keys)vkCode);
 		}
 		else if (wParam == (IntPtr)WM_KEYUP)
 		{
 			int vkCode = Marshal.ReadInt32(lParam);
-			KeyUpped?.Invoke(null, new KeyEventArgs((Keys)vkCode));
+			KeyReleased((Keys)vkCode);
+		}
+		if (keyCombinationHit)
+		{
+			return IntPtr.Zero; // Do not forward event, this will prevent other software (or windows) to do something with the KeyInput.
 		}
 		return CallNextHookEx(_keyboardHookID, nCode, wParam, lParam);
-
 	}
+
+	bool KeyPressed(Keys key)
+	{
+		return _keyInputHandler.IsPresetKeyCombinationHit(key);
+	}
+
+	void KeyReleased(Keys key)
+	{
+		_keyInputHandler.KeyReleased(key);
+	}
+
+	#region dllImports
 	internal delegate IntPtr LowLevelKeyboardProc(int nCode, IntPtr wParam, IntPtr lParam);
 	internal delegate IntPtr LowLevelMouseProc(int nCode, IntPtr wParam, IntPtr lParam);
-
-
-
-	public delegate void KeyDownedEventHandler(object? sender, KeyEventArgs e);
-	public static event KeyDownedEventHandler KeyDowned;
-
-	public delegate void KeyUppedEventHandler(object? sender, KeyEventArgs e);
-	public static event KeyUppedEventHandler KeyUpped;
-
-
 	[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
 	private static extern IntPtr SetWindowsHookEx(int idHook, LowLevelKeyboardProc lpfn, IntPtr hMod, uint dwThreadId);
 
@@ -112,5 +126,5 @@ internal static class MouseAndKeysCapture
 
 	[DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
 	private static extern IntPtr GetModuleHandle(string lpModuleName);
-
+	#endregion
 }
