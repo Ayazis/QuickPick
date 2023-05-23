@@ -32,8 +32,7 @@ public class TaskbarShortCut
         if(windowHandle != default)                    
             ActiveWindows.ToggleWindow(windowHandle);   
         else
-            Task.Run(() => { Process.Start(appInfo.TargetPath, appInfo.Arguments); });        
-        ClickWindow.HideWindow();
+            Task.Run(() => { Process.Start(appInfo.TargetPath, appInfo.Arguments); });                
     }    
 
 

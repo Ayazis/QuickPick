@@ -12,7 +12,7 @@ namespace QuickPick
     /// Interaction logic for RingButtonControl.xaml
     /// </summary>
     public partial class RingButtonControl : UserControl
-    {   
+    {
         public RingButtonControl()
         {
             InitializeComponent();
@@ -30,7 +30,7 @@ namespace QuickPick
         private void Path_MouseUp(object sender, MouseButtonEventArgs e)
         {
             Path source = sender as Path;
-            Debug.WriteLine(source.Name+ "clicked.");
+            Debug.WriteLine(source.Name + "clicked.");
         }
 
         private void QuadrantEnter(Path path)
@@ -39,7 +39,12 @@ namespace QuickPick
         }
         private void QuadrantLeave(Path path)
         {
-            path.Fill = Brushes.Transparent;            
-        }        
+            path.Fill = Brushes.Transparent;
+        }
+
+        private void SmallMiddleButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            ClickWindow.HideWindow();
+        }
     }
 }
