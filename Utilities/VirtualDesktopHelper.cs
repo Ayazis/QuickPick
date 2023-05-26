@@ -13,7 +13,7 @@ public class VirtualDesktopWrapper : IVirtualDesktopWrapper
         //These calls need to be done in an STA thread to avoid exceptions when handling events.
        Thread thread = new Thread(() =>
         {
-            isOnCurrentDesktop = WindowsDesktop.VirtualDesktop.IsCurrentVirtualDesktop(hwnd);
+           // isOnCurrentDesktop = WindowsDesktop.VirtualDesktop.IsCurrentVirtualDesktop(hwnd);
         });
 
         thread.SetApartmentState(ApartmentState.STA);

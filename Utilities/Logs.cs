@@ -1,4 +1,6 @@
-﻿namespace Ayazis.Utilities;
+﻿using System.IO;
+
+namespace Ayazis.Utilities;
 
 public static class Logs
 {

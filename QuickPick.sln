@@ -3,17 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33403.182
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickPickOld", "QuickPick\QuickPickOld.csproj", "{73EA9CEC-DCA9-4E35-A3FF-C0FC7F473F5A}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuickPick", "QuickPickNet6\QuickPick.csproj", "{5F33AEE5-9A6D-4203-8670-BE007D34CECF}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MouseAndKeyBoardHooks", "MouseAndKeyBoardHooks\MouseAndKeyBoardHooks.csproj", "{31907C99-613A-4458-8E51-175BF501B2BE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utilities", "Utilities\Utilities.csproj", "{380562C2-FE4D-4885-81D3-1A173BF84E1D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickPick.Tests", "QuickPick.Tests\QuickPick.Tests.csproj", "{DB2EBD7C-ABB1-4654-AB98-32613432A567}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuickPick.Tests", "QuickPick.Tests\QuickPick.Tests.csproj", "{DB2EBD7C-ABB1-4654-AB98-32613432A567}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utilities.Tests", "Utilities.Tests\Utilities.Tests.csproj", "{8E4863BB-D477-4113-AE40-F50FCB68890E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utilities.Tests", "Utilities.Tests\Utilities.Tests.csproj", "{8E4863BB-D477-4113-AE40-F50FCB68890E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,14 +19,6 @@ Global
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{73EA9CEC-DCA9-4E35-A3FF-C0FC7F473F5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{73EA9CEC-DCA9-4E35-A3FF-C0FC7F473F5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{73EA9CEC-DCA9-4E35-A3FF-C0FC7F473F5A}.Debug|x64.ActiveCfg = Debug|x64
-		{73EA9CEC-DCA9-4E35-A3FF-C0FC7F473F5A}.Debug|x64.Build.0 = Debug|x64
-		{73EA9CEC-DCA9-4E35-A3FF-C0FC7F473F5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{73EA9CEC-DCA9-4E35-A3FF-C0FC7F473F5A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{73EA9CEC-DCA9-4E35-A3FF-C0FC7F473F5A}.Release|x64.ActiveCfg = Release|x64
-		{73EA9CEC-DCA9-4E35-A3FF-C0FC7F473F5A}.Release|x64.Build.0 = Release|x64
 		{5F33AEE5-9A6D-4203-8670-BE007D34CECF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5F33AEE5-9A6D-4203-8670-BE007D34CECF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5F33AEE5-9A6D-4203-8670-BE007D34CECF}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -39,14 +27,6 @@ Global
 		{5F33AEE5-9A6D-4203-8670-BE007D34CECF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5F33AEE5-9A6D-4203-8670-BE007D34CECF}.Release|x64.ActiveCfg = Release|Any CPU
 		{5F33AEE5-9A6D-4203-8670-BE007D34CECF}.Release|x64.Build.0 = Release|Any CPU
-		{31907C99-613A-4458-8E51-175BF501B2BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{31907C99-613A-4458-8E51-175BF501B2BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{31907C99-613A-4458-8E51-175BF501B2BE}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{31907C99-613A-4458-8E51-175BF501B2BE}.Debug|x64.Build.0 = Debug|Any CPU
-		{31907C99-613A-4458-8E51-175BF501B2BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{31907C99-613A-4458-8E51-175BF501B2BE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{31907C99-613A-4458-8E51-175BF501B2BE}.Release|x64.ActiveCfg = Release|Any CPU
-		{31907C99-613A-4458-8E51-175BF501B2BE}.Release|x64.Build.0 = Release|Any CPU
 		{380562C2-FE4D-4885-81D3-1A173BF84E1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{380562C2-FE4D-4885-81D3-1A173BF84E1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{380562C2-FE4D-4885-81D3-1A173BF84E1D}.Debug|x64.ActiveCfg = Debug|Any CPU

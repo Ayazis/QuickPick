@@ -4,6 +4,8 @@
 		<TargetFramework>net6.0-windows10.0.19041</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>disable</Nullable>
+		<UseWPF>true</UseWPF>
+		<LangVersion>latest</LangVersion>
 	</PropertyGroup>
 
 
@@ -13,10 +15,14 @@
 
 
 	<ItemGroup>
-		<PackageReference Include="System.Windows.Forms" />
-		<PackageReference Include="VirtualDesktop" Version="5.0.5" />
+		<PackageReference Include="System.Windows.Forms" />		
 		<PackageReference Include="WindowsAPICodePack-Core" Version="1.1.2" />
 		<PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1" />	  
+	</ItemGroup>
+
+
+	<ItemGroup>
+	  <ProjectReference Include="..\QuickPick.Tests\QuickPick.Tests.csproj" />
 	</ItemGroup>
 
 
