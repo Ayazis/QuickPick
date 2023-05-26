@@ -9,15 +9,9 @@ public class ActiveWindows
 {
     private static IVirtualDesktopHelper _virtualDesktopHelper;
 
-    public ActiveWindows(IVirtualDesktopHelper virtualDesktopWrapper)
+    public static void Initialise (IVirtualDesktopHelper virtualDesktopWrapper)
     {
         _virtualDesktopHelper = virtualDesktopWrapper;
-    }
-
-    static ActiveWindows()
-    {
-
-        _virtualDesktopHelper = new VirtualDesktopHelper();
     }
 
 

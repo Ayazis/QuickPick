@@ -11,16 +11,43 @@ using System.Windows;
 using System.Diagnostics;
 using System.Collections.ObjectModel;
 using QuickPick.PinnedApps;
+using System.ComponentModel;
+using Utilities.Utilities.VirtualDesktop;
+using Utilities.VirtualDesktop;
 
 namespace QuickPick;
 /// <summary>
 /// Interaction logic for App.xaml
 /// </summary>
 public partial class App : Application
-{	
+{
+	TrayIconManager _trayIconManager = new TrayIconManager();
+	DesktopTracker _desktopTracker;
+	VirtualDesktopHelper _VirtualDesktopHelper;
+
 	protected override void OnStartup(StartupEventArgs e)
 	{
-		base.OnStartup(e);	       
-		new TrayIconManager().CreateTrayIcon();		
+		base.OnStartup(e);
+		_trayIconManager.CreateTrayIcon();
+
+		_VirtualDesktopHelper = new VirtualDesktopHelper();
+		ActiveWindows.Initialise(_VirtualDesktopHelper);
+		_desktopTracker = new DesktopTracker(_VirtualDesktopHelper);
+		_desktopTracker.DesktopChanged += _virtualDesktopManager_DesktopChanged;
+		_desktopTracker.StartTracking();
+
+
+	}
+
+	private void _virtualDesktopManager_DesktopChanged(object sender, EventArgs e)
+	{
+
+	}
+
+	protected override void OnExit(ExitEventArgs e)
+	{
+		base.OnExit(e);
+		_trayIconManager.RemoveTrayIcon();
+		_VirtualDesktopHelper.Dispose();
 	}
 }

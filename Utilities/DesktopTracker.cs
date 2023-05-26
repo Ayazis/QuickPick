@@ -13,14 +13,14 @@ namespace Utilities
 
     namespace Utilities.VirtualDesktop
     {
-        public class VirtualDesktopTracker
+        public class DesktopTracker
         {
             private readonly IVirtualDesktopHelper _virtualDesktopHelper;
             private Timer _timer;
 
             public event EventHandler DesktopChanged;
 
-            public VirtualDesktopTracker(IVirtualDesktopHelper virtualDesktopHelper)
+            public DesktopTracker(IVirtualDesktopHelper virtualDesktopHelper)
             {
                 _virtualDesktopHelper = virtualDesktopHelper ?? throw new ArgumentNullException(nameof(virtualDesktopHelper));
             }

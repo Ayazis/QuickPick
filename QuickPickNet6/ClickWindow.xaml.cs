@@ -39,12 +39,7 @@ public partial class ClickWindow : Window
         inputCapture.HookIntoMouseAndKeyBoard();
         keyInputHandler.KeyCombinationHit += OnKeyCombinationHit;
 
-        //Task.Run(() => 
-        //{
-        //    var desktopTracker = new VirtualDesktopTracker(new VirtualDesktopHelper());
-        //    desktopTracker.DesktopChanged += DesktopTracker_DesktopChanged1;
-        //    desktopTracker.StartTracking();
-        //});
+    
         ShowWindowInvisible();
         _instance = this;
     }    
@@ -73,10 +68,12 @@ public partial class ClickWindow : Window
 
     private void OnKeyCombinationHit()
     {
+        
         var mousePosition = MousePosition.GetCursorPosition();
+      
         this.Left = mousePosition.X - (this.ActualWidth / 2);
-        this.Top = mousePosition.Y - (this.ActualHeight / 2);
-        Show();        
+        this.Top = mousePosition.Y - (this.ActualHeight / 2);	
+		ShowDialog();     // SHOW() throws engine exceptions!    
         //ShowWindow();
         //UpdateTaskbarShortCut();	
     }

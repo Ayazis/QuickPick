@@ -39,7 +39,7 @@ internal class TrayIconManager
 		return Icon.FromHandle(iconHandle);
 	}
 
-	public void OnExitClick(object sender, EventArgs e)
+	public void RemoveTrayIcon()
 	{
 		if (_trayIcon != null)
 		{
@@ -47,6 +47,11 @@ internal class TrayIconManager
 			_trayIcon.Dispose();
 			_trayIcon = null;
 		}
+	}
+	public void OnExitClick(object sender, EventArgs e)
+	{
+
+		RemoveTrayIcon();
 		System.Windows.Application.Current?.Shutdown();
 	}
 
