@@ -10,6 +10,10 @@ using MouseAndKeyBoardHooks;
 using Ayazis.Utilities;
 using Utilities.Mouse_and_Keyboard;
 using System.Windows.Forms;
+using System.Runtime.CompilerServices;
+using Utilities.Utilities.VirtualDesktop;
+using Utilities.VirtualDesktop;
+using System.Threading.Tasks;
 
 namespace QuickPick;
 /// <summary>
@@ -17,99 +21,120 @@ namespace QuickPick;
 /// </summary>
 public partial class ClickWindow : Window
 {
-	private static ClickWindow _instance;
-	private QuickPickMainWindowModel _qpm = new QuickPickMainWindowModel();
-	public Storyboard HideAnimation { get; private set; }
-	public Storyboard ShowAnimation { get; private set; }
-	public ClickWindow()
-	{
-		InitializeComponent();		
-		DataContext = _qpm;
+    private static ClickWindow _instance;
+    private QuickPickMainWindowModel _qpm = new QuickPickMainWindowModel();
+    public Storyboard HideAnimation { get; private set; }
+    public Storyboard ShowAnimation { get; private set; }
+    public ClickWindow()
+    {
+        InitializeComponent();
+        DataContext = _qpm;
 
-		HideAnimation = TryFindResource("hideMe") as Storyboard;
-		ShowAnimation = TryFindResource("showMe") as Storyboard;
+        HideAnimation = TryFindResource("hideMe") as Storyboard;
+        ShowAnimation = TryFindResource("showMe") as Storyboard;
 
-		List<Keys> keyCombination = new List<Keys> { Keys.LMenu, Keys.RButton };
-		var keyInputHandler = new KeyInputHandler(keyCombination);
-		var inputCapture = new MouseAndKeysCapture(keyInputHandler);
-		inputCapture.HookIntoMouseAndKeyBoard();
-		keyInputHandler.KeyCombinationHit += OnKeyCombinationHit;
-		ShowWindowInvisible();
-		_instance = this;
-	}
+        List<Keys> keyCombination = new List<Keys> { Keys.LMenu, Keys.RButton };
+        var keyInputHandler = new KeyInputHandler(keyCombination);
+        var inputCapture = new MouseAndKeysCapture(keyInputHandler);
+        inputCapture.HookIntoMouseAndKeyBoard();
+        keyInputHandler.KeyCombinationHit += OnKeyCombinationHit;
+
+        //Task.Run(() => 
+        //{
+        //    var desktopTracker = new VirtualDesktopTracker(new VirtualDesktopHelper());
+        //    desktopTracker.DesktopChanged += DesktopTracker_DesktopChanged1;
+        //    desktopTracker.StartTracking();
+        //});
+        ShowWindowInvisible();
+        _instance = this;
+    }    
+
+    private void HotKeys_LeftMouseClicked()
+    {
+        if (MouseIsOutsideWindow())
+            HideAnimation.Begin(this);
+    }
+    public bool MouseIsOutsideWindow()
+    {
+        var mouse = MousePosition.GetCursorPosition();
+
+        bool isOutside = (mouse.X < this.Left || mouse.X > this.Left + this.ActualWidth)
+                        || (mouse.Y < this.Top || mouse.Y > this.Top + this.ActualHeight);
+
+        return isOutside;
+    }
+    private void ShowWindowInvisible()
+    {
+        Opacity = 0;
+        Show();
+        Visibility = Visibility.Hidden;
+        Opacity = 1;
+    }
+
+    private void OnKeyCombinationHit()
+    {
+        var mousePosition = MousePosition.GetCursorPosition();
+        this.Left = mousePosition.X - (this.ActualWidth / 2);
+        this.Top = mousePosition.Y - (this.ActualHeight / 2);
+        Show();        
+        //ShowWindow();
+        //UpdateTaskbarShortCut();	
+    }
+    private void DesktopTracker_DesktopChanged1(object sender, EventArgs e)
+    {
+        UpdateTaskbarShortCuts();
+    }
+
+    private void UpdateTaskbarShortCuts()
+    {
+        List<TaskbarShortCut> apps = TaskbarApps.GetPinnedAppsAndActiveWindows();
+
+        foreach (var app in apps)
+        {
+            var handle = ActiveWindows.GetActiveWindowOnCurentDesktop(app.TargetPath);
+            if (handle != default)
+                app.HasWindowActiveOnCurrentDesktop = true;
+        }
+
+        _qpm.PinnedApps = new ObservableCollection<TaskbarShortCut>(apps);
+        _qpm.NotifyPropertyChanged(nameof(_qpm.PinnedApps));
+    }
+
+   
+    public static void HideWindow()
+    {
+        try
+        {
+            _instance.Hide();
+            return;
+            _instance.HideAnimation.Begin(_instance);
+
+        }
+        catch (Exception ex)
+        {
+            Logs.Logger.Log(ex);
+        }
+    }
+
+    public void ShowWindow()
+    {
+        this.Show();
+        return;
 
 
-
-	private void HotKeys_LeftMouseClicked()
-	{
-		if (MouseIsOutsideWindow())
-			HideAnimation.Begin(this);
-	}
-	public bool MouseIsOutsideWindow()
-	{
-		var mouse = MousePosition.GetCursorPosition();
-
-		bool isOutside = (mouse.X < this.Left || mouse.X > this.Left + this.ActualWidth)
-						|| (mouse.Y < this.Top || mouse.Y > this.Top + this.ActualHeight);
-
-		return isOutside;
-	}
-	private void ShowWindowInvisible()
-	{
-		Opacity = 0;
-		Show();
-		Visibility = Visibility.Hidden;
-		Opacity = 1;
-	}
-
-	private void OnKeyCombinationHit()
-	{				
-		ShowWindow();
-		UpdateTaskbarShortCut();	
-	}
-
-	private void UpdateTaskbarShortCut()
-	{
-		List<TaskbarShortCut> apps = TaskbarApps.GetPinnedAppsAndActiveWindows();	
-
-		foreach ( var app in apps ) 
-		{
-			var handle = ActiveWindows.GetActiveWindowOnCurentDesktop(app.TargetPath);
-			if (handle != default)
-				app.HasWindowActiveOnCurrentDesktop = true;
-		}
-		_qpm.PinnedApps = new ObservableCollection<TaskbarShortCut>(apps);
-		_qpm.NotifyPropertyChanged(nameof(_qpm.PinnedApps));
-	}
-
-	public static void HideWindow()
-	{
-		try
-		{
-            _instance.HideAnimation.Begin(_instance);            
-
-		}
-		catch (Exception ex)
-		{
-			Logs.Logger.Log(ex);
-		}
-	}
-
-	public void ShowWindow()
-	{
-		try
-		{
+        try
+        {
             //SetActiveWindow();
             //HideShortCuts();
             var mousePosition = MousePosition.GetCursorPosition();
             this.Left = mousePosition.X - (this.ActualWidth / 2);
             this.Top = mousePosition.Y - (this.ActualHeight / 2);
-            ShowAnimation.Begin(this);       
+            ShowAnimation.Begin(this);
 
-		}
-		catch (Exception ex)
-		{
-			Logs.Logger.Log(ex);
-		}
-	}
+        }
+        catch (Exception ex)
+        {
+            Logs.Logger.Log(ex);
+        }
+    }
 }

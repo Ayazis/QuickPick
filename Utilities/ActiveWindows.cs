@@ -7,22 +7,23 @@ using Utilities.VirtualDesktop;
 
 public class ActiveWindows
 {
-    private static IVirtualDesktopWrapper _virtualDesktopWrapper;
+    private static IVirtualDesktopHelper _virtualDesktopHelper;
 
-    public ActiveWindows(IVirtualDesktopWrapper virtualDesktopWrapper)
+    public ActiveWindows(IVirtualDesktopHelper virtualDesktopWrapper)
     {
-        _virtualDesktopWrapper = virtualDesktopWrapper;
-    } 
-    
+        _virtualDesktopHelper = virtualDesktopWrapper;
+    }
+
     static ActiveWindows()
     {
-        
-        _virtualDesktopWrapper = new VirtualDesktopWrapper();   
+
+        _virtualDesktopHelper = new VirtualDesktopHelper();
     }
 
 
     public static IEnumerable<(IntPtr handle, Process process)> GetAllOpenWindows()
     {
+        var currentDesktop = _virtualDesktopHelper.UpdateCurrentDesktopID();
         foreach (var process in Process.GetProcesses()
                .Where(w => IsWindow(w.MainWindowHandle)
             && !string.IsNullOrEmpty(w.MainWindowTitle)))
@@ -30,7 +31,7 @@ public class ActiveWindows
             IntPtr hWnd = process.MainWindowHandle;
             if (hWnd != IntPtr.Zero)
             {
-                if (_virtualDesktopWrapper.IsWindowOnVirtualDesktop(hWnd))
+                if (_virtualDesktopHelper.IsWindowOnVirtualDesktop(hWnd, currentDesktop))
                 {
                     yield return (hWnd, process);
                 }
@@ -38,9 +39,11 @@ public class ActiveWindows
         }
     }
     public static IntPtr GetActiveWindowOnCurentDesktop(string filePath)
-    {       
+    {
         try
         {
+            var currentDesktop = _virtualDesktopHelper.UpdateCurrentDesktopID();
+
             string fileName = Path.GetFileNameWithoutExtension(filePath);
 
             Process[] matchingProcesses = Process.GetProcessesByName(fileName);
@@ -52,7 +55,7 @@ public class ActiveWindows
                 var processWindows = GetProcessWindows(process.Id);
                 foreach (IntPtr hWnd in processWindows)
                 {
-                    if (_virtualDesktopWrapper.IsWindowOnVirtualDesktop(hWnd))
+                    if (_virtualDesktopHelper.IsWindowOnVirtualDesktop(hWnd, currentDesktop))
                     {
                         return hWnd;
                     }
@@ -63,8 +66,8 @@ public class ActiveWindows
         }
         catch (Exception)
         {
-			return IntPtr.Zero;
-		}
+            return IntPtr.Zero;
+        }
     }
     public static void ToggleWindow(IntPtr hWnd)
     {
