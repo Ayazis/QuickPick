@@ -86,10 +86,7 @@ public partial class ClickWindow : Window
 	{
 		try
 		{
-			_instance.Dispatcher.Invoke(() =>
-			{
-				_instance.HideAnimation.Begin(_instance);
-			});
+            _instance.HideAnimation.Begin(_instance);            
 
 		}
 		catch (Exception ex)
@@ -102,16 +99,12 @@ public partial class ClickWindow : Window
 	{
 		try
 		{
-			//SetActiveWindow();
-
-			this.Dispatcher.Invoke(() =>
-			{
-				//HideShortCuts();
-				var mousePosition = MousePosition.GetCursorPosition();
-				this.Left = mousePosition.X - (this.ActualWidth / 2);
-				this.Top = mousePosition.Y - (this.ActualHeight / 2);
-				ShowAnimation.Begin(this);
-			});
+            //SetActiveWindow();
+            //HideShortCuts();
+            var mousePosition = MousePosition.GetCursorPosition();
+            this.Left = mousePosition.X - (this.ActualWidth / 2);
+            this.Top = mousePosition.Y - (this.ActualHeight / 2);
+            ShowAnimation.Begin(this);       
 
 		}
 		catch (Exception ex)
