@@ -17,7 +17,7 @@ public class ActiveWindows
 
     public static IEnumerable<(IntPtr handle, Process process)> GetAllOpenWindows()
     {
-        var currentDesktop = _virtualDesktopHelper.UpdateCurrentDesktopID();
+        var currentDesktop = _virtualDesktopHelper.CurrentDesktopId;
         foreach (var process in Process.GetProcesses()
                .Where(w => IsWindow(w.MainWindowHandle)
             && !string.IsNullOrEmpty(w.MainWindowTitle)))
@@ -36,7 +36,7 @@ public class ActiveWindows
     {
         try
         {
-            var currentDesktop = _virtualDesktopHelper.UpdateCurrentDesktopID();
+            var currentDesktop = _virtualDesktopHelper.CurrentDesktopId;
 
             string fileName = Path.GetFileNameWithoutExtension(filePath);
 

@@ -40,9 +40,9 @@ namespace Utilities
                 Guid oldId = _virtualDesktopHelper.CurrentDesktopId;
                 Guid newDesktopId = _virtualDesktopHelper.UpdateCurrentDesktopID();
 
-                Debug.WriteLine($"old {oldId}, new: {newDesktopId}");
                 if (newDesktopId != oldId)
                 {
+                    Debug.WriteLine($"old {oldId}, new: {newDesktopId}");
                     _virtualDesktopHelper.CurrentDesktopId = newDesktopId;
                     OnDesktopChanged();
                 }

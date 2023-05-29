@@ -50,6 +50,7 @@ internal class TrayIconManager
 	}
 	public void OnExitClick(object sender, EventArgs e)
 	{
+		// Todo: Raise event and handle closing the application elsewhere.
 
 		RemoveTrayIcon();
 		System.Windows.Application.Current?.Shutdown();

@@ -68,7 +68,7 @@ public partial class ClickWindow : Window
 
     private void OnKeyCombinationHit()
     {
-        
+        UpdateTaskbarShortCuts();	
         var mousePosition = MousePosition.GetCursorPosition();
       
         this.Left = mousePosition.X - (this.ActualWidth / 2);
