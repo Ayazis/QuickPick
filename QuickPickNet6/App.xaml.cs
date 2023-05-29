@@ -48,13 +48,13 @@ public partial class App : Application
     private void _virtualDesktopManager_DesktopChanged(object sender, EventArgs e)
     {
         // Update the tasks.
-    
+        ClickWindow.UpdateTaskbarShortCuts();
     }
 
     protected override void OnExit(ExitEventArgs e)
     {
-        base.OnExit(e);
-        ExitApplication();
+        //base.OnExit(e);
+       // ExitApplication();
     }
 
     private void ExitApplication()

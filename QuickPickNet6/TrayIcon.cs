@@ -4,7 +4,7 @@ using System.IO;
 using System.Windows.Forms;
 
 namespace QuickPick;
-internal class TrayIconManager
+public class TrayIconManager
 {
 	private NotifyIcon _trayIcon;
 	private ContextMenuStrip _contextMenu;
