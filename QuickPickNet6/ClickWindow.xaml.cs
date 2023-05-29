@@ -33,11 +33,6 @@ public partial class ClickWindow : Window
 		HideAnimation = TryFindResource("hideMe") as Storyboard;
 		ShowAnimation = TryFindResource("showMe") as Storyboard;
 
-		List<Keys> keyCombination = new List<Keys> { Keys.LMenu, Keys.RButton };
-		var keyInputHandler = new KeyInputHandler(keyCombination);
-		var inputCapture = new MouseAndKeysCapture(keyInputHandler);
-		inputCapture.HookIntoMouseAndKeyBoard();
-		keyInputHandler.KeyCombinationHit += OnKeyCombinationHit;
 
 
 		ShowWindowInvisible();
@@ -66,7 +61,7 @@ public partial class ClickWindow : Window
 		Opacity = 1;
 	}
 
-	private void OnKeyCombinationHit()
+	public void OnKeyCombinationHit()
 	{
 		var mousePosition = MousePosition.GetCursorPosition();
 
@@ -78,7 +73,7 @@ public partial class ClickWindow : Window
 	}
 
 
-	public static void UpdateTaskbarShortCuts()
+	public void UpdateTaskbarShortCuts()
 	{
 		List<TaskbarShortCut> apps = TaskbarApps.GetPinnedAppsAndActiveWindows();
 
@@ -89,8 +84,14 @@ public partial class ClickWindow : Window
 				app.HasWindowActiveOnCurrentDesktop = true;
 		}
 
-		//_instance._qpm.PinnedApps = new ObservableCollection<TaskbarShortCut>(apps);
-		//_instance._qpm.NotifyPropertyChanged(nameof(_instance._qpm.PinnedApps));
+		_qpm.PinnedApps = new ObservableCollection<TaskbarShortCut>(apps);
+		_qpm.NotifyPropertyChanged(nameof(_qpm.PinnedApps));
+
+		this.Dispatcher.Invoke(() =>
+		{
+			this.UpdateLayout();
+			// make the UI refresh.... 
+		});
 	}
 
 
