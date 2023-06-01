@@ -18,7 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\QuickPickNet6\QuickPick.UI.csproj" />
-    <ProjectReference Include="..\Utilities\Utilities.csproj" />
+    <ProjectReference Include="..\Utilities\QuickPick.Utilities.csproj" />
   </ItemGroup>
 
 </Project>

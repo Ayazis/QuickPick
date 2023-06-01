@@ -56,7 +56,6 @@
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="System.Drawing.Common" Version="6.0.0" />
 		<PackageReference Include="System.Windows.Forms" />
-		<ProjectReference Include="..\Utilities\Utilities.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -68,6 +67,10 @@
 
 	<ItemGroup>
 		<Page Include="App.xaml" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\Utilities\QuickPick.Utilities.csproj" />
 	</ItemGroup>
 
 </Project>

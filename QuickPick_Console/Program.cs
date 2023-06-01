@@ -1,24 +1,19 @@
 ﻿// See https://aka.ms/new-console-template for more information
-using QuickPick;
 using System.Windows.Forms;
 using Utilities.Utilities.VirtualDesktop;
 using Utilities.VirtualDesktop;
-using QuickPick.Models;
-
-
-using System.Drawing;
 using Ayazis.Utilities;
 using Ayazis.KeyHooks;
 using Utilities.Mouse_and_Keyboard;
 
-namespace QuickPick
-{
+namespace QuickPick;
+
 	public class Program
 	{
 		static TrayIconManager _trayIconManager = new TrayIconManager();
 		static DesktopTracker _desktopTracker;
-		static VirtualDesktopHelper _VirtualDesktopHelper;
-		static ClickWindow _clickwindows;
+		static VirtualDesktopHelper _virtualDesktopHelper = new VirtualDesktopHelper();
+		static ClickWindow _clickwindow = new ClickWindow();
 		private static MouseAndKeysCapture _inputCapture;
 		static KeyInputHandler _keyInputHandler;
 
@@ -26,59 +21,71 @@ namespace QuickPick
 		static void Main(string[] args)
 		{
 			try
-			{
-				_clickwindows = new ClickWindow();
-				_trayIconManager.CreateTrayIcon();
+        {
+            _trayIconManager.CreateTrayIcon();
 
-				_VirtualDesktopHelper = new VirtualDesktopHelper();
-				ActiveWindows.Initialise(_VirtualDesktopHelper);
-				_desktopTracker = new DesktopTracker(_VirtualDesktopHelper);
-				_desktopTracker.DesktopChanged += _desktopTracker_DesktopChanged;
-				_desktopTracker.StartTracking();
+            // Setup the ActiveWindows class, this class handles everything related to Open Application Windows.
+            ActiveWindows.SetVirtualDesktopHelper(_virtualDesktopHelper);
 
+            // On every desktop change, the current active windows for that desktop are retrieved.
+            StartDesktopTracking();
 
+            // Hook into Keyboard and Mouse to listen for User set Keycombination.
+            StartListeningToKeyboardAndMouse();
 
-				List<Keys> keyCombination = new List<Keys> { Keys.LMenu, Keys.RButton };
-				_keyInputHandler = new KeyInputHandler(keyCombination);
-				_inputCapture = new MouseAndKeysCapture(_keyInputHandler);
-				_inputCapture.HookIntoMouseAndKeyBoard();
+            SubscribeToExitEvent_ToHandleCleanup();
 
-				_keyInputHandler.KeyCombinationHit += _keyInputHandler_KeyCombinationHit;
+            RunApplicationIndefinetely();
 
-				AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
-
-
-
-
-				using (var context = new ApplicationContext())
-				{
-					Application.Run(context);
-				}
-
-
-			}
-			catch (Exception ex)
+        }
+        catch (Exception ex)
 			{
 				Logs.Logger?.Log(ex);
 			}
 		}
 
-		private static void _keyInputHandler_KeyCombinationHit()
+    private static void RunApplicationIndefinetely()
+    {
+        using (var context = new ApplicationContext())
+        {
+            Application.Run(context);
+        }
+    }
+
+    private static void SubscribeToExitEvent_ToHandleCleanup()
+    {
+        AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
+    }
+
+    private static void StartListeningToKeyboardAndMouse()
+    {
+        List<Keys> keyCombination = new List<Keys> { Keys.LMenu, Keys.RButton };
+        _keyInputHandler = new KeyInputHandler(keyCombination);
+        _inputCapture = new MouseAndKeysCapture(_keyInputHandler);
+        _inputCapture.HookIntoMouseAndKeyBoard();
+
+        _keyInputHandler.KeyCombinationHit += _keyInputHandler_KeyCombinationHit;
+    }
+
+    private static void StartDesktopTracking()
+    {
+        _desktopTracker = new DesktopTracker(_virtualDesktopHelper);
+        _desktopTracker.DesktopChanged += _desktopTracker_DesktopChanged;
+        _desktopTracker.StartTracking();
+    }
+
+    private static void _keyInputHandler_KeyCombinationHit()
 		{
-			_clickwindows.OnKeyCombinationHit();
+			_clickwindow.ShowWindow();
 		}
 
 		static void _desktopTracker_DesktopChanged(object? sender, EventArgs e)
 		{
-			_clickwindows.UpdateTaskbarShortCuts();
-
-			
+			_clickwindow.UpdateTaskbarShortCuts();			
 
 		}
 		static void CurrentDomain_ProcessExit(object? sender, EventArgs e)
 		{
-			_VirtualDesktopHelper?.Dispose();
+			_virtualDesktopHelper?.Dispose();
 		}
 	}
-
-}

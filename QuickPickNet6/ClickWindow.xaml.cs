@@ -54,13 +54,6 @@ public partial class ClickWindow : Window
         return isOutside;
     }
 
-
-    public void OnKeyCombinationHit()
-    {
-        ShowWindow();
-    }
-
-
     public void UpdateTaskbarShortCuts()
     {
         List<TaskbarShortCut> apps = TaskbarApps.GetPinnedAppsAndActiveWindows();
@@ -74,42 +67,10 @@ public partial class ClickWindow : Window
 
         _qpm.PinnedApps = new ObservableCollection<TaskbarShortCut>(apps);
         _qpm.NotifyPropertyChanged(nameof(_qpm.PinnedApps));
-
-
-        // Since we are not on the UI thread, use a dispatcher.
-        this.Dispatcher.Invoke(() =>
-        {
-            UpdateLayoutOfApplinks();
-        });
+            
+      
     }
-
-    private void UpdateLayoutOfApplinks()
-    {
-        // Save original state
-        var originalState = WindowState;
-        var originalOpacity = Opacity;
-
-        Opacity = 0.01;
-
-        //  Visibility = Visibility.Hidden;        
-        //Visibility = Visibility.Visible;
-        //Opacity = 1;
-
-        Applinks.InvalidateMeasure();
-        Applinks.InvalidateVisual();
-        Applinks.UpdateLayout();
-        InvalidateMeasure();
-        InvalidateVisual();
-        UpdateLayout();
-        //Hide();        
-        //Show();
-
-        // Restore original state
-        Opacity = originalOpacity;    
-
-        //Hide();
-        //   Visibility = Visibility.Visible;
-    }
+  
     public static void HideWindow()
     {
         try

@@ -21,46 +21,8 @@ namespace QuickPick;
 /// </summary>
 public partial class App : Application
 {
-    TrayIconManager _trayIconManager = new TrayIconManager();
-    DesktopTracker _desktopTracker;
-    VirtualDesktopHelper _VirtualDesktopHelper;
+   
 
-    protected override void OnStartup(StartupEventArgs e)
-    {
-        base.OnStartup(e);
-        _trayIconManager.CreateTrayIcon();
-
-        _VirtualDesktopHelper = new VirtualDesktopHelper();
-        ActiveWindows.Initialise(_VirtualDesktopHelper);
-        _desktopTracker = new DesktopTracker(_VirtualDesktopHelper);
-        _desktopTracker.DesktopChanged += _virtualDesktopManager_DesktopChanged;
-        _desktopTracker.StartTracking();
-        AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
-
-
-    }
-
-    private void CurrentDomain_ProcessExit(object sender, EventArgs e)
-    {
-        ExitApplication();
-    }
-
-    private void _virtualDesktopManager_DesktopChanged(object sender, EventArgs e)
-    {
-        // Update the tasks.
-        //ClickWindow.UpdateTaskbarShortCuts();
-    }
-
-    protected override void OnExit(ExitEventArgs e)
-    {
-        //base.OnExit(e);
-       // ExitApplication();
-    }
-
-    private void ExitApplication()
-    {
-        _trayIconManager?.RemoveTrayIcon();
-        _VirtualDesktopHelper?.Dispose();
-    }
+   
 
 }

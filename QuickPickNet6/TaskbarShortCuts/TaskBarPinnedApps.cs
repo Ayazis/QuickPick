@@ -16,16 +16,6 @@ public class TaskbarApps
 	private static List<TaskbarShortCut> _pinnedApps = new List<TaskbarShortCut>();
 	static List<TaskbarShortCut> _activeWindows = new List<TaskbarShortCut>();
 
-	/* Todo:
-	 * Refactor as follows:
-	 * Get all Pinned Apps,
-	 * Foreach get active window opn current desktop
-	 * Get all the other active windows on current Desktop, skip the pinned app ones
-	 * Save list to field, use field next time?	 * 
-	 * */
-
-
-
 	public static List<TaskbarShortCut> GetPinnedAppsAndActiveWindows()
 	{
 		_pinnedApps.Clear();
