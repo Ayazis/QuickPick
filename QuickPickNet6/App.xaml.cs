@@ -11,16 +11,18 @@ using System.Windows;
 using System.Diagnostics;
 using System.Collections.ObjectModel;
 using QuickPick.PinnedApps;
+using System.ComponentModel;
+using Utilities.Utilities.VirtualDesktop;
+using Utilities.VirtualDesktop;
 
 namespace QuickPick;
 /// <summary>
 /// Interaction logic for App.xaml
 /// </summary>
 public partial class App : Application
-{	
-	protected override void OnStartup(StartupEventArgs e)
-	{
-		base.OnStartup(e);	       
-		new TrayIconManager().CreateTrayIcon();		
-	}
+{
+   
+
+   
+
 }

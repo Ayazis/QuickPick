@@ -35,7 +35,7 @@
         </Grid.RowDefinitions>
         <local:RingButtonControl Width="100" Height="100" Margin="50"/>
 
-        <ItemsControl ItemsSource="{Binding PinnedApps, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" >
+        <ItemsControl x:Name="Applinks" ItemsSource="{Binding PinnedApps, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" >
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <custom:CircularPanel x:Name="AppsCircularPanel" Width="150" Height="150" />
