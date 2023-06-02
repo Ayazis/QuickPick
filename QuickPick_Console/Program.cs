@@ -5,6 +5,7 @@ using Utilities.VirtualDesktop;
 using Ayazis.Utilities;
 using Ayazis.KeyHooks;
 using Utilities.Mouse_and_Keyboard;
+using System.Diagnostics;
 
 namespace QuickPick;
 
@@ -14,10 +15,11 @@ namespace QuickPick;
 		static DesktopTracker _desktopTracker;
 		static VirtualDesktopHelper _virtualDesktopHelper = new VirtualDesktopHelper();
 		static ClickWindow _clickwindow = new ClickWindow();
-		private static MouseAndKeysCapture _inputCapture;
+		static MouseAndKeysCapture _inputCapture;
 		static KeyInputHandler _keyInputHandler;
+        static  IntPtr _quickPickMainWindowHandle;
 
-		[STAThread]
+    [STAThread]
 		static void Main(string[] args)
 		{
 			try
@@ -31,7 +33,7 @@ namespace QuickPick;
             StartDesktopTracking();
 
             // Hook into Keyboard and Mouse to listen for User set Keycombination.
-            StartListeningToKeyboardAndMouse();
+            StartListeningToKeyboardAndMouse();            
 
             SubscribeToExitEvent_ToHandleCleanup();
 
@@ -43,6 +45,9 @@ namespace QuickPick;
 				Logs.Logger?.Log(ex);
 			}
 		}
+
+
+  
 
     private static void RunApplicationIndefinetely()
     {

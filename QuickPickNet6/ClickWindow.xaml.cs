@@ -23,6 +23,8 @@ public partial class ClickWindow : Window
 {
     private static ClickWindow _instance;
     private QuickPickMainWindowModel _qpm = new QuickPickMainWindowModel();
+    private IntPtr _quickPickWindowHandle;
+
     public Storyboard HideAnimation { get; private set; }
     public Storyboard ShowAnimation { get; private set; }
     public ClickWindow()
@@ -34,7 +36,7 @@ public partial class ClickWindow : Window
         ShowAnimation = TryFindResource("showMe") as Storyboard;
 
 
-
+        SetQuickPicksMainWindowHandle();
         UpdateLayout();
         _instance = this;
     }
@@ -99,5 +101,18 @@ public partial class ClickWindow : Window
         {
             Logs.Logger.Log(ex);
         }
+    }
+
+    private void SetQuickPicksMainWindowHandle()
+    {
+        // Getting the window handle only works when the app is shown in the taskbar.
+        // hHe handle remains usable after setting this to false.
+        ShowInTaskbar = true;
+        Show();
+        Process currentProcess = Process.GetCurrentProcess();
+        _quickPickWindowHandle = currentProcess.MainWindowHandle;
+        ShowInTaskbar = false;
+        Hide();
+
     }
 }
