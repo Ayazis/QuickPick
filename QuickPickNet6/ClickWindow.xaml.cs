@@ -14,6 +14,7 @@ using System.Runtime.CompilerServices;
 using Utilities.Utilities.VirtualDesktop;
 using Utilities.VirtualDesktop;
 using System.Threading.Tasks;
+using ThumbnailLogic;
 
 namespace QuickPick;
 /// <summary>
@@ -69,10 +70,10 @@ public partial class ClickWindow : Window
 
         _qpm.PinnedApps = new ObservableCollection<TaskbarShortCut>(apps);
         _qpm.NotifyPropertyChanged(nameof(_qpm.PinnedApps));
-            
-      
+
+
     }
-  
+
     public static void HideWindow()
     {
         try
@@ -113,6 +114,29 @@ public partial class ClickWindow : Window
         _quickPickWindowHandle = currentProcess.MainWindowHandle;
         ShowInTaskbar = false;
         Hide();
+
+    }
+
+    private void Button_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+    {
+        TaskbarShortCut pinnedApp = ((System.Windows.Controls.Button)sender).DataContext as TaskbarShortCut;
+        var windowHandle = pinnedApp.WindowHandle;
+
+        var thumbnailPointer = ThumbnailCreator.GetThumbnailRelations(windowHandle, _quickPickWindowHandle);
+
+        double screenWidth = System.Windows.SystemParameters.PrimaryScreenWidth;
+        double screenHeight = System.Windows.SystemParameters.PrimaryScreenHeight;
+
+        int rectangleWidth = 100;
+        int rectangleHeight = 100;
+
+        int left = (int)(screenWidth - rectangleWidth) / 2;
+        int top = (int)(screenHeight - rectangleHeight) / 2;
+        int right = left + rectangleWidth;
+        int bottom = top + rectangleHeight;
+
+        RECT rect = new RECT(left, top, right, bottom);
+        ThumbnailCreator.CreateThumbnail(thumbnailPointer, rect);
 
     }
 }

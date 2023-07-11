@@ -36,7 +36,7 @@ public class ThumbnailCreator
         }
     }
 
-    internal static void CreateThumbnail(IntPtr thumbHandle, RECT target)
+    public static void CreateThumbnail(IntPtr thumbHandle, RECT target)
     {
         // Set the properties of the thumbnail.
         thumbnailProperties = new DWM_THUMBNAIL_PROPERTIES();
