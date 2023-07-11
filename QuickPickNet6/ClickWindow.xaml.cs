@@ -15,6 +15,7 @@ using Utilities.Utilities.VirtualDesktop;
 using Utilities.VirtualDesktop;
 using System.Threading.Tasks;
 using ThumbnailLogic;
+using System.Windows.Media.Media3D;
 
 namespace QuickPick;
 /// <summary>
@@ -25,6 +26,7 @@ public partial class ClickWindow : Window
     private static ClickWindow _instance;
     private QuickPickMainWindowModel _qpm = new QuickPickMainWindowModel();
     private IntPtr _quickPickWindowHandle;
+    private IntPtr _currentThumbnail;
 
     public Storyboard HideAnimation { get; private set; }
     public Storyboard ShowAnimation { get; private set; }
@@ -119,24 +121,31 @@ public partial class ClickWindow : Window
 
     private void Button_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
     {
-        TaskbarShortCut pinnedApp = ((System.Windows.Controls.Button)sender).DataContext as TaskbarShortCut;
+        var button = ((System.Windows.Controls.Button)sender);
+        TaskbarShortCut pinnedApp = button.DataContext as TaskbarShortCut;
         var windowHandle = pinnedApp.WindowHandle;
 
-        var thumbnailPointer = ThumbnailCreator.GetThumbnailRelations(windowHandle, _quickPickWindowHandle);
 
-        double screenWidth = System.Windows.SystemParameters.PrimaryScreenWidth;
-        double screenHeight = System.Windows.SystemParameters.PrimaryScreenHeight;
+        double sizeFactor = 0.2;
+        var positionRelativeToWindow = button.TranslatePoint(new Point(0, 0), this);
 
-        int rectangleWidth = 100;
-        int rectangleHeight = 100;
+        double x = positionRelativeToWindow.X;
+        double y = positionRelativeToWindow.Y;
+        double width = 1920 * sizeFactor;
+        double height = 1080 * sizeFactor;
 
-        int left = (int)(screenWidth - rectangleWidth) / 2;
-        int top = (int)(screenHeight - rectangleHeight) / 2;
-        int right = left + rectangleWidth;
-        int bottom = top + rectangleHeight;
+        _currentThumbnail = ThumbnailCreator.GetThumbnailRelations(windowHandle, _quickPickWindowHandle);
+        if (_currentThumbnail == default)
+            return;
+        RECT rect = new RECT((int)x, (int)y, (int)(x + width), (int)(y + height));
 
-        RECT rect = new RECT(left, top, right, bottom);
-        ThumbnailCreator.CreateThumbnail(thumbnailPointer, rect);
+        ThumbnailCreator.FadeInThumbnail(_currentThumbnail, rect);
+    }
+
+    private void Button_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+    {
+        if (_currentThumbnail != default)
+            ThumbnailCreator.DwmUnregisterThumbnail(_currentThumbnail);
 
     }
 }

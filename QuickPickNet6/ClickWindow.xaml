@@ -44,7 +44,8 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Grid>
-                        <Button Style="{StaticResource RoundButtonNoMouseOver}" Width="35" Height="35" MouseEnter="Button_MouseEnter"/>
+                        
+                        <Button Style="{StaticResource RoundButtonNoMouseOver}" Width="35" Height="35" />
                         <Image Source="{Binding AppIcon}" Width="23" Height="23" >
                             <Image.ToolTip>
                                 <ToolTip Content="{Binding Info}" />
@@ -72,7 +73,7 @@
                             </Image.InputBindings>
                         </Image>
                         <Rectangle Height="2" VerticalAlignment="Bottom" Fill="LightBlue" Visibility="{Binding HasWindowActiveOnCurrentDesktop, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                                    
+                        <Button Style="{StaticResource RoundButtonNoMouseOver}" Width="35" Height="35" MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave" Opacity="0"/>
                     </Grid>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
