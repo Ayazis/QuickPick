@@ -8,14 +8,8 @@ using Ayazis.KeyHooks;
 using System.Windows.Media.Animation;
 using MouseAndKeyBoardHooks;
 using Ayazis.Utilities;
-using Utilities.Mouse_and_Keyboard;
-using System.Windows.Forms;
-using System.Runtime.CompilerServices;
-using Utilities.Utilities.VirtualDesktop;
-using Utilities.VirtualDesktop;
-using System.Threading.Tasks;
 using ThumbnailLogic;
-using System.Windows.Media.Media3D;
+
 
 namespace QuickPick;
 /// <summary>
@@ -125,27 +119,63 @@ public partial class ClickWindow : Window
         TaskbarShortCut pinnedApp = button.DataContext as TaskbarShortCut;
         var windowHandle = pinnedApp.WindowHandle;
 
-
         double sizeFactor = 0.2;
         var positionRelativeToWindow = button.TranslatePoint(new Point(0, 0), this);
 
-        double x = positionRelativeToWindow.X;
-        double y = positionRelativeToWindow.Y;
+        // Get the position of the button with respect to the center of the panel
+        double buttonX = positionRelativeToWindow.X + button.ActualWidth / 2;
+        double buttonY = positionRelativeToWindow.Y + button.ActualHeight / 2;
+
+        // Get the center of the panel
+        double centerX = Applinks.ActualWidth / 2;
+        double centerY = Applinks.ActualHeight / 2;
+
+        // Calculate the vector from the center to the button
+        double vectorX = buttonX - centerX;
+        double vectorY = buttonY - centerY;
+
+        // Normalize the vector
+        double vectorLength = Math.Sqrt(vectorX * vectorX + vectorY * vectorY);
+        vectorX /= vectorLength;
+        vectorY /= vectorLength;
+
+        // Extend the vector to get the position of the thumbnail
+        double thumbnailX = buttonX + vectorX * button.ActualWidth / 2;
+        double thumbnailY = buttonY + vectorY * button.ActualHeight / 2;
+
+        // Adjust the thumbnail position to be centered around the point
+        thumbnailX -= 1920 * sizeFactor / 2;
+        thumbnailY -= 1080 * sizeFactor / 2;
+
         double width = 1920 * sizeFactor;
         double height = 1080 * sizeFactor;
 
         _currentThumbnail = ThumbnailCreator.GetThumbnailRelations(windowHandle, _quickPickWindowHandle);
         if (_currentThumbnail == default)
             return;
-        RECT rect = new RECT((int)x, (int)y, (int)(x + width), (int)(y + height));
+
+        RECT rect = new RECT((int)thumbnailX, (int)thumbnailY, (int)(thumbnailX + width), (int)(thumbnailY + height));
 
         ThumbnailCreator.FadeInThumbnail(_currentThumbnail, rect);
     }
+
+
 
     private void Button_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
     {
         if (_currentThumbnail != default)
             ThumbnailCreator.DwmUnregisterThumbnail(_currentThumbnail);
-
     }
+
+    private double CalculateAngle(Point center, Point position)
+    {
+        double dx = position.X - center.X;
+        double dy = position.Y - center.Y;
+
+        double radian = Math.Atan2(dy, dx);
+        double angle = radian * (180 / Math.PI);
+
+        return angle;
+    }
+
 }
