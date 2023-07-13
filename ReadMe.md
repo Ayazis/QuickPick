@@ -1,14 +1,15 @@
 # QuickPick
 ## Overview
-QuickPick is a powerful and user-friendly desktop application designed to streamline and enhance your workflow. It allows users to manage active applications and assign hotkeys to specific actions, improving productivity and efficiency.
+QuickPick is a hobby project of mine. When working on multiple 4K monitors, I always feel the windows taskbar is always to far away.
+QuickPick brings the taskbar right there where you are, at your mouse-cursor. 
+
 
 ## Features
 - Active Application Management: QuickPick keeps track of your active applications, allowing you to switch between them seamlessly.
+- More features will come.
 
 ## KeyLogger statement:
 QuickPick uses a keyboard hook to intercept and manage keyboard input. This is only used to determine the HotKey combination.
-
-
 
 ## For Developers
 ### Project Structure
@@ -20,7 +21,7 @@ The QuickPick project is organized into several projects.
 	- *.Tests		: Unit Tests projects.
  
 
-## Contributing
+### Contributing
 We welcome contributions from the developer community. If you're interested in contributing, please follow these steps:
 
 Create a new branch for your changes.
