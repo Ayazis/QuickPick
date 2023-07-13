@@ -115,6 +115,8 @@ public partial class ClickWindow : Window
 
     private void Button_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
     {
+        return; // disable thumbnails.
+
         var button = ((System.Windows.Controls.Button)sender);
         TaskbarShortCut pinnedApp = button.DataContext as TaskbarShortCut;
         var windowHandle = pinnedApp.WindowHandle;

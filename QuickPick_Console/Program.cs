@@ -64,7 +64,7 @@ namespace QuickPick;
 
     private static void StartListeningToKeyboardAndMouse()
     {
-        List<Keys> keyCombination = new List<Keys> { Keys.LMenu, Keys.RButton };
+        List<Keys> keyCombination = new List<Keys> { Keys.LControlKey, Keys.RButton };
         _keyInputHandler = new KeyInputHandler(keyCombination);
         _inputCapture = new MouseAndKeysCapture(_keyInputHandler);
         _inputCapture.HookIntoMouseAndKeyBoard();

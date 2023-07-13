@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using QuickPick.Logic;
+using System.Diagnostics;
 using System.Windows.Controls;
 
 using System.Windows.Input;
@@ -30,7 +31,12 @@ namespace QuickPick
         private void Path_MouseUp(object sender, MouseButtonEventArgs e)
         {
             Path source = sender as Path;
-            Debug.WriteLine(source.Name + "clicked.");
+            if (source.Name == nameof(this.TopRight))
+            {
+                InputSim.CtrlAltBreak();
+                ClickWindow.HideWindow();
+            }
+
         }
 
         private void QuadrantEnter(Path path)
