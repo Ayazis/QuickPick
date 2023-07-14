@@ -11,7 +11,7 @@ using System.Windows;
 using QuickPick.PinnedApps;
 using static QuickPick.PinnedApps.TaskbarApps;
 
-namespace QuickPick
+namespace QuickPick.UI.Views.QuickPickMainWindow
 {
     public class QuickPickMainWindowModel : INotifyPropertyChanged
     {

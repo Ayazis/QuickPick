@@ -10,7 +10,7 @@ using System.Windows.Input;
 using Point = System.Windows.Point;
 using System.Linq;
 
-namespace QuickPick
+namespace QuickPick.UI.Views.QuickPickMainWindow
 {
     public class QuickPickModel : INotifyPropertyChanged
     {
@@ -50,7 +50,7 @@ namespace QuickPick
                 _SettingsAreSaved = value;
                 NotifyPropertyChanged(nameof(SettingsAreSaved));
             }
-        }    
+        }
 
         public bool InstantShortCuts { get; set; } = false;
 

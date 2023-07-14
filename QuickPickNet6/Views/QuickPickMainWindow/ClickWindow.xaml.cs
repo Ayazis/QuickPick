@@ -11,7 +11,7 @@ using Ayazis.Utilities;
 using ThumbnailLogic;
 
 
-namespace QuickPick;
+namespace QuickPick.UI.Views.QuickPickMainWindow;
 /// <summary>
 /// Interaction logic for MainWindow.xaml
 /// </summary>
@@ -47,8 +47,8 @@ public partial class ClickWindow : Window
     {
         var mouse = MousePosition.GetCursorPosition();
 
-        bool isOutside = (mouse.X < this.Left || mouse.X > this.Left + this.ActualWidth)
-                        || (mouse.Y < this.Top || mouse.Y > this.Top + this.ActualHeight);
+        bool isOutside = mouse.X < Left || mouse.X > Left + ActualWidth
+                        || mouse.Y < Top || mouse.Y > Top + ActualHeight;
 
         return isOutside;
     }
@@ -89,8 +89,8 @@ public partial class ClickWindow : Window
         {
             Visibility = Visibility.Visible;
             var mousePosition = MousePosition.GetCursorPosition();
-            this.Left = mousePosition.X - (this.ActualWidth / 2);
-            this.Top = mousePosition.Y - (this.ActualHeight / 2);
+            Left = mousePosition.X - ActualWidth / 2;
+            Top = mousePosition.Y - ActualHeight / 2;
             ShowAnimation.Begin(this);
 
         }
@@ -117,7 +117,7 @@ public partial class ClickWindow : Window
     {
         return; // disable thumbnails.
 
-        var button = ((System.Windows.Controls.Button)sender);
+        var button = (System.Windows.Controls.Button)sender;
         TaskbarShortCut pinnedApp = button.DataContext as TaskbarShortCut;
         var windowHandle = pinnedApp.WindowHandle;
 

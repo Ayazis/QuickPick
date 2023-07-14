@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 using System;
 using Newtonsoft.Json;
+using QuickPick.UI.Views;
 
 namespace QuickPick.PinnedApps;
 [DebuggerDisplay("{Name} - {WindowHandle} - {TargetPath}")]

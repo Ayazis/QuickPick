@@ -66,10 +66,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Page Include="App.xaml" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <ProjectReference Include="..\Utilities\QuickPick.Utilities.csproj" />
 	</ItemGroup>
 

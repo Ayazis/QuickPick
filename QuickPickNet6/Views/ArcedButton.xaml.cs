@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace QuickPick
+namespace QuickPick.UI.Views
 {
     /// <summary>
     /// Interaction logic for ArcedButton.xaml

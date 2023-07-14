@@ -15,14 +15,14 @@ using System.ComponentModel;
 using Utilities.Utilities.VirtualDesktop;
 using Utilities.VirtualDesktop;
 
-namespace QuickPick;
+namespace QuickPick.UI.Views;
 /// <summary>
 /// Interaction logic for App.xaml
 /// </summary>
 public partial class App : Application
 {
-   
 
-   
+
+
 
 }

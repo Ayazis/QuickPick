@@ -7,7 +7,7 @@ using System.Windows.Media;
 
 using System.Windows.Shapes;
 
-namespace QuickPick
+namespace QuickPick.UI.Views
 {
     /// <summary>
     /// Interaction logic for RingButtonControl.xaml

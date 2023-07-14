@@ -30,5 +30,6 @@ Submit a pull request for review.
 
 ## Todo:
 - Created Installer / Update
+- Add Configurable and Options
 - Expand Featurelist
 - Provide beta test option

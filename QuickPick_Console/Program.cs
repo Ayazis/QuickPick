@@ -6,10 +6,11 @@ using Ayazis.Utilities;
 using Ayazis.KeyHooks;
 using Utilities.Mouse_and_Keyboard;
 using System.Diagnostics;
+using QuickPick.UI.Views;
 
 namespace QuickPick;
 
-	public class Program
+public class Program
 	{
 		static TrayIconManager _trayIconManager = new TrayIconManager();
 		static DesktopTracker _desktopTracker;
