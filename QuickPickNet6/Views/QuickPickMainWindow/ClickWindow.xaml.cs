@@ -119,37 +119,34 @@ public partial class ClickWindow : Window
         var windowHandle = pinnedApp.WindowHandle;
 
         const double sizeFactor = 0.2;
+        double width = 1920 * sizeFactor;
+        double height = 1080 * sizeFactor;
 
+        // Get the center of the window
+        double windowCenterX = this.ActualWidth / 2;
+        double windowCenterY = this.ActualHeight / 2;
+        
         // Get DPI information
         PresentationSource source = PresentationSource.FromVisual(this);
         var m = source.CompositionTarget.TransformToDevice;
         double dpiX = m.M11;
         double dpiY = m.M22;
 
-        // Apply DPI scaling
-        double width = 1920 * sizeFactor * dpiX;
-        double height = 1080 * sizeFactor * dpiY;
-
-        // Get the center of the window
-        double windowCenterX = this.ActualWidth / 2;
-        double windowCenterY = this.ActualHeight / 2;
-
         // Get the center of the button relative to its container (the window)
         var buttonCenter = button.TransformToAncestor(this)
-                                 .Transform(new Point(button.ActualWidth / 2, button.ActualHeight / 2));
+                                .Transform(new Point(button.ActualWidth / 2, button.ActualHeight / 2));
 
         // Calculate the button's position relative to the window's center
         double relativeX = buttonCenter.X - windowCenterX;
         double relativeY = buttonCenter.Y - windowCenterY;
 
-        // Scale the relative position by a factor to adjust the thumbnail's position
-        const double offsetFactor = 0.1;
-        double offsetX = relativeX * offsetFactor;
-        double offsetY = relativeY * offsetFactor;
+        // Scale the relative position by a factor to adjust the thumbnail's position        
+        double offsetX = relativeX * 3.5;
+        double offsetY = relativeY * 2;
 
         // Calculate the thumbnail's position, ensuring it is centered around the button's position
         double thumbnailX = buttonCenter.X + offsetX - width / 2;
-        double thumbnailY = buttonCenter.Y + offsetY - height / 2;
+        double thumbnailY = buttonCenter.Y + offsetY - height / 2 +15;
 
         _currentThumbnail = ThumbnailCreator.GetThumbnailRelations(windowHandle, _quickPickWindowHandle);
         if (_currentThumbnail == default)
