@@ -112,54 +112,68 @@ public partial class ClickWindow : Window
         Hide();
 
     }
-
     private void Button_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
-    {   
+    {
         var button = (System.Windows.Controls.Button)sender;
         TaskbarShortCut pinnedApp = button.DataContext as TaskbarShortCut;
         var windowHandle = pinnedApp.WindowHandle;
 
-        double sizeFactor = 0.2;
-        Point positionRelativeToWindow = button.PointToScreen(new Point(0, 0));
-        Point positionRelativeToWindow2 = button.TranslatePoint(new Point(0, 0), this);      
-               
-
-       // var positionRelativeToWindow = button.TranslatePoint(new Point(0, 0), this);
-
-        // Get the position of the button with respect to the center of the panel
-        double buttonX = positionRelativeToWindow.X;
-        double buttonY = positionRelativeToWindow.Y;
-
-        // Get the center of the panel
-        double centerX = this.ActualWidth / 2;
-        double centerY = this.ActualHeight / 2;
-
-        // Calculate the vector from the center to the button
-        double vectorX = buttonX - centerX;
-        double vectorY = buttonY - centerY;
-
-        // Normalize the vector
-        double vectorLength = Math.Sqrt(vectorX * vectorX + vectorY * vectorY);
-        vectorX /= vectorLength;
-        vectorY /= vectorLength;
-
-        // Extend the vector to get the position of the thumbnail
-        double thumbnailX = positionRelativeToWindow.X;
-        double thumbnailY = positionRelativeToWindow.Y;
-
-
-
+        const double sizeFactor = 0.2;
         double width = 1920 * sizeFactor;
         double height = 1080 * sizeFactor;
+
+        // Get the center of the window
+        double windowCenterX = this.ActualWidth / 2;
+        double windowCenterY = this.ActualHeight / 2;
+
+        // Get the center of the button relative to its container (the window)
+        var buttonCenter = button.TransformToAncestor(this)
+                                .Transform(new Point(button.ActualWidth / 2, button.ActualHeight / 2));
+
+        // Calculate the button's position relative to the window's center
+        double relativeX = buttonCenter.X - windowCenterX;
+        double relativeY = buttonCenter.Y - windowCenterY;
+
+        // Scale the relative position by a factor to adjust the thumbnail's position        
+        double offsetX = relativeX * 3.5;
+        double offsetY = relativeY * 2;
+
+        // Calculate the thumbnail's position, ensuring it is centered around the button's position
+        double thumbnailX = buttonCenter.X + offsetX - width / 2;
+        double thumbnailY = buttonCenter.Y + offsetY - height / 2 +15;
 
         _currentThumbnail = ThumbnailCreator.GetThumbnailRelations(windowHandle, _quickPickWindowHandle);
         if (_currentThumbnail == default)
             return;
 
         RECT rect = new RECT((int)thumbnailX, (int)thumbnailY, (int)(thumbnailX + width), (int)(thumbnailY + height));
-
         ThumbnailCreator.FadeInThumbnail(_currentThumbnail, rect);
     }
+
+
+
+    //private void Button_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+    //{
+    //    var mousePosition = MousePosition.GetCursorPosition();
+    //    const double sizeFactor = 0.2;
+    //    double width = 1920 * sizeFactor;
+    //    double height = 1080 * sizeFactor;
+
+    //    double thumbnailX = mousePosition.X - width / 2;
+    //    double thumbnailY = mousePosition.Y + height / 2;
+
+
+    //    var button = (System.Windows.Controls.Button)sender;
+    //    TaskbarShortCut pinnedApp = button.DataContext as TaskbarShortCut;
+    //    var windowHandle = pinnedApp.WindowHandle;
+    //    _currentThumbnail = ThumbnailCreator.GetThumbnailRelations(windowHandle, _quickPickWindowHandle);
+    //    if (_currentThumbnail == default)
+    //        return;
+
+    //    RECT rect = new RECT((int)thumbnailX, (int)thumbnailY, (int)(thumbnailX + width), (int)(thumbnailY + height));
+
+    //    ThumbnailCreator.FadeInThumbnail(_currentThumbnail, rect);
+    //}
 
 
 
