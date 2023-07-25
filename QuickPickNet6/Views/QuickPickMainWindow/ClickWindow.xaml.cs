@@ -151,32 +151,6 @@ public partial class ClickWindow : Window
     }
 
 
-
-    //private void Button_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
-    //{
-    //    var mousePosition = MousePosition.GetCursorPosition();
-    //    const double sizeFactor = 0.2;
-    //    double width = 1920 * sizeFactor;
-    //    double height = 1080 * sizeFactor;
-
-    //    double thumbnailX = mousePosition.X - width / 2;
-    //    double thumbnailY = mousePosition.Y + height / 2;
-
-
-    //    var button = (System.Windows.Controls.Button)sender;
-    //    TaskbarShortCut pinnedApp = button.DataContext as TaskbarShortCut;
-    //    var windowHandle = pinnedApp.WindowHandle;
-    //    _currentThumbnail = ThumbnailCreator.GetThumbnailRelations(windowHandle, _quickPickWindowHandle);
-    //    if (_currentThumbnail == default)
-    //        return;
-
-    //    RECT rect = new RECT((int)thumbnailX, (int)thumbnailY, (int)(thumbnailX + width), (int)(thumbnailY + height));
-
-    //    ThumbnailCreator.FadeInThumbnail(_currentThumbnail, rect);
-    //}
-
-
-
     private void Button_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
     {
         if (_currentThumbnail != default)
