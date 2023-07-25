@@ -11,7 +11,7 @@ using Ayazis.Utilities;
 using ThumbnailLogic;
 
 
-namespace QuickPick.UI.Views.QuickPickMainWindow;
+namespace QuickPick;
 /// <summary>
 /// Interaction logic for MainWindow.xaml
 /// </summary>
@@ -114,23 +114,25 @@ public partial class ClickWindow : Window
     }
 
     private void Button_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
-    {
-        return; // disable thumbnails.
-
+    {   
         var button = (System.Windows.Controls.Button)sender;
         TaskbarShortCut pinnedApp = button.DataContext as TaskbarShortCut;
         var windowHandle = pinnedApp.WindowHandle;
 
         double sizeFactor = 0.2;
-        var positionRelativeToWindow = button.TranslatePoint(new Point(0, 0), this);
+        Point positionRelativeToWindow = button.PointToScreen(new Point(0, 0));
+        Point positionRelativeToWindow2 = button.TranslatePoint(new Point(0, 0), this);      
+               
+
+       // var positionRelativeToWindow = button.TranslatePoint(new Point(0, 0), this);
 
         // Get the position of the button with respect to the center of the panel
-        double buttonX = positionRelativeToWindow.X + button.ActualWidth / 2;
-        double buttonY = positionRelativeToWindow.Y + button.ActualHeight / 2;
+        double buttonX = positionRelativeToWindow.X;
+        double buttonY = positionRelativeToWindow.Y;
 
         // Get the center of the panel
-        double centerX = Applinks.ActualWidth / 2;
-        double centerY = Applinks.ActualHeight / 2;
+        double centerX = this.ActualWidth / 2;
+        double centerY = this.ActualHeight / 2;
 
         // Calculate the vector from the center to the button
         double vectorX = buttonX - centerX;
@@ -142,12 +144,10 @@ public partial class ClickWindow : Window
         vectorY /= vectorLength;
 
         // Extend the vector to get the position of the thumbnail
-        double thumbnailX = buttonX + vectorX * button.ActualWidth / 2;
-        double thumbnailY = buttonY + vectorY * button.ActualHeight / 2;
+        double thumbnailX = positionRelativeToWindow.X;
+        double thumbnailY = positionRelativeToWindow.Y;
 
-        // Adjust the thumbnail position to be centered around the point
-        thumbnailX -= 1920 * sizeFactor / 2;
-        thumbnailY -= 1080 * sizeFactor / 2;
+
 
         double width = 1920 * sizeFactor;
         double height = 1080 * sizeFactor;

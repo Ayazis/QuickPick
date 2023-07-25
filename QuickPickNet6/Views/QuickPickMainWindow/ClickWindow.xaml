@@ -7,8 +7,8 @@
              xmlns:converters="clr-namespace:QuickPick.Converters"
              xmlns:custom="clr-namespace:QuickPick.Custom"
              mc:Ignorable="d"               
-             MinWidth="800"
-             MinHeight="800"
+             MinWidth="3000"
+             MinHeight="2000"
              SizeToContent="WidthAndHeight"
              Background="#00ffffff"         
              ShowInTaskbar="true"
@@ -24,7 +24,7 @@
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Resources.xaml"/>
+                <ResourceDictionary Source="..\Resources.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         </ResourceDictionary>

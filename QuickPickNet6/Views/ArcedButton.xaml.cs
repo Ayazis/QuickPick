@@ -13,16 +13,15 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace QuickPick.UI.Views
+namespace QuickPick;
+
+/// <summary>
+/// Interaction logic for ArcedButton.xaml
+/// </summary>
+public partial class ArcedButton : UserControl
 {
-    /// <summary>
-    /// Interaction logic for ArcedButton.xaml
-    /// </summary>
-    public partial class ArcedButton : UserControl
+    public ArcedButton()
     {
-        public ArcedButton()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

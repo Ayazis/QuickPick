@@ -15,7 +15,7 @@ using System.ComponentModel;
 using Utilities.Utilities.VirtualDesktop;
 using Utilities.VirtualDesktop;
 
-namespace QuickPick.UI.Views;
+namespace QuickPick;
 /// <summary>
 /// Interaction logic for App.xaml
 /// </summary>
