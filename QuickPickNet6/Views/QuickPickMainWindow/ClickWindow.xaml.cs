@@ -9,7 +9,7 @@ using System.Windows.Media.Animation;
 using MouseAndKeyBoardHooks;
 using Ayazis.Utilities;
 using ThumbnailLogic;
-
+using System.Linq;
 
 namespace QuickPick;
 /// <summary>
@@ -21,6 +21,7 @@ public partial class ClickWindow : Window
     private QuickPickMainWindowModel _qpm = new QuickPickMainWindowModel();
     private IntPtr _quickPickWindowHandle;
     private IntPtr _currentThumbnail;
+    private List<IntPtr> _currentThumbnails = new List<IntPtr>();
 
     public Storyboard HideAnimation { get; private set; }
     public Storyboard ShowAnimation { get; private set; }
@@ -55,7 +56,7 @@ public partial class ClickWindow : Window
 
     public void UpdateTaskbarShortCuts()
     {
-        List<TaskbarShortCut> apps = TaskbarApps.GetPinnedAppsAndActiveWindows();
+        List<AppLink> apps = TaskbarApps.GetPinnedAppsAndActiveWindows();
 
         foreach (var app in apps)
         {
@@ -64,10 +65,27 @@ public partial class ClickWindow : Window
                 app.HasWindowActiveOnCurrentDesktop = true;
         }
 
-        _qpm.PinnedApps = new ObservableCollection<TaskbarShortCut>(apps);
+
+        // Group the apps by filePath
+        var grouped = apps.GroupBy(g => g.TargetPath);
+        foreach (var group in grouped)
+        {
+            // Foreach 
+            var openWindows = group.ToList();
+            var main = openWindows.First();
+            openWindows.Remove(main);
+            main.WindowHandles = openWindows.Select(s => s.WindowHandle).ToList();
+
+            foreach (var appWindow in openWindows)
+            {
+                apps.Remove(appWindow);
+            }
+
+        }
+
+
+        _qpm.PinnedApps = new ObservableCollection<AppLink>(apps);
         _qpm.NotifyPropertyChanged(nameof(_qpm.PinnedApps));
-
-
     }
 
     public static void HideWindow()
@@ -115,17 +133,17 @@ public partial class ClickWindow : Window
     private void Button_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
     {
         var button = (System.Windows.Controls.Button)sender;
-        TaskbarShortCut pinnedApp = button.DataContext as TaskbarShortCut;
-        var windowHandle = pinnedApp.WindowHandle;
+        AppLink pinnedApp = button.DataContext as AppLink;
 
-        const double sizeFactor = 0.2;
+
+        const double sizeFactor = 0.1;
         double width = 1920 * sizeFactor;
         double height = 1080 * sizeFactor;
 
         // Get the center of the window
         double windowCenterX = this.ActualWidth / 2;
         double windowCenterY = this.ActualHeight / 2;
-        
+
         // Get DPI information
         PresentationSource source = PresentationSource.FromVisual(this);
         var m = source.CompositionTarget.TransformToDevice;
@@ -146,14 +164,42 @@ public partial class ClickWindow : Window
 
         // Calculate the thumbnail's position, ensuring it is centered around the button's position
         double thumbnailX = buttonCenter.X + offsetX - width / 2;
-        double thumbnailY = buttonCenter.Y + offsetY - height / 2 +15;
+        double thumbnailY = buttonCenter.Y + offsetY - height / 2 + 15;
 
-        _currentThumbnail = ThumbnailCreator.GetThumbnailRelations(windowHandle, _quickPickWindowHandle);
-        if (_currentThumbnail == default)
-            return;
 
-        RECT rect = new RECT((int)(thumbnailX * dpiX), (int)(thumbnailY * dpiY), (int)((thumbnailX + width) * dpiX), (int)((thumbnailY + height) * dpiY));
-        ThumbnailCreator.FadeInThumbnail(_currentThumbnail, rect);
+        if (pinnedApp.WindowHandles.Count > 0)
+        {
+            for (int i = 0; i < pinnedApp.WindowHandles.Count; i++)
+            {
+                IntPtr item = pinnedApp.WindowHandles[i];
+                var windowHandle = item;
+                var newThumbnail = ThumbnailCreator.GetThumbnailRelations(windowHandle, _quickPickWindowHandle);
+                if (newThumbnail == default)
+                    continue;
+                _currentThumbnails.Add(newThumbnail);
+
+
+                int left = (int)(thumbnailX * dpiX + (i * width));
+                int top = (int)(thumbnailY * dpiY);
+                int right = (int)((thumbnailX + width) * dpiX + (i * width));
+                int bottom = (int)((thumbnailY + height) * dpiY);
+
+                RECT rect = new RECT(left, top, right, bottom);
+                ThumbnailCreator.FadeInThumbnail(newThumbnail, rect);
+            }
+        }
+        else
+        {
+            var windowHandle = pinnedApp.WindowHandle;
+            _currentThumbnail = ThumbnailCreator.GetThumbnailRelations(windowHandle, _quickPickWindowHandle);
+            if (_currentThumbnail == default)
+                return;
+
+            RECT rect = new RECT((int)(thumbnailX * dpiX), (int)(thumbnailY * dpiY), (int)((thumbnailX + width) * dpiX), (int)((thumbnailY + height) * dpiY));
+            ThumbnailCreator.FadeInThumbnail(_currentThumbnail, rect);
+        }
+
+
     }
 
 
@@ -161,6 +207,11 @@ public partial class ClickWindow : Window
     {
         if (_currentThumbnail != default)
             ThumbnailCreator.DwmUnregisterThumbnail(_currentThumbnail);
+        foreach (var item in _currentThumbnails)
+        {
+            if (item != default)
+                ThumbnailCreator.DwmUnregisterThumbnail(item);
+        }
     }
 
     private double CalculateAngle(Point center, Point position)

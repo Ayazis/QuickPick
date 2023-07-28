@@ -13,26 +13,27 @@ public class TaskbarApps
 	private const string TASKBAR_FOLDERPATH = @"Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar";
 
 
-	private static List<TaskbarShortCut> _pinnedApps = new List<TaskbarShortCut>();
-	static List<TaskbarShortCut> _activeWindows = new List<TaskbarShortCut>();
+	private static List<AppLink> _pinnedApps = new List<AppLink>();
+	static List<AppLink> _activeWindows = new List<AppLink>();
 
-	public static List<TaskbarShortCut> GetPinnedAppsAndActiveWindows()
+	public static List<AppLink> GetPinnedAppsAndActiveWindows()
 	{
 		_pinnedApps.Clear();
         _activeWindows.Clear();
 
-        List<TaskbarShortCut> allShortCuts = new List<TaskbarShortCut>();
+        List<AppLink> allShortCuts = new List<AppLink>();
 		_pinnedApps = GetPinnedTaskbarApps();
 		_activeWindows = GetTaskBarAppsForActiveApplications();
 
 		allShortCuts.AddRange(_pinnedApps);
 		allShortCuts.AddRange(_activeWindows);
+
 		return allShortCuts;
 	}
 
-	private static List<TaskbarShortCut> GetPinnedTaskbarApps()
+	private static List<AppLink> GetPinnedTaskbarApps()
 	{
-		List<TaskbarShortCut> pinnedApps = new List<TaskbarShortCut>();
+		List<AppLink> pinnedApps = new List<AppLink>();
 
 		string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
 		string taskbarFolder = Path.Combine(appData, TASKBAR_FOLDERPATH);
@@ -53,7 +54,7 @@ public class TaskbarApps
 			{
 				IntPtr windowHandle = ActiveWindows.GetActiveWindowOnCurentDesktop(targetPath);
 
-				TaskbarShortCut appInfo = new TaskbarShortCut()
+				AppLink appInfo = new AppLink()
 				{
 					Name = Path.GetFileNameWithoutExtension(targetPath),
 					Arguments = arguments,
@@ -71,9 +72,9 @@ public class TaskbarApps
 	}
 
 
-	private static List<TaskbarShortCut> GetTaskBarAppsForActiveApplications()
+	private static List<AppLink> GetTaskBarAppsForActiveApplications()
 	{
-		List<TaskbarShortCut> activeWindows = new List<TaskbarShortCut>();
+		List<AppLink> activeWindows = new List<AppLink>();
 
 		IEnumerable<(IntPtr handle, Process process)> openProcesses = ActiveWindows.GetAllOpenWindows();
 
@@ -102,7 +103,7 @@ public class TaskbarApps
 					continue;
 				}
 
-				TaskbarShortCut activeWindow = new TaskbarShortCut()
+				AppLink activeWindow = new AppLink()
 				{
 					Name = process.MainWindowTitle,
 					Arguments = string.Empty, // Arguments might not be directly available for running processes
