@@ -45,3 +45,5 @@ public class CircularPanel : Panel
         return finalSize;
     }
 }
+
+

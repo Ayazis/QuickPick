@@ -20,7 +20,6 @@ public partial class ClickWindow : Window
     private static ClickWindow _instance;
     private QuickPickMainWindowModel _qpm = new QuickPickMainWindowModel();
     private IntPtr _quickPickWindowHandle;
-    private IntPtr _currentThumbnail;
     private List<IntPtr> _currentThumbnails = new List<IntPtr>();
 
     public Storyboard HideAnimation { get; private set; }
@@ -56,7 +55,7 @@ public partial class ClickWindow : Window
 
     public void UpdateTaskbarShortCuts()
     {
-        List<AppLink> apps = TaskbarApps.GetPinnedAppsAndActiveWindows();
+        List<AppLink> apps = AppLinkRetriever.GetPinnedAppsAndActiveWindows();
 
         foreach (var app in apps)
         {
@@ -73,14 +72,7 @@ public partial class ClickWindow : Window
             // Foreach 
             var openWindows = group.ToList();
             var main = openWindows.First();
-            openWindows.Remove(main);
-            main.WindowHandles = openWindows.Select(s => s.WindowHandle).ToList();
-
-            foreach (var appWindow in openWindows)
-            {
-                apps.Remove(appWindow);
-            }
-
+            main.WindowHandles = openWindows.SelectMany(s => s.WindowHandles).Distinct().ToList();          
         }
 
 
@@ -135,7 +127,6 @@ public partial class ClickWindow : Window
         var button = (System.Windows.Controls.Button)sender;
         AppLink pinnedApp = button.DataContext as AppLink;
 
-
         const double sizeFactor = 0.1;
         double width = 1920 * sizeFactor;
         double height = 1080 * sizeFactor;
@@ -167,46 +158,31 @@ public partial class ClickWindow : Window
         double thumbnailY = buttonCenter.Y + offsetY - height / 2 + 15;
 
 
-        if (pinnedApp.WindowHandles.Count > 0)
+
+        for (int i = 0; i < pinnedApp.WindowHandles.Count; i++)
         {
-            for (int i = 0; i < pinnedApp.WindowHandles.Count; i++)
-            {
-                IntPtr item = pinnedApp.WindowHandles[i];
-                var windowHandle = item;
-                var newThumbnail = ThumbnailCreator.GetThumbnailRelations(windowHandle, _quickPickWindowHandle);
-                if (newThumbnail == default)
-                    continue;
-                _currentThumbnails.Add(newThumbnail);
+            IntPtr item = pinnedApp.WindowHandles[i];
+            var windowHandle = item;
+            var newThumbnail = ThumbnailCreator.GetThumbnailRelations(windowHandle, _quickPickWindowHandle);
+            if (newThumbnail == default)
+                continue;
+            _currentThumbnails.Add(newThumbnail);
 
 
-                int left = (int)(thumbnailX * dpiX + (i * width));
-                int top = (int)(thumbnailY * dpiY);
-                int right = (int)((thumbnailX + width) * dpiX + (i * width));
-                int bottom = (int)((thumbnailY + height) * dpiY);
+            int left = (int)(thumbnailX * dpiX + (i * width));
+            int top = (int)(thumbnailY * dpiY);
+            int right = (int)((thumbnailX + width) * dpiX + (i * width));
+            int bottom = (int)((thumbnailY + height) * dpiY);
 
-                RECT rect = new RECT(left, top, right, bottom);
-                ThumbnailCreator.FadeInThumbnail(newThumbnail, rect);
-            }
+            RECT rect = new RECT(left, top, right, bottom);
+            ThumbnailCreator.FadeInThumbnail(newThumbnail, rect);
+
         }
-        else
-        {
-            var windowHandle = pinnedApp.WindowHandle;
-            _currentThumbnail = ThumbnailCreator.GetThumbnailRelations(windowHandle, _quickPickWindowHandle);
-            if (_currentThumbnail == default)
-                return;
-
-            RECT rect = new RECT((int)(thumbnailX * dpiX), (int)(thumbnailY * dpiY), (int)((thumbnailX + width) * dpiX), (int)((thumbnailY + height) * dpiY));
-            ThumbnailCreator.FadeInThumbnail(_currentThumbnail, rect);
-        }
-
-
     }
 
 
     private void Button_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
     {
-        if (_currentThumbnail != default)
-            ThumbnailCreator.DwmUnregisterThumbnail(_currentThumbnail);
         foreach (var item in _currentThumbnails)
         {
             if (item != default)

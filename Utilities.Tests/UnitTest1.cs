@@ -13,7 +13,7 @@ namespace Utilities.Tests
         [Test]
         public void Test1()
         {
-            List<AppLink> openWindows = TaskbarApps.GetPinnedAppsAndActiveWindows();
+            List<AppLink> openWindows = AppLinkRetriever.GetPinnedAppsAndActiveWindows();
             Console.WriteLine();
             Console.WriteLine(openWindows.Count + " open windows on current Desktop");
             foreach (var item in openWindows)

@@ -9,7 +9,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Generic;
 
 namespace QuickPick.PinnedApps;
-[DebuggerDisplay("{Name} - {WindowHandle} - {TargetPath}")]
+[DebuggerDisplay("{Name} - {TargetPath}")]
 /// <summary>
 /// Wrapper for ShortCut to PinnedApps & open Windows, includes Icon.
 /// </summary>
@@ -26,9 +26,7 @@ public class AppLink
     public string Arguments { get; set; }
     public bool HasWindowActiveOnCurrentDesktop { get; set; }
     public List<IntPtr> WindowHandles { get; set; } = new();
-    public IntPtr WindowHandle { get; set; }
-
-    public string Info => $"{Name} - {WindowHandle} - {TargetPath}";
+    public string Info => $"{Name} - {TargetPath}";
 
     public static void AppClicked(AppLink appInfo)
     {
