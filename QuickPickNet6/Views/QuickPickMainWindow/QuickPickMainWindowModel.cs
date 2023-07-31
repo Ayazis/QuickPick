@@ -9,7 +9,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using QuickPick.PinnedApps;
-using static QuickPick.PinnedApps.AppLinkRetriever;
 
 namespace QuickPick;
 
