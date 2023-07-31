@@ -53,7 +53,10 @@ public class TrayIconManager
 		// Todo: Raise event and handle closing the application elsewhere.
 
 		RemoveTrayIcon();
-		System.Windows.Application.Current?.Shutdown();
+		throw new NotImplementedException();
+		// this is not working!
+		
+		System.Windows.Application.Current?.Shutdown(); 
 	}
 
 	public delegate void SettingsMenuClickedEventHandler(object sender, EventArgs e);
