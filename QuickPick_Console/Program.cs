@@ -11,19 +11,19 @@ using QuickPick.UI.Views;
 namespace QuickPick;
 
 public class Program
-	{
-		static TrayIconManager _trayIconManager = new TrayIconManager();
-		static DesktopTracker _desktopTracker;
-		static VirtualDesktopHelper _virtualDesktopHelper = new VirtualDesktopHelper();
-		static ClickWindow _clickwindow = new ClickWindow();
-		static MouseAndKeysCapture _inputCapture;
-		static KeyInputHandler _keyInputHandler;
-        static  IntPtr _quickPickMainWindowHandle;
+{
+    static TrayIconManager _trayIconManager = new TrayIconManager();
+    static DesktopTracker _desktopTracker;
+    static VirtualDesktopHelper _virtualDesktopHelper = new VirtualDesktopHelper();
+    static ClickWindow _clickwindow = new ClickWindow();
+    static MouseAndKeysCapture _inputCapture;
+    static KeyInputHandler _keyInputHandler;
+    static IntPtr _quickPickMainWindowHandle;
 
     [STAThread]
-		static void Main(string[] args)
-		{
-			try
+    static void Main(string[] args)
+    {
+        try
         {
             _trayIconManager.CreateTrayIcon();
 
@@ -34,7 +34,7 @@ public class Program
             StartDesktopTracking();
 
             // Hook into Keyboard and Mouse to listen for User set Keycombination.
-            StartListeningToKeyboardAndMouse();            
+            StartListeningToKeyboardAndMouse();
 
             SubscribeToExitEvent_ToHandleCleanup();
 
@@ -42,13 +42,13 @@ public class Program
 
         }
         catch (Exception ex)
-			{
-				Logs.Logger?.Log(ex);
-			}
-		}
+        {
+            Logs.Logger?.Log(ex);
+        }
+    }
 
 
-  
+
 
     private static void RunApplicationIndefinetely()
     {
@@ -81,17 +81,19 @@ public class Program
     }
 
     private static void _keyInputHandler_KeyCombinationHit()
-		{
-			_clickwindow.ShowWindow();
-		}
+    {
+        _clickwindow.ShowWindow();
+    }
 
-		static void _desktopTracker_DesktopChanged(object? sender, EventArgs e)
-		{
-			_clickwindow.UpdateTaskbarShortCuts();			
+    static void _desktopTracker_DesktopChanged(object? sender, EventArgs e)
+    {
+        _clickwindow.UpdateTaskbarShortCuts();
 
-		}
-		static void CurrentDomain_ProcessExit(object? sender, EventArgs e)
-		{
-			_virtualDesktopHelper?.Dispose();
-		}
-	}
+    }
+    static void CurrentDomain_ProcessExit(object? sender, EventArgs e)
+    {
+        _desktopTracker.Dispose();
+        _virtualDesktopHelper?.Dispose();
+        _trayIconManager.RemoveTrayIcon();
+    }
+}

@@ -9,11 +9,13 @@ public interface IVirtualDesktopHelper
     Guid CurrentDesktopId { get; set; }
     Guid UpdateCurrentDesktopID();
     bool IsWindowOnVirtualDesktop(IntPtr hWnd, Guid currentVirtualDesktopId);
+    void Dispose();
 }
 
 public class VirtualDesktopHelper : IVirtualDesktopHelper
 {
     private IVirtualDesktopManager _virtualDesktopManager;
+    bool _isDisposed;
 
     public VirtualDesktopHelper()
     {
@@ -26,9 +28,12 @@ public class VirtualDesktopHelper : IVirtualDesktopHelper
     {
         try
         {
+            if (_isDisposed)
+                return;
             Marshal.ReleaseComObject(_virtualDesktopManager);
             _virtualDesktopManager = null;
             GC.SuppressFinalize(this);
+            _isDisposed = true;
         }
         catch (Exception)
         {
