@@ -26,19 +26,14 @@ public class VirtualDesktopHelper : IVirtualDesktopHelper
 
     public void Dispose()
     {
-        try
-        {
-            if (_isDisposed)
-                return;
-            Marshal.ReleaseComObject(_virtualDesktopManager);
-            _virtualDesktopManager = null;
-            GC.SuppressFinalize(this);
-            _isDisposed = true;
-        }
-        catch (Exception)
-        {
 
-        }
+        if (_isDisposed)
+            return;
+        Marshal.ReleaseComObject(_virtualDesktopManager);
+        _virtualDesktopManager = null;
+        GC.SuppressFinalize(this);
+        _isDisposed = true;
+
     }
     public Guid CurrentDesktopId { get; set; }
     public Guid UpdateCurrentDesktopID()
