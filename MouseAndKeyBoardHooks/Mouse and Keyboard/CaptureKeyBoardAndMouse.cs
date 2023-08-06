@@ -1,0 +1,113 @@
+﻿using System;
+using System.Diagnostics;
+using System.Windows.Forms;
+using System.Runtime.InteropServices;
+
+namespace Ayazis.KeyHooks;
+
+internal static class CaptureKeyBoardAndMouse
+{
+	private enum MouseMessages
+	{
+		WM_LBUTTONDOWN = 0x0201,
+		WM_LBUTTONUP = 0x0202,
+		WM_MOUSEMOVE = 0x0200,
+		WM_MOUSEWHEEL = 0x020A,
+		WM_RBUTTONDOWN = 0x0204,
+		WM_RBUTTONUP = 0x0205
+	}
+	private const int WH_MOUSE_LL = 14;
+	private const int WH_KEYBOARD_LL = 13;
+	private const int WM_KEYDOWN = 0x0100;
+	private const int WM_KEYUP = 0x101;
+	private const int WM_SYSKEYDOWN = 0x0104;
+
+	internal static LowLevelKeyboardProc _keyboardProc = KeyBoardHookCallback;
+	internal static LowLevelMouseProc _mouseProc = MouseHookCallBack;
+	internal static IntPtr _keyboardHookID = IntPtr.Zero;
+	internal static IntPtr _mouseHookId = IntPtr.Zero;
+
+
+	public static void HookIntoMouseAndKeyBoard()
+	{
+		using (Process curProcess = Process.GetCurrentProcess())
+		using (ProcessModule curModule = curProcess.MainModule)
+		{
+			_keyboardHookID = SetWindowsHookEx(WH_KEYBOARD_LL, _keyboardProc, GetModuleHandle(curModule.ModuleName), 0);
+			_keyboardHookID = SetWindowsHookEx(WH_MOUSE_LL, _mouseProc, GetModuleHandle(curModule.ModuleName), 0);
+		}
+	}
+
+
+	private static IntPtr MouseHookCallBack(int nCode, IntPtr wParam, IntPtr lParam)
+	{
+		if (nCode < 0)
+			return CallNextHookEx(_mouseHookId, nCode, wParam, lParam);
+
+		MouseMessages input = (MouseMessages)wParam;
+
+		if (input == MouseMessages.WM_LBUTTONDOWN)
+			KeyDowned?.Invoke(null, new KeyEventArgs(Keys.LButton));
+
+		else if (input == MouseMessages.WM_RBUTTONDOWN)
+			KeyDowned?.Invoke(null, new KeyEventArgs(Keys.RButton));
+
+		if (input == MouseMessages.WM_LBUTTONUP)
+			KeyUpped?.Invoke(null, new KeyEventArgs(Keys.LButton));
+
+		else if (input == MouseMessages.WM_RBUTTONUP)
+			KeyUpped?.Invoke(null, new KeyEventArgs(Keys.RButton));
+
+
+		return CallNextHookEx(_mouseHookId, nCode, wParam, lParam);
+
+	}
+
+	private static IntPtr KeyBoardHookCallback(int nCode, IntPtr wParam, IntPtr lParam)
+	{
+		if (nCode >= 0 && wParam == (IntPtr)WM_KEYDOWN || wParam == (IntPtr)WM_SYSKEYDOWN)
+		{
+			int vkCode = Marshal.ReadInt32(lParam);
+			KeyDowned?.Invoke(null, new KeyEventArgs((Keys)vkCode));
+
+		}
+		else if (wParam == (IntPtr)WM_KEYUP)
+		{
+			int vkCode = Marshal.ReadInt32(lParam);
+			KeyUpped?.Invoke(null, new KeyEventArgs((Keys)vkCode));
+		}
+		return CallNextHookEx(_keyboardHookID, nCode, wParam, lParam);
+
+	}
+	internal delegate IntPtr LowLevelKeyboardProc(int nCode, IntPtr wParam, IntPtr lParam);
+	internal delegate IntPtr LowLevelMouseProc(int nCode, IntPtr wParam, IntPtr lParam);
+
+
+
+	public delegate void KeyDownedEventHandler(object? sender, KeyEventArgs e);
+	public static event KeyDownedEventHandler KeyDowned;
+
+	public delegate void KeyUppedEventHandler(object? sender, KeyEventArgs e);
+	public static event KeyUppedEventHandler KeyUpped;
+
+
+	[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+	private static extern IntPtr SetWindowsHookEx(int idHook, LowLevelKeyboardProc lpfn, IntPtr hMod, uint dwThreadId);
+
+	[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+	private static extern IntPtr SetWindowsHookEx(int idHook, LowLevelMouseProc lpfn, IntPtr hMod, uint dwThreadId);
+
+
+	[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static extern bool UnhookWindowsHookEx(IntPtr hhk);
+
+
+	[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+	private static extern IntPtr CallNextHookEx(IntPtr hhk, int nCode, IntPtr wParam, IntPtr lParam);
+
+
+	[DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+	private static extern IntPtr GetModuleHandle(string lpModuleName);
+
+}

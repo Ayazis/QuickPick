@@ -1,10 +1,5 @@
-﻿using QuickPick.Classes;
-using QuickPick.Enums;
-using QuickPick.Logic;
-using QuickPick.Models;
-using IWshRuntimeLibrary;
-using Shell32;
-using System;
+﻿using QuickPick.Models;
+
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Drawing;
@@ -15,7 +10,7 @@ using System.Windows.Input;
 using Point = System.Windows.Point;
 using System.Linq;
 
-namespace QuickPick
+namespace QuickPick.UI.Views.QuickPickMainWindow
 {
     public class QuickPickModel : INotifyPropertyChanged
     {
@@ -57,16 +52,13 @@ namespace QuickPick
             }
         }
 
-        public HotKey Hotkey { get; set; } = HotKey.KeyCombination;
-
         public bool InstantShortCuts { get; set; } = false;
 
         #region Properties        
         private ObservableCollection<Keys> _HotKeys = new ObservableCollection<Keys> {
      //   Keys.LControlKey,
-        Keys.LMenu,
-        Keys.LShiftKey,
-        Keys.F11,
+            Keys.LMenu,
+            Keys.RButton
         };
         public ObservableCollection<Keys> HotKeys
         {

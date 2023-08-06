@@ -3,21 +3,22 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Forms;
 
 namespace QuickPick.Logic
 {
-    public class HotKeys
+    public static class HotKeys
     {
         static List<Keys> PressedKeys = new List<Keys>();
-        public Models.QuickPick QP { get; set; }
+        public static Models.QuickPick QP { get; private set; }
 
         private static QuickPickModel _qpm;
         private static WindowManager _windowManager;
 
-        public HotKeys(Models.QuickPick quickPick)
+        public static void Initialise(Models.QuickPick quickPick)
         {
-            this.QP = quickPick;
+            QP = quickPick;
             _qpm = QP.QuickPickModel;
             _windowManager = QP.WindowManager;
             
@@ -29,10 +30,15 @@ namespace QuickPick.Logic
         {
             try
             {
-                if (_qpm.Hotkey == Enums.HotKey.KeyCombination &&  _qpm.HotKeys.Contains(key))
+                if (key == Keys.LButton)
+                    HideWindowIfNeeded();
+
+                if (_qpm.HotKeys.Contains(key))
                 {
-                    PressedKeys.Add(key);
-                   // Debug.WriteLine("Down:  " + key.ToString());
+                    // Don't add it again if it's already there. This may happen when a user holds down a key.
+                    if(!PressedKeys.Contains(key))
+                        PressedKeys.Add(key);
+                   Debug.WriteLine("Down:  " + key.ToString());
 
                     if (PressedKeys.Count == _qpm.HotKeys.Count)
                         CheckHotKeyCombo();
@@ -48,7 +54,7 @@ namespace QuickPick.Logic
         {
             try
             {
-                if (_qpm.Hotkey == Enums.HotKey.KeyCombination &&  _qpm.HotKeys.Contains(key))
+                if ( _qpm.HotKeys.Contains(key))
                 {
                     PressedKeys.Remove(key);
                     Debug.WriteLine("Up: " + key.ToString());
@@ -60,15 +66,27 @@ namespace QuickPick.Logic
             }
         }
 
+        public static void HideWindowIfNeeded()
+        {
+			if (_windowManager.ClickWindow != null)
+			{
+				if (_windowManager.MouseIsOutsideWindow())
+				{
+					_windowManager.ClickWindow.WindowStyle = WindowStyle.None;
+					_windowManager.Hide.Begin(_windowManager.ClickWindow);
+				}
+			}
+		}
+
         private static void CheckHotKeyCombo()
         {
             try
             {
                 Logs.Logger.Log("checking hotkeycombo");
 
-                Debug.WriteLine("CHECKING");
-                var allPressed = true;
-                foreach (var key in _qpm.HotKeys)
+				// Debug.WriteLine("CHECKING");
+				bool allPressed = true;
+                foreach (Keys key in _qpm.HotKeys)
                 {
                     if (!PressedKeys.Contains(key))
                         allPressed = false;
@@ -76,7 +94,7 @@ namespace QuickPick.Logic
                 if (allPressed)
                 {
                     Debug.WriteLine("***** SHOWING THE WINDOW *****");
-                    Logs.Logger.Log("showing the window...");
+                   // Logs.Logger.Log("showing the window...");
                     PressedKeys.Clear();
                     _windowManager.ShowWindow();
                 }
