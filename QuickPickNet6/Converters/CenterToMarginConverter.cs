@@ -7,29 +7,28 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 
-namespace QuickPick.Converters
+namespace QuickPick.Converters;
+
+public class CenterToMarginConverter : IValueConverter
 {
-    class CenterToMarginConverter : IValueConverter
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        try
         {
-            try
-            {
-                var diameter = double.Parse(value.ToString()) /2;
-                var buttonSize = double.Parse(parameter.ToString());
+            var diameter = double.Parse(value.ToString()) /2;
+            var buttonSize = double.Parse(parameter.ToString());
 
-                var margin = new Thickness(diameter-buttonSize/2);
-                return margin;
-            }
-            catch (Exception)
-            {
-                return null;
-            }
+            var margin = new Thickness(diameter-buttonSize/2);
+            return margin;
         }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        catch (Exception)
         {
-            return new Thickness();
+            return null;
         }
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        return new Thickness();
     }
 }

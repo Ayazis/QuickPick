@@ -36,7 +36,33 @@ public class ThumbnailCreator
         }
     }
 
-    internal static void CreateThumbnail(IntPtr thumbHandle, RECT target)
+    public static async void FadeInThumbnail(IntPtr thumbnailId, RECT rect)
+    {
+        await Task.Run(() =>
+        {
+            DWM_THUMBNAIL_PROPERTIES props = new DWM_THUMBNAIL_PROPERTIES();
+            props.fVisible = true;
+            props.dwFlags = DWM_TNP_VISIBLE | DWM_TNP_RECTDESTINATION | DWM_TNP_OPACITY;
+            props.opacity = (byte)0;  // Start with a completely transparent thumbnail.
+            props.rcDestination = rect;
+
+            // Gradually increase the opacity over time to create a fade-in effect.
+            for (int i = 0; i <= 255; i += 25)
+            {
+                props.opacity = (byte)i;
+                DwmUpdateThumbnailProperties(thumbnailId, ref props);
+
+                // Sleep for a bit to control the speed of the fade-in. Adjust this value as needed.
+                System.Threading.Thread.Sleep(20);
+            }
+
+            // Ensure the thumbnail is fully visible.
+            props.opacity = (byte)255;
+            DwmUpdateThumbnailProperties(thumbnailId, ref props);
+
+        });
+    }
+    public static void CreateThumbnail(IntPtr thumbHandle, RECT target)
     {
         // Set the properties of the thumbnail.
         thumbnailProperties = new DWM_THUMBNAIL_PROPERTIES();

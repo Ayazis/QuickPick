@@ -13,7 +13,7 @@ namespace Utilities
 
     namespace Utilities.VirtualDesktop
     {
-        public class DesktopTracker
+        public class DesktopTracker : IDisposable
         {
             private readonly IVirtualDesktopHelper _virtualDesktopHelper;
             private Timer _timer;
@@ -52,9 +52,12 @@ namespace Utilities
             {
                 DesktopChanged?.Invoke(this, null);
             }
+
+            public void Dispose()
+            {                
+                _timer?.Dispose();
+                _virtualDesktopHelper?.Dispose();                
+            }
         }
-
-
     }
-
 }

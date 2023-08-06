@@ -4,15 +4,18 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 using System;
 using Newtonsoft.Json;
+using QuickPick.UI.Views;
+using System.Collections.ObjectModel;
+using System.Collections.Generic;
 
 namespace QuickPick.PinnedApps;
-[DebuggerDisplay("{Name} - {WindowHandle} - {TargetPath}")]
+[DebuggerDisplay("{Name} - {TargetPath}")]
 /// <summary>
 /// Wrapper for ShortCut to PinnedApps & open Windows, includes Icon.
 /// </summary>
-public class TaskbarShortCut
-{ 
-    public TaskbarShortCut()
+public class AppLink
+{
+    public AppLink()
     {
         ClickCommand = new RelayCommand(parameter => AppClicked(this));
     }
@@ -22,18 +25,18 @@ public class TaskbarShortCut
     public ICommand ClickCommand { get; set; }
     public string Arguments { get; set; }
     public bool HasWindowActiveOnCurrentDesktop { get; set; }
-    public IntPtr WindowHandle { get; set; }
+    public List<IntPtr> WindowHandles { get; set; } = new();
+    public string Info => $"{Name} - {TargetPath}";
 
-    public string Info => $"{Name} - {WindowHandle} - {TargetPath}";
-
-    public static void AppClicked(TaskbarShortCut appInfo)
+    public static void AppClicked(AppLink appInfo)
     {
         IntPtr windowHandle = ActiveWindows.GetActiveWindowOnCurentDesktop(appInfo.TargetPath);
-        if(windowHandle != default)                    
-            ActiveWindows.ToggleWindow(windowHandle);   
+        if (windowHandle != default)
+            ActiveWindows.ToggleWindow(windowHandle);
         else
-            Task.Run(() => { Process.Start(appInfo.TargetPath, appInfo.Arguments); });                
-    }    
+            Task.Run(() => { Process.Start(appInfo.TargetPath, appInfo.Arguments); });
+        ClickWindow.HideWindow();
+    }
 
 
 }

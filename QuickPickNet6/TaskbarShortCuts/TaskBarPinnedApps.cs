@@ -8,114 +8,118 @@ using System.Linq;
 
 namespace QuickPick.PinnedApps;
 
-public class TaskbarApps
+public class AppLinkRetriever
 {
-	private const string TASKBAR_FOLDERPATH = @"Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar";
+    private const string TASKBAR_FOLDERPATH = @"Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar";
 
 
-	private static List<TaskbarShortCut> _pinnedApps = new List<TaskbarShortCut>();
-	static List<TaskbarShortCut> _activeWindows = new List<TaskbarShortCut>();
+    private static List<AppLink> _pinnedApps = new List<AppLink>();
+    static List<AppLink> _activeWindows = new List<AppLink>();
 
-	public static List<TaskbarShortCut> GetPinnedAppsAndActiveWindows()
-	{
-		_pinnedApps.Clear();
+    public static List<AppLink> GetPinnedAppsAndActiveWindows()
+    {
+        _pinnedApps.Clear();
         _activeWindows.Clear();
 
-        List<TaskbarShortCut> allShortCuts = new List<TaskbarShortCut>();
-		_pinnedApps = GetPinnedTaskbarApps();
-		_activeWindows = GetTaskBarAppsForActiveApplications();
+        List<AppLink> allShortCuts = new List<AppLink>();
+        _pinnedApps = GetPinnedTaskbarApps();
+        _activeWindows = GetAllActiveApplications();
 
-		allShortCuts.AddRange(_pinnedApps);
-		allShortCuts.AddRange(_activeWindows);
-		return allShortCuts;
-	}
+        allShortCuts.AddRange(_pinnedApps);
+        allShortCuts.AddRange(_activeWindows);
 
-	private static List<TaskbarShortCut> GetPinnedTaskbarApps()
-	{
-		List<TaskbarShortCut> pinnedApps = new List<TaskbarShortCut>();
+        return allShortCuts;
+    }
 
-		string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-		string taskbarFolder = Path.Combine(appData, TASKBAR_FOLDERPATH);
+    private static List<AppLink> GetPinnedTaskbarApps()
+    {
+        List<AppLink> pinnedApps = new List<AppLink>();
 
-		if (!Directory.Exists(taskbarFolder))
-			return null;
+        string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+        string taskbarFolder = Path.Combine(appData, TASKBAR_FOLDERPATH);
 
-		string[] pinnedAppPaths = Directory.GetFiles(taskbarFolder, "*.lnk", new EnumerationOptions { RecurseSubdirectories = true });
+        if (!Directory.Exists(taskbarFolder))
+            return null;
 
-		foreach (string pinnedAppPath in pinnedAppPaths)
-		{
-			WshShell shell = new WshShell();
-			var shortcut = shell.CreateShortcut(pinnedAppPath);
-			string targetPath = shortcut.TargetPath;
-			string arguments = shortcut.Arguments;
+        string[] pinnedAppPaths = Directory.GetFiles(taskbarFolder, "*.lnk", new EnumerationOptions { RecurseSubdirectories = true });
 
-			if (!string.IsNullOrEmpty(targetPath))
-			{
-				IntPtr windowHandle = ActiveWindows.GetActiveWindowOnCurentDesktop(targetPath);
+        foreach (string pinnedAppPath in pinnedAppPaths)
+        {
+            WshShell shell = new WshShell();
+            var shortcut = shell.CreateShortcut(pinnedAppPath);
+            string targetPath = shortcut.TargetPath;
+            string arguments = shortcut.Arguments;
 
-				TaskbarShortCut appInfo = new TaskbarShortCut()
-				{
-					Name = Path.GetFileNameWithoutExtension(targetPath),
-					Arguments = arguments,
-					TargetPath = targetPath,
-					AppIcon = IconCreator.GetImage(targetPath),
-					WindowHandle = windowHandle,
-				};
+            if (!string.IsNullOrEmpty(targetPath))
+            {
+                AppLink appInfo = new AppLink()
+                {
+                    Name = Path.GetFileNameWithoutExtension(targetPath),
+                    Arguments = arguments,
+                    TargetPath = targetPath,
+                    AppIcon = IconCreator.GetImage(targetPath),
+                };
 
+                pinnedApps.Add(appInfo);
+            }
+        }
 
-				pinnedApps.Add(appInfo);
-			}
-		}
-
-		return pinnedApps;
-	}
+        return pinnedApps;
+    }
 
 
-	private static List<TaskbarShortCut> GetTaskBarAppsForActiveApplications()
-	{
-		List<TaskbarShortCut> activeWindows = new List<TaskbarShortCut>();
+    private static List<AppLink> GetAllActiveApplications()
+    {
+        List<AppLink> activeWindows = new List<AppLink>();
 
-		IEnumerable<(IntPtr handle, Process process)> openProcesses = ActiveWindows.GetAllOpenWindows();
+        IEnumerable<(IntPtr handle, Process process)> openProcesses = ActiveWindows.GetAllOpenWindows();
 
-		foreach (var activeProcess in openProcesses)
-		{
-			if (_pinnedApps.Any(a => a.WindowHandle == activeProcess.handle))
-				continue;
+        foreach (var activeProcess in openProcesses)
+        {
+            var matchingPinnedApp = _pinnedApps.FirstOrDefault(a => a.Name.Equals(activeProcess.process.ProcessName, StringComparison.OrdinalIgnoreCase));
+            if (matchingPinnedApp is not null)
+            {
+                if (activeProcess.process.MainWindowHandle != IntPtr.Zero)
+                    matchingPinnedApp.WindowHandles.Add(activeProcess.handle);
 
-			var process = activeProcess.process;
-			string filePath = string.Empty;
-			if (process.MainWindowHandle != IntPtr.Zero)  // Exclude processes without a main window
-			{
-				try
-				{
-					filePath = process.MainModule?.FileName;
-				}
-				catch (Exception)
-				{
-					Console.WriteLine($"Unable to acces {process.ProcessName}");
-					continue;
-				}
-				var appIcon = IconCreator.GetImage(filePath);
-				if (appIcon == null)
-				{
-					Console.WriteLine($"Could not get icon for {filePath}");
-					continue;
-				}
+                continue;
+            }
 
-				TaskbarShortCut activeWindow = new TaskbarShortCut()
-				{
-					Name = process.MainWindowTitle,
-					Arguments = string.Empty, // Arguments might not be directly available for running processes
-					TargetPath = filePath,
-					AppIcon = appIcon,
-					WindowHandle = activeProcess.handle
-				};
+            var process = activeProcess.process;
+            string filePath = string.Empty;
 
-				activeWindows.Add(activeWindow);
-			}
-		}
+            if (process.MainWindowHandle != IntPtr.Zero)  // Exclude processes without a main window
+            {
+                try
+                {
+                    filePath = process.MainModule?.FileName;
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine($"Unable to acces {process.ProcessName}");
+                    continue;
+                }
+                var appIcon = IconCreator.GetImage(filePath);
+                if (appIcon == null)
+                {
+                    Console.WriteLine($"Could not get icon for {filePath}");
+                    continue;
+                }
 
-		return activeWindows;
-	}
+                AppLink activeWindow = new AppLink()
+                {
+                    Name = process.MainWindowTitle,
+                    Arguments = string.Empty, // Arguments might not be directly available for running processes
+                    TargetPath = filePath,
+                    AppIcon = appIcon,
+                    WindowHandles = new List<IntPtr> { activeProcess.handle }
+                };
+
+                activeWindows.Add(activeWindow);
+            }
+        }
+
+        return activeWindows;
+    }
 
 }

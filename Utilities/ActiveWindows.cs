@@ -9,7 +9,7 @@ public class ActiveWindows
 {
     private static IVirtualDesktopHelper _virtualDesktopHelper;
 
-    public static void SetVirtualDesktopHelper (IVirtualDesktopHelper virtualDesktopWrapper)
+    public static void SetVirtualDesktopHelper(IVirtualDesktopHelper virtualDesktopWrapper)
     {
         _virtualDesktopHelper = virtualDesktopWrapper;
     }
@@ -18,18 +18,19 @@ public class ActiveWindows
     public static IEnumerable<(IntPtr handle, Process process)> GetAllOpenWindows()
     {
         var currentDesktop = _virtualDesktopHelper.CurrentDesktopId;
-        foreach (var process in Process.GetProcesses()
-               .Where(w => IsWindow(w.MainWindowHandle)
-            && !string.IsNullOrEmpty(w.MainWindowTitle)))
+        foreach (var process in Process.GetProcesses())
         {
-            IntPtr hWnd = process.MainWindowHandle;
-            if (hWnd != IntPtr.Zero)
+            IntPtr[] windows = GetProcessWindows(process.Id);
+            foreach (var windowHandle in windows)
             {
-                if (_virtualDesktopHelper.IsWindowOnVirtualDesktop(hWnd, currentDesktop))
+                if (windowHandle != IntPtr.Zero)
                 {
-                    yield return (hWnd, process);
+                    if (_virtualDesktopHelper.IsWindowOnVirtualDesktop(windowHandle, currentDesktop))
+                    {
+                        yield return (windowHandle, process);
+                    }
                 }
-            }
+            }  
         }
     }
     public static IntPtr GetActiveWindowOnCurentDesktop(string filePath)
@@ -84,7 +85,7 @@ public class ActiveWindows
             }
         }
     }
-    private static IntPtr[] GetProcessWindows(int processId)
+    public static IntPtr[] GetProcessWindows(int processId)
     {
         var windows = new List<IntPtr>();
 

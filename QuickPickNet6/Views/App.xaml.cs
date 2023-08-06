@@ -21,8 +21,8 @@ namespace QuickPick;
 /// </summary>
 public partial class App : Application
 {
-   
 
-   
+
+
 
 }

@@ -49,12 +49,9 @@ public class TrayIconManager
 		}
 	}
 	public void OnExitClick(object sender, EventArgs e)
-	{
-		// Todo: Raise event and handle closing the application elsewhere.
-
-		RemoveTrayIcon();
-		System.Windows.Application.Current?.Shutdown();
-	}
+	{		
+        Application.Exit(); // handling this event is done in program.cs
+    }
 
 	public delegate void SettingsMenuClickedEventHandler(object sender, EventArgs e);
 
