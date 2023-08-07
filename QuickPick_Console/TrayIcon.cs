@@ -14,11 +14,8 @@ public class TrayIconManager
 		_contextMenu = new ContextMenuStrip();
 		_contextMenu.Items.Add("Settings", null, OnSettingsClick);
 		_contextMenu.Items.Add(new ToolStripSeparator());
-		_contextMenu.Items.Add("Exit", null, OnExitClick);
+		_contextMenu.Items.Add("Exit", null, OnExitClick);	
 
-#if DEBUG
-        AppDomain.CurrentDomain.ProcessExit += OnExitClick;
-#endif
 		_trayIcon = new NotifyIcon
 		{
 			Icon = CreateIcon(),
@@ -49,9 +46,9 @@ public class TrayIconManager
 		}
 	}
 	public void OnExitClick(object sender, EventArgs e)
-	{		
-        Application.Exit(); // handling this event is done in program.cs
-    }
+	{
+		Application.Exit(); // handling this event is done in program.cs
+	}
 
 	public delegate void SettingsMenuClickedEventHandler(object sender, EventArgs e);
 

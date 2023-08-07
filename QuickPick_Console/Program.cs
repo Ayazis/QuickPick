@@ -7,6 +7,7 @@ using Ayazis.KeyHooks;
 using Utilities.Mouse_and_Keyboard;
 using System.Diagnostics;
 using QuickPick.UI.Views;
+using QuickPick.Utilities.File_Explorer;
 
 namespace QuickPick;
 
@@ -25,6 +26,12 @@ public class Program
     {
         try
         {
+
+            var fm = new FileManager();
+            var drives = fm.GetLocalDrives();
+            var subs = fm.GetChildNodes(drives.First());
+
+            return;
             _trayIconManager.CreateTrayIcon();
 
             // Setup the ActiveWindows class, this class handles everything related to Open Application Windows.
