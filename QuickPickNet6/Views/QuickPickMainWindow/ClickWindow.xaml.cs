@@ -150,7 +150,7 @@ public partial class ClickWindow : Window
         Hide();
 
     }
-    private void Button_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+    private void Button_MouseEnter(object sender, MouseEventArgs e)
     {
         // todo: Move logic out of xaml.xs
         var button = (System.Windows.Controls.Button)sender;
@@ -208,7 +208,7 @@ public partial class ClickWindow : Window
             int bottom = (int)((thumbnailY + height) * dpiY);
 
             RECT rect = new RECT(left, top, right, bottom);
-            ThumbnailCreator.FadeInThumbnail(newThumbnail, rect);
+            ThumbnailCreator.CreateAndFadeInThumbnail(newThumbnail, rect);
 
         }
     }

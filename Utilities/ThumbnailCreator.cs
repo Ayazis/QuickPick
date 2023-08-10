@@ -9,16 +9,7 @@ public class ThumbnailCreator
     private const int DWM_TNP_OPACITY = 0x4;
     private static DWM_THUMBNAIL_PROPERTIES thumbnailProperties;
 
-    [DllImport("user32.dll", SetLastError = true)]
-    [return: MarshalAs(UnmanagedType.Bool)]
-    public static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
 
-
-    [DllImport("dwmapi.dll")]
-    public static extern int DwmRegisterThumbnail(IntPtr dest, IntPtr src, out IntPtr thumb);
-
-    [DllImport("dwmapi.dll")]
-    public static extern int DwmUnregisterThumbnail(IntPtr thumb);
 
     public static IntPtr GetThumbnailRelations(IntPtr hwndSource, IntPtr hwndDestination)
     {
@@ -41,7 +32,7 @@ public class ThumbnailCreator
         }
     }
 
-    public static async void FadeInThumbnail(IntPtr thumbnailId, RECT rect)
+    public static async void CreateAndFadeInThumbnail(IntPtr thumbnailId, RECT rect)
     {
         await Task.Run(() =>
         {
@@ -67,34 +58,63 @@ public class ThumbnailCreator
 
         });
     }
-    public static void CreateThumbnail(IntPtr thumbHandle, RECT target)
-    {
-        // Set the properties of the thumbnail.
-        thumbnailProperties = new DWM_THUMBNAIL_PROPERTIES();
-        thumbnailProperties.dwFlags = DWM_TNP_VISIBLE | DWM_TNP_RECTDESTINATION | DWM_TNP_OPACITY;
-        thumbnailProperties.opacity = 255;
-        thumbnailProperties.fVisible = true;
-        thumbnailProperties.rcDestination = target; // Set the size and position of the thumbnail here.
-
-        int result = DwmUpdateThumbnailProperties(thumbHandle, ref thumbnailProperties);
-    }
-
-
     public static double GetWindowAspectRatio(IntPtr currentWindowHandle)
     {
-        RECT windowRect;
-        bool succes = GetWindowRect(currentWindowHandle, out windowRect);
-        if (!succes)
-            return 1;
+        WINDOWPLACEMENT windowPlacement = new WINDOWPLACEMENT();
+        windowPlacement.length = Marshal.SizeOf(typeof(WINDOWPLACEMENT));
 
-        double windowWidth = windowRect.Right - windowRect.Left;
-        double windowHeight = windowRect.Bottom - windowRect.Top;
-        double aspectRatio = windowWidth / windowHeight;
-        return aspectRatio;
+        if (!GetWindowPlacement(currentWindowHandle, out windowPlacement))
+            return 1; // Default aspect ratio
 
+        RECT rect = windowPlacement.rcNormalPosition;
+        double windowWidth = rect.Right - rect.Left;
+        double windowHeight = rect.Bottom - rect.Top;
+
+        if (windowHeight == 0)
+            return 16 / 9; // Default aspect ratio
+
+        return windowWidth / windowHeight;
     }
+
+    #region dllImports
+    [DllImport("user32.dll", SetLastError = true)]
+    public static extern bool GetWindowPlacement(IntPtr hWnd, out WINDOWPLACEMENT lpwndpl);
+
     [DllImport("dwmapi.dll")]
     private static extern int DwmUpdateThumbnailProperties(IntPtr hThumbnailId, ref DWM_THUMBNAIL_PROPERTIES ptnProperties);
+
+
+    [DllImport("dwmapi.dll")]
+    public static extern int DwmGetWindowAttribute(IntPtr hwnd, int dwAttribute, out RECT pvAttribute, int cbAttribute);
+
+    [DllImport("user32.dll", SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
+
+
+    [DllImport("dwmapi.dll")]
+    public static extern int DwmRegisterThumbnail(IntPtr dest, IntPtr src, out IntPtr thumb);
+
+    [DllImport("dwmapi.dll")]
+    public static extern int DwmUnregisterThumbnail(IntPtr thumb);
+    #endregion
+}
+[StructLayout(LayoutKind.Sequential)]
+public struct WINDOWPLACEMENT
+{
+    public int length;
+    public int flags;
+    public int showCmd;
+    public POINT ptMinPosition;
+    public POINT ptMaxPosition;
+    public RECT rcNormalPosition;
+}
+
+[StructLayout(LayoutKind.Sequential)]
+public struct POINT
+{
+    public int X;
+    public int Y;
 }
 
 [StructLayout(LayoutKind.Sequential)]
