@@ -154,11 +154,7 @@ public partial class ClickWindow : Window
     {
         // todo: Move logic out of xaml.xs
         var button = (System.Windows.Controls.Button)sender;
-        AppLink pinnedApp = button.DataContext as AppLink;      
-
-        // Get the center of the window
-        double windowCenterX = this.ActualWidth / 2;
-        double windowCenterY = this.ActualHeight / 2;
+        AppLink pinnedApp = button.DataContext as AppLink;   
 
         // Get DPI information
         PresentationSource source = PresentationSource.FromVisual(this);
@@ -170,6 +166,16 @@ public partial class ClickWindow : Window
         var buttonCenter = button.TransformToAncestor(this)
                                 .Transform(new Point(button.ActualWidth / 2, button.ActualHeight / 2));
 
+   
+
+        CreateThumbnails(pinnedApp, dpiX, dpiY, buttonCenter);
+    }
+
+    private void CreateThumbnails(AppLink pinnedApp, double dpiX, double dpiY, Point buttonCenter)
+    {
+        // Get the center of the window
+        double windowCenterX = this.ActualWidth / 2;
+        double windowCenterY = this.ActualHeight / 2;
         // Calculate the button's position relative to the window's center
         double relativeX = buttonCenter.X - windowCenterX;
         double relativeY = buttonCenter.Y - windowCenterY;
@@ -177,26 +183,20 @@ public partial class ClickWindow : Window
         // Scale the relative position by a factor to adjust the thumbnail's position       
         double offsetX = relativeX < 0 ? relativeX * 1.2 - 20 : relativeX + 20 * 1.2;
         double offsetY = relativeY < 0 ? relativeY - 20 : relativeY + 20;
-        //double offsetX = relativeX * 3;
-        //double offsetY = relativeY * 1.5;       
-
 
         for (int i = 0; i < pinnedApp.WindowHandles.Count; i++)
         {
-            var currentWindowHandle = pinnedApp.WindowHandles[i];            
-            double aspectRatio = ThumbnailCreator.GetWindowAspectRatio(currentWindowHandle);            
-            
-            const double height = 200;
+            IntPtr currentWindowHandle = pinnedApp.WindowHandles[i];
+            double aspectRatio = ThumbnailCreator.GetWindowAspectRatio(currentWindowHandle);
+
+            double height = 200;
             double width = height * aspectRatio;
 
             // Calculate the thumbnail's position, ensuring it is centered around the button's position
             double thumbnailX = buttonCenter.X + offsetX - width / 2;
             double thumbnailY = buttonCenter.Y + offsetY - height / 2;
 
-
-            IntPtr item = pinnedApp.WindowHandles[i];
-            var windowHandle = item;
-            var newThumbnail = ThumbnailCreator.GetThumbnailRelations(windowHandle, _quickPickWindowHandle);
+            var newThumbnail = ThumbnailCreator.GetThumbnailRelations(currentWindowHandle, _quickPickWindowHandle);
             if (newThumbnail == default)
                 continue;
             _currentThumbnails.Add(newThumbnail);
@@ -209,10 +209,8 @@ public partial class ClickWindow : Window
 
             RECT rect = new RECT(left, top, right, bottom);
             ThumbnailCreator.CreateAndFadeInThumbnail(newThumbnail, rect);
-
         }
     }
-
 
     private void Button_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
     {
