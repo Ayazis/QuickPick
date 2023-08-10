@@ -159,8 +159,8 @@ public partial class ClickWindow : Window
         // Get DPI information
         PresentationSource source = PresentationSource.FromVisual(this);
         var m = source.CompositionTarget.TransformToDevice;
-        double dpiX = m.M11;
-        double dpiY = m.M22;
+        double dpiScaling = m.M11;
+        
 
         // Get the center of the button relative to its container (the window)
         var buttonCenter = button.TransformToAncestor(this)
@@ -168,10 +168,10 @@ public partial class ClickWindow : Window
 
    
 
-        CreateThumbnails(pinnedApp, dpiX, dpiY, buttonCenter);
+        CreateThumbnails(pinnedApp, dpiScaling, buttonCenter);
     }
 
-    private void CreateThumbnails(AppLink pinnedApp, double dpiX, double dpiY, Point buttonCenter)
+    private void CreateThumbnails(AppLink pinnedApp, double dpiScaling, Point buttonCenter)
     {
         // Get the center of the window
         double windowCenterX = this.ActualWidth / 2;
@@ -202,10 +202,10 @@ public partial class ClickWindow : Window
             _currentThumbnails.Add(newThumbnail);
 
 
-            int left = (int)(thumbnailX * dpiX + (i * width));
-            int top = (int)(thumbnailY * dpiY);
-            int right = (int)((thumbnailX + width) * dpiX + (i * width));
-            int bottom = (int)((thumbnailY + height) * dpiY);
+            int left = (int)(thumbnailX * dpiScaling + (i * width));
+            int top = (int)(thumbnailY * dpiScaling);
+            int right = (int)((thumbnailX + width) * dpiScaling + (i * width));
+            int bottom = (int)((thumbnailY + height) * dpiScaling);
 
             RECT rect = new RECT(left, top, right, bottom);
             ThumbnailCreator.CreateAndFadeInThumbnail(newThumbnail, rect);
