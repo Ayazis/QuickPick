@@ -1,28 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿using System.Windows;
 
 namespace QuickPick.UI.Views.File_Explorer
 {
     /// <summary>
     /// Interaction logic for FileExplorer.xaml
     /// </summary>
-    public partial class FileExplorer : UserControl
+    public partial class FileExplorer : Window
     {
-        public FileExplorer()
-        {
-            InitializeComponent();
-        }
+        File_Explorer_DataContext _context = new File_Explorer_DataContext();
+        public FileExplorer(File_Explorer_DataContext context)
+        {            
+            InitializeComponent(); // Initialise first, it will create a context. 
+            _context = context;  // Override the default context.
+            this.DataContext = _context;
+        }        
     }
 }

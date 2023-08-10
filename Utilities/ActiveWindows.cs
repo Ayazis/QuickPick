@@ -104,6 +104,9 @@ public class ActiveWindows
 
 
     #region DllImports
+
+
+
     [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
     public static extern bool IsWindow(IntPtr hWnd);
 
