@@ -12,6 +12,10 @@ using ThumbnailLogic;
 using System.Linq;
 using System.Windows.Input;
 using Microsoft.VisualBasic;
+using QuickPick.UI.Views.Thumbnail;
+using System.Threading.Tasks;
+using System.Windows.Controls;
+using System.Windows.Forms;
 
 namespace QuickPick;
 /// <summary>
@@ -22,7 +26,7 @@ public partial class ClickWindow : Window
     private static ClickWindow _instance;
     private QuickPickMainWindowModel _qpm = new QuickPickMainWindowModel();
     private IntPtr _quickPickWindowHandle;
-    private List<IntPtr> _currentThumbnails = new List<IntPtr>();
+    private List<ThumbnailView> _currentThumbnails = new List<ThumbnailView>();
 
     public Storyboard HideAnimation { get; private set; }
     public Storyboard ShowAnimation { get; private set; }
@@ -150,29 +154,31 @@ public partial class ClickWindow : Window
         Hide();
 
     }
-    private void Button_MouseEnter(object sender, MouseEventArgs e)
+    private void Button_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
     {
         // todo: Move logic out of xaml.xs
         var button = (System.Windows.Controls.Button)sender;
-        AppLink pinnedApp = button.DataContext as AppLink;   
+        AppLink pinnedApp = button.DataContext as AppLink;
 
         // Get DPI information
         PresentationSource source = PresentationSource.FromVisual(this);
         var m = source.CompositionTarget.TransformToDevice;
         double dpiScaling = m.M11;
-        
 
+
+
+
+
+
+        CreateThumbnails(pinnedApp, dpiScaling, button);
+    }
+
+    private void CreateThumbnails(AppLink pinnedApp, double dpiScaling, System.Windows.Controls.Button button)
+    {
         // Get the center of the button relative to its container (the window)
         var buttonCenter = button.TransformToAncestor(this)
                                 .Transform(new Point(button.ActualWidth / 2, button.ActualHeight / 2));
 
-   
-
-        CreateThumbnails(pinnedApp, dpiScaling, buttonCenter);
-    }
-
-    private void CreateThumbnails(AppLink pinnedApp, double dpiScaling, Point buttonCenter)
-    {
         // Get the center of the window
         double windowCenterX = this.ActualWidth / 2;
         double windowCenterY = this.ActualHeight / 2;
@@ -210,7 +216,7 @@ public partial class ClickWindow : Window
             var newThumbnail = ThumbnailCreator.GetThumbnailRelations(currentWindowHandle, _quickPickWindowHandle);
             if (newThumbnail == default)
                 continue;
-            _currentThumbnails.Add(newThumbnail);
+
 
 
             int left = (int)(thumbnailX * dpiScaling + (i * width));
@@ -219,17 +225,67 @@ public partial class ClickWindow : Window
             int bottom = (int)((thumbnailY + height) * dpiScaling);
 
             RECT rect = new RECT(left, top, right, bottom);
-            ThumbnailCreator.CreateAndFadeInThumbnail(newThumbnail, rect);
-        }
+            var thumbnailContext = new ThumbnailDataContext(string.Empty, newThumbnail, rect);
+            var thumbnailView = new ThumbnailView(thumbnailContext);
+
+            this.ThumbnailCanvas.Children.Add(thumbnailView);
+            _currentThumbnails.Add(thumbnailView);
+
+
+            var canvasPoint = ScreenToCanvasPosition(new Point(left, top));
+
+            // Set the position of ThumbnailView based on translated coordinates.
+            Canvas.SetLeft(thumbnailView, canvasPoint.X );
+            Canvas.SetTop(thumbnailView, canvasPoint.Y);
+
+            //Debug.WriteLine(buttonPosition);
+            thumbnailView.FadeIn();
+            //ThumbnailCreator.CreateAndFadeInThumbnail(newThumbnail, rect);
+        };
+    }
+    public Point ScreenToCanvasPosition(RECT thumbnailRect)
+    {        
+        // This still derives the DPI from the Canvas; for precise multi-monitor support, you may need a more advanced approach.
+     
+
+        Point canvasScreenPosition = ThumbnailCanvas.PointToScreen(new Point(0, 0));
+        PresentationSource source = PresentationSource.FromVisual(this);
+        Point targetPoints = source.CompositionTarget.TransformFromDevice.Transform(canvasScreenPosition);
+
+        double adjustedX = (thumbnailRect.Left - canvasScreenPosition.X);
+        double adjustedY = (thumbnailRect.Top - canvasScreenPosition.Y);
+
+        return targetPoints;
     }
 
+    private double GetDpiFactor(UIElement element)
+    {
+        PresentationSource source = PresentationSource.FromVisual(element);
+        if (source?.CompositionTarget != null)
+        {
+            return source.CompositionTarget.TransformToDevice.M11;
+        }
+        return 1.0; // default value
+    }
+
+    public Point ScreenToCanvasPosition(Point screenPosition)
+    {
+        double dpiFactor = GetDpiFactor(ThumbnailCanvas);
+
+        // Adjust for DPI scaling
+        Point adjustedScreenPosition = new Point(screenPosition.X / dpiFactor, screenPosition.Y / dpiFactor);
+
+        // Convert to canvas-relative position
+        return ThumbnailCanvas.PointFromScreen(adjustedScreenPosition);
+    }
     private void Button_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
     {
-        foreach (var item in _currentThumbnails)
+        foreach (var thumbnailView in _currentThumbnails)
         {
-            if (item != default)
-                ThumbnailCreator.DwmUnregisterThumbnail(item);
+            if (thumbnailView != default)
+                thumbnailView.Hide();
         }
+        _currentThumbnails.Clear();
     }
 
     private double CalculateAngle(Point center, Point position)

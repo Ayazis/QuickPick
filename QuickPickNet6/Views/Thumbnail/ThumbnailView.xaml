@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:QuickPick.UI.Views.Thumbnail"
              mc:Ignorable="d" 
-             d:DesignHeight="200" d:DesignWidth="200">
+             Width="200" Height="200">
     <UserControl.DataContext>
         <local:ThumbnailDataContext/>
     </UserControl.DataContext>
@@ -16,9 +16,9 @@
                    Height="200"
                    HorizontalAlignment="Center"
                    VerticalAlignment="Bottom"                                      
-                   Fill="#222222"
+                   Fill="#000000"
                    >            
         </Rectangle>
-        <TextBlock Text="{Binding WindowTitle}" Foreground="White"   d:Text="PlaceholderTitle" Margin="5"/>
+        <TextBlock Text="{Binding WindowTitle}" Foreground="White"   d:Text="PlaceholderTitle" Margin="5" />
     </Grid>
 </UserControl>

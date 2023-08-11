@@ -17,5 +17,8 @@ public class ThumbnailDataContext
         ThumbnailRelation = thumbnailRelation;
         Rect = rect;
     }
-
+    public ThumbnailDataContext()
+    {
+            
+    }
 }

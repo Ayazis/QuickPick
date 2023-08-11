@@ -80,17 +80,6 @@
             </ItemsControl.ItemTemplate>
         </ItemsControl>
 
-        <ItemsControl ItemsSource="{Binding ButtonLabels}" Visibility="Hidden">
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <custom:CircularPanel x:Name="CircularButtonPanel" Width="75" Height="75" />
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <Button Content="{Binding}" Style="{StaticResource RoundButton}" Width="40" Height="40" />
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
+        <Canvas x:Name="ThumbnailCanvas" HorizontalAlignment="Center" VerticalAlignment="Center" Width="3000" Height="2000" />
     </Grid>
 </Window>
