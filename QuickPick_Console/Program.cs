@@ -9,6 +9,7 @@ using System.Diagnostics;
 using QuickPick.UI.Views;
 using QuickPick.Utilities.File_Explorer;
 using QuickPick.UI.Views.File_Explorer;
+using System.Windows;
 
 namespace QuickPick;
 
@@ -27,7 +28,9 @@ public class Program
     {
         try
         {
-
+            var devonly = new DevOnly();
+            devonly.ShowDialog();
+            return;
             //var fm = new FileManager();
             //var drives = fm.GetLocalDrives();
             //var subs = fm.GetChildNodes(drives.First());
@@ -65,7 +68,7 @@ public class Program
     {
         using (var context = new ApplicationContext())
         {
-            Application.Run(context);
+            System.Windows.Forms.Application.Run(context);
         }
     }
 

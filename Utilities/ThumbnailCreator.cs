@@ -49,7 +49,7 @@ public class ThumbnailCreator
                 DwmUpdateThumbnailProperties(thumbnailId, ref props);
 
                 // Sleep for a bit to control the speed of the fade-in. Adjust this value as needed.
-                System.Threading.Thread.Sleep(20);
+                Thread.Sleep(20);
             }
 
             // Ensure the thumbnail is fully visible.
