@@ -58,20 +58,34 @@ public class ThumbnailCreator
 
         });
     }
+   
     public static double GetWindowAspectRatio(IntPtr currentWindowHandle)
     {
+        const int SW_MAXIMIZE = 3;
         WINDOWPLACEMENT windowPlacement = new WINDOWPLACEMENT();
         windowPlacement.length = Marshal.SizeOf(typeof(WINDOWPLACEMENT));
 
         if (!GetWindowPlacement(currentWindowHandle, out windowPlacement))
             return 1; // Default aspect ratio
 
-        RECT rect = windowPlacement.rcNormalPosition;
+        RECT rect;
+
+        if (windowPlacement.showCmd == SW_MAXIMIZE)
+        {
+            // If window is maximized, get the current size
+            GetWindowRect(currentWindowHandle, out rect);
+        }
+        else
+        {
+            // Else use the size from rcNormalPosition
+            rect = windowPlacement.rcNormalPosition;
+        }
+
         double windowWidth = rect.Right - rect.Left;
         double windowHeight = rect.Bottom - rect.Top;
 
         if (windowHeight == 0)
-            return 16 / 9; // Default aspect ratio
+            return 1; // Default aspect ratio
 
         return windowWidth / windowHeight;
     }

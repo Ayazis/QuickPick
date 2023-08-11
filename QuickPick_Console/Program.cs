@@ -28,9 +28,9 @@ public class Program
     {
         try
         {
-            var devonly = new DevOnly();
-            devonly.ShowDialog();
-            return;
+            //var devonly = new DevOnly();
+            //devonly.ShowDialog();
+            //return;
             //var fm = new FileManager();
             //var drives = fm.GetLocalDrives();
             //var subs = fm.GetChildNodes(drives.First());

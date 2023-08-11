@@ -189,8 +189,19 @@ public partial class ClickWindow : Window
             IntPtr currentWindowHandle = pinnedApp.WindowHandles[i];
             double aspectRatio = ThumbnailCreator.GetWindowAspectRatio(currentWindowHandle);
 
-            double height = 200;
-            double width = height * aspectRatio;
+
+            double height, width;
+            if (aspectRatio > 1)
+            {
+                width = 200;
+                height = width / aspectRatio;
+            }
+            else
+            {
+                height = 200;
+                width = height * aspectRatio;
+
+            }
 
             // Calculate the thumbnail's position, ensuring it is centered around the button's position
             double thumbnailX = buttonCenter.X + offsetX - width / 2;
