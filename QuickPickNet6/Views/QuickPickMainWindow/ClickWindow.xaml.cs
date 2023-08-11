@@ -235,7 +235,7 @@ public partial class ClickWindow : Window
             var canvasPoint = ScreenToCanvasPosition(new Point(left, top));
 
             // Set the position of ThumbnailView based on translated coordinates.
-            Canvas.SetLeft(thumbnailView, canvasPoint.X );
+            Canvas.SetLeft(thumbnailView, canvasPoint.X);
             Canvas.SetTop(thumbnailView, canvasPoint.Y);
 
             //Debug.WriteLine(buttonPosition);
@@ -244,12 +244,14 @@ public partial class ClickWindow : Window
         };
     }
     public Point ScreenToCanvasPosition(RECT thumbnailRect)
-    {        
+    {
+
+        return ThumbnailCanvas.PointFromScreen(new Point(thumbnailRect.Left, thumbnailRect.Top));
         // This still derives the DPI from the Canvas; for precise multi-monitor support, you may need a more advanced approach.
-     
+
 
         Point canvasScreenPosition = ThumbnailCanvas.PointToScreen(new Point(0, 0));
-        PresentationSource source = PresentationSource.FromVisual(this);
+        PresentationSource source = PresentationSource.FromVisual(ThumbnailCanvas);
         Point targetPoints = source.CompositionTarget.TransformFromDevice.Transform(canvasScreenPosition);
 
         double adjustedX = (thumbnailRect.Left - canvasScreenPosition.X);
