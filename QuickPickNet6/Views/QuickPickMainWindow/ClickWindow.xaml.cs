@@ -158,22 +158,12 @@ public partial class ClickWindow : Window
 	{
 		// todo: Move logic out of xaml.xs
 		var button = (System.Windows.Controls.Button)sender;
-		AppLink pinnedApp = button.DataContext as AppLink;
+		AppLink pinnedApp = button.DataContext as AppLink;	
 
-		// Get DPI information
-		PresentationSource source = PresentationSource.FromVisual(this);
-		var m = source.CompositionTarget.TransformToDevice;
-		double dpiScaling = m.M11;
-
-
-
-
-
-
-		CreateThumbnails(pinnedApp, dpiScaling, button);
+		CreateThumbnails(pinnedApp, button);
 	}
 
-	private void CreateThumbnails(AppLink pinnedApp, double dpiScaling, System.Windows.Controls.Button button)
+	private void CreateThumbnails(AppLink pinnedApp, System.Windows.Controls.Button button)
 	{
 		// Get the center of the button relative to its container (the window)
 		var buttonCenter = button.TransformToAncestor(this)
@@ -182,58 +172,27 @@ public partial class ClickWindow : Window
 		// Get the center of the window
 		double windowCenterX = this.ActualWidth / 2;
 		double windowCenterY = this.ActualHeight / 2;
+
 		// Calculate the button's position relative to the window's center
-		double relativeX = buttonCenter.X - windowCenterX;
-		double relativeY = buttonCenter.Y - windowCenterY;
+		double xToCenter = buttonCenter.X - windowCenterX;
+		double ytoCenter = buttonCenter.Y - windowCenterY;
 
-		// Scale the relative position by a factor to adjust the thumbnail's position       
-
-
-		const int offSetFromButton = 0;
-		double offSetDpiAdjusted = offSetFromButton * dpiScaling;
-
-		double offsetX = relativeX < 0 ? relativeX - offSetDpiAdjusted : relativeX + offSetDpiAdjusted;
-		double offsetY = relativeY < 0 ? relativeY - offSetDpiAdjusted : relativeY + offSetDpiAdjusted;
+		// Get DPI information
+		PresentationSource source = PresentationSource.FromVisual(this);
+		var m = source.CompositionTarget.TransformToDevice;
+		double dpiScaling = m.M11;
 
 		for (int i = 0; i < pinnedApp.WindowHandles.Count; i++)
 		{
 			IntPtr currentWindowHandle = pinnedApp.WindowHandles[i];
-			double aspectRatio = ThumbnailCreator.GetWindowAspectRatio(currentWindowHandle);
 
-
-			double height, width;
-			if (aspectRatio > 1)
-			{
-				width = 200;
-				height = width / aspectRatio;
-			}
-			else
-			{
-				height = 200;
-				width = height * aspectRatio;
-
-			}
-
-			double thumbnailX, thumbnailY;
-			// Calculate the thumbnail's position, ensuring it is centered around the button's position
-			if (offsetX < 0)
-				thumbnailX = buttonCenter.X + offsetX - width;
-			else
-				thumbnailX = buttonCenter.X + offsetX;
-
-		
-			thumbnailY = buttonCenter.Y + offsetY - height / 2;
-
+			// Create thumbnailRelation
 			var newThumbnail = ThumbnailCreator.GetThumbnailRelations(currentWindowHandle, _quickPickWindowHandle);
 			if (newThumbnail == default)
 				continue;
 
-			int left = (int)(thumbnailX * dpiScaling + (i * width));
-			int top = (int)(thumbnailY * dpiScaling);
-			int right = (int)((thumbnailX + width) * dpiScaling + (i * width));
-			int bottom = (int)((thumbnailY + height) * dpiScaling);
+			RECT rect = CreateRectForThumbnail(buttonCenter, xToCenter, ytoCenter, dpiScaling, i, currentWindowHandle);
 
-			RECT rect = new RECT(left, top, right, bottom);
 			var thumbnailContext = new ThumbnailDataContext(string.Empty, newThumbnail, rect);
 			var thumbnailView = new ThumbnailView(thumbnailContext);
 
@@ -241,10 +200,49 @@ public partial class ClickWindow : Window
 			_currentThumbnails.Add(thumbnailView);
 
 			// Set the position of ThumbnailView based on translated coordinates.
-			Canvas.SetLeft(thumbnailView, left);
-			Canvas.SetTop(thumbnailView, top - 20);
+			Canvas.SetLeft(thumbnailView, rect.Left);
+			Canvas.SetTop(thumbnailView, rect.Top - 20);
 			thumbnailView.FadeIn();
 		};
+	}
+
+	private static RECT CreateRectForThumbnail(Point buttonCenter, double xToCenter, double ytoCenter, double dpiScaling, int i, IntPtr currentWindowHandle)
+	{
+		double aspectRatio = ThumbnailCreator.GetWindowAspectRatio(currentWindowHandle);
+
+		double height, width;
+
+		bool isLandscape = aspectRatio > 1;
+		if (isLandscape)
+		{
+			width = 200;
+			height = width / aspectRatio;
+		}
+		else
+		{
+			height = 200;
+			width = height * aspectRatio;
+		}
+
+		double thumbnailX, thumbnailY;
+
+		thumbnailX = buttonCenter.X + xToCenter;
+		bool isLeftToCenter = xToCenter < 0;
+
+		// make room for the thumbnail.
+		if (isLeftToCenter)
+			thumbnailX -= width;
+
+		// align the vertical center of the thumbnail
+		thumbnailY = buttonCenter.Y + ytoCenter - height / 2;
+
+		int left = (int)(thumbnailX * dpiScaling + (i * width));
+		int top = (int)(thumbnailY * dpiScaling);
+		int right = (int)((thumbnailX + width) * dpiScaling + (i * width));
+		int bottom = (int)((thumbnailY + height) * dpiScaling);
+
+		RECT rect = new RECT(left, top, right, bottom);
+		return rect;
 	}
 
 	private void Button_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
@@ -256,16 +254,4 @@ public partial class ClickWindow : Window
 		}
 		_currentThumbnails.Clear();
 	}
-
-	private double CalculateAngle(Point center, Point position)
-	{
-		double dx = position.X - center.X;
-		double dy = position.Y - center.Y;
-
-		double radian = Math.Atan2(dy, dx);
-		double angle = radian * (180 / Math.PI);
-
-		return angle;
-	}
-
 }
