@@ -7,8 +7,8 @@
              xmlns:converters="clr-namespace:QuickPick.Converters"
              xmlns:custom="clr-namespace:QuickPick.Custom"
              mc:Ignorable="d"               
-             MinWidth="3000"
-             MinHeight="2000"
+             MinWidth="800"
+             MinHeight="800"
              SizeToContent="WidthAndHeight"
              Background="#00ffffff"         
              ShowInTaskbar="true"
@@ -80,6 +80,6 @@
             </ItemsControl.ItemTemplate>
         </ItemsControl>
 
-        <Canvas x:Name="ThumbnailCanvas" HorizontalAlignment="Center" VerticalAlignment="Center" Width="3000" Height="2000" />
+        <Canvas x:Name="ThumbnailCanvas" HorizontalAlignment="Center" VerticalAlignment="Center" Width="800" Height="800" />
     </Grid>
 </Window>
