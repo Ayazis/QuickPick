@@ -193,15 +193,15 @@ public partial class ClickWindow : Window
 
 			RECT rect = CreateRectForThumbnail(buttonCenter, xToCenter, ytoCenter, dpiScaling, i, currentWindowHandle);
 
-			var thumbnailContext = new ThumbnailDataContext(string.Empty, newThumbnail, rect);
+			var thumbnailContext = new ThumbnailDataContext(newThumbnail, rect);
 			var thumbnailView = new ThumbnailView(thumbnailContext);
 
 			this.ThumbnailCanvas.Children.Add(thumbnailView);
 			_currentThumbnails.Add(thumbnailView);
 
 			// Set the position of ThumbnailView based on translated coordinates.
-			Canvas.SetLeft(thumbnailView, rect.Left);
-			Canvas.SetTop(thumbnailView, rect.Top - 20);
+			Canvas.SetLeft(thumbnailView, rect.Left / dpiScaling);
+			Canvas.SetTop(thumbnailView, rect.Top / dpiScaling - 20);
 			thumbnailView.FadeIn();
 		};
 	}
@@ -224,7 +224,7 @@ public partial class ClickWindow : Window
 			width = height * aspectRatio;
 		}
 
-		double thumbnailX, thumbnailY;
+		double thumbnailX;
 
 		thumbnailX = buttonCenter.X + xToCenter;
 		bool isLeftToCenter = xToCenter < 0;
@@ -234,7 +234,7 @@ public partial class ClickWindow : Window
 			thumbnailX -= width;
 
 		// align the vertical center of the thumbnail
-		thumbnailY = buttonCenter.Y + ytoCenter - height / 2;
+		double thumbnailY = buttonCenter.Y + ytoCenter - height / 2;
 
 		int left = (int)(thumbnailX * dpiScaling + (i * width));
 		int top = (int)(thumbnailY * dpiScaling);

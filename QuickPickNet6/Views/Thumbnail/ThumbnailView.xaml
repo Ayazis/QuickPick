@@ -19,6 +19,6 @@
                    Fill="#000000"
                    >            
         </Rectangle>
-        <TextBlock Text="{Binding WindowTitle}" Foreground="White"   d:Text="PlaceholderTitle" Margin="5" />
+        <TextBlock Text="{Binding WindowTitle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Foreground="White"   d:Text="PlaceholderTitle" Margin="5" />
     </Grid>
 </UserControl>
