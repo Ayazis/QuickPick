@@ -6,8 +6,7 @@ namespace Utilities.VirtualDesktop;
 
 public interface IVirtualDesktopHelper
 {
-    Guid CurrentDesktopId { get; set; }
-    Guid UpdateCurrentDesktopID();
+    Guid CurrentDesktopId { get; set; }    
     bool IsWindowOnVirtualDesktop(IntPtr hWnd, Guid currentVirtualDesktopId);
     void Dispose();
 }
@@ -36,39 +35,6 @@ public class VirtualDesktopHelper : IVirtualDesktopHelper
 
     }
     public Guid CurrentDesktopId { get; set; }
-    public Guid UpdateCurrentDesktopID()
-    {
-        Thread newThread = new Thread(() =>
-        {
-            IntPtr hwnd = IntPtr.Zero;
-
-            // Get the current window handle
-            hwnd = GetForegroundWindow();
-            if (hwnd == IntPtr.Zero) { return; }
-            // Get the desktop ID for the current window
-            try
-            {
-
-                Guid desktopId = _virtualDesktopManager.GetWindowDesktopId(hwnd);
-                CurrentDesktopId = desktopId;
-            }
-            catch (Exception e)
-            {
-                // when  HWND is not an active  window?
-                // try again later.
-            }
-            finally
-            {
-
-            }
-        });
-
-        newThread.SetApartmentState(ApartmentState.STA); // Set the thread to STA, needed for some COM objects, and necessary in this case.
-        newThread.Start();
-        newThread.Join();
-        return CurrentDesktopId;
-    }
-
     public bool IsWindowOnVirtualDesktop(IntPtr hWnd, Guid currentVirtualDesktopId)
     {
         if (currentVirtualDesktopId == default)

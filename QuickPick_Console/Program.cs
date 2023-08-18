@@ -7,9 +7,10 @@ using Ayazis.KeyHooks;
 using Utilities.Mouse_and_Keyboard;
 using System.Diagnostics;
 using QuickPick.UI.Views;
-using QuickPick.Utilities.File_Explorer;
+using QuickPick.Utilities;
 using QuickPick.UI.Views.File_Explorer;
 using System.Windows;
+
 
 namespace QuickPick;
 
@@ -27,18 +28,7 @@ public class Program
     static void Main(string[] args)
     {
         try
-        {
-            //var devonly = new DevOnly();
-            //devonly.ShowDialog();
-            //return;
-            //var fm = new FileManager();
-            //var drives = fm.GetLocalDrives();
-            //var subs = fm.GetChildNodes(drives.First());
-            //var ctx = new File_Explorer_DataContext();
-            //ctx.SetDriveItems(drives);
-            //var fex = new FileExplorer(ctx);
-            //fex.ShowDialog();
-            //return;
+        {   
             _trayIconManager.CreateTrayIcon();
 
             // Setup the ActiveWindows class, this class handles everything related to Open Application Windows.

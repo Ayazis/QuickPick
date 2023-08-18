@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Utilities.VirtualDesktop;
+﻿using Utilities.VirtualDesktop;
 
 namespace Utilities
 {
+    using QuickPick.Utilities;
     using System;
     using System.Diagnostics;
     using System.Threading;
@@ -17,6 +13,7 @@ namespace Utilities
         {
             private readonly IVirtualDesktopHelper _virtualDesktopHelper;
             private Timer _timer;
+            Guid _lastDesktopId = Guid.Empty;
 
             public event EventHandler DesktopChanged;
 
@@ -37,15 +34,14 @@ namespace Utilities
 
             private void CheckDesktopChange(object state)
             {
-                Guid oldId = _virtualDesktopHelper.CurrentDesktopId;
-                Guid newDesktopId = _virtualDesktopHelper.UpdateCurrentDesktopID();
+                Guid newDesktopId = Desktop.Current.Id;
+                if (newDesktopId == _lastDesktopId)
+                    return;
 
-                if (newDesktopId != oldId)
-                {
-                    Debug.WriteLine($"old {oldId}, new: {newDesktopId}");
-                    _virtualDesktopHelper.CurrentDesktopId = newDesktopId;
-                    OnDesktopChanged();
-                }
+                Debug.WriteLine($"old {_lastDesktopId}, new: {newDesktopId}");
+                _lastDesktopId = newDesktopId;
+                _virtualDesktopHelper.CurrentDesktopId = newDesktopId;
+                OnDesktopChanged();
             }
 
             protected virtual void OnDesktopChanged()
@@ -54,9 +50,9 @@ namespace Utilities
             }
 
             public void Dispose()
-            {                
+            {
                 _timer?.Dispose();
-                _virtualDesktopHelper?.Dispose();                
+                _virtualDesktopHelper?.Dispose();
             }
         }
     }
