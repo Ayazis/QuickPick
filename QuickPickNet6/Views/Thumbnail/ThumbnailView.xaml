@@ -5,7 +5,10 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:QuickPick.UI.Views.Thumbnail"
              mc:Ignorable="d" 
-             Width="200" Height="200">
+             Width="200" Height="200"             
+             MouseEnter="UserControl_MouseEnter"
+             MouseLeave="UserControl_MouseLeave"
+             MouseUp="UserControl_MouseUp">
     <UserControl.DataContext>
         <local:ThumbnailDataContext/>
     </UserControl.DataContext>

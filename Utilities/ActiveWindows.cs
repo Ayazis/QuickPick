@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Text;
 using Utilities.VirtualDesktop;
 
 public class ActiveWindows
@@ -103,9 +104,26 @@ public class ActiveWindows
     }
 
 
+    public static string GetWindowTitle(IntPtr hwnd)
+    {
+        int length = GetWindowTextLength(hwnd);
+        if (length == 0)
+            return string.Empty;
+
+        StringBuilder title = new StringBuilder(length + 1);
+        GetWindowText(hwnd, title, title.Capacity);
+
+        return title.ToString();
+    }
+
     #region DllImports
 
+    // Import the user32.dll library
+    [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+    static extern int GetWindowText(IntPtr hwnd, StringBuilder lpString, int nMaxCount);
 
+    [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+    static extern int GetWindowTextLength(IntPtr hwnd);
 
     [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
     public static extern bool IsWindow(IntPtr hWnd);

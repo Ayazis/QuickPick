@@ -10,6 +10,7 @@ public class ThumbnailDataContext : INotifyPropertyChanged
     public RECT Rect { get; private set; }
 
     private string _windowTitle = @" --- ";
+    public IntPtr WindowHandle { get; private set; }
     public string WindowTitle
     {
         get { return _windowTitle; }
@@ -22,9 +23,10 @@ public class ThumbnailDataContext : INotifyPropertyChanged
 
     public IntPtr ThumbnailRelation { get; private set; }
 
-    public ThumbnailDataContext(IntPtr thumbnailRelation, RECT rect, string windowTitle = null)
+    public ThumbnailDataContext(IntPtr thumbnailRelation, RECT rect, IntPtr windowHandle, string windowTitle = null)
     {
         WindowTitle = string.IsNullOrEmpty(windowTitle) ? _windowTitle : windowTitle;
+        WindowHandle = windowHandle;
         ThumbnailRelation = thumbnailRelation;
         Rect = rect;
     }
