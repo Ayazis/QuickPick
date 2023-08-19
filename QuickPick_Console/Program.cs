@@ -86,6 +86,7 @@ public class Program
 
     private static void _keyInputHandler_KeyCombinationHit()
     {
+        Task.Run(() => { _clickwindow.UpdateTaskbarShortCuts(); });
         _clickwindow.ShowWindow();
     }
 
