@@ -9,7 +9,6 @@ public class Program
 {
     static TrayIconManager _trayIconManager = new TrayIconManager();
     static DesktopTracker _desktopTracker;
-    static VirtualDesktopHelper _virtualDesktopHelper = new VirtualDesktopHelper();
     static ClickWindow _clickwindow = new ClickWindow();
     static MouseAndKeysCapture _inputCapture;
     static KeyInputHandler _keyInputHandler;
@@ -20,10 +19,7 @@ public class Program
     {
         try
         {   
-            _trayIconManager.CreateTrayIcon();
-
-            // Setup the ActiveWindows class, this class handles everything related to Open Application Windows.
-            ActiveWindows.SetVirtualDesktopHelper(_virtualDesktopHelper);
+            _trayIconManager.CreateTrayIcon();        
 
             // On every desktop change, the current active windows for that desktop are retrieved.
             StartDesktopTracking();
@@ -70,7 +66,7 @@ public class Program
 
     private static void StartDesktopTracking()
     {
-        _desktopTracker = new DesktopTracker(_virtualDesktopHelper);
+        _desktopTracker = new DesktopTracker();
         _desktopTracker.DesktopChanged += _desktopTracker_DesktopChanged;
         _desktopTracker.StartTracking();
     }
@@ -89,7 +85,6 @@ public class Program
     static void CurrentDomain_ProcessExit(object? sender, EventArgs e)
     {
         _desktopTracker.Dispose();
-        _virtualDesktopHelper?.Dispose();
         _trayIconManager.RemoveTrayIcon();
     }
 }

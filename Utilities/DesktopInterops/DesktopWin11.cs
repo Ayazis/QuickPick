@@ -7,30 +7,16 @@ using System.Threading.Tasks;
 
 namespace QuickPick.Utilities.DesktopInterops
 {
-    public class Desktop_Win11
+    internal static class DesktopWin11
     {
-        public Guid Id => ivd.GetId();
-
-        public override int GetHashCode()
-        {
-            return ivd.GetHashCode();
-        }
-        private Desktop_Win11(Win11Interop.IVirtualDesktop desktop) { this.ivd = desktop; }
-        private Win11Interop.IVirtualDesktop ivd;
-        public static Desktop_Win11 Current => GetCurrentDesktop();
-
-        static Desktop_Win11 GetCurrentDesktop()
-        {
-            return new Desktop_Win11(DesktopManager_Win11.VirtualDesktopManagerInternal.GetCurrentDesktop(IntPtr.Zero));
-        }
-    }
-    internal static class DesktopManager_Win11
-    {
-        static DesktopManager_Win11()
+        static DesktopWin11()
         {
             var shell = (IServiceProvider10)Activator.CreateInstance(Type.GetTypeFromCLSID(Guids.CLSID_ImmersiveShell));
             VirtualDesktopManagerInternal = (Win11Interop.IVirtualDesktopManagerInternal)shell.QueryService(Guids.CLSID_VirtualDesktopManagerInternal, typeof(Win11Interop.IVirtualDesktopManagerInternal).GUID);
+            VirtualDesktopManager = (IVirtualDesktopManager)Activator.CreateInstance(Type.GetTypeFromCLSID(Guids.CLSID_VirtualDesktopManager));
+
         }
+        internal static IVirtualDesktopManager VirtualDesktopManager;
         internal static Win11Interop.IVirtualDesktopManagerInternal VirtualDesktopManagerInternal;
     }
     internal class Win11Interop

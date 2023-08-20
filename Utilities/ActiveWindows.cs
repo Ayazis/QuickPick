@@ -1,4 +1,5 @@
-﻿using System;
+﻿using QuickPick.Utilities.DesktopInterops;
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -16,7 +17,7 @@ public class ActiveWindows
 
     public static IEnumerable<(IntPtr handle, Process process)> GetAllOpenWindows()
     {
-        var currentDesktop = _virtualDesktopHelper.CurrentDesktopId;
+        var currentDesktop = DesktopInterop.GetCurrentDesktopGuid();
         foreach (var process in Process.GetProcesses())
         {
             IntPtr[] windows = GetProcessWindows(process.Id);
@@ -24,20 +25,19 @@ public class ActiveWindows
             {
                 if (windowHandle != IntPtr.Zero)
                 {
-                    if (_virtualDesktopHelper.IsWindowOnVirtualDesktop(windowHandle, currentDesktop))
+                    if (DesktopInterop.IsWindowOnCurrentVirtualDesktop(windowHandle))
                     {
                         yield return (windowHandle, process);
                     }
                 }
-            }  
+            }
         }
     }
     public static IntPtr GetActiveWindowOnCurentDesktop(string filePath)
     {
         try
         {
-            var currentDesktop = _virtualDesktopHelper.CurrentDesktopId;
-
+            var currentDesktop = DesktopInterop.GetCurrentDesktopGuid();
             string fileName = Path.GetFileNameWithoutExtension(filePath);
 
             Process[] matchingProcesses = Process.GetProcessesByName(fileName);
@@ -49,7 +49,7 @@ public class ActiveWindows
                 var processWindows = GetProcessWindows(process.Id);
                 foreach (IntPtr hWnd in processWindows)
                 {
-                    if (_virtualDesktopHelper.IsWindowOnVirtualDesktop(hWnd, currentDesktop))
+                    if (DesktopInterop.IsWindowOnCurrentVirtualDesktop(hWnd))
                     {
                         return hWnd;
                     }

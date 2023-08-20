@@ -6,16 +6,10 @@ namespace Utilities.VirtualDesktop;
 
 public class DesktopTracker : IDisposable
 {
-    private readonly IVirtualDesktopHelper _virtualDesktopHelper;
     private Timer _timer;
     Guid _lastDesktopId = Guid.Empty;
 
     public event EventHandler DesktopChanged;
-
-    public DesktopTracker(IVirtualDesktopHelper virtualDesktopHelper)
-    {
-        _virtualDesktopHelper = virtualDesktopHelper ?? throw new ArgumentNullException(nameof(virtualDesktopHelper));
-    }
 
     public void StartTracking()
     {
@@ -29,25 +23,16 @@ public class DesktopTracker : IDisposable
 
     private void CheckDesktopChange(object state)
     {
-        Guid newDesktopId = GetCurrentDesktopGuid();
+        Guid newDesktopId = DesktopInterop.GetCurrentDesktopGuid();
         if (newDesktopId == _lastDesktopId)
             return;
 
         Debug.WriteLine($"old {_lastDesktopId}, new: {newDesktopId}");
-        _lastDesktopId = newDesktopId;
-        _virtualDesktopHelper.CurrentDesktopId = newDesktopId;
+        _lastDesktopId = newDesktopId;        
         OnDesktopChanged();
     }
 
-    private static Guid GetCurrentDesktopGuid()
-    {
-        Guid newDesktopId;
-        if (OsVersionChecker.IsWindows11Eligable)
-            newDesktopId = Desktop_Win11.Current.Id;
-        else
-            newDesktopId = Desktop_Win10.Current.Id;
-        return newDesktopId;
-    }
+    
 
     protected virtual void OnDesktopChanged()
     {
@@ -56,8 +41,7 @@ public class DesktopTracker : IDisposable
 
     public void Dispose()
     {
-        _timer?.Dispose();
-        _virtualDesktopHelper?.Dispose();
+        _timer?.Dispose();     
     }
 }
 

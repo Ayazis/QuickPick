@@ -12,9 +12,10 @@ namespace QuickPick.Utilities.DesktopInterops
     }
 
 
+
     [ComImport]
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-    [Guid("A5CD92FF-29BE-454C-8D04-D82879FB3F1B")]// win10
+    [Guid("A5CD92FF-29BE-454C-8D04-D82879FB3F1B")]
     internal interface IVirtualDesktopManager
     {
         bool IsWindowOnCurrentVirtualDesktop(IntPtr topLevelWindow);

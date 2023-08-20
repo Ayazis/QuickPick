@@ -1,67 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace QuickPick.Utilities.DesktopInterops
 {
-
-
-
-    public interface IDesktopInterop
+    internal static class DesktopWin10
     {
-        Guid Current { get; }
-        bool IsWindowOnCurrentVirtualDesktop(IntPtr topLevelWindow);
-        Guid GetWindowDesktopId(IntPtr topLevelWindow);
-    }
-
-    public class DesktopInterop : IDesktopInterop
-    {
-        public Guid Current => GetCurrentDesktopGuid();
-
-        public Guid GetWindowDesktopId(IntPtr topLevelWindow)
-        {
-            throw new NotImplementedException();
-        }
-        public bool IsWindowOnCurrentVirtualDesktop(IntPtr topLevelWindow)
-        {
-            throw new NotImplementedException();
-        }
-        Guid GetCurrentDesktopGuid()
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    public class Desktop_Win10
-    {
-        public Guid Id => ivd.GetId();
-        public override int GetHashCode()
-        {
-            return ivd.GetHashCode();
-        }
-        private Desktop_Win10(Win10Interop.IVirtualDesktop desktop) { this.ivd = desktop; }
-        private Win10Interop.IVirtualDesktop ivd;
-        public static Desktop_Win10 Current => GetCurrentDesktop();
-        static Desktop_Win10 GetCurrentDesktop()
-        {
-            return new Desktop_Win10(DesktopManager_Win10.VirtualDesktopManagerInternal.GetCurrentDesktop());
-        }
-
-
-    }
-    internal static class DesktopManager_Win10
-    {
-        static DesktopManager_Win10()
+        static DesktopWin10()
         {
             var shell = (IServiceProvider10)Activator.CreateInstance(Type.GetTypeFromCLSID(Guids.CLSID_ImmersiveShell));
             VirtualDesktopManagerInternal = (Win10Interop.IVirtualDesktopManagerInternal)shell.QueryService(Guids.CLSID_VirtualDesktopManagerInternal, typeof(Win10Interop.IVirtualDesktopManagerInternal).GUID);
-            VirtualDesktopManager = (Win10Interop.IVirtualDesktopManager)shell.QueryService(Guids.CLSID_VirtualDesktopManager, typeof(Win10Interop.IVirtualDesktopManager).GUID);
+            VirtualDesktopManager = (IVirtualDesktopManager)Activator.CreateInstance(Type.GetTypeFromCLSID(Guids.CLSID_VirtualDesktopManager));
         }
         internal static Win10Interop.IVirtualDesktopManagerInternal VirtualDesktopManagerInternal;
-        internal static Win10Interop.IVirtualDesktopManager VirtualDesktopManager;
+        internal static IVirtualDesktopManager VirtualDesktopManager;
     }
     internal class Win10Interop
     {
@@ -168,7 +124,7 @@ namespace QuickPick.Utilities.DesktopInterops
             int Unknown12(out Size size1);
         }
 
-   
+
 
     }
 }
