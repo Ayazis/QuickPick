@@ -1,59 +1,63 @@
-﻿using Utilities.VirtualDesktop;
+﻿using QuickPick.Utilities.DesktopInterops;
+using System.Diagnostics;
 
-namespace Utilities
+
+namespace Utilities.VirtualDesktop;
+
+public class DesktopTracker : IDisposable
 {
-    using QuickPick.Utilities;
-    using System;
-    using System.Diagnostics;
-    using System.Threading;
+    private readonly IVirtualDesktopHelper _virtualDesktopHelper;
+    private Timer _timer;
+    Guid _lastDesktopId = Guid.Empty;
 
-    namespace Utilities.VirtualDesktop
+    public event EventHandler DesktopChanged;
+
+    public DesktopTracker(IVirtualDesktopHelper virtualDesktopHelper)
     {
-        public class DesktopTracker : IDisposable
-        {
-            private readonly IVirtualDesktopHelper _virtualDesktopHelper;
-            private Timer _timer;
-            Guid _lastDesktopId = Guid.Empty;
+        _virtualDesktopHelper = virtualDesktopHelper ?? throw new ArgumentNullException(nameof(virtualDesktopHelper));
+    }
 
-            public event EventHandler DesktopChanged;
+    public void StartTracking()
+    {
+        _timer = new Timer(CheckDesktopChange, null, 0, 500);
+    }
 
-            public DesktopTracker(IVirtualDesktopHelper virtualDesktopHelper)
-            {
-                _virtualDesktopHelper = virtualDesktopHelper ?? throw new ArgumentNullException(nameof(virtualDesktopHelper));
-            }
+    public void StopTracking()
+    {
+        _timer?.Dispose();
+    }
 
-            public void StartTracking()
-            {
-                _timer = new Timer(CheckDesktopChange, null, 0, 500);
-            }
+    private void CheckDesktopChange(object state)
+    {
+        Guid newDesktopId = GetCurrentDesktopGuid();
+        if (newDesktopId == _lastDesktopId)
+            return;
 
-            public void StopTracking()
-            {
-                _timer?.Dispose();
-            }
+        Debug.WriteLine($"old {_lastDesktopId}, new: {newDesktopId}");
+        _lastDesktopId = newDesktopId;
+        _virtualDesktopHelper.CurrentDesktopId = newDesktopId;
+        OnDesktopChanged();
+    }
 
-            private void CheckDesktopChange(object state)
-            {
-                Guid newDesktopId = Desktop.Current.Id;
-                if (newDesktopId == _lastDesktopId)
-                    return;
+    private static Guid GetCurrentDesktopGuid()
+    {
+        Guid newDesktopId;
+        if (OsVersionChecker.IsWindows11Eligable)
+            newDesktopId = Desktop_Win11.Current.Id;
+        else
+            newDesktopId = Desktop_Win10.Current.Id;
+        return newDesktopId;
+    }
 
-                Debug.WriteLine($"old {_lastDesktopId}, new: {newDesktopId}");
-                _lastDesktopId = newDesktopId;
-                _virtualDesktopHelper.CurrentDesktopId = newDesktopId;
-                OnDesktopChanged();
-            }
+    protected virtual void OnDesktopChanged()
+    {
+        DesktopChanged?.Invoke(this, null);
+    }
 
-            protected virtual void OnDesktopChanged()
-            {
-                DesktopChanged?.Invoke(this, null);
-            }
-
-            public void Dispose()
-            {
-                _timer?.Dispose();
-                _virtualDesktopHelper?.Dispose();
-            }
-        }
+    public void Dispose()
+    {
+        _timer?.Dispose();
+        _virtualDesktopHelper?.Dispose();
     }
 }
+

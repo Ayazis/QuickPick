@@ -12,7 +12,7 @@ public class MousePosition
         GetCursorPos(ref mousePos);
 
         IntPtr hMonitor = MonitorFromPoint(mousePos, MonitorOptions.MONITOR_DEFAULTTONEAREST);
-        var dpi = MonitorHelper.GetDpi(hMonitor);
+        var dpi = MonitorDpi.GetDpi(hMonitor);
         float scale = dpi / 96f;
 
         int mouseX = (int)(mousePos.X / scale);

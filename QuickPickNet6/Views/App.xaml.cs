@@ -12,7 +12,6 @@ using System.Diagnostics;
 using System.Collections.ObjectModel;
 using QuickPick.PinnedApps;
 using System.ComponentModel;
-using Utilities.Utilities.VirtualDesktop;
 using Utilities.VirtualDesktop;
 
 namespace QuickPick;

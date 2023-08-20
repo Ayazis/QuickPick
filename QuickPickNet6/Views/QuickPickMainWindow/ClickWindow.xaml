@@ -31,9 +31,6 @@
     </Window.Resources>   
 
         <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
-
-
-
             <local:RingButtonControl Width="100" Height="100" Margin="50"/>
             <ItemsControl x:Name="Applinks" ItemsSource="{Binding PinnedApps, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" >
                 <ItemsControl.ItemsPanel>
@@ -44,7 +41,6 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Grid>
-
                             <Button Style="{StaticResource RoundButtonNoMouseOver}" Width="35" Height="35" />
                             <Image Source="{Binding AppIcon}" Width="23" Height="23" >
                                 <Image.ToolTip>
@@ -80,8 +76,6 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-
-
             <Canvas x:Name="ThumbnailCanvas" HorizontalAlignment="Center" VerticalAlignment="Center" Width="800" Height="800" />
         </Grid>   
 </Window>

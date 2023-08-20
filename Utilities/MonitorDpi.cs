@@ -2,7 +2,7 @@
 
 namespace QuickPick.Utilities
 {
-    public static class MonitorHelper
+    public static class MonitorDpi
     {
         // Dictionary to store dpiX values for any hmonitor
         private static Dictionary<IntPtr, int> _monitorDpiCache = new Dictionary<IntPtr, int>();

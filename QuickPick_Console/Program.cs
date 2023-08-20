@@ -1,17 +1,8 @@
-﻿// See https://aka.ms/new-console-template for more information
-using System.Windows.Forms;
-using Utilities.Utilities.VirtualDesktop;
+﻿using System.Windows.Forms;
 using Utilities.VirtualDesktop;
 using Ayazis.Utilities;
 using Ayazis.KeyHooks;
 using Utilities.Mouse_and_Keyboard;
-using System.Diagnostics;
-using QuickPick.UI.Views;
-using QuickPick.Utilities;
-using QuickPick.UI.Views.File_Explorer;
-using System.Windows;
-
-
 namespace QuickPick;
 
 public class Program
