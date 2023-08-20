@@ -8,13 +8,11 @@ using Utilities.VirtualDesktop;
 
 public class ActiveWindows
 {
-    private static IVirtualDesktopHelper _virtualDesktopHelper;
 
-    public static void SetVirtualDesktopHelper(IVirtualDesktopHelper virtualDesktopWrapper)
+    static ActiveWindows()
     {
-        _virtualDesktopHelper = virtualDesktopWrapper;
-    }
 
+    }
 
     public static IEnumerable<(IntPtr handle, Process process)> GetAllOpenWindows()
     {
