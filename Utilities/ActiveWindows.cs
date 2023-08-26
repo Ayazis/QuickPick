@@ -126,7 +126,7 @@ public class ActiveWindows
 	
 		return _classnamesToIgnore.Contains(className);
 	}
-	private static readonly string[] _classnamesToIgnore = new string[] { "WorkerW", "Progman", "SysShadow" };
+	static readonly string[] _classnamesToIgnore = new string[] { "WorkerW", "Progman", "SysShadow" };
 	static string GetClassName(IntPtr hWnd)
 	{
 		const int maxClassNameLength = 256;
