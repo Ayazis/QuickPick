@@ -1,43 +1,56 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Runtime.InteropServices;
 
 namespace QuickPick.Utilities.DesktopInterops
 {
+    // Source: https://github.com/MScholtes/VirtualDesktop/blob/master/VirtualDesktop11InsiderCanary.cs
     internal static class DesktopWin11
     {
         static DesktopWin11()
         {
             var shell = (IServiceProvider10)Activator.CreateInstance(Type.GetTypeFromCLSID(Guids.CLSID_ImmersiveShell));
-            VirtualDesktopManagerInternal = (Win11Interop.IVirtualDesktopManagerInternal)shell.QueryService(Guids.CLSID_VirtualDesktopManagerInternal, typeof(Win11Interop.IVirtualDesktopManagerInternal).GUID);
+            VirtualDesktopManagerInternal = 
+                (Win11Interop.IVirtualDesktopManagerInternal)shell.QueryService(Guids.CLSID_VirtualDesktopManagerInternal,                 
+                typeof(Win11Interop.IVirtualDesktopManagerInternal).GUID);
             VirtualDesktopManager = (IVirtualDesktopManager)Activator.CreateInstance(Type.GetTypeFromCLSID(Guids.CLSID_VirtualDesktopManager));
 
         }
         internal static IVirtualDesktopManager VirtualDesktopManager;
         internal static Win11Interop.IVirtualDesktopManagerInternal VirtualDesktopManagerInternal;
     }
+
+
     internal class Win11Interop
     {
+        [ComImport]
+        [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+        [Guid("3F07F4BE-B107-441A-AF0F-39D82529072C")]
+        internal interface IVirtualDesktop
+        {
+            bool IsViewVisible(IApplicationView view);
+            Guid GetId();
+            [return: MarshalAs(UnmanagedType.HString)]
+            string GetName();
+            [return: MarshalAs(UnmanagedType.HString)]
+            string GetWallpaperPath();
+            bool IsRemote();
+        }
 
         [ComImport]
         [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-        [Guid("B2F925B9-5A0F-4D2E-9F4D-2B1507593C10")] // Win11
-        //[Guid("F31574D6-B682-4CDC-BD56-1827860ABEC6")] // Win10:
+        [Guid("A3175F2D-239C-4BD2-8AA0-EEBA8B0B138E")]
         internal interface IVirtualDesktopManagerInternal
         {
-            int GetCount(IntPtr hWndOrMon);
+            int GetCount();
             void MoveViewToDesktop(IApplicationView view, IVirtualDesktop desktop);
             bool CanViewMoveDesktops(IApplicationView view);
-            IVirtualDesktop GetCurrentDesktop(IntPtr hWndOrMon);
-            void GetDesktops(IntPtr hWndOrMon, out IObjectArray desktops);
+            IVirtualDesktop GetCurrentDesktop();
+            void GetDesktops(out IObjectArray desktops);
             [PreserveSig]
             int GetAdjacentDesktop(IVirtualDesktop from, int direction, out IVirtualDesktop desktop);
-            void SwitchDesktop(IntPtr hWndOrMon, IVirtualDesktop desktop);
-            IVirtualDesktop CreateDesktop(IntPtr hWndOrMon);
-            void MoveDesktop(IVirtualDesktop desktop, IntPtr hWndOrMon, int nIndex);
+            void SwitchDesktop(IVirtualDesktop desktop);
+            //		void SwitchDesktopAndMoveForegroundView(IVirtualDesktop desktop);
+            IVirtualDesktop CreateDesktop();
+            void MoveDesktop(IVirtualDesktop desktop, int nIndex);
             void RemoveDesktop(IVirtualDesktop desktop, IVirtualDesktop fallback);
             IVirtualDesktop FindDesktop(ref Guid desktopid);
             void GetDesktopSwitchIncludeExcludeViews(IVirtualDesktop desktop, out IObjectArray unknown1, out IObjectArray unknown2);
@@ -45,31 +58,15 @@ namespace QuickPick.Utilities.DesktopInterops
             void SetDesktopWallpaper(IVirtualDesktop desktop, [MarshalAs(UnmanagedType.HString)] string path);
             void UpdateWallpaperPathForAllDesktops([MarshalAs(UnmanagedType.HString)] string path);
             void CopyDesktopState(IApplicationView pView0, IApplicationView pView1);
-            int GetDesktopIsPerMonitor();
-            void SetDesktopIsPerMonitor(bool state);
+            void CreateRemoteDesktop([MarshalAs(UnmanagedType.HString)] string path, out IVirtualDesktop desktop);
+            void SwitchRemoteDesktop(IVirtualDesktop desktop);
+            void SwitchDesktopWithAnimation(IVirtualDesktop desktop);
+            void GetLastActiveDesktop(out IVirtualDesktop desktop);
+            void WaitForAnimationToComplete();
         }
-
-        [ComImport]
-        [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-        [Guid("536D3495-B208-4CC9-AE26-DE8111275BF8")] //win11
-        //[Guid("FF72FFDD-BE7E-43FC-9C03-AD81681E88E4")] //win10
-        internal interface IVirtualDesktop
-        {
-            bool IsViewVisible(IApplicationView view);
-            Guid GetId();
-            IntPtr Unknown1();
-            [return: MarshalAs(UnmanagedType.HString)]
-            string GetName();
-            [return: MarshalAs(UnmanagedType.HString)]
-            string GetWallpaperPath();
-        }
-
-
-
         [ComImport]
         [InterfaceType(ComInterfaceType.InterfaceIsIInspectable)]
-        [Guid("372E1D3B-38D3-42E4-A15B-8AB2B178F513")] //win11
-        //[Guid("F31574D6-B682-4CDC-BD56-1827860ABEC6")] //win10
+        [Guid("372E1D3B-38D3-42E4-A15B-8AB2B178F513")]
         internal interface IApplicationView
         {
             int SetFocus();

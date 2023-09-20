@@ -8,7 +8,7 @@ namespace QuickPick.Utilities.DesktopInterops
 		public static Guid GetCurrentDesktopGuid()
 		{
 			if (OsVersionChecker.IsWindows11Eligable)
-				return DesktopWin11.VirtualDesktopManagerInternal.GetCurrentDesktop(IntPtr.Zero).GetId();
+				return DesktopWin11.VirtualDesktopManagerInternal.GetCurrentDesktop().GetId();
 			else
 				return DesktopWin10.VirtualDesktopManagerInternal.GetCurrentDesktop().GetId();
 		}
