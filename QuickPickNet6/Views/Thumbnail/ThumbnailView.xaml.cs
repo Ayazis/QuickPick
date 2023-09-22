@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Controls;
@@ -18,10 +19,16 @@ public partial class ThumbnailView : UserControl
 
     public ThumbnailView(ThumbnailDataContext context)
     {
+        var size = CalculateRenderSize(context.Rect);
+        context.Width = size.Width;
+        context.Height = size.Height;
+
         InitializeComponent();
         this.DataContext = context;
         _context = context;
         this.Visibility = System.Windows.Visibility.Hidden;
+       
+        
     }
 
     public async Task FadeIn()
@@ -85,15 +92,16 @@ public partial class ThumbnailView : UserControl
         // Set the fill color of the rectangle
         SolidColorBrush fillBrush = new SolidColorBrush(color);
 
-        ImageRectangle.Fill = fillBrush;
+        ThumbBackground.Background = fillBrush;
         ClickWindow.ThumbnailTimer.StopTimer();
     }
 
     private void UserControl_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
     {
-        SolidColorBrush fillBrush = new SolidColorBrush(Colors.Black);
+        var color = (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#202020");
+        SolidColorBrush fillBrush = new SolidColorBrush(color);
 
-        ImageRectangle.Fill = fillBrush;
+        ThumbBackground.Background = fillBrush;
         ClickWindow.ThumbnailTimer.StartTimer();
         // starttimer
     }
@@ -102,5 +110,19 @@ public partial class ThumbnailView : UserControl
     {
         ActiveWindows.ToggleWindow(_context.WindowHandle);
         // Toggle.
+    }
+    public static System.Windows.Size CalculateRenderSize(RECT rect)
+    {
+        int width = rect.Right - rect.Left;
+        int height = rect.Bottom - rect.Top;
+
+        // Ensure width and height are positive
+        if (width < 0)
+            width = -width;
+
+        if (height < 0)
+            height = -height;
+
+        return new System.Windows.Size(width, height);
     }
 }

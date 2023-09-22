@@ -7,6 +7,9 @@ namespace QuickPick.UI.Views.Thumbnail;
 public class ThumbnailDataContext : INotifyPropertyChanged
 {
 
+    public double Width { get; set; }
+    public double Height { get; set; }
+
     public RECT Rect { get; private set; }
 
     private string _windowTitle = @" --- ";
