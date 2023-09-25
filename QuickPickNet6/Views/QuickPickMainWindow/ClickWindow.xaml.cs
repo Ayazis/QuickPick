@@ -221,7 +221,7 @@ public partial class ClickWindow : Window
             _currentThumbnails.Add(thumbnailView);
 
             // Set the position of ThumbnailView based on translated coordinates.
-            Canvas.SetLeft(thumbnailView, rect.Left / dpiScaling - 10);
+            Canvas.SetLeft(thumbnailView, rect.Left / dpiScaling - 20);
             Canvas.SetTop(thumbnailView, rect.Top / dpiScaling - 20);
             thumbnailView.FadeIn();
         }
