@@ -22,8 +22,8 @@ namespace QuickPick.UI
         public RECT CreateRectForThumbnail(Point buttonCenter, double xToWindowCenter, double yToWindowCenter, double dpiScaling, int i, double aspectRatio)
         {
             var dimensions = CalculateThumbnailDimensions(aspectRatio);
-            double thumbnailX = CalculateThumbnailX(buttonCenter.X, xToWindowCenter, dimensions.Width);
-            double thumbnailY = CalculateThumbnailY(buttonCenter.Y, yToWindowCenter, dimensions.Height);
+            double thumbnailX = CalculateThumbnailX(buttonCenter.X, xToWindowCenter, dimensions.Width + 20);
+            double thumbnailY = CalculateThumbnailY(buttonCenter.Y, yToWindowCenter, dimensions.Height + 20);
 
             return CalculateRECT(thumbnailX, thumbnailY, dimensions, dpiScaling, i, xToWindowCenter < 0);
         }
@@ -35,7 +35,7 @@ namespace QuickPick.UI
 
             if (isLandscape)
             {
-                width = MAX_DIMENSION; 
+                width = MAX_DIMENSION;
                 height = width / aspectRatio;
             }
             else
@@ -60,23 +60,22 @@ namespace QuickPick.UI
         }
 
 
-        private double CalculateThumbnailY(double buttonCenterY, double yToCenter, double height)
+        private double CalculateThumbnailY(double startPosition, double YDistanceToWindowCenter, double height)
         {
-            double coefficient = 1.2; // Increase to increase distance from thumbnail to the center
-            double thumbnailY = buttonCenterY + (yToCenter * coefficient);
-            double verticalOffset = -30;
-            thumbnailY += verticalOffset;
+            double shiftCoefficient = 1.5; // Increase to increase distance from thumbnail to the center
+            double verticalShiftAmount = YDistanceToWindowCenter * shiftCoefficient;
+            double shiftedPosition = startPosition + verticalShiftAmount;
 
-            if (yToCenter < 0)
-            {
-                thumbnailY -= (height / 2);
-            }
+            double offset = height / 2;  // Default position is the thumbnail centered in the middle.        
+            double offSetPosition = shiftedPosition - offset;
 
-            return thumbnailY;
+            return offSetPosition;
         }
 
         private RECT CalculateRECT(double thumbnailX, double thumbnailY, (double Width, double Height) dimensions, double dpiScaling, int i, bool isLeftToCenter)
         {
+            // TODO: allow space for border in thumbnailview
+
             int left = (int)(thumbnailX * dpiScaling);
             if (isLeftToCenter)
             {
