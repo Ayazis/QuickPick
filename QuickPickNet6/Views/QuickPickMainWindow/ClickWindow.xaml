@@ -31,7 +31,8 @@
     </Window.Resources>   
 
         <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
-            <local:RingButtonControl Width="100" Height="100" Margin="50"/>
+        <Ellipse Width="150" Height="150" Fill="#B3000000" />
+        <local:RingButtonControl/>
             <ItemsControl x:Name="Applinks" ItemsSource="{Binding PinnedApps, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" >
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -76,6 +77,7 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-            <Canvas x:Name="ThumbnailCanvas" HorizontalAlignment="Center" VerticalAlignment="Center" Width="800" Height="800" />
+    
+        <Canvas x:Name="ThumbnailCanvas" HorizontalAlignment="Center" VerticalAlignment="Center" Width="800" Height="800" />
         </Grid>   
 </Window>

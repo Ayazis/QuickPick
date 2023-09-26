@@ -7,25 +7,25 @@ namespace QuickPick.UI
     public class ThumbnailRectCreator
     {
 
-        private const double DEFAULT_DIMENSION = 200.0;
+        private const double MAX_DIMENSION = 180.0;
 
         /// <summary>
         /// Creates the RECT for the actual thumbnailpreview.
         /// </summary>
         /// <param name="buttonCenter"></param>
-        /// <param name="xToCenter"></param>
-        /// <param name="ytoCenter"></param>
+        /// <param name="xToWindowCenter"></param>
+        /// <param name="yToWindowCenter"></param>
         /// <param name="dpiScaling"></param>
         /// <param name="i"></param>
         /// <param name="aspectRatio"></param>
         /// <returns></returns>
-        public RECT CreateRectForThumbnail(Point buttonCenter, double xToCenter, double ytoCenter, double dpiScaling, int i, double aspectRatio)
+        public RECT CreateRectForThumbnail(Point buttonCenter, double xToWindowCenter, double yToWindowCenter, double dpiScaling, int i, double aspectRatio)
         {
             var dimensions = CalculateThumbnailDimensions(aspectRatio);
-            double thumbnailX = CalculateThumbnailX(buttonCenter.X, xToCenter, dimensions.Width);
-            double thumbnailY = CalculateThumbnailY(buttonCenter.Y, ytoCenter, dimensions.Height);
+            double thumbnailX = CalculateThumbnailX(buttonCenter.X, xToWindowCenter, dimensions.Width);
+            double thumbnailY = CalculateThumbnailY(buttonCenter.Y, yToWindowCenter, dimensions.Height);
 
-            return CalculateRECT(thumbnailX, thumbnailY, dimensions, dpiScaling, i, xToCenter < 0);
+            return CalculateRECT(thumbnailX, thumbnailY, dimensions, dpiScaling, i, xToWindowCenter < 0);
         }
 
         private (double Width, double Height) CalculateThumbnailDimensions(double aspectRatio)
@@ -35,37 +35,28 @@ namespace QuickPick.UI
 
             if (isLandscape)
             {
-                width = DEFAULT_DIMENSION - 20;
+                width = MAX_DIMENSION; 
                 height = width / aspectRatio;
             }
             else
             {
-                height = DEFAULT_DIMENSION - 20;
+                height = MAX_DIMENSION;
                 width = height * aspectRatio;
             }
 
             return (Width: width, Height: height);
         }
 
-        private double CalculateThumbnailX(double buttonCenterX, double xToCenter, double width)
+        private double CalculateThumbnailX(double startPosition, double xDistanceToWindowCenter, double width)
         {
-            double coefficient = 1.2;
-            double thumbnailX = buttonCenterX + xToCenter * coefficient;
+            // Position should increasingly shift depending on xDistanceToWindowCenter          
+            double shiftCoEfficient = 2; // increase for more horizontal shifting
+            double horizontalShiftAmount = xDistanceToWindowCenter * shiftCoEfficient;
+            double shiftedPosition = startPosition + horizontalShiftAmount;
 
-            // The closer the thumbnail is to the center (xToCenter near 0), the more it should be shifted to align its center.
-            double centeringFactor = Math.Abs(xToCenter) / DEFAULT_DIMENSION;
-            double shift = (.5 - centeringFactor) * (DEFAULT_DIMENSION / 2);
-
-            if (xToCenter < 0)
-            {
-                thumbnailX -= (width - shift);
-            }
-            else
-            {
-                thumbnailX -= shift;
-            }
-
-            return thumbnailX;
+            double offset = width / 2; // Default position is the thumbnail centered in the middle.            
+            double offSetPosition = shiftedPosition - offset;
+            return offSetPosition;
         }
 
 
@@ -89,11 +80,11 @@ namespace QuickPick.UI
             int left = (int)(thumbnailX * dpiScaling);
             if (isLeftToCenter)
             {
-                left -= (int)(i * DEFAULT_DIMENSION);
+                left -= (int)(i * MAX_DIMENSION);
             }
             else
             {
-                left += (int)(i * DEFAULT_DIMENSION);
+                left += (int)(i * MAX_DIMENSION);
             }
 
             int top = (int)(thumbnailY * dpiScaling);

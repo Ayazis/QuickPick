@@ -187,8 +187,8 @@ public partial class ClickWindow : Window
         double windowCenterY = this.ActualHeight / 2;
 
         // Calculate the button's position relative to the window's center
-        double xToCenter = buttonCenter.X - windowCenterX;
-        double ytoCenter = buttonCenter.Y - windowCenterY;
+        double xToWindowCenter = buttonCenter.X - windowCenterX;
+        double ytoWindowCenter = buttonCenter.Y - windowCenterY;
 
         // Get DPI information
         PresentationSource source = PresentationSource.FromVisual(this);
@@ -211,7 +211,7 @@ public partial class ClickWindow : Window
                 return;
 
             double aspectRatio = ThumbnailCreator.GetWindowAspectRatio(currentWindowHandle);
-            RECT rect = _thumbnailRectCreator.CreateRectForThumbnail(buttonCenter, xToCenter, ytoCenter, dpiScaling, i, aspectRatio);
+            RECT rect = _thumbnailRectCreator.CreateRectForThumbnail(buttonCenter, xToWindowCenter, ytoWindowCenter, dpiScaling, i, aspectRatio);
 
             string windowTitle = ActiveWindows.GetWindowTitle(currentWindowHandle);
             var thumbnailContext = new ThumbnailDataContext(newThumbnail, rect, currentWindowHandle, windowTitle);
