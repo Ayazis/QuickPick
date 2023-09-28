@@ -17,7 +17,7 @@ public class AppLink
 {
     public AppLink()
     {
-        ClickCommand = new RelayCommand(parameter => AppClicked(this));
+        ClickCommand = new RelayCommand(parameter => ToggleWindowOrStartApplication(this));
     }
     public string Name { get; set; }
     public string TargetPath { get; set; }
@@ -28,15 +28,14 @@ public class AppLink
     public List<IntPtr> WindowHandles { get; set; } = new();
     public string Info => $"{Name} - {TargetPath}";
 
-    public static void AppClicked(AppLink appInfo)
+    public void ToggleWindowOrStartApplication(AppLink appInfo)
     {
-        IntPtr windowHandle = ActiveWindows.GetActiveWindowOnCurentDesktop(appInfo.TargetPath);
-        if (windowHandle != default)
-            ActiveWindows.ToggleWindow(windowHandle);
+        if (WindowHandles.Count == 1)
+            ActiveWindows.ToggleWindow(WindowHandles[0]);
         else
+        {
             Task.Run(() => { Process.Start(appInfo.TargetPath, appInfo.Arguments); });
-        ClickWindow.HideWindow();
+            ClickWindow.HideWindow();
+        }
     }
-
-
 }

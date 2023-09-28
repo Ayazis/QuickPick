@@ -8,6 +8,20 @@
 		<LangVersion>latest</LangVersion>
 	</PropertyGroup>
 
+	<ItemGroup>
+	  <Compile Remove="APPLICATION_VIEW_CLOAK_TYPE.cs" />
+	  <Compile Remove="APPLICATION_VIEW_COMPATIBILITY_POLICY.cs" />
+	  <Compile Remove="DesktopManager.cs" />
+	  <Compile Remove="Guids.cs" />
+	  <Compile Remove="IApplicationView.cs" />
+	  <Compile Remove="IObjectArray.cs" />
+	  <Compile Remove="IServiceProvider10.cs" />
+	  <Compile Remove="IVirtualDesktop.cs" />
+	  <Compile Remove="IVirtualDesktopManagerInternal.cs" />
+	  <Compile Remove="Rect.cs" />
+	  <Compile Remove="Size.cs" />
+	</ItemGroup>
+
 
 	<ItemGroup>
 		<PackageReference Include="InputSimulator" Version="1.0.4" />

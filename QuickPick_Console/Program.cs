@@ -1,20 +1,14 @@
-﻿// See https://aka.ms/new-console-template for more information
-using System.Windows.Forms;
-using Utilities.Utilities.VirtualDesktop;
+﻿using System.Windows.Forms;
 using Utilities.VirtualDesktop;
 using Ayazis.Utilities;
 using Ayazis.KeyHooks;
 using Utilities.Mouse_and_Keyboard;
-using System.Diagnostics;
-using QuickPick.UI.Views;
-
 namespace QuickPick;
 
 public class Program
 {
     static TrayIconManager _trayIconManager = new TrayIconManager();
     static DesktopTracker _desktopTracker;
-    static VirtualDesktopHelper _virtualDesktopHelper = new VirtualDesktopHelper();
     static ClickWindow _clickwindow = new ClickWindow();
     static MouseAndKeysCapture _inputCapture;
     static KeyInputHandler _keyInputHandler;
@@ -24,11 +18,8 @@ public class Program
     static void Main(string[] args)
     {
         try
-        {
-            _trayIconManager.CreateTrayIcon();
-
-            // Setup the ActiveWindows class, this class handles everything related to Open Application Windows.
-            ActiveWindows.SetVirtualDesktopHelper(_virtualDesktopHelper);
+        {   
+            _trayIconManager.CreateTrayIcon();        
 
             // On every desktop change, the current active windows for that desktop are retrieved.
             StartDesktopTracking();
@@ -54,7 +45,7 @@ public class Program
     {
         using (var context = new ApplicationContext())
         {
-            Application.Run(context);
+            System.Windows.Forms.Application.Run(context);
         }
     }
 
@@ -75,13 +66,14 @@ public class Program
 
     private static void StartDesktopTracking()
     {
-        _desktopTracker = new DesktopTracker(_virtualDesktopHelper);
+        _desktopTracker = new DesktopTracker();
         _desktopTracker.DesktopChanged += _desktopTracker_DesktopChanged;
         _desktopTracker.StartTracking();
     }
 
     private static void _keyInputHandler_KeyCombinationHit()
     {
+        Task.Run(() => { _clickwindow.UpdateTaskbarShortCuts(); });
         _clickwindow.ShowWindow();
     }
 
@@ -93,7 +85,6 @@ public class Program
     static void CurrentDomain_ProcessExit(object? sender, EventArgs e)
     {
         _desktopTracker.Dispose();
-        _virtualDesktopHelper?.Dispose();
         _trayIconManager.RemoveTrayIcon();
     }
 }

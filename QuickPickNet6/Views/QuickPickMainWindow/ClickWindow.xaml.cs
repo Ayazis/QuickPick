@@ -12,6 +12,16 @@ using ThumbnailLogic;
 using System.Linq;
 using System.Windows.Input;
 using Microsoft.VisualBasic;
+using QuickPick.UI.Views.Thumbnail;
+using System.Threading.Tasks;
+using System.Windows.Controls;
+using System.Windows.Forms;
+using System.Windows.Media.Effects;
+using System.Windows.Media;
+using System.Windows.Shapes;
+using System.Runtime.InteropServices;
+using System.Windows.Interop;
+using QuickPick.UI;
 
 namespace QuickPick;
 /// <summary>
@@ -19,15 +29,18 @@ namespace QuickPick;
 /// </summary>
 public partial class ClickWindow : Window
 {
-    private static ClickWindow _instance;
+    public static ClickWindow _instance;
     private QuickPickMainWindowModel _qpm = new QuickPickMainWindowModel();
     private IntPtr _quickPickWindowHandle;
-    private List<IntPtr> _currentThumbnails = new List<IntPtr>();
+    private List<ThumbnailView> _currentThumbnails = new List<ThumbnailView>();
+    public static ThumbnailTimer ThumbnailTimer;
 
+    private ThumbnailRectCreator _thumbnailRectCreator = new();
     public Storyboard HideAnimation { get; private set; }
     public Storyboard ShowAnimation { get; private set; }
     public ClickWindow()
     {
+        ThumbnailTimer = new(HideThumbnails);
         InitializeComponent();
         this.PreviewMouseWheel += ClickWindow_PreviewMouseWheel; ;
         DataContext = _qpm;
@@ -39,6 +52,8 @@ public partial class ClickWindow : Window
         SetQuickPicksMainWindowHandle();
         UpdateLayout();
         _instance = this;
+
+        // EnableBlur();  // The blurreffect works, but only on window level, creating a squared blurry area...
     }
 
     private void ClickWindow_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -152,84 +167,136 @@ public partial class ClickWindow : Window
     }
     private void Button_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
     {
+        ThumbnailTimer.StopTimer();
+        HideThumbnails();
+        // todo: Move logic out of xaml.xs
         var button = (System.Windows.Controls.Button)sender;
         AppLink pinnedApp = button.DataContext as AppLink;
 
-        const double sizeFactor = 0.1;
-        double width = 1920 * sizeFactor;
-        double height = 1080 * sizeFactor;
+        CreateThumbnails(pinnedApp, button);
+    }
+
+    private void CreateThumbnails(AppLink pinnedApp, System.Windows.Controls.Button button)
+    {
+        // Get the center of the button relative to its container (the window)
+        var buttonCenter = button.TransformToAncestor(this)
+                                .Transform(new Point(button.ActualWidth / 2, button.ActualHeight / 2));
 
         // Get the center of the window
         double windowCenterX = this.ActualWidth / 2;
         double windowCenterY = this.ActualHeight / 2;
 
+        // Calculate the button's position relative to the window's center
+        double xToWindowCenter = buttonCenter.X - windowCenterX;
+        double ytoWindowCenter = buttonCenter.Y - windowCenterY;
+
         // Get DPI information
         PresentationSource source = PresentationSource.FromVisual(this);
         var m = source.CompositionTarget.TransformToDevice;
-        double dpiX = m.M11;
-        double dpiY = m.M22;
-
-        // Get the center of the button relative to its container (the window)
-        var buttonCenter = button.TransformToAncestor(this)
-                                .Transform(new Point(button.ActualWidth / 2, button.ActualHeight / 2));
-
-        // Calculate the button's position relative to the window's center
-        double relativeX = buttonCenter.X - windowCenterX;
-        double relativeY = buttonCenter.Y - windowCenterY;
-
-        // Scale the relative position by a factor to adjust the thumbnail's position        
-
-        double offsetX = relativeX < 0 ? relativeX * 1.2 - 20 : relativeX + 20 * 1.2;
-        double offsetY = relativeY < 0 ? relativeY - 20 : relativeY + 20;
-        //double offsetX = relativeX * 3;
-        //double offsetY = relativeY * 1.5;
-
-        // Calculate the thumbnail's position, ensuring it is centered around the button's position
-        double thumbnailX = buttonCenter.X + offsetX - width / 2;
-        double thumbnailY = buttonCenter.Y + offsetY - height / 2;
-
-
+        double dpiScaling = m.M11;
 
         for (int i = 0; i < pinnedApp.WindowHandles.Count; i++)
         {
-            IntPtr item = pinnedApp.WindowHandles[i];
-            var windowHandle = item;
-            var newThumbnail = ThumbnailCreator.GetThumbnailRelations(windowHandle, _quickPickWindowHandle);
+            ProcessThumbnail(i);
+        };
+        
+        //local function for readability
+        void ProcessThumbnail(int i)
+        {
+            IntPtr currentWindowHandle = pinnedApp.WindowHandles[i];
+
+            // Create thumbnailRelation
+            var newThumbnail = ThumbnailCreator.GetThumbnailRelations(currentWindowHandle, _quickPickWindowHandle);
             if (newThumbnail == default)
-                continue;
-            _currentThumbnails.Add(newThumbnail);
+                return;
 
+            double aspectRatio = ThumbnailCreator.GetWindowAspectRatio(currentWindowHandle);
+            RECT rect = _thumbnailRectCreator.CreateRectForThumbnail(buttonCenter, xToWindowCenter, ytoWindowCenter, dpiScaling, i, aspectRatio);
 
-            int left = (int)(thumbnailX * dpiX + (i * width));
-            int top = (int)(thumbnailY * dpiY);
-            int right = (int)((thumbnailX + width) * dpiX + (i * width));
-            int bottom = (int)((thumbnailY + height) * dpiY);
+            string windowTitle = ActiveWindows.GetWindowTitle(currentWindowHandle);
+            var thumbnailContext = new ThumbnailDataContext(newThumbnail, rect, currentWindowHandle, windowTitle);
+            var thumbnailView = new ThumbnailView(thumbnailContext);
 
-            RECT rect = new RECT(left, top, right, bottom);
-            ThumbnailCreator.FadeInThumbnail(newThumbnail, rect);
+            this.ThumbnailCanvas.Children.Add(thumbnailView);
+            _currentThumbnails.Add(thumbnailView);
 
+            // Set the position of ThumbnailView based on translated coordinates.
+            Canvas.SetLeft(thumbnailView, rect.Left / dpiScaling - 20);
+            Canvas.SetTop(thumbnailView, rect.Top / dpiScaling - 20);
+            thumbnailView.FadeIn();
         }
     }
-
 
     private void Button_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
     {
-        foreach (var item in _currentThumbnails)
-        {
-            if (item != default)
-                ThumbnailCreator.DwmUnregisterThumbnail(item);
-        }
+        ThumbnailTimer.StartTimer();
     }
 
-    private double CalculateAngle(Point center, Point position)
+
+    private void HideThumbnails()
     {
-        double dx = position.X - center.X;
-        double dy = position.Y - center.Y;
-
-        double radian = Math.Atan2(dy, dx);
-        double angle = radian * (180 / Math.PI);
-
-        return angle;
+        foreach (var thumbnailView in _currentThumbnails)
+        {
+            if (thumbnailView != default)
+                thumbnailView.Hide();
+        }
+        _currentThumbnails.Clear();
     }
 
+
+    internal void EnableBlur()
+    {
+        var windowHelper = new WindowInteropHelper(this);
+
+        var accent = new AccentPolicy();
+        accent.AccentState = AccentState.ACCENT_ENABLE_BLURBEHIND;
+
+        var accentStructSize = Marshal.SizeOf(accent);
+
+        var accentPtr = Marshal.AllocHGlobal(accentStructSize);
+        Marshal.StructureToPtr(accent, accentPtr, false);
+
+        var data = new WindowCompositionAttributeData();
+        data.Attribute = WindowCompositionAttribute.WCA_ACCENT_POLICY;
+        data.SizeOfData = accentStructSize;
+        data.Data = accentPtr;
+
+        SetWindowCompositionAttribute(windowHelper.Handle, ref data);
+
+        Marshal.FreeHGlobal(accentPtr);
+    }
+    internal enum AccentState
+    {
+        ACCENT_DISABLED = 1,
+        ACCENT_ENABLE_GRADIENT = 0,
+        ACCENT_ENABLE_TRANSPARENTGRADIENT = 2,
+        ACCENT_ENABLE_BLURBEHIND = 3,
+        ACCENT_INVALID_STATE = 4
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct AccentPolicy
+    {
+        public AccentState AccentState;
+        public int AccentFlags;
+        public int GradientColor;
+        public int AnimationId;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct WindowCompositionAttributeData
+    {
+        public WindowCompositionAttribute Attribute;
+        public IntPtr Data;
+        public int SizeOfData;
+    }
+
+    internal enum WindowCompositionAttribute
+    {
+        // ...
+        WCA_ACCENT_POLICY = 19
+        // ...
+    }
+    [DllImport("user32.dll")]
+    internal static extern int SetWindowCompositionAttribute(IntPtr hwnd, ref WindowCompositionAttributeData data);
 }

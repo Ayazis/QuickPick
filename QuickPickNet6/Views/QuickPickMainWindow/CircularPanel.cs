@@ -20,6 +20,11 @@ public class CircularPanel : Panel
         return base.MeasureOverride(availableSize);
     }
 
+    /// <summary>
+    /// Arranges the buttons in a circular fashion
+    /// </summary>
+    /// <param name="finalSize"></param>
+    /// <returns></returns>
     protected override Size ArrangeOverride(Size finalSize)
     {
         if (Children.Count == 0) return finalSize;
