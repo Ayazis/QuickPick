@@ -3,14 +3,14 @@ using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
-using UpdateChecker;
+using FileDownloader;
 
-namespace UpdateChecker;
+namespace FileDownloader;
 
 public interface IUpdateChecker
 {
     Task<bool> IsUpdateAvailableAsync(UpdateType updateType, Version currentVersion);
-    Task<Version?> GetLatestVersionAsync(UpdateType updateType);
+    Task<(Version version, string downloadUrl)> GetLatestVersionAsync(UpdateType updateType);
 }
 
 public class GitHubUpdateChecker : IUpdateChecker
@@ -26,12 +26,12 @@ public class GitHubUpdateChecker : IUpdateChecker
 
     public async Task<bool> IsUpdateAvailableAsync(UpdateType updateType, Version currentVersion)
     {
-        Version? latestVersion = await GetLatestVersionAsync(updateType);
+        Version? latestVersion = (await GetLatestVersionAsync(updateType)).version;
 
         return latestVersion == null ? false : latestVersion > currentVersion;
     }
 
-    public async Task<Version?> GetLatestVersionAsync(UpdateType updateType)
+    public async Task<(Version version, string downloadUrl)> GetLatestVersionAsync(UpdateType updateType)
     {
         using (HttpClient httpClient = new HttpClient())
         {
@@ -50,19 +50,18 @@ public class GitHubUpdateChecker : IUpdateChecker
             }
         }
 
-        return null;
+        return default;
     }
-    private static async Task<Version?> GetLatestStableRelease(HttpClient httpClient, string url)
+    private async Task<(Version version, string downloadUrl)> GetLatestStableRelease(HttpClient httpClient, string url)
     {
         url += "/latest"; // pre-releases are not included in this result
         var response = await httpClient.GetStringAsync(url);
         JObject release = JObject.Parse(response);
         string version = release["tag_name"]?.ToString() ?? string.Empty;
-        return new Version(version);
+        string assetsUrl = release["assets_url"].ToString();
+        return (new Version(version), assetsUrl);
     }
-
-
-    private static async Task<Version?> GetLatestPreRelease(HttpClient httpClient, string url)
+    private async Task<(Version version, string downloadUrl)> GetLatestPreRelease(HttpClient httpClient, string url)
     {
         var response = await httpClient.GetStringAsync(url);
         JArray releases = JArray.Parse(response);
@@ -76,10 +75,11 @@ public class GitHubUpdateChecker : IUpdateChecker
         if (sortedReleases.Count > 0)
         {
             string version = sortedReleases[0]["tag_name"].ToString();
-            return new Version(version);
+            string assetsUrl = sortedReleases[0]["assets_url"].ToString();
+            return (new Version(version), assetsUrl);
         }
         else
-            return null;
+            return default;
     }
 }
 

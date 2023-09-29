@@ -1,4 +1,4 @@
-﻿using UpdateChecker;
+﻿using FileDownloader;
 
 namespace UpdateInstaller
 {
