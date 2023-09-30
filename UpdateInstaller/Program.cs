@@ -1,4 +1,5 @@
 ﻿// See https://aka.ms/new-console-template for more information
+using ArchiveFiles;
 using UpdateDownloader;
 
 Console.WriteLine("Hello, World!");
@@ -11,10 +12,14 @@ bool result = await updateChecker.IsUpdateAvailableAsync(UpdateType.Pre_Release,
 Version version = newVersion.version;
 string downloadUrl = newVersion.downloadUrl;
 
-FileDownloader newDownloader = new (@"E:\newdownload");
+string downloadFolder = @"E:\newdownload";
+FileDownloader newDownloader = new (downloadFolder);
 newDownloader.DownloadProgressChanged += NewDownloader_DownloadProgressChanged;
 await newDownloader.DownloadFilesAsync(new Uri(downloadUrl));
+string fileName = Path.GetFileName(downloadUrl);
+string finalPath = Path.Join(downloadFolder, fileName);
 
+new ArchiveExtractor().ExtractFiles(finalPath, downloadFolder);
 
 
 void NewDownloader_DownloadProgressChanged(object? sender, System.Net.DownloadProgressChangedEventArgs e)

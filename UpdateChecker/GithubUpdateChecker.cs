@@ -63,7 +63,7 @@ public class GitHubUpdateChecker : IUpdateChecker
 	{
 		var response = await httpClient.GetStringAsync(url);
 		JArray releases = JArray.Parse(response);
-
+		
 		// Filter and sort the releases
 		var sortedReleases = releases
 			.Where(r => r["prerelease"].ToObject<bool>() == true)

@@ -2,9 +2,12 @@
 
 namespace UpdateInstaller
 {
-    public interface IUpdateInstaller
+
+
+	public interface IUpdateInstaller
     {
-        void InstallUpdate(string filePath, UpdateType updateType);
+        void InstallUpdate(string sourceFolder, string targetFolder, string pathToExecutable);
     }
 
+   
 }
