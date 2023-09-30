@@ -57,9 +57,7 @@ public class GitHubUpdateChecker : IUpdateChecker
 		url += "/latest"; // pre-releases are not included in this result
 		var response = await httpClient.GetStringAsync(url);
 		JObject release = JObject.Parse(response);
-		string version = release["tag_name"]?.ToString() ?? string.Empty;
-		string assetsUrl = release["assets_url"].ToString();
-		return (new Version(version), assetsUrl);
+		return GetVersionAndDownloadLink(release);
 	}
 	private async Task<(Version version, string downloadUrl)> GetLatestPreRelease(HttpClient httpClient, string url)
 	{
@@ -74,17 +72,21 @@ public class GitHubUpdateChecker : IUpdateChecker
 
 		if (sortedReleases.Count > 0)
 		{
-			string version = sortedReleases[0]["tag_name"].ToString();
-			string bodyUrl = sortedReleases[0]["body"].ToString();
+			return GetVersionAndDownloadLink(sortedReleases[0]);
 
-			string fileDownloadUrl = ExtractBetweenParentheses(bodyUrl);
-
-
-			return (new Version(version), fileDownloadUrl);
-			
 		}
 		else
 			return default;
+	}
+
+	private (Version version, string downloadUrl) GetVersionAndDownloadLink(JToken release)
+	{
+		string version = release["tag_name"].ToString();
+		string bodyUrl = release["body"].ToString();
+		string fileDownloadUrl = ExtractBetweenParentheses(bodyUrl);
+
+
+		return (new Version(version), fileDownloadUrl);
 	}
 
 	public string ExtractBetweenParentheses(string input)
