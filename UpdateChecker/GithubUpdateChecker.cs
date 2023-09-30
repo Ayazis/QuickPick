@@ -9,88 +9,96 @@ namespace UpdateDownloader;
 
 public interface IUpdateChecker
 {
-    Task<bool> IsUpdateAvailableAsync(UpdateType updateType, Version currentVersion);
-    Task<(Version version, string downloadUrl)> GetLatestVersionAsync(UpdateType updateType);
+	Task<bool> IsUpdateAvailableAsync(UpdateType updateType, Version currentVersion);
+	Task<(Version version, string downloadUrl)> GetLatestVersionAsync(UpdateType updateType);
 }
 
 public class GitHubUpdateChecker : IUpdateChecker
 {
-    private readonly string _repoOwner;
-    private readonly string _repoName;
+	private readonly string _repoOwner;
+	private readonly string _repoName;
 
-    public GitHubUpdateChecker(string repoOwner, string repoName)
-    {
-        _repoOwner = repoOwner;
-        _repoName = repoName;
-    }
+	public GitHubUpdateChecker(string repoOwner, string repoName)
+	{
+		_repoOwner = repoOwner;
+		_repoName = repoName;
+	}
 
-    public async Task<bool> IsUpdateAvailableAsync(UpdateType updateType, Version currentVersion)
-    {
-        Version? latestVersion = (await GetLatestVersionAsync(updateType)).version;
+	public async Task<bool> IsUpdateAvailableAsync(UpdateType updateType, Version currentVersion)
+	{
+		Version? latestVersion = (await GetLatestVersionAsync(updateType)).version;
 
-        return latestVersion == null ? false : latestVersion > currentVersion;
-    }
+		return latestVersion == null ? false : latestVersion > currentVersion;
+	}
 
-    public async Task<(Version version, string downloadUrl)> GetLatestVersionAsync(UpdateType updateType)
-    {
-        using (HttpClient httpClient = new HttpClient())
-        {
-            httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(_repoName);
-            string url = $"https://api.github.com/repos/{_repoOwner}/{_repoName}/releases";
+	public async Task<(Version version, string downloadUrl)> GetLatestVersionAsync(UpdateType updateType)
+	{
+		using (HttpClient httpClient = new HttpClient())
+		{
+			httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(_repoName);
+			string url = $"https://api.github.com/repos/{_repoOwner}/{_repoName}/releases";
 
-            if (updateType == UpdateType.Stable)
-            {
-                return await GetLatestStableRelease(httpClient, url);
-            }
+			if (updateType == UpdateType.Stable)
+			{
+				return await GetLatestStableRelease(httpClient, url);
+			}
 
-            if (updateType == UpdateType.Pre_Release)
-            {
-                return await GetLatestPreRelease(httpClient, url);
+			if (updateType == UpdateType.Pre_Release)
+			{
+				return await GetLatestPreRelease(httpClient, url);
 
-            }
-        }
+			}
+		}
 
-        return default;
-    }
-    private async Task<(Version version, string downloadUrl)> GetLatestStableRelease(HttpClient httpClient, string url)
-    {
-        url += "/latest"; // pre-releases are not included in this result
-        var response = await httpClient.GetStringAsync(url);
-        JObject release = JObject.Parse(response);
-        string version = release["tag_name"]?.ToString() ?? string.Empty;
-        string assetsUrl = release["assets_url"].ToString();
-        return (new Version(version), assetsUrl);
-    }
-    private async Task<(Version version, string downloadUrl)> GetLatestPreRelease(HttpClient httpClient, string url)
-    {
-        var response = await httpClient.GetStringAsync(url);
-        JArray releases = JArray.Parse(response);
+		return default;
+	}
+	private async Task<(Version version, string downloadUrl)> GetLatestStableRelease(HttpClient httpClient, string url)
+	{
+		url += "/latest"; // pre-releases are not included in this result
+		var response = await httpClient.GetStringAsync(url);
+		JObject release = JObject.Parse(response);
+		string version = release["tag_name"]?.ToString() ?? string.Empty;
+		string assetsUrl = release["assets_url"].ToString();
+		return (new Version(version), assetsUrl);
+	}
+	private async Task<(Version version, string downloadUrl)> GetLatestPreRelease(HttpClient httpClient, string url)
+	{
+		var response = await httpClient.GetStringAsync(url);
+		JArray releases = JArray.Parse(response);
 
-        // Filter and sort the releases
-        var sortedReleases = releases
-            .Where(r => r["prerelease"].ToObject<bool>() == true)
-            .OrderByDescending(r => r["tag_name"].ToString())
-            .ToList();
+		// Filter and sort the releases
+		var sortedReleases = releases
+			.Where(r => r["prerelease"].ToObject<bool>() == true)
+			.OrderByDescending(r => r["tag_name"].ToString())
+			.ToList();
 
-        if (sortedReleases.Count > 0)
-        {
-            string version = sortedReleases[0]["tag_name"].ToString();
-            string assetsUrl = sortedReleases[0]["assets_url"].ToString();
+		if (sortedReleases.Count > 0)
+		{
+			string version = sortedReleases[0]["tag_name"].ToString();
+			string bodyUrl = sortedReleases[0]["body"].ToString();
 
-			var response2 = await httpClient.GetStringAsync(assetsUrl);
-			JArray assets = JArray.Parse(response2);
-
-            return (new Version(version),assets[0]["browser_download_url"].ToString());
-			// sent request to assets url, get specific donwnload url to zipped asset.
-
-			// example: 
-			//"browser_download_url": "https://github.com/Ayazis/QuickPick/releases/download/1.0.0/NUnit3.TestAdapter.pdb"
+			string fileDownloadUrl = ExtractBetweenParentheses(bodyUrl);
 
 
-			return (new Version(version), assetsUrl);
-        }
-        else
-            return default;
-    }
+			return (new Version(version), fileDownloadUrl);
+			
+		}
+		else
+			return default;
+	}
+
+	public string ExtractBetweenParentheses(string input)
+	{
+		int startIndex = input.IndexOf('(') + 1;
+		int endIndex = input.IndexOf(')');
+
+		if (startIndex != -1 && endIndex != -1 && endIndex > startIndex)
+		{
+			return input.Substring(startIndex, endIndex - startIndex);
+		}
+
+		return null;
+	}
+
 }
 

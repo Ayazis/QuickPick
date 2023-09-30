@@ -19,7 +19,7 @@ await newDownloader.DownloadFilesAsync(new Uri(downloadUrl));
 
 void NewDownloader_DownloadProgressChanged(object? sender, System.Net.DownloadProgressChangedEventArgs e)
 {
-    Console.WriteLine(e.ProgressPercentage);
+	Console.WriteLine(e.ProgressPercentage);
 }
 
 Console.Read();
