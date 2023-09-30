@@ -6,12 +6,12 @@ Console.WriteLine("Hello, World!");
 var updateChecker = new GitHubUpdateChecker("Ayazis", "QuickPick");
 
 bool result = await updateChecker.IsUpdateAvailableAsync(UpdateType.Pre_Release, new Version("0.1.1"));
-var newVersion = await updateChecker.GetLatestVersionAsync(UpdateType.Pre_Release);
+(Version version, string downloadUrl) newVersion = await updateChecker.GetLatestVersionAsync(UpdateType.Pre_Release);
 
-var version = newVersion.version;
-var downloadUrl = newVersion.downloadUrl;
+Version version = newVersion.version;
+string downloadUrl = newVersion.downloadUrl;
 
-var newDownloader = new FileDownloader(@"E:\newdownload");
+FileDownloader newDownloader = new (@"E:\newdownload");
 newDownloader.DownloadProgressChanged += NewDownloader_DownloadProgressChanged;
 await newDownloader.DownloadFilesAsync(new Uri(downloadUrl));
 
