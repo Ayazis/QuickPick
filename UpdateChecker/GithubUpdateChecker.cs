@@ -77,11 +77,17 @@ public class GitHubUpdateChecker : IUpdateChecker
             string version = sortedReleases[0]["tag_name"].ToString();
             string assetsUrl = sortedReleases[0]["assets_url"].ToString();
 
+			var response2 = await httpClient.GetStringAsync(assetsUrl);
+			JArray assets = JArray.Parse(response2);
 
-            // sent request to assets url, get specific donwnload url to zipped asset.
+            return (new Version(version),assets[0]["browser_download_url"].ToString());
+			// sent request to assets url, get specific donwnload url to zipped asset.
+
+			// example: 
+			//"browser_download_url": "https://github.com/Ayazis/QuickPick/releases/download/1.0.0/NUnit3.TestAdapter.pdb"
 
 
-            return (new Version(version), assetsUrl);
+			return (new Version(version), assetsUrl);
         }
         else
             return default;
