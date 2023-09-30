@@ -3,9 +3,9 @@ using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
-using FileDownloader;
+using UpdateDownloader;
 
-namespace FileDownloader;
+namespace UpdateDownloader;
 
 public interface IUpdateChecker
 {
@@ -76,6 +76,11 @@ public class GitHubUpdateChecker : IUpdateChecker
         {
             string version = sortedReleases[0]["tag_name"].ToString();
             string assetsUrl = sortedReleases[0]["assets_url"].ToString();
+
+
+            // sent request to assets url, get specific donwnload url to zipped asset.
+
+
             return (new Version(version), assetsUrl);
         }
         else

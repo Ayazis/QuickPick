@@ -1,4 +1,4 @@
-﻿namespace FileDownloader;
+﻿namespace UpdateDownloader;
 
 public enum UpdateType
 {

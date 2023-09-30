@@ -1,5 +1,5 @@
 ﻿// See https://aka.ms/new-console-template for more information
-using FileDownloader;
+using UpdateDownloader;
 
 Console.WriteLine("Hello, World!");
 
@@ -10,5 +10,16 @@ var newVersion = await updateChecker.GetLatestVersionAsync(UpdateType.Pre_Releas
 
 var version = newVersion.version;
 var downloadUrl = newVersion.downloadUrl;
+
+var newDownloader = new FileDownloader(@"E:\newdownload");
+newDownloader.DownloadProgressChanged += NewDownloader_DownloadProgressChanged;
+await newDownloader.DownloadFilesAsync(new Uri(downloadUrl));
+
+
+
+void NewDownloader_DownloadProgressChanged(object? sender, System.Net.DownloadProgressChangedEventArgs e)
+{
+    Console.WriteLine(e.ProgressPercentage);
+}
 
 Console.Read();

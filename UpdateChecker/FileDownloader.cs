@@ -1,19 +1,34 @@
 ﻿using System;
 using System.Net;
 
-namespace FileDownloader;
+namespace UpdateDownloader;
 
 public interface IFileDownloader
 {
-    Task DownloadFilesAsync(Uri source, string destination);
+    Task DownloadFilesAsync(Uri source);
     event EventHandler<DownloadProgressChangedEventArgs> DownloadProgressChanged;
 }
 
 public class FileDownloader : IFileDownloader
 {
-    public event EventHandler<DownloadProgressChangedEventArgs> DownloadProgressChanged;
+	private string _destinationFolder;
 
-    public Task DownloadFilesAsync(Uri source, string destination)
+	public FileDownloader(string destinationFolder)
+	{
+		this._destinationFolder = destinationFolder;
+        CheckFolder();
+	}
+	void CheckFolder()
+	{
+		if(!Directory.Exists(this._destinationFolder)) 
+        {
+            Directory.CreateDirectory(this._destinationFolder); 
+        }
+	}
+
+	public event EventHandler<DownloadProgressChangedEventArgs> DownloadProgressChanged;
+
+    public Task DownloadFilesAsync(Uri source)
     {
         // Declare the TaskCompletionSource
         TaskCompletionSource<object> tcs = new TaskCompletionSource<object>();
@@ -42,6 +57,9 @@ public class FileDownloader : IFileDownloader
                 tcs.SetResult(null); // no need to do anything with the result. It is for awaiting the async call only.
             }
         };
+
+        string fileName = Path.GetFileName(source.AbsolutePath);
+        string destination = Path.Join(this._destinationFolder, fileName);
 
         // Start the download
         webClient.DownloadFileAsync(source, destination); // returns void, not Task. Therefor not awaitable.
