@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-
-namespace UpdateDownloader;
+﻿namespace UpdateDownloader;
 
 public enum eUpdateType
 {
