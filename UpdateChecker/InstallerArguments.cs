@@ -7,15 +7,15 @@ public readonly struct InstallerArguments
 	public string TargetFolder { get; }
 	public int ProcessIdToKill { get; }
 	public string PathToExecutable { get; }
-	public string[] TargetArguments { get; }
+	public string[] Arguments { get; }
 
-	private InstallerArguments(string sourceFolder, string targetFolder, int processIdToKill, string pathToExecutable, string[] arguments)
+	public InstallerArguments(string sourceFolder, string targetFolder, int processIdToKill, string pathToExecutable, string[] arguments)
 	{
-		SourceFolder = sourceFolder;
-		TargetFolder = targetFolder;
+		SourceFolder = sourceFolder ?? throw new ArgumentNullException(nameof(sourceFolder));
+		TargetFolder = targetFolder ?? throw new ArgumentNullException(nameof(targetFolder));
 		ProcessIdToKill = processIdToKill;
-		PathToExecutable = pathToExecutable;
-		TargetArguments = arguments;
+		PathToExecutable = pathToExecutable ?? throw new ArgumentNullException(nameof(pathToExecutable));
+		Arguments = arguments ?? Array.Empty<string>();
 	}
 
 	public static InstallerArguments FromStringArray(string[] args)
@@ -36,7 +36,13 @@ public readonly struct InstallerArguments
 		}
 
 		string[] additionalArgs = args.Skip(4).ToArray();
-
 		return new InstallerArguments(args[0], args[1], processIdToKill, args[3], additionalArgs);
+	}
+
+	public override string ToString()
+	{
+		string basicArgs = $"{SourceFolder} {TargetFolder} {ProcessIdToKill} {PathToExecutable}";
+		string additionalArgs = Arguments.Length > 0 ? string.Join(" ", Arguments.Select(arg => $"\"{arg}\"")) : string.Empty;
+		return string.IsNullOrWhiteSpace(additionalArgs) ? basicArgs : $"{basicArgs} {additionalArgs}";
 	}
 }
