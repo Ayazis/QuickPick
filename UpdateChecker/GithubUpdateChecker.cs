@@ -9,8 +9,8 @@ namespace UpdateDownloader;
 
 public interface IUpdateChecker
 {
-	Task<bool> IsUpdateAvailableAsync(UpdateType updateType, Version currentVersion);
-	Task<(Version version, string downloadUrl)> GetLatestVersionAsync(UpdateType updateType);
+	Task<bool> IsUpdateAvailableAsync(eUpdateType updateType, Version currentVersion);
+	Task<(Version version, string downloadUrl)> GetLatestVersionAsync(eUpdateType updateType);
 }
 
 public class GitHubUpdateChecker : IUpdateChecker
@@ -24,26 +24,26 @@ public class GitHubUpdateChecker : IUpdateChecker
 		_repoName = repoName;
 	}
 
-	public async Task<bool> IsUpdateAvailableAsync(UpdateType updateType, Version currentVersion)
+	public async Task<bool> IsUpdateAvailableAsync(eUpdateType updateType, Version currentVersion)
 	{
 		Version? latestVersion = (await GetLatestVersionAsync(updateType)).version;
 
 		return latestVersion == null ? false : latestVersion > currentVersion;
 	}
 
-	public async Task<(Version version, string downloadUrl)> GetLatestVersionAsync(UpdateType updateType)
+	public async Task<(Version version, string downloadUrl)> GetLatestVersionAsync(eUpdateType updateType)
 	{
 		using (HttpClient httpClient = new HttpClient())
 		{
 			httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(_repoName);
 			string url = $"https://api.github.com/repos/{_repoOwner}/{_repoName}/releases";
 
-			if (updateType == UpdateType.Stable)
+			if (updateType == eUpdateType.Stable)
 			{
 				return await GetLatestStableRelease(httpClient, url);
 			}
 
-			if (updateType == UpdateType.Pre_Release)
+			if (updateType == eUpdateType.Pre_Release)
 			{
 				return await GetLatestPreRelease(httpClient, url);
 
