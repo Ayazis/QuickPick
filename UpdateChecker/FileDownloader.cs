@@ -1,5 +1,4 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 
 namespace UpdateDownloader;
 
@@ -16,9 +15,9 @@ public class FileDownloader : IFileDownloader
 	public FileDownloader(string destinationFolder)
 	{
 		this._destinationFolder = destinationFolder;
-        CheckFolder();
+        CreateDestinationFolderIfNotExists();
 	}
-	void CheckFolder()
+	void CreateDestinationFolderIfNotExists()
 	{
 		if(!Directory.Exists(this._destinationFolder)) 
         {

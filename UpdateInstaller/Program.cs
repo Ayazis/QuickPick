@@ -1,13 +1,20 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using ArchiveFiles;
 using UpdateDownloader;
-
+using UpdateInstaller;
 
 public class Program
 {
 	public static void Main(string[] args)
 	{
+		// todo
+		// Elevation check
+		// some clever error handling.
 		InstallerArguments arguments = InstallerArguments.FromStringArray(args);
+		UpdateManager updater = new UpdateManager(new ApplicationCloser(), new ArchiveExtractor());
+		updater.CloseApplication(arguments.ProcessIdToKill);
+		updater.ExtractUpdateFile(arguments.SourceFolder, arguments.TargetFolder);
+		updater.LaunchUpdatedApplication(arguments.PathToExecutable);
 
 	}
 

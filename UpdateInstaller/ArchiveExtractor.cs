@@ -5,6 +5,11 @@ using System.Security.AccessControl;
 using System.Security.Principal;
 
 namespace ArchiveFiles;
+public interface IArchiveExtractor
+{
+	void ExtractFiles(string sourceFile, string targetFolder);
+}
+
 public class ArchiveExtractor : IArchiveExtractor
 {
 	public void ExtractFiles(string sourceFile, string targetFolder)
@@ -89,7 +94,3 @@ public class ArchiveExtractor : IArchiveExtractor
 
 }
 
-public interface IArchiveExtractor
-{
-	void ExtractFiles(string sourceFile, string targetFolder);
-}

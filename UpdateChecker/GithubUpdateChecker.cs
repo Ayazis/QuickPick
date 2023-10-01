@@ -1,9 +1,4 @@
-﻿using System;
-using System.Net.Http;
-using System.Reflection;
-using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
-using UpdateDownloader;
+﻿using Newtonsoft.Json.Linq;
 
 namespace UpdateDownloader;
 
@@ -20,13 +15,17 @@ public class GitHubUpdateChecker : IUpdateChecker
 
 	public GitHubUpdateChecker(string repoOwner, string repoName)
 	{
+		if (string.IsNullOrWhiteSpace(repoOwner) || string.IsNullOrWhiteSpace(repoName))
+			throw new ArgumentNullException("repoOwner and repoName cannot be null or empty.");
+
 		_repoOwner = repoOwner;
 		_repoName = repoName;
 	}
 
 	public async Task<bool> IsUpdateAvailableAsync(eUpdateType updateType, Version currentVersion)
 	{
-		Version? latestVersion = (await GetLatestVersionAsync(updateType)).version;
+		(Version version, string downloadUrl) result = await GetLatestVersionAsync(updateType);
+		Version? latestVersion = result.version;
 
 		return latestVersion == null ? false : latestVersion > currentVersion;
 	}
@@ -83,13 +82,13 @@ public class GitHubUpdateChecker : IUpdateChecker
 	{
 		string version = release["tag_name"].ToString();
 		string bodyUrl = release["body"].ToString();
-		string fileDownloadUrl = ExtractBetweenParentheses(bodyUrl);
+		string fileDownloadUrl = GetStringBetweenParentheses(bodyUrl);
 
 
 		return (new Version(version), fileDownloadUrl);
 	}
 
-	public string ExtractBetweenParentheses(string input)
+	private string GetStringBetweenParentheses(string input)
 	{
 		int startIndex = input.IndexOf('(') + 1;
 		int endIndex = input.IndexOf(')');
@@ -99,7 +98,7 @@ public class GitHubUpdateChecker : IUpdateChecker
 			return input.Substring(startIndex, endIndex - startIndex);
 		}
 
-		return null;
+		return input;
 	}
 
 }
