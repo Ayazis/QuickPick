@@ -20,21 +20,26 @@ public class Program
 	async Task doSomeStuffAsync()
 	{
 		var updateChecker = new GitHubUpdateChecker("Ayazis", "QuickPick");
-
 		bool result = await updateChecker.IsUpdateAvailableAsync(eUpdateType.Pre_Release, new Version("0.1.1"));
 		(Version version, string downloadUrl) newVersion = await updateChecker.GetLatestVersionAsync(eUpdateType.Pre_Release);
-
 		Version version = newVersion.version;
 		string downloadUrl = newVersion.downloadUrl;
-
 		string downloadFolder = @"E:\newdownload";
 		FileDownloader newDownloader = new(downloadFolder);
 		newDownloader.DownloadProgressChanged += NewDownloader_DownloadProgressChanged;
-		await newDownloader.DownloadFilesAsync(new Uri(downloadUrl));
 		string fileName = Path.GetFileName(downloadUrl);
 		string finalPath = Path.Join(downloadFolder, fileName);
+		await newDownloader.DownloadFilesAsync(new Uri(downloadUrl));// todo return downloaded filepath
 
-		new ArchiveExtractor().ExtractFiles(finalPath, downloadFolder);
+		string targetfolder = "";
+		InstallerArguments arguments = new InstallerArguments(finalPath, targetfolder, 00, "",null );
+		UpdateManager updater = new UpdateManager(new ApplicationCloser(), new ArchiveExtractor());
+		updater.CloseApplication(arguments.ProcessIdToKill);
+		updater.ExtractUpdateFile(arguments.SourceFolder, arguments.TargetFolder);
+		updater.LaunchUpdatedApplication(arguments.PathToExecutable, arguments.TargetArguments);
+
+
+		
 
 
 		void NewDownloader_DownloadProgressChanged(object? sender, System.Net.DownloadProgressChangedEventArgs e)
