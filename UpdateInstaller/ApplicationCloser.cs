@@ -45,7 +45,7 @@ public class ApplicationCloser : IApplicationCloser
 			if (!process.WaitForExit(500))  // Additional wait for confirmation
 			{
 				throw new InvalidOperationException("Failed to close the application within the allotted time.");
-			}6
+			}
 
 			return true;
 		}

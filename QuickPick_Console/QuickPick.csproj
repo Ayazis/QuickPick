@@ -6,10 +6,13 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>disable</Nullable>
+	  <language>latest</language>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\QuickPickNet6\QuickPick.UI.csproj" />
+    <ProjectReference Include="..\UpdateChecker\UpdateDownloader.csproj" />
+    <ProjectReference Include="..\UpdateInstaller\UpdateInstaller.csproj" />
     <ProjectReference Include="..\Utilities\QuickPick.Utilities.csproj" />
   </ItemGroup>
 

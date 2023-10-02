@@ -1,90 +1,96 @@
 ﻿using System.Windows.Forms;
 using Utilities.VirtualDesktop;
 using Ayazis.Utilities;
+using System.Net;
 using Ayazis.KeyHooks;
 using Utilities.Mouse_and_Keyboard;
+
+using System.Reflection;
+
 namespace QuickPick;
 
 public class Program
 {
-    static TrayIconManager _trayIconManager = new TrayIconManager();
-    static DesktopTracker _desktopTracker;
-    static ClickWindow _clickwindow = new ClickWindow();
-    static MouseAndKeysCapture _inputCapture;
-    static KeyInputHandler _keyInputHandler;
-    static IntPtr _quickPickMainWindowHandle;
+	static TrayIconManager _trayIconManager = new TrayIconManager();
+	static DesktopTracker _desktopTracker;
+	static ClickWindow _clickwindow = new ClickWindow();
+	static MouseAndKeysCapture _inputCapture;
+	static KeyInputHandler _keyInputHandler;
+	static IntPtr _quickPickMainWindowHandle;
 
-    [STAThread]
-    static void Main(string[] args)
-    {
-        try
-        {   
-            _trayIconManager.CreateTrayIcon();        
+	[STAThread]
+	static async Task Main(string[] args)
+	{
+		try
+		{
+			var updater = new Updater();
+			bool updateIsAvailable = await updater.IsUpdateAvailableAsync();
+			//if (updateIsAvailable)
+				await updater.InstallUpdateAsync();
 
-            // On every desktop change, the current active windows for that desktop are retrieved.
-            StartDesktopTracking();
+			_trayIconManager.CreateTrayIcon();
 
-            // Hook into Keyboard and Mouse to listen for User set Keycombination.
-            StartListeningToKeyboardAndMouse();
+			// On every desktop change, the current active windows for that desktop are retrieved.
+			StartDesktopTracking();
 
-            SubscribeToExitEvent_ToHandleCleanup();
+			// Hook into Keyboard and Mouse to listen for User set Keycombination.
+			StartListeningToKeyboardAndMouse();
 
-            RunApplicationIndefinetely();
+			SubscribeToExitEvent_ToHandleCleanup();
 
-        }
-        catch (Exception ex)
-        {
-            Logs.Logger?.Log(ex);
-        }
-    }
+			RunApplicationIndefinetely();
 
+		}
+		catch (Exception ex)
+		{
+			Logs.Logger?.Log(ex);
+		}
+	}
 
+	private static void RunApplicationIndefinetely()
+	{
+		using (var context = new ApplicationContext())
+		{
+			Application.Run(context);
+		}
+	}
 
+	private static void SubscribeToExitEvent_ToHandleCleanup()
+	{
+		AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
+	}
 
-    private static void RunApplicationIndefinetely()
-    {
-        using (var context = new ApplicationContext())
-        {
-            System.Windows.Forms.Application.Run(context);
-        }
-    }
+	private static void StartListeningToKeyboardAndMouse()
+	{
+		List<Keys> keyCombination = new List<Keys> { Keys.LControlKey, Keys.RButton };
+		_keyInputHandler = new KeyInputHandler(keyCombination);
+		_inputCapture = new MouseAndKeysCapture(_keyInputHandler);
+		_inputCapture.HookIntoMouseAndKeyBoard();
 
-    private static void SubscribeToExitEvent_ToHandleCleanup()
-    {
-        AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
-    }
+		_keyInputHandler.KeyCombinationHit += _keyInputHandler_KeyCombinationHit;
+	}
 
-    private static void StartListeningToKeyboardAndMouse()
-    {
-        List<Keys> keyCombination = new List<Keys> { Keys.LControlKey, Keys.RButton };
-        _keyInputHandler = new KeyInputHandler(keyCombination);
-        _inputCapture = new MouseAndKeysCapture(_keyInputHandler);
-        _inputCapture.HookIntoMouseAndKeyBoard();
+	private static void StartDesktopTracking()
+	{
+		_desktopTracker = new DesktopTracker();
+		_desktopTracker.DesktopChanged += _desktopTracker_DesktopChanged;
+		_desktopTracker.StartTracking();
+	}
 
-        _keyInputHandler.KeyCombinationHit += _keyInputHandler_KeyCombinationHit;
-    }
+	private static void _keyInputHandler_KeyCombinationHit()
+	{
+		Task.Run(() => { _clickwindow.UpdateTaskbarShortCuts(); });
+		_clickwindow.ShowWindow();
+	}
 
-    private static void StartDesktopTracking()
-    {
-        _desktopTracker = new DesktopTracker();
-        _desktopTracker.DesktopChanged += _desktopTracker_DesktopChanged;
-        _desktopTracker.StartTracking();
-    }
+	static void _desktopTracker_DesktopChanged(object? sender, EventArgs e)
+	{
+		_clickwindow.UpdateTaskbarShortCuts();
 
-    private static void _keyInputHandler_KeyCombinationHit()
-    {
-        Task.Run(() => { _clickwindow.UpdateTaskbarShortCuts(); });
-        _clickwindow.ShowWindow();
-    }
-
-    static void _desktopTracker_DesktopChanged(object? sender, EventArgs e)
-    {
-        _clickwindow.UpdateTaskbarShortCuts();
-
-    }
-    static void CurrentDomain_ProcessExit(object? sender, EventArgs e)
-    {
-        _desktopTracker.Dispose();
-        _trayIconManager.RemoveTrayIcon();
-    }
+	}
+	static void CurrentDomain_ProcessExit(object? sender, EventArgs e)
+	{
+		_desktopTracker.Dispose();
+		_trayIconManager.RemoveTrayIcon();
+	}
 }
