@@ -1,12 +1,8 @@
 ﻿using System.Windows.Forms;
 using Utilities.VirtualDesktop;
 using Ayazis.Utilities;
-using System.Net;
 using Ayazis.KeyHooks;
 using Utilities.Mouse_and_Keyboard;
-
-using System.Reflection;
-
 namespace QuickPick;
 
 public class Program
@@ -19,14 +15,14 @@ public class Program
 	static IntPtr _quickPickMainWindowHandle;
 
 	[STAThread]
-	static async Task Main(string[] args)
+	static void Main(string[] args)
 	{
 		try
-		{
-			var updater = new Updater();
-			bool updateIsAvailable = await updater.IsUpdateAvailableAsync();
-			//if (updateIsAvailable)
-				await updater.InstallUpdateAsync();
+		{			
+			Updater updater = new();			
+			bool updateIsAvailable = updater.IsUpdateAvailableAsync().GetAwaiter().GetResult();
+			if (updateIsAvailable)
+				updater.InstallUpdateAsync().GetAwaiter().GetResult();
 
 			_trayIconManager.CreateTrayIcon();
 

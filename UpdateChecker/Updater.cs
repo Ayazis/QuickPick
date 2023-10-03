@@ -23,7 +23,8 @@ public class Updater
 
 		string pathToCurrentExecutable = Process.GetCurrentProcess().MainModule.FileName;
 		string currentFolder = Path.GetDirectoryName(pathToCurrentExecutable);
-		string downloadFolder = Path.Join(currentFolder, "Update");
+		string appDataPathFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+		string downloadFolder = Path.Join(appDataPathFolder, "QuickPickUpdate");
 		FileDownloader newDownloader = new(downloadFolder);
 		newDownloader.DownloadProgressChanged += NewDownloader_DownloadProgressChanged;
 		string fileName = Path.GetFileName(downloadUrl);
@@ -35,11 +36,10 @@ public class Updater
 		InstallerArguments arguments = new InstallerArguments(updateZipPath, targetfolder, currentProcessId, pathToCurrentExecutable, null);
 	}
 
-	static void NewDownloader_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+	public void NewDownloader_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
 	{
-	//	throw new NotImplementedException();
+		DownloadProgressChanged?.Invoke(this, e);
 	}
 
-
-
+	public event EventHandler<DownloadProgressChangedEventArgs> DownloadProgressChanged;
 }

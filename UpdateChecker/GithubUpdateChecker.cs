@@ -34,6 +34,7 @@ public class GitHubUpdateChecker : IUpdateChecker
 	{
 		using (HttpClient httpClient = new HttpClient())
 		{
+			// Todo AuthorisationHeader for preventing time-outs
 			httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(_repoName);
 			string url = $"https://api.github.com/repos/{_repoOwner}/{_repoName}/releases";
 
@@ -45,10 +46,8 @@ public class GitHubUpdateChecker : IUpdateChecker
 			if (updateType == eUpdateType.Pre_Release)
 			{
 				return await GetLatestPreRelease(httpClient, url);
-
 			}
 		}
-
 		return default;
 	}
 	private async Task<(Version version, string downloadUrl)> GetLatestStableRelease(HttpClient httpClient, string url)

@@ -10,10 +10,27 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="StartWindow.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Include="StartWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\QuickPickNet6\QuickPick.UI.csproj" />
     <ProjectReference Include="..\UpdateChecker\UpdateDownloader.csproj" />
     <ProjectReference Include="..\UpdateInstaller\UpdateInstaller.csproj" />
     <ProjectReference Include="..\Utilities\QuickPick.Utilities.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="StartWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
 
 </Project>
