@@ -21,12 +21,16 @@ public class Program
 	{
 		try
 		{
-			new StartWindow().Show();
+			Updater updater = new Updater(UpdateDownloader.eUpdateType.Pre_Release);
+			if(updater.IsUpdateAvailableAsync().GetAwaiter().GetResult())
+			{
+				var startWindow = new StartWindow();
+				startWindow.Show();
+				Task.Run(() => { startWindow.StartUpdateAsync(updater); }).GetAwaiter().GetResult();	
 
-			Updater updater = new();			
-			bool updateIsAvailable = updater.IsUpdateAvailableAsync().GetAwaiter().GetResult();
-			if (updateIsAvailable)
-				updater.InstallUpdateAsync().GetAwaiter().GetResult();
+			}
+
+
 
 			_trayIconManager.CreateTrayIcon();
 

@@ -39,6 +39,18 @@ public readonly struct InstallerArguments
 		return new InstallerArguments(args[0], args[1], processIdToKill, args[3], additionalArgs);
 	}
 
+	public string[] ToStringArray()
+	{
+		return new string[5]
+		{
+			SourceFolder,
+			TargetFolder,
+			ProcessIdToKill.ToString(),
+			PathToExecutable,
+			string.Join(' ',TargetArguments)
+		};
+	}
+
 	public override string ToString()
 	{
 		string basicArgs = $"{SourceFolder} {TargetFolder} {ProcessIdToKill} {PathToExecutable}";
