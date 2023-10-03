@@ -73,7 +73,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Update="Views\StartWindow.xaml.cs">
+	  <Compile Update="StartWindow.xaml.cs">
 	    <SubType>Code</SubType>
 	  </Compile>
 	</ItemGroup>

@@ -3,6 +3,8 @@ using Utilities.VirtualDesktop;
 using Ayazis.Utilities;
 using Ayazis.KeyHooks;
 using Utilities.Mouse_and_Keyboard;
+using QuickPick.UI;
+
 namespace QuickPick;
 
 public class Program
@@ -18,7 +20,9 @@ public class Program
 	static void Main(string[] args)
 	{
 		try
-		{			
+		{
+			new StartWindow().Show();
+
 			Updater updater = new();			
 			bool updateIsAvailable = updater.IsUpdateAvailableAsync().GetAwaiter().GetResult();
 			if (updateIsAvailable)
