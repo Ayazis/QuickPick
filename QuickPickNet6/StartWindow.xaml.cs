@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
-using UpdateDownloader;
+using Updates;
 
 namespace QuickPick.UI;
 /// <summary>
@@ -10,55 +10,69 @@ namespace QuickPick.UI;
 /// </summary>
 public partial class StartWindow : Window
 {
-	Version _newVersion;
-	Updater _updater;
-	public StartWindow()
-	{
-		InitializeComponent();
-	}
+    Version _newVersion;
+    UpdateDownloader _updater;
+    public StartWindow()
+    {
+        InitializeComponent();
+    }
 
-	public async Task StartUpdateAsync(Updater updater)
-	{
-		_updater = updater;
-		_newVersion = await _updater.GetLatestVersionAsync();
+    public async Task<string> StartDownloadAsync(UpdateDownloader updater)
+    {
+        _updater = updater;
+        _newVersion = await _updater.GetLatestVersionAsync();
 
-		UpdateUI(() =>
-		{
-			StatusTextBlock.Text = $"Downloading version {_newVersion}...";
-			DownloadProgressBar.Visibility = Visibility.Visible;
-		});
+        UpdateUI(() =>
+        {
+            StatusTextBlock.Text = $"Downloading version {_newVersion}...";
+            DownloadProgressBar.Visibility = Visibility.Visible;
+        });
 
-		_updater.DownloadProgressChanged += Updater_DownloadProgressChanged;
-		_updater.DownloadCompleted += _updater_DownloadCompleted;
-		await _updater.DownloadAndInstallUpdateAsync();
+        _updater.DownloadProgressChanged += Updater_DownloadProgressChanged;
+        _updater.DownloadCompleted += _updater_DownloadCompleted;
+        string downloadResult = await _updater.DownloadUpdateAsync();
 
-		await Task.Delay(500);
-		UpdateUI(Close);
-	}
-	private void Updater_DownloadProgressChanged(object sender, System.Net.DownloadProgressChangedEventArgs e)
-	{
-		int newPercentage = (int)(e.BytesReceived / e.TotalBytesToReceive * 100);
-		//throw new NotImplementedException();
-	}
-	private void _updater_DownloadCompleted(object sender, EventArgs e)
-	{
+        await Task.Delay(200); // give time for the ui to display 100%.
+        UpdateUI(Close);
 
-		_updater.DownloadCompleted -= _updater_DownloadCompleted;
-		_updater.DownloadProgressChanged -= Updater_DownloadProgressChanged;
+        return downloadResult;
+    }
+    private void Updater_DownloadProgressChanged(object sender, System.Net.DownloadProgressChangedEventArgs e)
+    {
+        int newPercentage = (int)(e.BytesReceived / e.TotalBytesToReceive * 100);
 
-		UpdateUI(() =>
-		{
-			DownloadProgressBar.Value = 100;
-			StatusTextBlock.Text = $"Installing version {_newVersion}...";
-		});
-	}
+        UpdateUI(() =>
+        {
+            DownloadProgressBar.Value = newPercentage;
+        });
+    }
+    private void _updater_DownloadCompleted(object sender, EventArgs e)
+    {
 
-	public void UpdateUI(Action action)
-	{
-		Dispatcher.Invoke(() =>
-		{
-			action();
-		});
-	}
+        _updater.DownloadCompleted -= _updater_DownloadCompleted;
+        _updater.DownloadProgressChanged -= Updater_DownloadProgressChanged;
+
+        UpdateUI(() =>
+        {
+            DownloadProgressBar.Value = 100;
+            StatusTextBlock.Text = $"Installing version {_newVersion}...";
+        });
+    }
+
+    public void UpdateUI(Action action)
+    {
+        try
+        {
+            Dispatcher.Invoke(() =>
+          {
+              action();
+          });
+        }
+        catch (Exception)
+        {
+
+            throw;
+        }
+    }
 }
 
