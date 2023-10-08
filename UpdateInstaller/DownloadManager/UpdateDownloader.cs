@@ -7,7 +7,18 @@ using UpdateInstaller.Updates;
 using UpdateInstaller;
 
 namespace QuickPick;
-public class UpdateDownloader
+
+public interface IUpdateDownloader
+{
+    event EventHandler DownloadCompleted;
+    event EventHandler<DownloadProgressChangedEventArgs> DownloadProgressChanged;
+
+    Task<Version> GetLatestVersionAsync();
+    Task<bool> IsUpdateAvailableAsync();
+    void NewDownloader_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e);
+    Task<string> DownloadUpdateAsync();
+}
+public class UpdateDownloader : IUpdateDownloader
 {
     IUpdateChecker _updateChecker;
     eUpdateType _updateType;
@@ -20,9 +31,9 @@ public class UpdateDownloader
     {
         Assembly assembly = Assembly.GetExecutingAssembly();
         Version currentVersion = assembly.GetName().Version;
-    #if DEBUG
+#if DEBUG
         currentVersion = new Version("0.0.0");
-    #endif
+#endif
 
         bool updateAvailable = await _updateChecker.IsUpdateAvailableAsync(_updateType, currentVersion);
         return updateAvailable;
@@ -38,12 +49,12 @@ public class UpdateDownloader
     /// Downloads file and returns final path to file.
     /// </summary>
     /// <returns></returns>
-    public async Task<string> StartDownloadUpdateAsync()
+    public async Task<string> DownloadUpdateAsync()
     {
         (Version version, string downloadUrl) update = await _updateChecker.GetLatestVersionAsync(_updateType);
         Version newVersion = update.version;
         string downloadUrl = update.downloadUrl;
-  
+
         string appDataPathFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
         string downloadFolder = Path.Join(appDataPathFolder, "QuickPickUpdate");
         FileDownloader newDownloader = new(downloadFolder);

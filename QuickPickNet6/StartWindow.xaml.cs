@@ -20,8 +20,9 @@ public partial class StartWindow : Window
     {
         UpdateUI(() =>
         {
-            StatusTextBlock.Text = $"Hold for a minute while we download and install the latest verion for you...";
-            DownloadProgressBar.Visibility = Visibility.Visible;
+            StatusTextBlock.TextAlignment = TextAlignment.Center;
+            StatusTextBlock.Text = $"Hold for a minute while we \ndownload and install the latest verion for you...";
+            DownloadProgressBar.Visibility = Visibility.Collapsed; // can be used when UI updating is fixed.
         });
     }
     public void Updater_DownloadProgressChanged(object sender, System.Net.DownloadProgressChangedEventArgs e)

@@ -26,45 +26,7 @@ public class Program
     {
         try
         {
-            var updateChecker = new GithubUpdateChecker("Ayazis", "QuickPick");
-            Assembly assembly = Assembly.GetExecutingAssembly();
-            Version currentVersion = assembly.GetName().Version;
-#if DEBUG
-            currentVersion = new Version("0.0.0");
-#endif
-
-            bool updateAvailable = updateChecker.IsUpdateAvailableAsync(eUpdateType.Pre_Release, currentVersion).Result;
-
-            if (updateAvailable)
-            {
-                // create updater and subscribe windowupdate to event
-                // show window
-                // start update
-                // RunApp
-                // download done? Run UpdateInstallerApp
-
-                UpdateDownloader updater = new UpdateDownloader(eUpdateType.Pre_Release, updateChecker);
-                var updateWindow = new StartWindow();
-                //updater.DownloadProgressChanged += updateWindow.Updater_DownloadProgressChanged;
-                //updater.DownloadCompleted += updateWindow._updater_DownloadCompleted;
-                updateWindow.Show();
-                var downloadedFile = updater.StartDownloadUpdateAsync().Result;
-                // .Result blocks the UI Thread so we cannot update it,
-                // fix by calling an event with the url when it is done
-
-                string pathToCurrentExecutable = Process.GetCurrentProcess().MainModule.FileName;
-                string targetDirectory = Path.GetDirectoryName(downloadedFile);
-                string targetFolderName = Path.GetFileNameWithoutExtension(downloadedFile) + "\\";
-                string extractionFolder = Path.Join(targetDirectory, targetFolderName);
-
-                if (!Directory.Exists(extractionFolder))
-                    Directory.CreateDirectory(extractionFolder);
-
-                new ArchiveExtractor().ExtractFiles(downloadedFile, extractionFolder);
-
-            }
-
-
+            CheckInputArguments(args);
 
             _trayIconManager.CreateTrayIcon();
 
@@ -85,6 +47,43 @@ public class Program
         }
     }
 
+    private static void CheckInputArguments(string[] args)
+    {
+        InstallerArguments arguments = TryGetInstallerArguments(args);
+        if (arguments.Equals(default))
+        {
+            // check for update
+
+            var updateChecker = new GithubUpdateChecker("Ayazis", "QuickPick");
+            var updateDownloader = new UpdateDownloader(eUpdateType.Pre_Release, updateChecker);
+            var updateManager = new UpdateDownloadManager(updateDownloader);
+            bool UpdateIsAvailable = updateManager.CheckIfUpdateIsAvailableAsync().Result;
+            if (UpdateIsAvailable)
+            {
+                new StartWindow().Show();
+                InstallerParams installerParams = updateManager.DownloadUpdateAndGetInstallerArguments();
+                Process.Start(installerParams.InstallerPath, installerParams.Arguments.ToStringArray());
+            }
+
+        }
+        else
+        {
+            // Run as Installer
+        }
+
+
+    }
+    static InstallerArguments TryGetInstallerArguments(string[] args)
+    {
+        try
+        {
+            return InstallerArguments.FromStringArray(args);
+        }
+        catch (Exception)
+        {
+            return default;
+        }
+    }
 
     private static void RunApplicationIndefinetely()
     {

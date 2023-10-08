@@ -18,7 +18,7 @@ public class ArchiveExtractor : IArchiveExtractor
 
         try
         {
-            ZipFile.ExtractToDirectory(sourceFile, targetFolder);
+            ZipFile.ExtractToDirectory(sourceFile, targetFolder,true);
         }
         catch (Exception ex)
         {
