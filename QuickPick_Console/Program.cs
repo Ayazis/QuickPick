@@ -37,11 +37,18 @@ public class Program
 
             if (updateAvailable)
             {
+                // todo: decouple updater from window
+                // create updater and subscribe windowupdate to event
+                // show window
+                // start update
+                // RunApp
+                // download done? Run UpdateInstallerApp
+
                 UpdateDownloader updater = new UpdateDownloader(eUpdateType.Pre_Release, updateChecker);
                 var updateWindow = new StartWindow();
                 updateWindow.Show();
 
-                Task<string> downloadedFile = updateWindow.StartDownloadAsync(updater);
+                var downloadedFile = updateWindow.StartDownloadAsync(updater).GetAwaiter().GetResult();
 
                 RunApplicationIndefinetely();
 
