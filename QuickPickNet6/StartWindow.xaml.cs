@@ -10,34 +10,21 @@ namespace QuickPick.UI;
 /// </summary>
 public partial class StartWindow : Window
 {
-    Version _newVersion;
-    UpdateDownloader _updater;
     public StartWindow()
-    {
+    {        
         InitializeComponent();
+        ShowDownloadStartMessage();
     }
 
-    public async Task<string> StartDownloadAsync(UpdateDownloader updater)
+    public void ShowDownloadStartMessage()
     {
-        _updater = updater;
-        _newVersion = await _updater.GetLatestVersionAsync();
-
         UpdateUI(() =>
         {
-            StatusTextBlock.Text = $"Downloading version {_newVersion}...";
+            StatusTextBlock.Text = $"Hold for a minute while we download and install the latest verion for you...";
             DownloadProgressBar.Visibility = Visibility.Visible;
         });
-
-        _updater.DownloadProgressChanged += Updater_DownloadProgressChanged;
-        _updater.DownloadCompleted += _updater_DownloadCompleted;
-        string downloadResult = await _updater.DownloadUpdateAsync();
-
-        await Task.Delay(200); // give time for the ui to display 100%.
-        UpdateUI(Close);
-
-        return downloadResult;
     }
-    private void Updater_DownloadProgressChanged(object sender, System.Net.DownloadProgressChangedEventArgs e)
+    public void Updater_DownloadProgressChanged(object sender, System.Net.DownloadProgressChangedEventArgs e)
     {
         int newPercentage = (int)(e.BytesReceived / e.TotalBytesToReceive * 100);
 
@@ -46,20 +33,16 @@ public partial class StartWindow : Window
             DownloadProgressBar.Value = newPercentage;
         });
     }
-    private void _updater_DownloadCompleted(object sender, EventArgs e)
+    public void _updater_DownloadCompleted(object sender, EventArgs e)
     {
-
-        _updater.DownloadCompleted -= _updater_DownloadCompleted;
-        _updater.DownloadProgressChanged -= Updater_DownloadProgressChanged;
-
         UpdateUI(() =>
         {
             DownloadProgressBar.Value = 100;
-            StatusTextBlock.Text = $"Installing version {_newVersion}...";
+            StatusTextBlock.Text = $"Installing version...";
         });
     }
 
-    public void UpdateUI(Action action)
+    private void UpdateUI(Action action)
     {
         try
         {

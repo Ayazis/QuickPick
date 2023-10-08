@@ -37,7 +37,6 @@ public class Program
 
             if (updateAvailable)
             {
-                // todo: decouple updater from window
                 // create updater and subscribe windowupdate to event
                 // show window
                 // start update
@@ -46,18 +45,22 @@ public class Program
 
                 UpdateDownloader updater = new UpdateDownloader(eUpdateType.Pre_Release, updateChecker);
                 var updateWindow = new StartWindow();
+                //updater.DownloadProgressChanged += updateWindow.Updater_DownloadProgressChanged;
+                //updater.DownloadCompleted += updateWindow._updater_DownloadCompleted;
                 updateWindow.Show();
-
-                var downloadedFile = updateWindow.StartDownloadAsync(updater).GetAwaiter().GetResult();
-
-                RunApplicationIndefinetely();
+                var downloadedFile = updater.StartDownloadUpdateAsync().Result;
+                // .Result blocks the UI Thread so we cannot update it,
+                // fix by calling an event with the url when it is done
 
                 string pathToCurrentExecutable = Process.GetCurrentProcess().MainModule.FileName;
-                string targetDirectory = Path.GetFileNameWithoutExtension(downloadedFile);
-                if (!Directory.Exists(targetDirectory))
-                    Directory.CreateDirectory(targetDirectory);
+                string targetDirectory = Path.GetDirectoryName(downloadedFile);
+                string targetFolderName = Path.GetFileNameWithoutExtension(downloadedFile) + "\\";
+                string extractionFolder = Path.Join(targetDirectory, targetFolderName);
 
-                new ArchiveExtractor().ExtractFiles(pathToCurrentExecutable, targetDirectory);
+                if (!Directory.Exists(extractionFolder))
+                    Directory.CreateDirectory(extractionFolder);
+
+                new ArchiveExtractor().ExtractFiles(downloadedFile, extractionFolder);
 
             }
 
@@ -81,6 +84,7 @@ public class Program
             Logs.Logger?.Log(ex);
         }
     }
+
 
     private static void RunApplicationIndefinetely()
     {

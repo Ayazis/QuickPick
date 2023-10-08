@@ -38,7 +38,7 @@ public class UpdateDownloader
     /// Downloads file and returns final path to file.
     /// </summary>
     /// <returns></returns>
-    public async Task<string> DownloadUpdateAsync()
+    public async Task<string> StartDownloadUpdateAsync()
     {
         (Version version, string downloadUrl) update = await _updateChecker.GetLatestVersionAsync(_updateType);
         Version newVersion = update.version;
@@ -52,7 +52,6 @@ public class UpdateDownloader
         string updateZipPath = Path.Join(downloadFolder, fileName);
         await newDownloader.DownloadFilesAsync(new Uri(downloadUrl));// todo return downloaded filepath
         this.DownloadCompleted?.Invoke(this, null);
-
         return updateZipPath;
     }
 
