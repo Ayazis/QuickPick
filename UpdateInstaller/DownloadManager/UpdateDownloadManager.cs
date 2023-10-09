@@ -14,8 +14,7 @@ namespace UpdateInstaller.Updates;
 
 public class UpdateDownloadManager
 {
-    IUpdateDownloader _updateDownloader;
-    const string INSTALLER_FILENAME_ = "UpdateInstaller.exe";
+    IUpdateDownloader _updateDownloader;  
 
     public UpdateDownloadManager(IUpdateDownloader updateDownloader)
     {
@@ -35,8 +34,9 @@ public class UpdateDownloadManager
         new ArchiveExtractor().ExtractFiles(downloadedFile, extractionFolder);
 
         string pathToCurrentExecutable = Process.GetCurrentProcess().MainModule.FileName;
+        string currentExecutableName = Path.GetFileName(pathToCurrentExecutable);
         string currentDirectory = Path.GetDirectoryName(pathToCurrentExecutable);
-        string newInstallerPath = Path.Join(extractionFolder, INSTALLER_FILENAME_);
+        string newInstallerPath = Path.Join(extractionFolder, currentExecutableName);
 
         int processId = Process.GetCurrentProcess().Id;
 

@@ -49,39 +49,55 @@ public class Program
 
     private static void CheckInputArguments(string[] args)
     {
-        InstallerArguments arguments = TryGetInstallerArguments(args);
-        if (arguments.Equals(default))
+        InstallerArguments? arguments = TryGetInstallerArguments(args);
+        if (arguments == null)
         {
-            // check for update
-
-            var updateChecker = new GithubUpdateChecker("Ayazis", "QuickPick");
-            var updateDownloader = new UpdateDownloader(eUpdateType.Pre_Release, updateChecker);
-            var updateManager = new UpdateDownloadManager(updateDownloader);
-            bool UpdateIsAvailable = updateManager.CheckIfUpdateIsAvailableAsync().Result;
-            if (UpdateIsAvailable)
-            {
-                new StartWindow().Show();
-                InstallerParams installerParams = updateManager.DownloadUpdateAndGetInstallerArguments();
-                Process.Start(installerParams.InstallerPath, installerParams.Arguments.ToStringArray());
-            }
+            UpdateIfAvailable();
 
         }
         else
         {
-            // Run as Installer
+            UpdateAndRestart((InstallerArguments)arguments);
         }
 
 
     }
-    static InstallerArguments TryGetInstallerArguments(string[] args)
+
+    private static void UpdateAndRestart(InstallerArguments arguments)
+    {    
+        new ApplicationCloser().CloseApplication(arguments.ProcessIdToKill);
+        FileCopier.CopyFiles(arguments.SourceFolder, arguments.TargetFolder);
+        Process.Start(arguments.PathToExecutable, arguments.TargetArguments);
+    }
+
+    private static void UpdateIfAvailable()
     {
+        // check for update
+
+        var updateChecker = new GithubUpdateChecker("Ayazis", "QuickPick");
+        var updateDownloader = new UpdateDownloader(eUpdateType.Pre_Release, updateChecker);
+        var updateManager = new UpdateDownloadManager(updateDownloader);
+        bool UpdateIsAvailable = updateManager.CheckIfUpdateIsAvailableAsync().Result;
+        if (UpdateIsAvailable)
+        {
+            new StartWindow().Show();
+            InstallerParams installerParams = updateManager.DownloadUpdateAndGetInstallerArguments();
+            Process.Start(installerParams.InstallerPath, installerParams.Arguments.ToStringArray());
+        }
+    }
+
+    static InstallerArguments? TryGetInstallerArguments(string[] args)
+    {
+        if (args == null || args.Length == 0)
+            return null;
+
         try
         {
             return InstallerArguments.FromStringArray(args);
         }
         catch (Exception)
         {
-            return default;
+            return null;
         }
     }
 
