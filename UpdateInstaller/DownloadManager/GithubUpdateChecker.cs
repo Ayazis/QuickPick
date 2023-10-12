@@ -60,7 +60,7 @@ public class GithubUpdateChecker : IUpdateChecker
 	}
 	private async Task<(Version version, string downloadUrl)> GetLatestPreRelease(HttpClient httpClient, string url)
 	{
-		var response = await httpClient.GetStringAsync(url);
+		var response = httpClient.GetStringAsync(url).Result;
 		JArray releases = JArray.Parse(response);
 		
 		// Filter and sort the releases

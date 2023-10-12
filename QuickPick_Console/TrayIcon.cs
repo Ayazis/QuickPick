@@ -24,7 +24,7 @@ public class TrayIconManager
 			Visible = true,
 			ContextMenuStrip = _contextMenu
 			,
-			BalloonTipText = $"QuickPick {currentVersion}"
+			Text= $"QuickPick {currentVersion}"
 		};
 	}
 	private Icon CreateIcon()
