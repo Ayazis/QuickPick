@@ -76,7 +76,7 @@ public class Program
 		bool UpdateIsAvailable = updateManager.CheckIfUpdateIsAvailableAsync().Result;
 		if (UpdateIsAvailable)
 		{
-			new StartWindow().Show();
+			//new StartWindow().Show();
 			InstallerParams installerParams = updateManager.DownloadUpdateAndGetInstallerArguments();
 			Process.Start(installerParams.InstallerPath, installerParams.Arguments.ToStringArray());
 		}

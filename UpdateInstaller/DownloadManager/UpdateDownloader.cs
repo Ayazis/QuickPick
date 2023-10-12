@@ -61,8 +61,8 @@ public class UpdateDownloader : IUpdateDownloader
         newDownloader.DownloadProgressChanged += NewDownloader_DownloadProgressChanged;
         string fileName = Path.GetFileName(downloadUrl);
         string updateZipPath = Path.Join(downloadFolder, fileName);
-        await newDownloader.DownloadFilesAsync(new Uri(downloadUrl));// todo return downloaded filepath
-        this.DownloadCompleted?.Invoke(this, null);
+        newDownloader.DownloadFile(new Uri(downloadUrl));// todo return downloaded filepath
+        //this.DownloadCompleted?.Invoke(this, null);
         return updateZipPath;
     }
 
