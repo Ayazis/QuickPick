@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.IO;
+using System.Reflection;
 using System.Windows.Forms;
 
 namespace QuickPick;
@@ -14,13 +15,16 @@ public class TrayIconManager
 		_contextMenu = new ContextMenuStrip();
 		_contextMenu.Items.Add("Settings", null, OnSettingsClick);
 		_contextMenu.Items.Add(new ToolStripSeparator());
-		_contextMenu.Items.Add("Exit", null, OnExitClick);	
-
+		_contextMenu.Items.Add("Exit", null, OnExitClick);
+		Assembly assembly = Assembly.GetExecutingAssembly();
+		string currentVersion = assembly?.GetName()?.Version?.ToString() ?? string.Empty;
 		_trayIcon = new NotifyIcon
 		{
 			Icon = CreateIcon(),
 			Visible = true,
 			ContextMenuStrip = _contextMenu
+			,
+			BalloonTipText = $"QuickPick {currentVersion}"
 		};
 	}
 	private Icon CreateIcon()
