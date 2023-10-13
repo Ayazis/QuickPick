@@ -16,7 +16,6 @@ public partial class ThumbnailView : UserControl
 	{
 
 	}
-
 	public ThumbnailView(ThumbnailDataContext context, double dpiScaling)
 	{
 		var size = CalculateRenderSize(context.Rect);
