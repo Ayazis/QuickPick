@@ -215,7 +215,7 @@ public partial class ClickWindow : Window
 
             string windowTitle = ActiveWindows.GetWindowTitle(currentWindowHandle);
             var thumbnailContext = new ThumbnailDataContext(newThumbnail, rect, currentWindowHandle, windowTitle);
-            var thumbnailView = new ThumbnailView(thumbnailContext);
+            var thumbnailView = new ThumbnailView(thumbnailContext, dpiScaling);
 
             this.ThumbnailCanvas.Children.Add(thumbnailView);
             _currentThumbnails.Add(thumbnailView);

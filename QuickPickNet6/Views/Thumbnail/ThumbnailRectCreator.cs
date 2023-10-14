@@ -77,16 +77,16 @@ namespace QuickPick.UI
             // TODO: allow space for border in thumbnailview
 
             int left = (int)(thumbnailX * dpiScaling);
-            if (isLeftToCenter)
-            {
-                left -= (int)(i * MAX_DIMENSION);
-            }
-            else
-            {
-                left += (int)(i * MAX_DIMENSION);
-            }
+			if (isLeftToCenter)
+			{
+				left -= (int)(i * MAX_DIMENSION * dpiScaling);
+			}
+			else
+			{
+				left += (int)(i * MAX_DIMENSION * dpiScaling);
+			}
 
-            int top = (int)(thumbnailY * dpiScaling);
+			int top = (int)(thumbnailY * dpiScaling);
             int right = (int)((thumbnailX + dimensions.Width) * dpiScaling);
             int bottom = (int)((thumbnailY + dimensions.Height) * dpiScaling);
 

@@ -21,6 +21,7 @@ public class AppLink
     }
     public string Name { get; set; }
     public string TargetPath { get; set; }
+    public string StartInDirectory { get; set; }
     public ImageSource AppIcon { get; set; }
     public ICommand ClickCommand { get; set; }
     public string Arguments { get; set; }
@@ -34,7 +35,15 @@ public class AppLink
             ActiveWindows.ToggleWindow(WindowHandles[0]);
         else
         {
-            Task.Run(() => { Process.Start(appInfo.TargetPath, appInfo.Arguments); });
+            Task.Run(() =>
+            {
+                ProcessStartInfo info = new(appInfo.TargetPath, appInfo.Arguments);
+
+                if (!string.IsNullOrWhiteSpace(appInfo.StartInDirectory))
+                    info.WorkingDirectory = appInfo.StartInDirectory;
+
+                Process.Start(info);
+            });
             ClickWindow.HideWindow();
         }
     }

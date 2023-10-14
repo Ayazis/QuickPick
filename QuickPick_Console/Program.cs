@@ -27,8 +27,9 @@ public class Program
 		try
 		{
 			_trayIconManager.CreateTrayIcon();
+#if !DEBUG
 			CheckInputArguments(args);
-
+#endif
 			// On every desktop change, the current active windows for that desktop are retrieved.
 			StartDesktopTracking();
 
