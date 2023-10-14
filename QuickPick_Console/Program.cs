@@ -117,9 +117,11 @@ public class Program
 		_keyInputHandler = new KeyInputHandler(keyCombination);
 		_inputCapture = new MouseAndKeysCapture(_keyInputHandler);
 		_inputCapture.HookIntoMouseAndKeyBoard();
-
+		_inputCapture.LeftMouseButtonClicked += _clickwindow.HandleLeftMouseClick;
 		_keyInputHandler.KeyCombinationHit += _keyInputHandler_KeyCombinationHit;
 	}
+
+
 
 	private static void StartDesktopTracking()
 	{

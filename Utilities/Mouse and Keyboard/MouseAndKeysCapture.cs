@@ -2,6 +2,7 @@
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using Utilities.Mouse_and_Keyboard;
+using Microsoft.VisualStudio.TestPlatform.TestHost;
 
 namespace Ayazis.KeyHooks;
 
@@ -67,7 +68,7 @@ public class MouseAndKeysCapture
 			KeyReleased(Keys.RButton);
 
 		if (keyCombinationHit)
-		{			
+		{
 			return IntPtr.Zero; // Do not forward event, this will prevent other software (or windows) to do something with the KeyInput.
 		}
 
@@ -97,8 +98,17 @@ public class MouseAndKeysCapture
 
 	bool KeyPressed(Keys key)
 	{
+		// Left mouse button has special functions, like hiding the window, so we invoke a method to be able handle this.
+		if (key == Keys.LButton)
+		{
+			this.LeftMouseButtonClicked?.Invoke(this, null);
+			return false;
+		}
+
 		return _keyInputHandler.IsPresetKeyCombinationHit(key);
 	}
+
+	public event EventHandler LeftMouseButtonClicked;
 
 	void KeyReleased(Keys key)
 	{
