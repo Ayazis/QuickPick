@@ -16,19 +16,18 @@ public partial class ThumbnailView : UserControl
     {
 
     }
-
-    public ThumbnailView(ThumbnailDataContext context)
+    public ThumbnailView(ThumbnailDataContext context, double dpiScaling)
     {
         var size = CalculateRenderSize(context.Rect);
-        context.Width = size.Width;
-        context.Height = size.Height;
+        context.Width = size.Width * 1.25 / dpiScaling;
+        context.Height = size.Height * 1.25 / dpiScaling;
 
         InitializeComponent();
         this.DataContext = context;
         _context = context;
         this.Visibility = System.Windows.Visibility.Hidden;
-       
-        
+
+
     }
 
     public async Task FadeIn()
