@@ -49,8 +49,9 @@ public class AppLinkRetriever
             var shortcut = shell.CreateShortcut(pinnedAppPath);
             string targetPath = shortcut.TargetPath;
             string arguments = shortcut.Arguments;
+			string startinDir = shortcut.WorkingDirectory;
 
-            if (!string.IsNullOrEmpty(targetPath))
+			if (!string.IsNullOrEmpty(targetPath))
             {
                 AppLink appInfo = new AppLink()
                 {
@@ -58,6 +59,7 @@ public class AppLinkRetriever
                     Arguments = arguments,
                     TargetPath = targetPath,
                     AppIcon = IconCreator.GetImage(targetPath),
+                    StartInDirectory = startinDir,
                 };
 
                 pinnedApps.Add(appInfo);
