@@ -15,28 +15,36 @@ namespace QuickPick.PinnedApps;
 /// </summary>
 public class AppLink
 {
-	public AppLink()
-	{
-		ClickCommand = new RelayCommand(parameter => ToggleWindowOrStartApplication(this));
-	}
-	public string Name { get; set; }
-	public string TargetPath { get; set; }
-	public string StartInDirectory { get; set; }
-	public ImageSource AppIcon { get; set; }
-	public ICommand ClickCommand { get; set; }
-	public string Arguments { get; set; }
-	public bool HasWindowActiveOnCurrentDesktop { get; set; }
-	public List<IntPtr> WindowHandles { get; set; } = new();
-	public string Info => $"{Name} - {TargetPath}";
+    public AppLink()
+    {
+        ClickCommand = new RelayCommand(parameter => ToggleWindowOrStartApplication(this));
+    }
+    public string Name { get; set; }
+    public string TargetPath { get; set; }
+    public string StartInDirectory { get; set; }
+    public ImageSource AppIcon { get; set; }
+    public ICommand ClickCommand { get; set; }
+    public string Arguments { get; set; }
+    public bool HasWindowActiveOnCurrentDesktop { get; set; }
+    public List<IntPtr> WindowHandles { get; set; } = new();
+    public string Info => $"{Name} - {TargetPath}";
 
-	public void ToggleWindowOrStartApplication(AppLink appInfo)
-	{
-		if (WindowHandles.Count == 1)
-			ActiveWindows.ToggleWindow(WindowHandles[0]);
-		else
-		{
-			Task.Run(() => { Process.Start(appInfo.TargetPath, appInfo.Arguments); });
-			ClickWindow.HideWindow();
-		}
-	}
+    public void ToggleWindowOrStartApplication(AppLink appInfo)
+    {
+        if (WindowHandles.Count == 1)
+            ActiveWindows.ToggleWindow(WindowHandles[0]);
+        else
+        {
+            Task.Run(() =>
+            {
+                ProcessStartInfo info = new(appInfo.TargetPath, appInfo.Arguments);
+
+                if (!string.IsNullOrWhiteSpace(appInfo.StartInDirectory))
+                    info.WorkingDirectory = appInfo.StartInDirectory;
+
+                Process.Start(info);
+            });
+            ClickWindow.HideWindow();
+        }
+    }
 }
