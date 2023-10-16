@@ -65,7 +65,7 @@ jobs:
       - name: Publish
         shell: pwsh
         run: |
-          & "$env:MSBUILD_PATH" -target:Publish -p:Configuration=Release -p:PublishDir=out\
+           "$env:MSBUILD_PATH" -target:Publish -p:Configuration=Release -p:PublishDir=out\
 
       - name: Zip the published content
         shell: pwsh
