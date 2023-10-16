@@ -21,6 +21,18 @@ jobs:
       - name: Restore
         run: dotnet restore
 
+      - name: Extract Version
+        id: get_version
+        shell: pwsh
+        run: |
+          $projectPath = "/QuickPick_Console/QuickPick.csproj"
+          $projectFileContent = Get-Content $projectPath -Raw
+          $versionPattern = '<Version>(.*?)<\/Version>'
+          if ($projectFileContent -match $versionPattern) {
+            $version = $matches[1]
+            echo "VERSION=$version" | Out-File -FilePath $env:GITHUB_ENV -Append
+          }
+
       - name: Locate MSBuild
         id: msbuild
         shell: pwsh
@@ -44,17 +56,7 @@ jobs:
     #    run: |
     #      & "$env:VSTEST_PATH" **\*.Tests.dll
 
-      - name: Extract Version
-        id: get_version
-        shell: pwsh
-        run: |
-          $projectPath = "QuickPick/QuickPick_Console/QuickPick.csproj"
-          $projectFileContent = Get-Content $projectPath -Raw
-          $versionPattern = '<Version>(.*?)<\/Version>'
-          if ($projectFileContent -match $versionPattern) {
-            $version = $matches[1]
-            echo "VERSION=$version" | Out-File -FilePath $env:GITHUB_ENV -Append
-          }
+
 
       - name: Publish
         shell: pwsh
