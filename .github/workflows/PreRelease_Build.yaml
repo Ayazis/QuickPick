@@ -33,4 +33,10 @@ jobs:
           & "${{ steps.msbuild.outputs.path }}" -p:Configuration=Release
 
       - name: Test
-        run: dotnet test
+        shell: pwsh
+        run: |
+          $testProjects = Get-ChildItem -Recurse -Filter *.Tests.csproj
+          foreach ($testProject in $testProjects) {
+              dotnet test $testProject.FullName
+          }
+
