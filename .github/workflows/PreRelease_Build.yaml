@@ -32,11 +32,14 @@ jobs:
         run: |
           & "${{ steps.msbuild.outputs.path }}" -p:Configuration=Release
 
+      - name: Locate VSTest
+        id: vstest
+        shell: pwsh
+        run: |
+          $vsTestPath = & vswhere -latest -products * -requires Microsoft.Component.MSBuild -find Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe
+          echo "VSTEST_PATH=$vsTestPath" | Out-File -FilePath $env:GITHUB_ENV -Append
+
       - name: Test
         shell: pwsh
         run: |
-          $testProjects = Get-ChildItem -Recurse -Filter *.Tests.csproj
-          foreach ($testProject in $testProjects) {
-              dotnet test $testProject.FullName
-          }
-
+          & "$env:VSTEST_PATH" **\*.Tests.dll
