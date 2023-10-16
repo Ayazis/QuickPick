@@ -25,7 +25,7 @@ jobs:
         id: get_version
         shell: pwsh
         run: |
-          $projectPath = "/QuickPick/QuickPick_Console/QuickPick.csproj"
+          $projectPath = "QuickPick_Console/QuickPick.csproj"
           $projectFileContent = Get-Content $projectPath -Raw
           $versionPattern = '<Version>(.*?)<\/Version>'
           if ($projectFileContent -match $versionPattern) {
