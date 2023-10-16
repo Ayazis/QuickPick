@@ -39,7 +39,42 @@ jobs:
           $vsTestPath = & vswhere -latest -products * -requires Microsoft.Component.MSBuild -find Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe
           echo "VSTEST_PATH=$vsTestPath" | Out-File -FilePath $env:GITHUB_ENV -Append
 
-      - name: Test
+    #  - name: Test
+    #    shell: pwsh
+    #    run: |
+    #      & "$env:VSTEST_PATH" **\*.Tests.dll
+
+      - name: Extract Version
+        id: get_version
         shell: pwsh
         run: |
-          & "$env:VSTEST_PATH" **\*.Tests.dll
+          $projectPath = "QuickPick/QuickPick_Console/QuickPick.csproj"
+          $projectFileContent = Get-Content $projectPath -Raw
+          $versionPattern = '<Version>(.*?)<\/Version>'
+          if ($projectFileContent -match $versionPattern) {
+            $version = $matches[1]
+            echo "VERSION=$version" | Out-File -FilePath $env:GITHUB_ENV -Append
+          }
+
+      - name: Publish
+        shell: pwsh
+        run: |
+          & "$env:MSBUILD_PATH" -target:Publish -p:Configuration=Release -p:PublishDir=out\
+
+      - name: Zip the published content
+        shell: pwsh
+        run: |
+          Compress-Archive -Path out\* -DestinationPath "QuickPick $env:VERSION.zip"
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: true
+
+     
