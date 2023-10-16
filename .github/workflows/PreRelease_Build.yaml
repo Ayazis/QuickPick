@@ -37,12 +37,14 @@ jobs:
             Write-Error "Version extraction failed."
           }
 
-      - name: Locate MSBuild
+      - name: Set MSBuild Path
         id: msbuild
         shell: pwsh
         run: |
-          $msbuildPath = & vswhere -latest -products * -requires Microsoft.Component.MSBuild -find MSBuild\**\Bin\MSBuild.exe
-          echo "::set-output name=path::$msbuildPath"
+                $msbuildPath = & vswhere -latest -products * -requires Microsoft.Component.MSBuild -find MSBuild\**\Bin\MSBuild.exe
+                Add-Content -Path $env:GITHUB_ENV -Value "MSBUILD_PATH=$msbuildPath"
+                write-host $msbuildPath
+
 
  #     - name: Build
  #       run: |
