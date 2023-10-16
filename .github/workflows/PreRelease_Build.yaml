@@ -62,7 +62,10 @@ jobs:
     #    run: |
     #      & "$env:VSTEST_PATH" **\*.Tests.dll
 
-
+      - name: Restore NuGet packages
+        shell: pwsh
+        run: |
+          dotnet restore
 
       - name: Publish
         shell: pwsh
