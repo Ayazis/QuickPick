@@ -1,9 +1,9 @@
-name: PreRelease Build
+name: Build and Test
 
 on:
   push:
     branches:
-      - pre-release
+      - Pre-Release
 
 jobs:
   build_and_test:
