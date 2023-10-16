@@ -12,6 +12,16 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+        
+      - name: Output MSBuild Path
+        shell: pwsh
+        run: |
+          Write-Host "MSBuild Path: $env:MSBUILD_PATH"
+      
+      - name: Publish
+        shell: pwsh
+        run: |
+          & "$env:MSBUILD_PATH" -target:Publish -p:Configuration=Release -p:PublishDir=out\
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
