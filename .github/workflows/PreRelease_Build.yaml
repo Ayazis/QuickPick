@@ -29,7 +29,8 @@ jobs:
           echo "::set-output name=path::$msbuildPath"
 
       - name: Build
-        run: ${{ steps.msbuild.outputs.path }} -p:Configuration=Release
+        run: |
+          & "${{ steps.msbuild.outputs.path }}" -p:Configuration=Release
 
       - name: Test
         run: dotnet test
