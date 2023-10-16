@@ -30,7 +30,11 @@ jobs:
           $versionPattern = '<Version>(.*?)<\/Version>'
           if ($projectFileContent -match $versionPattern) {
             $version = $matches[1]
-            echo "VERSION=$version" | Out-File -FilePath $env:GITHUB_ENV -Append
+            Write-Host "Extracted version: $version"
+            Add-Content -Path $env:GITHUB_ENV -Value "VERSION=$version"
+          }
+          else {
+            Write-Error "Version extraction failed."
           }
 
       - name: Locate MSBuild
