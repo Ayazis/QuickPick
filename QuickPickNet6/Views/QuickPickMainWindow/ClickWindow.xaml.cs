@@ -22,6 +22,7 @@ using System.Windows.Shapes;
 using System.Runtime.InteropServices;
 using System.Windows.Interop;
 using QuickPick.UI;
+using System.Runtime.CompilerServices;
 
 namespace QuickPick;
 /// <summary>
@@ -42,12 +43,14 @@ public partial class ClickWindow : Window
     {
         ThumbnailTimer = new(HideThumbnails);
         InitializeComponent();
-        this.PreviewMouseWheel += ClickWindow_PreviewMouseWheel; ;
+        this.PreviewMouseWheel += ClickWindow_PreviewMouseWheel;
+       // this.MouseUp += ClickWindow_MouseLeftButtonUp;
         DataContext = _qpm;
 
         HideAnimation = TryFindResource("hideMe") as Storyboard;
         ShowAnimation = TryFindResource("showMe") as Storyboard;
-        this.Deactivated += ClickWindow_Deactivated;
+       // this.Deactivated += HandleFocusLost;
+       // this.LostFocus += HandleFocusLost;
 
         SetQuickPicksMainWindowHandle();
         UpdateLayout();
@@ -56,15 +59,15 @@ public partial class ClickWindow : Window
         // EnableBlur();  // The blurreffect works, but only on window level, creating a squared blurry area...
     }
 
-    private void ClickWindow_Deactivated(object sender, EventArgs e)
+    public void HandleFocusLost(object sender, EventArgs e)
     {
-        HideAnimation.Begin(this);
-    }
+		HideWindow();
+	}
 
-    private void ClickWindow_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+	private void ClickWindow_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
     {
         if (MouseIsOutsideVisibleCircle())
-            HideAnimation.Begin(this);
+            HideWindow();
     }
 
     private void ClickWindow_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
@@ -142,6 +145,8 @@ public partial class ClickWindow : Window
     {
         try
         {
+            _instance.Deactivated -= _instance.HandleFocusLost;
+            _instance.LostFocus -= _instance.HandleFocusLost;
             _instance.HideAnimation.Begin(_instance);
 
         }
@@ -160,7 +165,6 @@ public partial class ClickWindow : Window
             Left = mousePosition.X - ActualWidth / 2;
             Top = mousePosition.Y - ActualHeight / 2;
             ShowAnimation.Begin(this);
-
         }
         catch (Exception ex)
         {

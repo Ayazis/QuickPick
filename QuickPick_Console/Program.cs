@@ -7,6 +7,7 @@ using Updates;
 using UpdateInstaller;
 using UpdateInstaller.Updates;
 using System.Diagnostics;
+using System.Windows.Threading;
 
 namespace QuickPick;
 
@@ -129,7 +130,31 @@ public class Program
 	private static void _keyInputHandler_KeyCombinationHit()
 	{
 		Task.Run(() => { _clickwindow.UpdateTaskbarShortCuts(); });
-		_clickwindow.ShowWindow();
+		
+
+		DispatcherTimer timer = new DispatcherTimer();
+		timer.Interval = TimeSpan.FromMilliseconds(100); // Adjust the interval as needed
+
+		// Show the window
+		ClickWindow._instance.ShowWindow();
+		ClickWindow._instance.Activate();
+		ClickWindow._instance.Focus();
+
+		// Add a one-time event handler for the first Tick of the timer
+		timer.Tick += (sender, e) =>
+		{
+			// Handle the first tick (after a small delay)
+			ClickWindow._instance.Deactivated += ClickWindow._instance.HandleFocusLost;
+			ClickWindow._instance.LostFocus += ClickWindow._instance.HandleFocusLost;
+
+			// Stop the timer, as we only want this to happen once
+			timer.Stop();
+		};
+
+		// Start the timer
+		timer.Start();
+
+
 	}
 
 	static void _desktopTracker_DesktopChanged(object? sender, EventArgs e)
