@@ -67,15 +67,23 @@ jobs:
         run: |
           dotnet restore
 
+      - name: Set Publish Directory Path
+        shell: pwsh
+        run: |
+          $publishDir = Join-Path $env:GITHUB_WORKSPACE "QuickPick_Console\out"
+          Add-Content -Path $env:GITHUB_ENV -Value "PUBLISH_DIR=$publishDir"
+
+
       - name: Publish
         shell: pwsh
         run: |
-          & "$env:MSBUILD_PATH" -target:Publish -p:Configuration=Release -p:PublishDir=out\
+          & "$env:MSBUILD_PATH" -target:Publish -p:Configuration=Release -p:PublishDir="$env:PUBLISH_DIR\"
+
 
       - name: Zip the published content
         shell: pwsh
         run: |
-          Compress-Archive -Path out\* -DestinationPath "QuickPick $env:VERSION.zip"
+          Compress-Archive -Path "$env:PUBLISH_DIR\*" -DestinationPath "QuickPick $env:VERSION.zip"
 
       - name: Create GitHub Release
         id: create_release
