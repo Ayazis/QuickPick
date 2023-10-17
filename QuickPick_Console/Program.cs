@@ -3,12 +3,10 @@ using Utilities.VirtualDesktop;
 using Ayazis.Utilities;
 using Ayazis.KeyHooks;
 using Utilities.Mouse_and_Keyboard;
-using QuickPick.UI;
 using Updates;
 using UpdateInstaller;
 using UpdateInstaller.Updates;
 using System.Diagnostics;
-using System.Reflection;
 
 namespace QuickPick;
 

@@ -47,7 +47,7 @@ public partial class ClickWindow : Window
 
         HideAnimation = TryFindResource("hideMe") as Storyboard;
         ShowAnimation = TryFindResource("showMe") as Storyboard;
-
+        this.Deactivated += ClickWindow_Deactivated;
 
         SetQuickPicksMainWindowHandle();
         UpdateLayout();
@@ -56,9 +56,14 @@ public partial class ClickWindow : Window
         // EnableBlur();  // The blurreffect works, but only on window level, creating a squared blurry area...
     }
 
+    private void ClickWindow_Deactivated(object sender, EventArgs e)
+    {
+        HideAnimation.Begin(this);
+    }
+
     private void ClickWindow_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
     {
-        if (MouseIsOutsideWindow())
+        if (MouseIsOutsideVisibleCircle())
             HideAnimation.Begin(this);
     }
 
@@ -86,12 +91,22 @@ public partial class ClickWindow : Window
         }
     }
 
-    public bool MouseIsOutsideWindow()
+    public bool MouseIsOutsideVisibleCircle()
     {
-        var mouse = MousePosition.GetCursorPosition();
+        // Get the current mouse position
+        System.Drawing.Point mousePosition = MousePosition.GetCursorPosition();
 
-        bool isOutside = mouse.X < Left || mouse.X > Left + ActualWidth
-                        || mouse.Y < Top || mouse.Y > Top + ActualHeight;
+        // Calculate the circle's radius and center point
+        double circleRadius = this.Applinks.Width / 2;
+        Point circleCenter = new Point(Left + Width / 2, Top - Height / 2);
+
+        // Calculate the distance between the mouse position and the circle's center
+        double deltaX = mousePosition.X - circleCenter.X;
+        double deltaY = mousePosition.Y - circleCenter.Y;
+        double distanceToCenter = Math.Sqrt(Math.Pow(deltaX, 2) + Math.Pow(deltaY, 2));
+
+        // Determine if the mouse is outside the circle
+        bool isOutside = distanceToCenter > circleRadius;
 
         return isOutside;
     }
