@@ -84,7 +84,7 @@ jobs:
       - name: Zip the published content
         shell: pwsh
         run: |
-          Compress-Archive -Path "$env:PUBLISH_DIR\*" -DestinationPath "${{ env.REPO_NAME }} $env:VERSION.zip"
+          Compress-Archive -Path "$env:PUBLISH_DIR\*" -DestinationPath "$env:PUBLISH_DIR\QuickPick $env:VERSION.zip"
 
       - name: Create Release and Upload Asset
         run: |
