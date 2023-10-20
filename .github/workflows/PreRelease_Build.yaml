@@ -92,4 +92,4 @@ jobs:
           gh release create ${{ env.VERSION }} --title "QuickPick ${{ env.VERSION }}" --notes "Release notes for ${{ env.VERSION }}"
         
           # Upload asset
-          gh release upload ${{ env.VERSION }} ${{ env.PUBLISH_DIR }}/QuickPick_${{ env.VERSION }}.zip
+          gh release upload ${{ env.VERSION }} ${{ env.PUBLISH_DIR }}\QuickPick_${{ env.VERSION }}.zip
