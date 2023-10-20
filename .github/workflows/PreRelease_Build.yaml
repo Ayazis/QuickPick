@@ -82,6 +82,18 @@ jobs:
         shell: pwsh
         run: |
           Compress-Archive -Path "$env:PUBLISH_DIR\*" -DestinationPath "${{ env.REPO_NAME }} $env:VERSION.zip"
+      
+      - name: Generate Release Notes
+        id: generate_release_notes
+        run: |
+          # Fetch PRs merged into the current branch
+          response=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+                         "https://api.github.com/repos/${{ env.REPO_OWNER }}/${{ env.REPO_NAME }}/pulls?state=closed&base=${{ github.ref }}")
+          release_notes=""
+          for pr in $(echo "${response}" | jq -r '.[] | .title'); do
+            release_notes="${release_notes}\n- ${pr}"
+          done
+          echo "RELEASE_NOTES=${release_notes}" >> $GITHUB_ENV
 
       - name: Create GitHub Release
         id: create_release
@@ -89,6 +101,7 @@ jobs:
         with:
           tag_name: ${{ env.VERSION }}
           release_name: "${{ env.REPO_NAME }} ${{ env.VERSION }}"
+          body: ${{ env.RELEASE_NOTES }}
           draft: false
           prerelease: true
         env:
