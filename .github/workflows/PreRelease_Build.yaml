@@ -15,6 +15,9 @@ jobs:
     runs-on: windows-latest
 
     steps:  
+      - name: Authenticate gh CLI
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
+
       - name: Checkout code
         uses: actions/checkout@v2
         
@@ -83,23 +86,10 @@ jobs:
         run: |
           Compress-Archive -Path "$env:PUBLISH_DIR\*" -DestinationPath "${{ env.REPO_NAME }} $env:VERSION.zip"
 
-      - name: Create GitHub Release
-        id: create_release
-        uses: actions/create-release@v1
-        with:
-          tag_name: ${{ env.VERSION }}
-          release_name: "${{ env.REPO_NAME }} ${{ env.VERSION }}"
-          body: ${{ env.RELEASE_NOTES }}
-          draft: false
-          prerelease: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload Release Asset
-        uses: actions/upload-release-asset@v1
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./QuickPick ${{ env.VERSION }}.zip
-          asset_name: QuickPick ${{ env.VERSION }}.zip
-          asset_content_type: application/zip
+      - name: Create Release and Upload Asset
+        run: |
+          # Create release
+          gh release create ${{ env.VERSION }} --title "QuickPick ${{ env.VERSION }}" --notes "Release notes for ${{ env.VERSION }}"
+      
+          # Upload asset
+          gh release upload ${{ env.VERSION }} ./QuickPick_${{ env.VERSION }}.zip --label "QuickPick_${{ env.VERSION }}.zip"
