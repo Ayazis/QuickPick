@@ -14,21 +14,7 @@ jobs:
   build_and_test:
     runs-on: windows-latest
 
-    steps:
-    
-      - name: Generate Release Notes
-        id: generate_release_notes0
-        shell: pwsh
-        run: |
-          $response = Invoke-RestMethod -Uri "https://api.github.com/repos/${{ env.REPO_OWNER }}/${{ env.REPO_NAME }}/pulls?state=closed&base=${{ github.ref }}" -Headers @{ Authorization = "Bearer $env:GITHUB_TOKEN" }
-          $releaseNotes = @()
-          foreach ($pr in $response) {
-            $releaseNotes += "- $($pr.title)"
-          }
-          $releaseNotesStr = $releaseNotes -join "`n"
-          Write-Host "RELEASE_NOTES=$releaseNotesStr"
-          Add-Content -Path $env:GITHUB_ENV -Value "RELEASE_NOTES=${releaseNotesStr}"
-  
+    steps:  
       - name: Checkout code
         uses: actions/checkout@v2
         
@@ -96,18 +82,6 @@ jobs:
         shell: pwsh
         run: |
           Compress-Archive -Path "$env:PUBLISH_DIR\*" -DestinationPath "${{ env.REPO_NAME }} $env:VERSION.zip"
-      
-      - name: Generate Release Notes
-        id: generate_release_notes
-        run: |
-          # Fetch PRs merged into the current branch
-          response=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-                         "https://api.github.com/repos/${{ env.REPO_OWNER }}/${{ env.REPO_NAME }}/pulls?state=closed&base=${{ github.ref }}")
-          release_notes=""
-          for pr in $(echo "${response}" | jq -r '.[] | .title'); do
-            release_notes="${release_notes}\n- ${pr}"
-          done
-          echo "RELEASE_NOTES=${release_notes}" >> $GITHUB_ENV
 
       - name: Create GitHub Release
         id: create_release
