@@ -22,6 +22,7 @@ using System.Windows.Shapes;
 using System.Runtime.InteropServices;
 using System.Windows.Interop;
 using QuickPick.UI;
+using System.Runtime.CompilerServices;
 
 namespace QuickPick;
 /// <summary>
@@ -42,24 +43,20 @@ public partial class ClickWindow : Window
     {
         ThumbnailTimer = new(HideThumbnails);
         InitializeComponent();
-        this.PreviewMouseWheel += ClickWindow_PreviewMouseWheel; ;
+        this.PreviewMouseWheel += ClickWindow_PreviewMouseWheel;
         DataContext = _qpm;
 
         HideAnimation = TryFindResource("hideMe") as Storyboard;
         ShowAnimation = TryFindResource("showMe") as Storyboard;
 
-
         SetQuickPicksMainWindowHandle();
         UpdateLayout();
         _instance = this;
-
-        // EnableBlur();  // The blurreffect works, but only on window level, creating a squared blurry area...
     }
 
-    private void ClickWindow_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+    public void HandleFocusLost(object sender, EventArgs e)
     {
-        if (MouseIsOutsideWindow())
-            HideAnimation.Begin(this);
+        HideWindow();
     }
 
     private void ClickWindow_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
@@ -70,30 +67,16 @@ public partial class ClickWindow : Window
             if (collection.Count > 1)
             {
                 collection.Move(0, collection.Count - 1);
-                //AppLink firstItem = collection[0];
-                //collection.RemoveAt(0);
-                //collection.Add(firstItem);
             }
         }
         else
         {
-            // Scrolled down
             // Scrolled down
             if (collection.Count > 1)
             {
                 collection.Move(collection.Count - 1, 0);
             }
         }
-    }
-
-    public bool MouseIsOutsideWindow()
-    {
-        var mouse = MousePosition.GetCursorPosition();
-
-        bool isOutside = mouse.X < Left || mouse.X > Left + ActualWidth
-                        || mouse.Y < Top || mouse.Y > Top + ActualHeight;
-
-        return isOutside;
     }
 
     public void UpdateTaskbarShortCuts()
@@ -127,6 +110,8 @@ public partial class ClickWindow : Window
     {
         try
         {
+            _instance.Deactivated -= _instance.HandleFocusLost;
+            _instance.LostFocus -= _instance.HandleFocusLost;
             _instance.HideAnimation.Begin(_instance);
 
         }
@@ -145,7 +130,7 @@ public partial class ClickWindow : Window
             Left = mousePosition.X - ActualWidth / 2;
             Top = mousePosition.Y - ActualHeight / 2;
             ShowAnimation.Begin(this);
-
+            this.Applinks.Focus();
         }
         catch (Exception ex)
         {
@@ -199,7 +184,7 @@ public partial class ClickWindow : Window
         {
             ProcessThumbnail(i);
         };
-        
+
         //local function for readability
         void ProcessThumbnail(int i)
         {
@@ -242,61 +227,4 @@ public partial class ClickWindow : Window
         }
         _currentThumbnails.Clear();
     }
-
-
-    internal void EnableBlur()
-    {
-        var windowHelper = new WindowInteropHelper(this);
-
-        var accent = new AccentPolicy();
-        accent.AccentState = AccentState.ACCENT_ENABLE_BLURBEHIND;
-
-        var accentStructSize = Marshal.SizeOf(accent);
-
-        var accentPtr = Marshal.AllocHGlobal(accentStructSize);
-        Marshal.StructureToPtr(accent, accentPtr, false);
-
-        var data = new WindowCompositionAttributeData();
-        data.Attribute = WindowCompositionAttribute.WCA_ACCENT_POLICY;
-        data.SizeOfData = accentStructSize;
-        data.Data = accentPtr;
-
-        SetWindowCompositionAttribute(windowHelper.Handle, ref data);
-
-        Marshal.FreeHGlobal(accentPtr);
-    }
-    internal enum AccentState
-    {
-        ACCENT_DISABLED = 1,
-        ACCENT_ENABLE_GRADIENT = 0,
-        ACCENT_ENABLE_TRANSPARENTGRADIENT = 2,
-        ACCENT_ENABLE_BLURBEHIND = 3,
-        ACCENT_INVALID_STATE = 4
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
-    internal struct AccentPolicy
-    {
-        public AccentState AccentState;
-        public int AccentFlags;
-        public int GradientColor;
-        public int AnimationId;
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
-    internal struct WindowCompositionAttributeData
-    {
-        public WindowCompositionAttribute Attribute;
-        public IntPtr Data;
-        public int SizeOfData;
-    }
-
-    internal enum WindowCompositionAttribute
-    {
-        // ...
-        WCA_ACCENT_POLICY = 19
-        // ...
-    }
-    [DllImport("user32.dll")]
-    internal static extern int SetWindowCompositionAttribute(IntPtr hwnd, ref WindowCompositionAttributeData data);
 }

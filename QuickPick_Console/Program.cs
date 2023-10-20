@@ -3,12 +3,12 @@ using Utilities.VirtualDesktop;
 using Ayazis.Utilities;
 using Ayazis.KeyHooks;
 using Utilities.Mouse_and_Keyboard;
-using QuickPick.UI;
 using Updates;
 using UpdateInstaller;
 using UpdateInstaller.Updates;
 using System.Diagnostics;
-using System.Reflection;
+using System.Windows.Threading;
+using System.Runtime.InteropServices;
 
 namespace QuickPick;
 
@@ -131,7 +131,31 @@ public class Program
 	private static void _keyInputHandler_KeyCombinationHit()
 	{
 		Task.Run(() => { _clickwindow.UpdateTaskbarShortCuts(); });
-		_clickwindow.ShowWindow();
+		
+
+		DispatcherTimer timer = new DispatcherTimer();
+		timer.Interval = TimeSpan.FromMilliseconds(100); // Adjust the interval as needed
+
+		// Show the window
+		ClickWindow._instance.ShowWindow();
+	
+		// Some actions need to be done slightly later then the ShowWindown() method, when the UI is showing. 
+		// Using a Timer we make sure the UI is loaded before performing these actions.
+		timer.Tick += (sender, e) =>
+		{
+			ClickWindow._instance.Activate(); // Set focus to the Window after it is shown. If not done, the deactivated event will not fire.
+
+			// Set the deactivated event after the is shown, otherwise the UI will hide instantly.
+			ClickWindow._instance.Deactivated += ClickWindow._instance.HandleFocusLost; 
+			ClickWindow._instance.LostFocus += ClickWindow._instance.HandleFocusLost; 
+
+			// Stop the timer, as we only want this to happen once
+			timer.Stop();
+		};
+
+		// Start the timer
+		timer.Start();
+
 	}
 
 	static void _desktopTracker_DesktopChanged(object? sender, EventArgs e)
@@ -144,4 +168,5 @@ public class Program
 		_desktopTracker.Dispose();
 		_trayIconManager.RemoveTrayIcon();
 	}
+
 }
