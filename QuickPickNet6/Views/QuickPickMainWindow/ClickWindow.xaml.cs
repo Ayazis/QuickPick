@@ -44,30 +44,19 @@ public partial class ClickWindow : Window
         ThumbnailTimer = new(HideThumbnails);
         InitializeComponent();
         this.PreviewMouseWheel += ClickWindow_PreviewMouseWheel;
-       // this.MouseUp += ClickWindow_MouseLeftButtonUp;
         DataContext = _qpm;
 
         HideAnimation = TryFindResource("hideMe") as Storyboard;
         ShowAnimation = TryFindResource("showMe") as Storyboard;
-       // this.Deactivated += HandleFocusLost;
-       // this.LostFocus += HandleFocusLost;
 
         SetQuickPicksMainWindowHandle();
         UpdateLayout();
         _instance = this;
-
-        // EnableBlur();  // The blurreffect works, but only on window level, creating a squared blurry area...
     }
 
     public void HandleFocusLost(object sender, EventArgs e)
     {
-		HideWindow();
-	}
-
-	private void ClickWindow_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-    {
-        if (MouseIsOutsideVisibleCircle())
-            HideWindow();
+        HideWindow();
     }
 
     private void ClickWindow_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
@@ -78,40 +67,16 @@ public partial class ClickWindow : Window
             if (collection.Count > 1)
             {
                 collection.Move(0, collection.Count - 1);
-                //AppLink firstItem = collection[0];
-                //collection.RemoveAt(0);
-                //collection.Add(firstItem);
             }
         }
         else
         {
-            // Scrolled down
             // Scrolled down
             if (collection.Count > 1)
             {
                 collection.Move(collection.Count - 1, 0);
             }
         }
-    }
-
-    public bool MouseIsOutsideVisibleCircle()
-    {
-        // Get the current mouse position
-        System.Drawing.Point mousePosition = MousePosition.GetCursorPosition();
-
-        // Calculate the circle's radius and center point
-        double circleRadius = this.Applinks.Width / 2;
-        Point circleCenter = new Point(Left + Width / 2, Top - Height / 2);
-
-        // Calculate the distance between the mouse position and the circle's center
-        double deltaX = mousePosition.X - circleCenter.X;
-        double deltaY = mousePosition.Y - circleCenter.Y;
-        double distanceToCenter = Math.Sqrt(Math.Pow(deltaX, 2) + Math.Pow(deltaY, 2));
-
-        // Determine if the mouse is outside the circle
-        bool isOutside = distanceToCenter > circleRadius;
-
-        return isOutside;
     }
 
     public void UpdateTaskbarShortCuts()
@@ -219,7 +184,7 @@ public partial class ClickWindow : Window
         {
             ProcessThumbnail(i);
         };
-        
+
         //local function for readability
         void ProcessThumbnail(int i)
         {
@@ -262,61 +227,4 @@ public partial class ClickWindow : Window
         }
         _currentThumbnails.Clear();
     }
-
-
-    internal void EnableBlur()
-    {
-        var windowHelper = new WindowInteropHelper(this);
-
-        var accent = new AccentPolicy();
-        accent.AccentState = AccentState.ACCENT_ENABLE_BLURBEHIND;
-
-        var accentStructSize = Marshal.SizeOf(accent);
-
-        var accentPtr = Marshal.AllocHGlobal(accentStructSize);
-        Marshal.StructureToPtr(accent, accentPtr, false);
-
-        var data = new WindowCompositionAttributeData();
-        data.Attribute = WindowCompositionAttribute.WCA_ACCENT_POLICY;
-        data.SizeOfData = accentStructSize;
-        data.Data = accentPtr;
-
-        SetWindowCompositionAttribute(windowHelper.Handle, ref data);
-
-        Marshal.FreeHGlobal(accentPtr);
-    }
-    internal enum AccentState
-    {
-        ACCENT_DISABLED = 1,
-        ACCENT_ENABLE_GRADIENT = 0,
-        ACCENT_ENABLE_TRANSPARENTGRADIENT = 2,
-        ACCENT_ENABLE_BLURBEHIND = 3,
-        ACCENT_INVALID_STATE = 4
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
-    internal struct AccentPolicy
-    {
-        public AccentState AccentState;
-        public int AccentFlags;
-        public int GradientColor;
-        public int AnimationId;
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
-    internal struct WindowCompositionAttributeData
-    {
-        public WindowCompositionAttribute Attribute;
-        public IntPtr Data;
-        public int SizeOfData;
-    }
-
-    internal enum WindowCompositionAttribute
-    {
-        // ...
-        WCA_ACCENT_POLICY = 19
-        // ...
-    }
-    [DllImport("user32.dll")]
-    internal static extern int SetWindowCompositionAttribute(IntPtr hwnd, ref WindowCompositionAttributeData data);
 }
