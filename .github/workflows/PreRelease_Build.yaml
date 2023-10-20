@@ -15,6 +15,20 @@ jobs:
     runs-on: windows-latest
 
     steps:
+    
+      - name: Generate Release Notes
+        id: generate_release_notes0
+        shell: pwsh
+        run: |
+          $response = Invoke-RestMethod -Uri "https://api.github.com/repos/${{ env.REPO_OWNER }}/${{ env.REPO_NAME }}/pulls?state=closed&base=${{ github.ref }}" -Headers @{ Authorization = "Bearer $env:GITHUB_TOKEN" }
+          $releaseNotes = @()
+          foreach ($pr in $response) {
+            $releaseNotes += "- $($pr.title)"
+          }
+          $releaseNotesStr = $releaseNotes -join "`n"
+          Write-Host "RELEASE_NOTES=$releaseNotesStr"
+          Add-Content -Path $env:GITHUB_ENV -Value "RELEASE_NOTES=${releaseNotesStr}"
+  
       - name: Checkout code
         uses: actions/checkout@v2
         
