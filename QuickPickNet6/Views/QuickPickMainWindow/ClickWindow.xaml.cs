@@ -165,6 +165,7 @@ public partial class ClickWindow : Window
             Left = mousePosition.X - ActualWidth / 2;
             Top = mousePosition.Y - ActualHeight / 2;
             ShowAnimation.Begin(this);
+            this.Applinks.Focus();
         }
         catch (Exception ex)
         {

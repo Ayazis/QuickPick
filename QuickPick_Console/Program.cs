@@ -8,6 +8,7 @@ using UpdateInstaller;
 using UpdateInstaller.Updates;
 using System.Diagnostics;
 using System.Windows.Threading;
+using System.Runtime.InteropServices;
 
 namespace QuickPick;
 
@@ -137,15 +138,16 @@ public class Program
 
 		// Show the window
 		ClickWindow._instance.ShowWindow();
-		ClickWindow._instance.Activate();
-		ClickWindow._instance.Focus();
-
-		// Add a one-time event handler for the first Tick of the timer
+	
+		// Some actions need to be done slightly later then the ShowWindown() method, when the UI is showing. 
+		// Using a Timer we make sure the UI is loaded before performing these actions.
 		timer.Tick += (sender, e) =>
 		{
-			// Handle the first tick (after a small delay)
-			ClickWindow._instance.Deactivated += ClickWindow._instance.HandleFocusLost;
-			ClickWindow._instance.LostFocus += ClickWindow._instance.HandleFocusLost;
+			ClickWindow._instance.Activate(); // Set focus to the Window after it is shown. If not done, the deactivated event will not fire.
+
+			// Set the deactivated event after the is shown, otherwise the UI will hide instantly.
+			ClickWindow._instance.Deactivated += ClickWindow._instance.HandleFocusLost; 
+			ClickWindow._instance.LostFocus += ClickWindow._instance.HandleFocusLost; 
 
 			// Stop the timer, as we only want this to happen once
 			timer.Stop();
@@ -153,7 +155,6 @@ public class Program
 
 		// Start the timer
 		timer.Start();
-
 
 	}
 
@@ -167,4 +168,5 @@ public class Program
 		_desktopTracker.Dispose();
 		_trayIconManager.RemoveTrayIcon();
 	}
+
 }
