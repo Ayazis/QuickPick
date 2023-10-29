@@ -6,59 +6,59 @@
         Title="QuickPick Settings" Height="300" Width="300"
         Foreground="White"        
         Background="#303030" 
-        DataContext="{x:Static vm:SettingsViewModel.Instance}" >
+        >
 
-    <Window.Resources>
-        <ResourceDictionary Source="../Resources.xaml"/>
-    </Window.Resources>
-    <Border Margin="20">
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
+<Window.Resources>
+    <ResourceDictionary Source="../Resources.xaml"/>
+</Window.Resources>
+<Border Margin="20">
+    <StackPanel>
 
-            <GroupBox Header="Auto Update:" Grid.Row="0" Foreground="{StaticResource ForegroundBrush}" BorderThickness="0.0" >
-                <GroupBox.HeaderTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding}" Foreground="{StaticResource ForegroundBrush}"/>
-                    </DataTemplate>
-                </GroupBox.HeaderTemplate>
-                <StackPanel>
-                    <RadioButton Content="Never" 
+        <GroupBox Header="Auto Update:" Foreground="{StaticResource ForegroundBrush}" BorderThickness="0.0" >
+            <GroupBox.HeaderTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding}" Foreground="{StaticResource ForegroundBrush}"/>
+                </DataTemplate>
+            </GroupBox.HeaderTemplate>
+            <StackPanel>
+                <RadioButton Content="Never" 
                      GroupName="AutoUpdate" 
                      Foreground="{StaticResource ForegroundBrush}"
                      IsChecked="{Binding AutoUpdateSetting, Converter={StaticResource EnumToBooleanConverter}, 
                         ConverterParameter={x:Static local:AutoUpdateSetting.Never}}" />
 
 
-                    <RadioButton Content="Pre-Release" 
+                <RadioButton Content="Pre-Release" 
                      GroupName="AutoUpdate" 
                      Foreground="{StaticResource ForegroundBrush}"
                         IsChecked="{Binding AutoUpdateSetting, Converter={StaticResource EnumToBooleanConverter}, 
                     ConverterParameter={x:Static local:AutoUpdateSetting.PreRelease}}"/>
 
 
-                    <RadioButton Content="Master" 
+                <RadioButton Content="Master" 
                      GroupName="AutoUpdate" 
                      Foreground="{StaticResource ForegroundBrush}"
                     IsChecked="{Binding AutoUpdateSetting, Converter={StaticResource EnumToBooleanConverter}, 
                         ConverterParameter={x:Static local:AutoUpdateSetting.Master}}" />
 
-                </StackPanel>
-            </GroupBox>
+            </StackPanel>
+        </GroupBox>
 
-            <!-- Active Apps Section -->
-            <GroupBox Header="Show Active Apps:" Grid.Row="1" 
+        <!-- Active Apps Section -->
+        <GroupBox Header="Show Active Apps:"
                       Margin="0,20"
                       Foreground="{StaticResource ForegroundBrush}" BorderBrush="#6F6F6F" BorderThickness="0">
-                <StackPanel>
-                    <RadioButton Content="Include pinned TaskBar Apps" GroupName="PinnedApps"  Foreground="{StaticResource ForegroundBrush}"/>
-                    <RadioButton Content="Active Apps only" GroupName="PinnedApps"   Foreground="{StaticResource ForegroundBrush}"/>
+            <StackPanel>
+                <RadioButton Content="Include pinned TaskBar Apps" GroupName="PinnedApps"  Foreground="{StaticResource ForegroundBrush}"/>
+                <RadioButton Content="Active Apps only" GroupName="PinnedApps"   Foreground="{StaticResource ForegroundBrush}"/>
 
 
-                </StackPanel>
-            </GroupBox>
-        </Grid>
-    </Border>
+            </StackPanel>
+        </GroupBox>
+
+        <Button Margin="10,0" Content="Apply" Padding="0,0,0,3"  HorizontalAlignment="left" Width="50" 
+                    Click="Apply_Click"/>
+    </StackPanel>
+</Border>
+
 </Window>

@@ -10,6 +10,7 @@ public class TrayIconManager
 {
 	private NotifyIcon _trayIcon;
 	private ContextMenuStrip _contextMenu;
+	SettingsWindow _settingsWindow;
 
 	public void CreateTrayIcon()
 	{
@@ -25,7 +26,7 @@ public class TrayIconManager
 			Visible = true,
 			ContextMenuStrip = _contextMenu
 			,
-			Text= $"QuickPick {currentVersion}"
+			Text = $"QuickPick {currentVersion}"
 		};
 	}
 	private Icon CreateIcon()
@@ -61,7 +62,17 @@ public class TrayIconManager
 
 	private void OnSettingsClick(object sender, EventArgs e)
 	{
-		new SettingsWindow().Show();
+		if (_settingsWindow == null)
+		{
+			_settingsWindow = new(new SettingsViewModel());
+			_settingsWindow.ApplySettings += _settingsWindow_ApplySettings;
+		}
+
+		_settingsWindow.Show();
 	}
 
+	private void _settingsWindow_ApplySettings(object sender, EventArgs e)
+	{
+		Settings.Instance.ApplySettings(_settingsWindow.ViewModel);
+	}
 }
