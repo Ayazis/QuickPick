@@ -62,12 +62,9 @@ public class TrayIconManager
 
 	private void OnSettingsClick(object sender, EventArgs e)
 	{
-		if (_settingsWindow == null)
-		{
-			_settingsWindow = new(new SettingsViewModel());
-			_settingsWindow.ApplySettings += _settingsWindow_ApplySettings;
-		}
 
+		_settingsWindow = new(new SettingsViewModel());
+		_settingsWindow.ApplySettings += _settingsWindow_ApplySettings;
 		_settingsWindow.Show();
 	}
 

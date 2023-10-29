@@ -81,7 +81,8 @@ public partial class ClickWindow : Window
 
     public void UpdateTaskbarShortCuts()
     {
-        List<AppLink> apps = AppLinkRetriever.GetPinnedAppsAndActiveWindows();
+        bool includePinnedApps = Settings.Instance.ActiveAppSetting == UI.Views.Settings.ActiveAppSetting.IncludePinnedTaskBarApps;
+        List<AppLink> apps = AppLinkRetriever.GetPinnedAppsAndActiveWindows(includePinnedApps);
 
         foreach (var app in apps)
         {

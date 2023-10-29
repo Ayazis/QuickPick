@@ -4,10 +4,14 @@ namespace QuickPick
 {
 	public class Settings
 	{
-		public static Settings Instance => new();
+		static Settings()
+		{
+			_instance = new();
+		}
+		public static Settings Instance => _instance;
 		private Settings() { }
 
-
+		private static Settings _instance;
 		public ActiveAppSetting ActiveAppSetting { get; set; }
 		public AutoUpdateSetting AutoUpdateSetting { get; set; }
 		public void ApplySettings(SettingsViewModel vm)

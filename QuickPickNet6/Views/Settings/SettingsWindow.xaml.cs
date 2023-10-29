@@ -23,6 +23,7 @@ namespace QuickPick.UI.Views.Settings
 		public SettingsWindow(SettingsViewModel viewModel)
         {
             ViewModel = viewModel;
+            this.DataContext = ViewModel;
             InitializeComponent();
         }
 

@@ -49,11 +49,18 @@
                       Margin="0,20"
                       Foreground="{StaticResource ForegroundBrush}" BorderBrush="#6F6F6F" BorderThickness="0">
             <StackPanel>
-                <RadioButton Content="Include pinned TaskBar Apps" GroupName="PinnedApps"  Foreground="{StaticResource ForegroundBrush}"/>
-                <RadioButton Content="Active Apps only" GroupName="PinnedApps"   Foreground="{StaticResource ForegroundBrush}"/>
+                <RadioButton Content="Include pinned TaskBar Apps" GroupName="PinnedApps"  
+                             Foreground="{StaticResource ForegroundBrush}"
+                             IsChecked="{Binding ActiveAppSetting, Converter={StaticResource EnumToBooleanConverter}, 
+                             ConverterParameter={x:Static local:ActiveAppSetting.IncludePinnedTaskBarApps}}" />
+
+                    <RadioButton Content="Active Apps only" GroupName="PinnedApps"   
+                             Foreground="{StaticResource ForegroundBrush}" 
+                             IsChecked="{Binding ActiveAppSetting, Converter={StaticResource EnumToBooleanConverter}, 
+                             ConverterParameter={x:Static local:ActiveAppSetting.ActiveAppsOnly}}"/>
 
 
-            </StackPanel>
+                </StackPanel>
         </GroupBox>
 
         <Button Margin="10,0" Content="Apply" Padding="0,0,0,3"  HorizontalAlignment="left" Width="50" 
