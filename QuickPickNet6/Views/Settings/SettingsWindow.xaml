@@ -1,10 +1,13 @@
 ﻿<Window x:Class="QuickPick.UI.Views.Settings.SettingsWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:QuickPick.UI.Views.Settings"
         Title="QuickPick Settings" Height="300" Width="300"
         Foreground="White"        
-        Background="{StaticResource BackgroundBrush}" >
-
+        Background="#303030" >
+    <Window.DataContext>
+        <vm:SettingsViewModel/>
+    </Window.DataContext>
     <Window.Resources>
         <ResourceDictionary Source="../Resources.xaml"/>
     </Window.Resources>
@@ -15,7 +18,6 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <!-- Auto Update Section -->
             <GroupBox Header="Auto Update:" Grid.Row="0" Foreground="{StaticResource ForegroundBrush}" BorderThickness="0.0" >
                 <GroupBox.HeaderTemplate>
                     <DataTemplate>
@@ -23,9 +25,23 @@
                     </DataTemplate>
                 </GroupBox.HeaderTemplate>
                 <StackPanel>
-                    <RadioButton  Content="Never" GroupName="AutoUpdate" Foreground="{StaticResource ForegroundBrush}"/>
-                    <RadioButton Content="Pre-Release" GroupName="AutoUpdate" Foreground="{StaticResource ForegroundBrush}"/>
-                    <RadioButton Content="Master" GroupName="AutoUpdate" Foreground="{StaticResource ForegroundBrush}"/>
+                    <RadioButton Content="Never" 
+                     GroupName="AutoUpdate" 
+                     Foreground="{StaticResource ForegroundBrush}"/>
+                    <!--IsChecked="{Binding AutoUpdateSetting, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static local:AutoUpdateSetting.Never}}"-->
+                                 
+
+                        <RadioButton Content="Pre-Release" 
+                     GroupName="AutoUpdate" 
+                     Foreground="{StaticResource ForegroundBrush}"/>
+                        <!--IsChecked="{Binding AutoUpdateSetting, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static local:AutoUpdateSetting.PreRelease}}"-->
+                                 
+
+                    <RadioButton Content="Master" 
+                     GroupName="AutoUpdate" 
+                     Foreground="{StaticResource ForegroundBrush}"/>
+                    <!--IsChecked="{Binding AutoUpdateSetting, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static local:AutoUpdateSetting.Master}}"-->
+                                 
                 </StackPanel>
             </GroupBox>
 

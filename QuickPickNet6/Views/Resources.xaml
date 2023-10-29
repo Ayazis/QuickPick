@@ -3,6 +3,8 @@
                     xmlns:converters="clr-namespace:QuickPick.Converters">
 
     <converters:CenterToMarginConverter x:Key="CenterToMarginConverter"/>
+    <converters:EnumToBooleanConverter x:Key="EnumToBooleanConverter"/>
+
 
     <SolidColorBrush x:Key="BackgroundBrush" Color="#303030"/>
     <SolidColorBrush x:Key="ForegroundBrush" Color="#F7F7F7"/>
