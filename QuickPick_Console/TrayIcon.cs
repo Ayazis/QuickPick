@@ -1,4 +1,5 @@
-﻿using System;
+﻿using QuickPick.UI.Views.Settings;
+using System;
 using System.Drawing;
 using System.IO;
 using System.Reflection;
@@ -60,7 +61,7 @@ public class TrayIconManager
 
 	private void OnSettingsClick(object sender, EventArgs e)
 	{
-		SettingsMenuClicked?.Invoke(this, e);
+		new SettingsWindow().Show();
 	}
 
 }

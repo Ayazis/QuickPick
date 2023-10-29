@@ -2,8 +2,12 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:converters="clr-namespace:QuickPick.Converters">
 
-    <converters:CenterToMarginConverter x:Key="CenterToMarginConverter"/>    
-    
+    <converters:CenterToMarginConverter x:Key="CenterToMarginConverter"/>
+
+    <SolidColorBrush x:Key="BackgroundBrush" Color="#303030"/>
+    <SolidColorBrush x:Key="ForegroundBrush" Color="#F7F7F7"/>
+    <SolidColorBrush x:Key="BorderBrush" Color="#6F6F6F"/>
+
     <Style x:Key="RoundButton" TargetType="{x:Type Button}">
         <Setter Property="Foreground" Value="#F7F7F7"/>
         <Setter Property="HorizontalContentAlignment" Value="Center"/>
