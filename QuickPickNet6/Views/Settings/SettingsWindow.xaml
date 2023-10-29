@@ -5,10 +5,9 @@
         xmlns:local="clr-namespace:QuickPick.UI.Views.Settings"
         Title="QuickPick Settings" Height="300" Width="300"
         Foreground="White"        
-        Background="#303030" >
-    <Window.DataContext>
-        <vm:SettingsViewModel/>
-    </Window.DataContext>
+        Background="#303030" 
+        DataContext="{x:Static vm:SettingsViewModel.Instance}" >
+
     <Window.Resources>
         <ResourceDictionary Source="../Resources.xaml"/>
     </Window.Resources>
