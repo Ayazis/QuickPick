@@ -37,6 +37,7 @@ public partial class ClickWindow : Window
     public static ThumbnailTimer ThumbnailTimer;
 
     private ThumbnailRectCreator _thumbnailRectCreator = new();
+    static DateTime _timeStampLastShown;
     public Storyboard HideAnimation { get; private set; }
     public Storyboard ShowAnimation { get; private set; }
     public ClickWindow()
@@ -56,6 +57,7 @@ public partial class ClickWindow : Window
 
     public void HandleFocusLost(object sender, EventArgs e)
     {
+        // Don't do when window just switched.
         HideWindow();
     }
 
@@ -111,7 +113,13 @@ public partial class ClickWindow : Window
     {
         try
         {
-            _instance.Deactivated -= _instance.HandleFocusLost;
+            // If the Ui has been shown in the last couple of millieseconds, we should not hide the window.
+            // This often happens when a user clicks the hotkey combination whilst the ui is showing.
+            TimeSpan timeSinceUIShown = DateTime.Now - _timeStampLastShown;            
+            if (timeSinceUIShown < TimeSpan.FromMilliseconds(200))
+                return;  
+
+                _instance.Deactivated -= _instance.HandleFocusLost;
             _instance.LostFocus -= _instance.HandleFocusLost;
             _instance.HideAnimation.Begin(_instance);
 
@@ -126,12 +134,15 @@ public partial class ClickWindow : Window
     {
         try
         {
+            _timeStampLastShown = DateTime.Now;
             Visibility = Visibility.Visible;
             var mousePosition = MousePosition.GetCursorPosition();
             Left = mousePosition.X - ActualWidth / 2;
             Top = mousePosition.Y - ActualHeight / 2;
             ShowAnimation.Begin(this);
-            this.Applinks.Focus();
+            this.ThumbnailCanvas.InvalidateVisual();
+            this.Applinks.Focus();            
+            
         }
         catch (Exception ex)
         {
