@@ -19,18 +19,30 @@ namespace QuickPick.UI.Views.Settings
     /// </summary>
     public partial class SettingsWindow : Window
     {
-		public SettingsViewModel ViewModel;
-		public SettingsWindow(SettingsViewModel viewModel)
+        public SettingsViewModel ViewModel;
+        public SettingsWindow(SettingsViewModel viewModel)
         {
             ViewModel = viewModel;
             this.DataContext = ViewModel;
             InitializeComponent();
+            this.MouseLeftButtonDown += SettingsWindow_MouseDown;
         }
 
-		public event EventHandler ApplySettings;
-		private void Apply_Click(object sender, RoutedEventArgs e)
-		{
+        private void SettingsWindow_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            this.DragMove();
+        }
+
+        public event EventHandler ApplySettings;
+        private void Apply_Click(object sender, RoutedEventArgs e)
+        {
             ApplySettings?.Invoke(this, EventArgs.Empty);
+            this.Close();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
         }
     }
 }

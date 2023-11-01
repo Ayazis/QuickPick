@@ -3,69 +3,75 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="clr-namespace:QuickPick.UI.Views.Settings"
         xmlns:local="clr-namespace:QuickPick.UI.Views.Settings"
-        Title="QuickPick Settings" Height="300" Width="300"
-        Foreground="White"        
+        Title="QuickPick Settings" Height="250" Width="250"
+        Foreground="White"           
         Background="#303030" 
+        WindowStyle="None"
         >
 
-<Window.Resources>
-    <ResourceDictionary Source="../Resources.xaml"/>
-</Window.Resources>
-<Border Margin="20">
+    <Window.Resources>
+        <ResourceDictionary Source="../Resources.xaml"/>
+    </Window.Resources>
     <StackPanel>
-
-        <GroupBox Header="Auto Update:" Foreground="{StaticResource ForegroundBrush}" BorderThickness="0.0" >
-            <GroupBox.HeaderTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding}" Foreground="{StaticResource ForegroundBrush}"/>
-                </DataTemplate>
-            </GroupBox.HeaderTemplate>
+        <Button Content=" X " Width="25" Height="25" Click="Button_Click" HorizontalAlignment="Right"  
+                Style="{StaticResource ResourceKey =QpButtonStyle }"               
+                />
+        <Border Margin="20,0">
             <StackPanel>
-                <RadioButton Content="Never" 
+                <TextBlock Text="{Binding VersionText}" Foreground="{StaticResource ForegroundBrush}" />
+                <GroupBox Header="Auto Update:" Foreground="{StaticResource ForegroundBrush}" BorderThickness="0.0" >
+                    <GroupBox.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding}" Foreground="{StaticResource ForegroundBrush}"/>
+                        </DataTemplate>
+                    </GroupBox.HeaderTemplate>
+                    <StackPanel>
+                        <RadioButton Content="Never" 
                      GroupName="AutoUpdate" 
                      Foreground="{StaticResource ForegroundBrush}"
                      IsChecked="{Binding AutoUpdateSetting, Converter={StaticResource EnumToBooleanConverter}, 
                         ConverterParameter={x:Static local:AutoUpdateSetting.Never}}" />
 
 
-                <RadioButton Content="Pre-Release" 
+                        <RadioButton Content="Pre-Release" 
                      GroupName="AutoUpdate" 
                      Foreground="{StaticResource ForegroundBrush}"
                         IsChecked="{Binding AutoUpdateSetting, Converter={StaticResource EnumToBooleanConverter}, 
                     ConverterParameter={x:Static local:AutoUpdateSetting.PreRelease}}"/>
 
 
-                <RadioButton Content="Master" 
+                        <RadioButton Content="Master" 
                      GroupName="AutoUpdate" 
                      Foreground="{StaticResource ForegroundBrush}"
                     IsChecked="{Binding AutoUpdateSetting, Converter={StaticResource EnumToBooleanConverter}, 
                         ConverterParameter={x:Static local:AutoUpdateSetting.Master}}" />
 
-            </StackPanel>
-        </GroupBox>
+                    </StackPanel>
+                </GroupBox>
 
-        <!-- Active Apps Section -->
-        <GroupBox Header="Show Active Apps:"
+                <!-- Active Apps Section -->
+                <GroupBox Header="Show Active Apps:"
                       Margin="0,20"
                       Foreground="{StaticResource ForegroundBrush}" BorderBrush="#6F6F6F" BorderThickness="0">
-            <StackPanel>
-                <RadioButton Content="Include pinned TaskBar Apps" GroupName="PinnedApps"  
+                    <StackPanel>
+                        <RadioButton Content="Include pinned TaskBar Apps" GroupName="PinnedApps"  
                              Foreground="{StaticResource ForegroundBrush}"
                              IsChecked="{Binding ActiveAppSetting, Converter={StaticResource EnumToBooleanConverter}, 
                              ConverterParameter={x:Static local:ActiveAppSetting.IncludePinnedTaskBarApps}}" />
 
-                    <RadioButton Content="Active Apps only" GroupName="PinnedApps"   
+                        <RadioButton Content="Active Apps only" GroupName="PinnedApps"   
                              Foreground="{StaticResource ForegroundBrush}" 
                              IsChecked="{Binding ActiveAppSetting, Converter={StaticResource EnumToBooleanConverter}, 
                              ConverterParameter={x:Static local:ActiveAppSetting.ActiveAppsOnly}}"/>
 
 
-                </StackPanel>
-        </GroupBox>
+                    </StackPanel>
+                </GroupBox>
 
-        <Button Margin="10,0" Content="Apply" Padding="0,0,0,3"  HorizontalAlignment="left" Width="50" 
+                <Button Margin="10,0" Content="Apply" Padding="0,0,0,3"  HorizontalAlignment="left" Width="50" 
+                  Style="{StaticResource ResourceKey=QpButtonStyle}"                        
                     Click="Apply_Click"/>
+            </StackPanel>
+        </Border>
     </StackPanel>
-</Border>
-
 </Window>
