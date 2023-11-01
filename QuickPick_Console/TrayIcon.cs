@@ -62,14 +62,7 @@ public class TrayIconManager
 
 	private void OnSettingsClick(object sender, EventArgs e)
 	{
-
-		_settingsWindow = new(new SettingsViewModel());
-		_settingsWindow.ApplySettings += _settingsWindow_ApplySettings;
-		_settingsWindow.Show();
-	}
-
-	private void _settingsWindow_ApplySettings(object sender, EventArgs e)
-	{
-		Settings.Instance.ApplySettings(_settingsWindow.ViewModel);
+		SettingsWindow.Instance.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
+		SettingsWindow.Instance.Show();		
 	}
 }

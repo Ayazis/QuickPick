@@ -9,6 +9,7 @@ using UpdateInstaller.Updates;
 using System.Diagnostics;
 using System.Windows.Threading;
 using System.Runtime.InteropServices;
+using QuickPick.UI.Views.Settings;
 
 namespace QuickPick;
 
@@ -26,15 +27,19 @@ public class Program
 	{
 		try
 		{
+			SettingsManager.Instance.LoadSettings();
+			SettingsWindow.Instance.ViewModel.ApplySettings(SettingsManager.Instance.Settings);
 			_trayIconManager.CreateTrayIcon();
 #if !DEBUG
-			CheckInputArguments(args);
+			//CheckInputArguments(args);
 #endif
 			// On every desktop change, the current active windows for that desktop are retrieved.
 			StartDesktopTracking();
 
 			// Hook into Keyboard and Mouse to listen for User set Keycombination.
 			StartListeningToKeyboardAndMouse();
+
+			SettingsWindow.Instance.ApplySettings += ApplySettings;
 
 			SubscribeToExitEvent_ToHandleCleanup();
 
@@ -45,6 +50,12 @@ public class Program
 		{
 			Logs.Logger?.Log(ex);
 		}
+	}
+
+	private static void ApplySettings(object sender, EventArgs e)
+	{
+		SettingsManager.Instance.ApplySettings(SettingsWindow.Instance.ViewModel);
+		
 	}
 
 	private static void CheckInputArguments(string[] args)

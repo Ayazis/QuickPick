@@ -1,28 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MouseAndKeyBoardHooks;
+using System;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace QuickPick.UI.Views.Settings
 {
     /// <summary>
-    /// Interaction logic for SettingsWindow.xaml
+    /// Interaction logic for SettingsWindow4.xaml
     /// </summary>
     public partial class SettingsWindow : Window
     {
-        public SettingsViewModel ViewModel;
-        public SettingsWindow(SettingsViewModel viewModel)
+		static SettingsWindow _instance;
+		public static SettingsWindow Instance => _instance ??= new SettingsWindow();
+		public SettingsViewModel ViewModel { get; private set; }
+
+		private SettingsWindow()
         {
-            ViewModel = viewModel;
+            ViewModel = new SettingsViewModel();
             this.DataContext = ViewModel;
             InitializeComponent();
             this.MouseLeftButtonDown += SettingsWindow_MouseDown;
@@ -33,16 +27,26 @@ namespace QuickPick.UI.Views.Settings
             this.DragMove();
         }
 
+        public void ShowWindow()
+        {
+			var mousePosition = MousePosition.GetCursorPosition();
+			Left = mousePosition.X - ActualWidth / 2;
+			Top = mousePosition.Y - ActualHeight / 2;
+			// get mouseposition.
+
+			Show();
+        }
+
         public event EventHandler ApplySettings;
         private void Apply_Click(object sender, RoutedEventArgs e)
         {
             ApplySettings?.Invoke(this, EventArgs.Empty);
-            this.Close();
+            this.Hide();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            this.Hide();
         }
     }
 }

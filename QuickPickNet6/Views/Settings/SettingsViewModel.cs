@@ -16,7 +16,7 @@ public enum ActiveAppSetting
 
 public class SettingsViewModel : ObservableObject
 {
-    private AutoUpdateSetting _autoUpdateSetting = AutoUpdateSetting.Master;
+    private AutoUpdateSetting _autoUpdateSetting = AutoUpdateSetting.PreRelease;
     private ActiveAppSetting _activeAppSetting = ActiveAppSetting.IncludePinnedTaskBarApps;
 
     private string _version => Assembly.GetExecutingAssembly().GetName().Version.ToString();
@@ -48,4 +48,9 @@ public class SettingsViewModel : ObservableObject
             }
         }
     }
+	public void ApplySettings(QuickPick.Settings settings)
+	{
+        AutoUpdateSetting = settings.AutoUpdateSetting;
+        ActiveAppSetting = settings.ActiveAppSetting;
+	}
 }
