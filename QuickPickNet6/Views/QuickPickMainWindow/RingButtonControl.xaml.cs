@@ -34,7 +34,7 @@ public partial class RingButtonControl : UserControl
         if (source.Name == nameof(this.TopRight))
         {
             InputSim.CtrlAltBreak();
-            ClickWindow.HideWindow();
+            ClickWindow.Instance.HideWindow();
         }
 
     }
@@ -50,6 +50,6 @@ public partial class RingButtonControl : UserControl
 
     private void SmallMiddleButton_Click(object sender, System.Windows.RoutedEventArgs e)
     {
-        ClickWindow.HideWindow();
+        ClickWindow.Instance.HideWindow();
     }
 }

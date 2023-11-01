@@ -44,7 +44,7 @@ public class AppLink
 
                 Process.Start(info);
             });
-            ClickWindow.HideWindow();
+            ClickWindow.Instance.HideWindow();
         }
     }
 }

@@ -11,11 +11,11 @@
              MinHeight="800"
              SizeToContent="WidthAndHeight"
              Background="#00000000"         
-             ShowInTaskbar="true"
+             ShowInTaskbar="False"
              AllowsTransparency="True" 
              WindowStyle="None" 
              WindowStartupLocation="Manual"
-             Topmost="True"        
+             Topmost="True"                   
              >
 
     <Window.DataContext>
@@ -33,11 +33,7 @@
         <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
         <Canvas x:Name="ThumbnailCanvas" HorizontalAlignment="Center" VerticalAlignment="Center" 
                 Width="800" 
-                Height="800"  
-                Margin="-5" 
-                RenderOptions.EdgeMode="Aliased"
-                UseLayoutRounding="True" 
-                ClipToBounds="True"
+                Height="800"                                 
                 />
         <Ellipse Width="150" Height="150" Fill="#B3000000" />
         <local:RingButtonControl/>

@@ -137,17 +137,17 @@ public class Program
 		timer.Interval = TimeSpan.FromMilliseconds(100); // Adjust the interval as needed
 
 		// Show the window
-		ClickWindow._instance.ShowWindow();
+		ClickWindow.Instance.ShowWindow();
 	
 		// Some actions need to be done slightly later then the ShowWindown() method, when the UI is showing. 
 		// Using a Timer we make sure the UI is loaded before performing these actions.
 		timer.Tick += (sender, e) =>
 		{
-			ClickWindow._instance.Activate(); // Set focus to the Window after it is shown. If not done, the deactivated event will not fire.
+			ClickWindow.Instance.Activate(); // Set focus to the Window after it is shown. If not done, the deactivated event will not fire.
 
 			// Set the deactivated event after the is shown, otherwise the UI will hide instantly.
-			ClickWindow._instance.Deactivated += ClickWindow._instance.HandleFocusLost; 
-			ClickWindow._instance.LostFocus += ClickWindow._instance.HandleFocusLost; 
+			ClickWindow.Instance.Deactivated += ClickWindow.Instance.HandleFocusLost; 
+			ClickWindow.Instance.LostFocus += ClickWindow.Instance.HandleFocusLost; 
 
 			// Stop the timer, as we only want this to happen once
 			timer.Stop();
