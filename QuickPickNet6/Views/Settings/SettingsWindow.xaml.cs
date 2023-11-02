@@ -30,8 +30,8 @@ namespace QuickPick.UI.Views.Settings
         public void ShowWindow()
         {
 			var mousePosition = MousePosition.GetCursorPosition();
-			Left = mousePosition.X - ActualWidth / 2;
-			Top = mousePosition.Y - ActualHeight / 2;
+			Left = mousePosition.X - Width / 2;
+			Top = mousePosition.Y - Height / 2;
 			// get mouseposition.
 
 			Show();
