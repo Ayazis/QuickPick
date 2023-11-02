@@ -1,4 +1,5 @@
-﻿using System;
+﻿using QuickPick.UI.Views.Settings;
+using System;
 using System.Drawing;
 using System.IO;
 using System.Reflection;
@@ -9,6 +10,7 @@ public class TrayIconManager
 {
 	private NotifyIcon _trayIcon;
 	private ContextMenuStrip _contextMenu;
+	SettingsWindow _settingsWindow;
 
 	public void CreateTrayIcon()
 	{
@@ -24,7 +26,7 @@ public class TrayIconManager
 			Visible = true,
 			ContextMenuStrip = _contextMenu
 			,
-			Text= $"QuickPick {currentVersion}"
+			Text = $"QuickPick {currentVersion}"
 		};
 	}
 	private Icon CreateIcon()
@@ -60,7 +62,7 @@ public class TrayIconManager
 
 	private void OnSettingsClick(object sender, EventArgs e)
 	{
-		SettingsMenuClicked?.Invoke(this, e);
+		SettingsWindow.Instance.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
+		SettingsWindow.Instance.Show();		
 	}
-
 }

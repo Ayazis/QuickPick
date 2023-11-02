@@ -30,13 +30,14 @@ namespace QuickPick;
 /// </summary>
 public partial class ClickWindow : Window
 {
-    public static ClickWindow _instance;
+    public static ClickWindow Instance;
     private QuickPickMainWindowModel _qpm = new QuickPickMainWindowModel();
     private IntPtr _quickPickWindowHandle;
     private List<ThumbnailView> _currentThumbnails = new List<ThumbnailView>();
     public static ThumbnailTimer ThumbnailTimer;
 
     private ThumbnailRectCreator _thumbnailRectCreator = new();
+    static DateTime _timeStampLastShown;
     public Storyboard HideAnimation { get; private set; }
     public Storyboard ShowAnimation { get; private set; }
     public ClickWindow()
@@ -51,7 +52,7 @@ public partial class ClickWindow : Window
 
         SetQuickPicksMainWindowHandle();
         UpdateLayout();
-        _instance = this;
+        Instance = this;
     }
 
     public void HandleFocusLost(object sender, EventArgs e)
@@ -81,7 +82,8 @@ public partial class ClickWindow : Window
 
     public void UpdateTaskbarShortCuts()
     {
-        List<AppLink> apps = AppLinkRetriever.GetPinnedAppsAndActiveWindows();
+        bool includePinnedApps = SettingsManager.Instance.Settings.ActiveAppSetting == UI.Views.Settings.ActiveAppSetting.IncludePinnedTaskBarApps;
+        List<AppLink> apps = AppLinkRetriever.GetPinnedAppsAndActiveWindows(includePinnedApps);
 
         foreach (var app in apps)
         {
@@ -106,13 +108,20 @@ public partial class ClickWindow : Window
         _qpm.NotifyPropertyChanged(nameof(_qpm.PinnedApps));
     }
 
-    public static void HideWindow()
+    public void HideWindow()
     {
         try
         {
-            _instance.Deactivated -= _instance.HandleFocusLost;
-            _instance.LostFocus -= _instance.HandleFocusLost;
-            _instance.HideAnimation.Begin(_instance);
+            // If the Ui has been shown in the last couple of millieseconds, we should not hide the window.
+            // This often happens when a user clicks the hotkey combination whilst the ui is showing.
+            TimeSpan timeSinceUIShown = DateTime.Now - _timeStampLastShown;
+            if (timeSinceUIShown < TimeSpan.FromMilliseconds(200))
+                return;
+
+
+            Deactivated -= HandleFocusLost;
+            LostFocus -= HandleFocusLost;
+            HideAnimation.Begin(this);
 
         }
         catch (Exception ex)
@@ -124,13 +133,13 @@ public partial class ClickWindow : Window
     public void ShowWindow()
     {
         try
-        {
+        {   
+            _timeStampLastShown = DateTime.Now;
             Visibility = Visibility.Visible;
             var mousePosition = MousePosition.GetCursorPosition();
             Left = mousePosition.X - ActualWidth / 2;
-            Top = mousePosition.Y - ActualHeight / 2;
-            ShowAnimation.Begin(this);
-            this.Applinks.Focus();
+            Top = mousePosition.Y - ActualHeight / 2;                                    
+            ShowAnimation.Begin(this);           
         }
         catch (Exception ex)
         {

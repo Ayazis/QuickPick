@@ -9,6 +9,7 @@ using UpdateInstaller.Updates;
 using System.Diagnostics;
 using System.Windows.Threading;
 using System.Runtime.InteropServices;
+using QuickPick.UI.Views.Settings;
 
 namespace QuickPick;
 
@@ -26,15 +27,19 @@ public class Program
 	{
 		try
 		{
+			SettingsManager.Instance.LoadSettings();
+			SettingsWindow.Instance.ViewModel.ApplySettings(SettingsManager.Instance.Settings);
 			_trayIconManager.CreateTrayIcon();
 #if !DEBUG
-			CheckInputArguments(args);
+			//CheckInputArguments(args);
 #endif
 			// On every desktop change, the current active windows for that desktop are retrieved.
 			StartDesktopTracking();
 
 			// Hook into Keyboard and Mouse to listen for User set Keycombination.
 			StartListeningToKeyboardAndMouse();
+
+			SettingsWindow.Instance.ApplySettings += ApplySettings;
 
 			SubscribeToExitEvent_ToHandleCleanup();
 
@@ -45,6 +50,12 @@ public class Program
 		{
 			Logs.Logger?.Log(ex);
 		}
+	}
+
+	private static void ApplySettings(object sender, EventArgs e)
+	{
+		SettingsManager.Instance.ApplySettings(SettingsWindow.Instance.ViewModel);
+		
 	}
 
 	private static void CheckInputArguments(string[] args)
@@ -137,17 +148,17 @@ public class Program
 		timer.Interval = TimeSpan.FromMilliseconds(100); // Adjust the interval as needed
 
 		// Show the window
-		ClickWindow._instance.ShowWindow();
+		ClickWindow.Instance.ShowWindow();
 	
 		// Some actions need to be done slightly later then the ShowWindown() method, when the UI is showing. 
 		// Using a Timer we make sure the UI is loaded before performing these actions.
 		timer.Tick += (sender, e) =>
 		{
-			ClickWindow._instance.Activate(); // Set focus to the Window after it is shown. If not done, the deactivated event will not fire.
+			ClickWindow.Instance.Activate(); // Set focus to the Window after it is shown. If not done, the deactivated event will not fire.
 
 			// Set the deactivated event after the is shown, otherwise the UI will hide instantly.
-			ClickWindow._instance.Deactivated += ClickWindow._instance.HandleFocusLost; 
-			ClickWindow._instance.LostFocus += ClickWindow._instance.HandleFocusLost; 
+			ClickWindow.Instance.Deactivated += ClickWindow.Instance.HandleFocusLost; 
+			ClickWindow.Instance.LostFocus += ClickWindow.Instance.HandleFocusLost; 
 
 			// Stop the timer, as we only want this to happen once
 			timer.Stop();
