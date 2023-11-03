@@ -48,6 +48,8 @@ public class MouseAndKeysCapture
 
 	private IntPtr MouseHookCallBack(int nCode, IntPtr wParam, IntPtr lParam)
 	{
+		// Todo: refactor for readability, 
+		// MouseAndKeyCapture should only forward the pressed and released event in winforms keys.
 		bool keyCombinationHit = false;
 		if (nCode < 0)
 			return CallNextHookEx(_mouseHookId, nCode, wParam, lParam);
