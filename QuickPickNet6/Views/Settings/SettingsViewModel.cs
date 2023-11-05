@@ -16,12 +16,19 @@ public enum ActiveAppSetting
 
 public class SettingsViewModel : ObservableObject
 {
+    public SettingsViewModel()
+    {        
+
+    }
     private AutoUpdateSetting _autoUpdateSetting = AutoUpdateSetting.PreRelease;
     private ActiveAppSetting _activeAppSetting = ActiveAppSetting.IncludePinnedTaskBarApps;
 
-    private string _version => Assembly.GetExecutingAssembly().GetName().Version.ToString();
+    private string _version => Assembly.GetEntryAssembly().GetName().Version.ToString();
     private string _title => $"QuickPick {_version} - Settings";
     public string Title { get { return _title; } }
+
+
+    public string CurrentKeyCombo { get; set; } = "ctrl + RMouse";
 
     public AutoUpdateSetting AutoUpdateSetting
     {
@@ -48,9 +55,9 @@ public class SettingsViewModel : ObservableObject
             }
         }
     }
-	public void ApplySettings(QuickPick.Settings settings)
-	{
+    public void ApplySettings(QuickPick.Settings settings)
+    {
         AutoUpdateSetting = settings.AutoUpdateSetting;
         ActiveAppSetting = settings.ActiveAppSetting;
-	}
+    }
 }

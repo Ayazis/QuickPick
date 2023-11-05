@@ -4,98 +4,109 @@ using System.Windows.Forms;
 
 namespace Utilities.Mouse_and_Keyboard
 {
-	public interface IKeyInputHandler
-	{
-		/// <summary>
-		/// Determines if the pressed key results in the preset keycombination.
-		/// </summary>
-		/// <param name="key"></param>
-		/// <returns></returns>
-		bool IsPresetKeyCombinationHit(Keys key);
-		void KeyReleased(Keys keys);
-		delegate void KeyCombinationHitEventHandler();
-		event KeyCombinationHitEventHandler KeyCombinationHit;
-	}
+    public interface IKeyInputHandler
+    {
+        /// <summary>
+        /// Determines if the pressed key results in the preset keycombination.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        bool IsPresetKeyCombinationHit(Keys key);
+        void KeyReleased(Keys keys);
+        delegate void KeyCombinationHitEventHandler();
+        event KeyCombinationHitEventHandler KeyCombinationHit;
+    }
 
-	public class KeyInputHandler : IKeyInputHandler
-	{
-		private HashSet<Keys> _pressedKeys = new HashSet<Keys>();
+    public class KeyInputHandler : IKeyInputHandler
+    {
+        private HashSet<Keys> _pressedKeys = new HashSet<Keys>();
 
-		public static bool _isRecordingNewCombo = false;
-		HashSet<Keys> _oldCombo;
-		public HashSet<Keys> PresetKeyCombination { get; set; }
+        public static bool _isRecordingNewCombo = false;
+        HashSet<Keys> _oldCombo;
+        public HashSet<Keys> PresetKeyCombination { get; set; }
 
-		public static KeyInputHandler Instance { get; private set; } // todo: refactor. KeyINputHandler should not be concerned with KeyCombo preferences.
-		public KeyInputHandler(IEnumerable<Keys> presetKeyCombination)
-		{
-			Instance = this;
-			if (presetKeyCombination == null || !presetKeyCombination.Any())
-			{
-				throw new ArgumentNullException(nameof(presetKeyCombination), "Preset key combination must not be null or empty.");
-			}
+        public static KeyInputHandler Instance { get; private set; } // todo: refactor. KeyINputHandler should not be concerned with KeyCombo preferences.
+        public KeyInputHandler(IEnumerable<Keys> presetKeyCombination)
+        {
+            Instance = this;
+            if (presetKeyCombination == null || !presetKeyCombination.Any())
+            {
+                throw new ArgumentNullException(nameof(presetKeyCombination), "Preset key combination must not be null or empty.");
+            }
 
-			PresetKeyCombination = new HashSet<Keys>(presetKeyCombination);
-		}
+            PresetKeyCombination = new HashSet<Keys>(presetKeyCombination);
+        }
 
-		public event IKeyInputHandler.KeyCombinationHitEventHandler KeyCombinationHit;
+        public event IKeyInputHandler.KeyCombinationHitEventHandler KeyCombinationHit;
 
-		public void StartRecordingNewCombo()
-		{
-			_oldCombo = PresetKeyCombination;
-			_isRecordingNewCombo = true;
-		}
+        public void StartRecordingNewCombo()
+        {
+            _oldCombo.Clear();
+            foreach (var key in PresetKeyCombination)
+            {
+                _oldCombo.Add(key);
+            }
+            _isRecordingNewCombo = true;
+        }
 
-		public void CancelRecording()
-		{
-			_isRecordingNewCombo = false;
-			_oldCombo.Clear();
-			_oldCombo = null;
-		}
+        public void CancelRecording()
+        {
+            _isRecordingNewCombo = false;
+            _oldCombo.Clear();
+            _oldCombo = null;
+        }
 
-		public void ApplyNewRecording()
-		{
-			_isRecordingNewCombo = false;
-			PresetKeyCombination = _pressedKeys;
-		}
-		public bool IsPresetKeyCombinationHit(Keys key)
-		{
-			if(_isRecordingNewCombo)
-			{
-				if (key == Keys.LButton)
-					return false; // left mouse button is prohibited.
+        public HashSet<Keys> ApplyNewRecording()
+        {
+            _isRecordingNewCombo = false;
+            PresetKeyCombination.Clear();
+            foreach (var key in _pressedKeys)
+            {
+                PresetKeyCombination.Add(key);
+            }
 
-				_pressedKeys.Add(key);
-				return false;
-			}
-			if (PresetKeyCombination.Contains(key))
-			{
-				_pressedKeys.Add(key);  // If it's already there, it won't be added again.
+            return PresetKeyCombination;
+        }
+        public bool IsPresetKeyCombinationHit(Keys key)
+        {
+            if (_isRecordingNewCombo)
+            {
+                if (key == Keys.LButton)
+                    return false; // left mouse button is prohibited.
 
-				if (_pressedKeys.Count == PresetKeyCombination.Count)
-				{
-					return IsHotKeyCombinationHit();
-				}
-			}
-			return false;
-		}
+                _pressedKeys.Add(key);
+                return false;
+            }
 
-		public void KeyReleased(Keys key)
-		{
-			_pressedKeys.Remove(key);  // If it's not there, nothing happens.
-		}
+            if (PresetKeyCombination.Contains(key))
+            {
+                _pressedKeys.Add(key);  // If it's already there, it won't be added again.
 
-		private bool IsHotKeyCombinationHit()
-		{
-			bool allPressed = PresetKeyCombination.All(_pressedKeys.Contains);
+                if (_pressedKeys.Count == PresetKeyCombination.Count)
+                {
+                    return IsHotKeyCombinationHit();
+                }
+            }
+            return false;
+        }
 
-			if (allPressed)
-			{
-				_pressedKeys.Clear();
-				KeyCombinationHit?.Invoke();
-				return true;
-			}
+        public void KeyReleased(Keys key)
+        {
+            _pressedKeys.Remove(key);  // If it's not there, nothing happens.
+        }
 
-			return false;
-		}
-	}
+        private bool IsHotKeyCombinationHit()
+        {
+            bool allPressed = PresetKeyCombination.All(_pressedKeys.Contains);
+
+            if (allPressed)
+            {
+                _pressedKeys.Clear();
+                KeyCombinationHit?.Invoke();
+                return true;
+            }
+
+            return false;
+        }
+    }
 }

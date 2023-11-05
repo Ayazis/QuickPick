@@ -2,6 +2,7 @@
 using System;
 using System.Windows;
 using System.Windows.Input;
+using Utilities.Mouse_and_Keyboard;
 
 namespace QuickPick.UI.Views.Settings
 {
@@ -47,6 +48,18 @@ namespace QuickPick.UI.Views.Settings
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             this.Hide();
+        }
+
+        private void btnKeyCombo_Click(object sender, RoutedEventArgs e)
+        {
+            if(KeyInputHandler._isRecordingNewCombo)
+            {
+               var newKeys =  KeyInputHandler.Instance.ApplyNewRecording();
+            }
+            else
+            {
+                KeyInputHandler.Instance.StartRecordingNewCombo();
+            }
         }
     }
 }
