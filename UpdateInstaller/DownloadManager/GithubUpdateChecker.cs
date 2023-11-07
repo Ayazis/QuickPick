@@ -78,17 +78,25 @@ public class GithubUpdateChecker : IUpdateChecker
 			return default;
 	}
 
-	private (Version version, string downloadUrl) GetVersionAndDownloadLink(JToken release)
-	{
-		string version = release["tag_name"].ToString();
-		string bodyUrl = release["body"].ToString();
-		string fileDownloadUrl = GetStringBetweenParentheses(bodyUrl);
+    private (Version version, string downloadUrl) GetVersionAndDownloadLink(JToken release)
+    {
+        string version = release["tag_name"].ToString();
 
+        try
+        {
+            string fileDownloadUrl = release["assets"]?[0]["browser_download_url"]?.ToString();
+            return (new Version(version), fileDownloadUrl);
+        }
+        catch (Exception)
+        {
+            // early versions of quickpick did not use the assets url but a url found in the body.
+            string bodyUrl = release["body"].ToString();
+            string fileDownloadUrl = GetStringBetweenParentheses(bodyUrl);
 
-		return (new Version(version), fileDownloadUrl);
-	}
-
-	private string GetStringBetweenParentheses(string input)
+            return (new Version(version), fileDownloadUrl);
+        }
+    }
+    private string GetStringBetweenParentheses(string input)
 	{
 		int startIndex = input.IndexOf('(') + 1;
 		int endIndex = input.IndexOf(')');

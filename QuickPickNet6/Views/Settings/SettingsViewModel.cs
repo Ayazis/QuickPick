@@ -23,6 +23,8 @@ public class SettingsViewModel : ObservableObject
     private string _title => $"QuickPick {_version} - Settings";
     public string Title { get { return _title; } }
 
+    public string CurrentKeyCombo { get; set; } = "ctrl + rMouse";
+
     public AutoUpdateSetting AutoUpdateSetting
     {
         get { return _autoUpdateSetting; }
