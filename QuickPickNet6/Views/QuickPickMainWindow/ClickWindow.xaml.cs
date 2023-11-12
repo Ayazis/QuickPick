@@ -23,6 +23,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Interop;
 using QuickPick.UI;
 using System.Runtime.CompilerServices;
+using System.Windows.Threading;
 
 namespace QuickPick;
 /// <summary>
@@ -37,7 +38,7 @@ public partial class ClickWindow : Window
     public static ThumbnailTimer ThumbnailTimer;
 
     private ThumbnailRectCreator _thumbnailRectCreator = new();
-    static DateTime _timeStampLastShown;
+    private DateTime _timeStampIgnoreHide; // Can be used to ignore the hide command.
     public Storyboard HideAnimation { get; private set; }
     public Storyboard ShowAnimation { get; private set; }
     public ClickWindow()
@@ -54,13 +55,39 @@ public partial class ClickWindow : Window
         UpdateLayout();
         Instance = this;
     }
+    public void SetCurrentTimeOnTimeStamp()
+    {
+        _timeStampIgnoreHide = DateTime.Now;
+    }
 
     public void HandleFocusLost(object sender, EventArgs e)
     {
-        HideWindow();
-    }
+        Debug.WriteLine("Lost Focus hit, dispatching...");
+		// Use Dispatcher to delay the handling of LostFocus event
+		Dispatcher.BeginInvoke(new Action(() =>
+		{
+			Debug.WriteLine("EVENT: Dispatch of Lost Focus Invoked.");
 
-    private void ClickWindow_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+			//TimedAction(HideWindow,50);
+			//HideWindow();
+			// Your LostFocus handling logic goes here
+			// This code will run after the button click event has been processed
+		}), DispatcherPriority.Background);
+		
+    }
+	private void TimedAction(Action action, int milliseconds)
+	{
+		var timer = new DispatcherTimer();
+		timer.Interval = TimeSpan.FromMilliseconds(milliseconds);
+		timer.Tick += (sender, args) =>
+		{
+			timer.Stop(); // Stop the timer
+			action(); // Execute the passed action
+		};
+		timer.Start();
+	}
+
+	private void ClickWindow_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
     {
         var collection = _qpm.PinnedApps;
         if (e.Delta > 0)
@@ -114,7 +141,7 @@ public partial class ClickWindow : Window
         {
             // If the Ui has been shown in the last couple of millieseconds, we should not hide the window.
             // This often happens when a user clicks the hotkey combination whilst the ui is showing.
-            TimeSpan timeSinceUIShown = DateTime.Now - _timeStampLastShown;
+            TimeSpan timeSinceUIShown = DateTime.Now - _timeStampIgnoreHide;
             if (timeSinceUIShown < TimeSpan.FromMilliseconds(200))
                 return;
 
@@ -134,7 +161,7 @@ public partial class ClickWindow : Window
     {
         try
         {   
-            _timeStampLastShown = DateTime.Now;
+            _timeStampIgnoreHide = DateTime.Now;
             Visibility = Visibility.Visible;
             var mousePosition = MousePosition.GetCursorPosition();
             Left = mousePosition.X - ActualWidth / 2;
@@ -161,6 +188,7 @@ public partial class ClickWindow : Window
     }
     private void Button_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
     {
+        //Debug.WriteLine("EVENT: Mouse Enter.");
         ThumbnailTimer.StopTimer();
         HideThumbnails();
         // todo: Move logic out of xaml.xs
