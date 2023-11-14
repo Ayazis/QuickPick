@@ -31,7 +31,7 @@ public class Program
 			SettingsWindow.Instance.ViewModel.ApplySettings(SettingsManager.Instance.Settings);
 			_trayIconManager.CreateTrayIcon();
 #if !DEBUG
-			//CheckInputArguments(args);
+			CheckInputArguments(args);
 #endif
 			// On every desktop change, the current active windows for that desktop are retrieved.
 			StartDesktopTracking();
