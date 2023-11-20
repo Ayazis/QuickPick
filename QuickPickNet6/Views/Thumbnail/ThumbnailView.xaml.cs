@@ -28,9 +28,6 @@ public partial class ThumbnailView : UserControl
 		this.DataContext = context;
 		_context = context;
 		this.Visibility = System.Windows.Visibility.Hidden;
-		this.btnClose.Click += this.btnClose_Click;
-
-
 	}
 
 	public async Task FadeIn()
@@ -77,8 +74,6 @@ public partial class ThumbnailView : UserControl
 			// Make sure the opacity ends at 1 for full visibiblity.
 			this.Opacity = 1;
 		});
-
-
 	}
 
 	public void Hide()
@@ -89,6 +84,7 @@ public partial class ThumbnailView : UserControl
 
 	private void UserControl_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
 	{
+		ClickWindow.Instance.HidingIsEnabled = false;
 		var color = (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#101010");
 
 		// Set the fill color of the rectangle
@@ -100,6 +96,7 @@ public partial class ThumbnailView : UserControl
 
 	private void UserControl_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
 	{
+		ClickWindow.Instance.HidingIsEnabled = true;
 		var color = (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#202020");
 		SolidColorBrush fillBrush = new SolidColorBrush(color);
 
@@ -145,5 +142,10 @@ public partial class ThumbnailView : UserControl
 			action(); // Execute the passed action
 		};
 		timer.Start();
+	}
+
+	private void btnClose_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+	{
+		btnClose_Click(sender, null);
 	}
 }

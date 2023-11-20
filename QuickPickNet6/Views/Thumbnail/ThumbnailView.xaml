@@ -23,7 +23,11 @@
         <Grid>
             <TextBlock Text="{Binding WindowTitle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Foreground="White"   
                        d:Text="PlaceholderTitle" Margin="12" MaxWidth="175" />
-            <Button Name="btnClose" Content=" X " Width="25" Height="25" 
+            <Button Name="btnClose" 
+                    Content=" X " 
+                    Width="25" 
+                    Height="25"                     
+                    Click="btnClose_Click"
   HorizontalAlignment="Right" 
   VerticalAlignment="Top"
   Background="Transparent" 

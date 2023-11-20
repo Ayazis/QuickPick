@@ -9,6 +9,7 @@ Major
 - Updater
 
 Minor
+- Investigate Use Popups instead of usercontrols
 - Handle Unsubscribing to events and COM cleanup upon exit.
 - Make QuickPick.UI a library instead of a winExe
 
