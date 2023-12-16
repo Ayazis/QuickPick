@@ -45,56 +45,71 @@ public class MouseAndKeysCapture
 		}
 	}
 
+    private IntPtr MouseHookCallBack(int nCode, IntPtr wParam, IntPtr lParam)
+    {
+        // If nCode is less than 0, the hook procedure must pass the message to the CallNextHookEx function.
+        if (nCode < 0)
+            return CallNextHookEx(_mouseHookId, nCode, wParam, lParam);
 
-	private IntPtr MouseHookCallBack(int nCode, IntPtr wParam, IntPtr lParam)
-	{
-		bool keyCombinationHit = false;
-		if (nCode < 0)
-			return CallNextHookEx(_mouseHookId, nCode, wParam, lParam);
+        MouseMessages input = (MouseMessages)wParam;
+        bool keyCombinationHit = false;
 
-		MouseMessages input = (MouseMessages)wParam;
+        switch (input)
+        {
+            case MouseMessages.WM_LBUTTONDOWN:
+            case MouseMessages.WM_RBUTTONDOWN:
+                // Check if the specified key is pressed
+                keyCombinationHit = KeyPressed(input == MouseMessages.WM_LBUTTONDOWN ? Keys.LButton : Keys.RButton);
+                break;
 
-		if (input == MouseMessages.WM_LBUTTONDOWN)
-			keyCombinationHit = KeyPressed(Keys.LButton);
+            case MouseMessages.WM_LBUTTONUP:
+            case MouseMessages.WM_RBUTTONUP:
+                // Mark the specified key as released
+                KeyReleased(input == MouseMessages.WM_LBUTTONUP ? Keys.LButton : Keys.RButton);
+                break;
+        }
 
-		else if (input == MouseMessages.WM_RBUTTONDOWN)
-			keyCombinationHit = KeyPressed(Keys.RButton);
+        // If a key combination is hit, prevent other software or Windows from receiving the key input
+        if (keyCombinationHit)
+        {
+            return IntPtr.Zero;
+        }
 
-		if (input == MouseMessages.WM_LBUTTONUP)
-			KeyReleased(Keys.LButton);
+        // Otherwise, pass the message to the next hook in the chain
+        return CallNextHookEx(_mouseHookId, nCode, wParam, lParam);
+    }
+    private IntPtr KeyBoardHookCallback(int nCode, IntPtr wParam, IntPtr lParam)
+    {
+        // If nCode is less than 0, the hook procedure must pass the message to the CallNextHookEx function.
+        if (nCode < 0)
+            return CallNextHookEx(_keyboardHookID, nCode, wParam, lParam);
 
-		else if (input == MouseMessages.WM_RBUTTONUP)
-			KeyReleased(Keys.RButton);
+        bool keyCombinationHit = false;
 
-		if (keyCombinationHit)
-		{			
-			return IntPtr.Zero; // Do not forward event, this will prevent other software (or windows) to do something with the KeyInput.
-		}
+        // Read the virtual key code from the lParam
+        int vkCode = Marshal.ReadInt32(lParam);
+        Keys key = (Keys)vkCode;
 
-		return CallNextHookEx(_mouseHookId, nCode, wParam, lParam);
-	}
+        if (wParam == (IntPtr)WM_KEYDOWN || wParam == (IntPtr)WM_SYSKEYDOWN)
+        {
+            // Check if the specified key is pressed
+            keyCombinationHit = KeyPressed(key);
+        }
+        else if (wParam == (IntPtr)WM_KEYUP)
+        {
+            // Mark the specified key as released
+            KeyReleased(key);
+        }
 
-	private IntPtr KeyBoardHookCallback(int nCode, IntPtr wParam, IntPtr lParam)
-	{
-		bool keyCombinationHit = false;
+        // If a key combination is hit, prevent other software or Windows from receiving the key input
+        if (keyCombinationHit)
+        {
+            return IntPtr.Zero;
+        }
 
-		if (nCode >= 0 && wParam == (IntPtr)WM_KEYDOWN || wParam == (IntPtr)WM_SYSKEYDOWN)
-		{
-			int vkCode = Marshal.ReadInt32(lParam);
-			keyCombinationHit = KeyPressed((Keys)vkCode);
-		}
-		else if (wParam == (IntPtr)WM_KEYUP)
-		{
-			int vkCode = Marshal.ReadInt32(lParam);
-			KeyReleased((Keys)vkCode);
-		}
-		if (keyCombinationHit)
-		{
-			return IntPtr.Zero; // Do not forward event, this will prevent other software (or windows) to do something with the KeyInput.
-		}
-		return CallNextHookEx(_keyboardHookID, nCode, wParam, lParam);
-	}
-
+        // Otherwise, pass the message to the next hook in the chain
+        return CallNextHookEx(_keyboardHookID, nCode, wParam, lParam);
+    }
 	bool KeyPressed(Keys key)
 	{
 		return _keyInputHandler.IsPresetKeyCombinationHit(key);

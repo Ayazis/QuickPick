@@ -34,7 +34,7 @@ public class Program
 #if !DEBUG
 			//CheckInputArguments(args);
 #else
-            CheckInputArguments(args);
+            //CheckInputArguments(args);
 #endif
             // On every desktop change, the current active windows for that desktop are retrieved.
             StartDesktopTracking();
