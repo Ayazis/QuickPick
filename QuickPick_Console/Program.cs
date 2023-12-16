@@ -19,8 +19,7 @@ public class Program
     static TrayIconManager _trayIconManager = new TrayIconManager();
     static DesktopTracker _desktopTracker;
     static ClickWindow _clickwindow = new ClickWindow();
-    static MouseAndKeysCapture _inputCapture;
-    static KeyInputHandler _keyInputHandler;
+    static MouseAndKeysCapture _inputCapture;    
     static IntPtr _quickPickMainWindowHandle;
 
     [STAThread]
@@ -78,7 +77,7 @@ public class Program
     {
         new ApplicationCloser().CloseApplication(arguments.ProcessIdToKill);
         FileCopier.CopyFiles(arguments.SourceFolder, arguments.TargetFolder);
-        Process.Start(arguments.PathToExecutable, arguments.TargetArguments);        
+        Process.Start(arguments.PathToExecutable, arguments.TargetArguments);
         Application.Current.Shutdown();
     }
 
@@ -93,7 +92,7 @@ public class Program
         {
             //new StartWindow().Show();
             InstallerParams installerParams = updateManager.DownloadUpdateAndGetInstallerArguments();
-            Process.Start(installerParams.InstallerPath, installerParams.Arguments.ToStringArray());            
+            Process.Start(installerParams.InstallerPath, installerParams.Arguments.ToStringArray());
             Application.Current.Shutdown();
         }
     }
@@ -116,7 +115,7 @@ public class Program
     private static void RunApplicationIndefinetely()
     {  // Create the Application object
         Application app = new();
-        app.Run();        
+        app.Run();
     }
 
     private static void SubscribeToExitEvent_ToHandleCleanup()
@@ -127,11 +126,11 @@ public class Program
     private static void StartListeningToKeyboardAndMouse()
     {
         List<Keys> keyCombination = new List<Keys> { Keys.LControlKey, Keys.RButton };
-        _keyInputHandler = new KeyInputHandler(keyCombination);
-        _inputCapture = new MouseAndKeysCapture(_keyInputHandler);
+        KeyInputHandler.Instance.SetKeycombination(keyCombination);
+        _inputCapture = new MouseAndKeysCapture();
         _inputCapture.HookIntoMouseAndKeyBoard();
 
-        _keyInputHandler.KeyCombinationHit += _keyInputHandler_KeyCombinationHit;
+        KeyInputHandler.Instance.KeyCombinationHit += _keyInputHandler_KeyCombinationHit;
     }
 
     private static void StartDesktopTracking()
@@ -147,7 +146,7 @@ public class Program
 
 
         DispatcherTimer timer = new DispatcherTimer();
-        timer.Interval = TimeSpan.FromMilliseconds(100); // Adjust the interval as needed
+        timer.Interval = TimeSpan.FromMilliseconds(100);
 
         // Show the window
         ClickWindow.Instance.ShowWindow();

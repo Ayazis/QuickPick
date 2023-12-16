@@ -25,12 +25,10 @@ public class MouseAndKeysCapture
 	internal LowLevelKeyboardProc _keyboardProc;
 	internal LowLevelMouseProc _mouseProc;
 	internal IntPtr _keyboardHookID = IntPtr.Zero;
-	internal IntPtr _mouseHookId = IntPtr.Zero;
-	IKeyInputHandler _keyInputHandler;
+	internal IntPtr _mouseHookId = IntPtr.Zero;	
 
-	public MouseAndKeysCapture(IKeyInputHandler keyInputHandler)
-	{
-		_keyInputHandler = keyInputHandler;
+	public MouseAndKeysCapture()
+	{		
 		_keyboardProc = KeyBoardHookCallback;
 		_mouseProc = MouseHookCallBack;
 	}
@@ -112,12 +110,12 @@ public class MouseAndKeysCapture
     }
 	bool KeyPressed(Keys key)
 	{
-		return _keyInputHandler.IsPresetKeyCombinationHit(key);
+		return KeyInputHandler.Instance.IsPresetKeyCombinationHit(key);
 	}
 
 	void KeyReleased(Keys key)
 	{
-		_keyInputHandler.KeyReleased(key);
+        KeyInputHandler.Instance.KeyReleased(key);
 	}
 
 	#region dllImports

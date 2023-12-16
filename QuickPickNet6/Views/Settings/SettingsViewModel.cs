@@ -1,5 +1,7 @@
 ﻿using System.Reflection;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace QuickPick.UI.Views.Settings;
 public enum AutoUpdateSetting
@@ -24,6 +26,25 @@ public class SettingsViewModel : ObservableObject
     public string Title { get { return _title; } }
 
     public string CurrentKeyCombo { get; set; } = "ctrl + rMouse";
+
+    private HashSet<System.Windows.Forms.Keys> _newKeyComboKeys = new();
+
+    public void AddKeyToNewCombo(System.Windows.Forms.Keys key)
+    {
+        _newKeyComboKeys.Add(key);
+        NewKeyCombo = string.Join(" + ", _newKeyComboKeys);
+    }
+
+    private string _newKeyCombo = " - ";
+    public string NewKeyCombo
+    {
+        get { return _newKeyCombo; }
+        set
+        {
+            _newKeyCombo = value;
+            OnPropertyChanged(nameof(NewKeyCombo));
+        }
+    }
 
     public AutoUpdateSetting AutoUpdateSetting
     {
@@ -50,9 +71,15 @@ public class SettingsViewModel : ObservableObject
             }
         }
     }
-	public void ApplySettings(QuickPick.Settings settings)
-	{
+    public void ApplySettings(QuickPick.Settings settings)
+    {
         AutoUpdateSetting = settings.AutoUpdateSetting;
         ActiveAppSetting = settings.ActiveAppSetting;
-	}
+    }
+
+    internal void ClearNewKeyCombo()
+    {
+        _newKeyComboKeys.Clear();
+        NewKeyCombo = string.Empty;
+    }
 }

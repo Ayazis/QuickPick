@@ -19,13 +19,10 @@ namespace QuickPick.UI.Views.Settings
             ViewModel = new SettingsViewModel();
             this.DataContext = ViewModel;
             InitializeComponent();
-            this.MouseLeftButtonDown += SettingsWindow_MouseDown;
+            this.MouseLeftButtonDown += SettingsWindow_MouseLeftButtonDown;
         }
 
-        private void SettingsWindow_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            this.DragMove();
-        }
+     
 
         public void ShowWindow()
         {
@@ -48,5 +45,80 @@ namespace QuickPick.UI.Views.Settings
         {
             this.Hide();
         }
+     
+        private void btnApplyNewCombo_Click(object sender, RoutedEventArgs e)
+        {
+            tbNewCombo.Visibility = Visibility.Collapsed;
+            btnApplyNewCombo.Visibility = Visibility.Collapsed;
+            btnCancelNewCombo.Visibility = Visibility.Collapsed;
+            btnRecordNewCombo.Visibility = Visibility.Visible;
+            this.KeyDown -= SettingsWindow_KeyDown;
+            this.MouseDown -= SettingsWindow_MouseDown;
+        }
+
+        private void btnCancelNewCombo_Click(object sender, RoutedEventArgs e)
+        {
+            tbNewCombo.Visibility = Visibility.Collapsed;
+            btnApplyNewCombo.Visibility = Visibility.Collapsed;
+            btnCancelNewCombo.Visibility = Visibility.Collapsed;
+            btnRecordNewCombo.Visibility = Visibility.Visible;
+            this.KeyDown -= SettingsWindow_KeyDown;
+            this.MouseDown -= SettingsWindow_MouseDown;
+        }
+
+        private void btnRecordNewCombo_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.ClearNewKeyCombo();
+            this.KeyDown += SettingsWindow_KeyDown;
+            this.MouseDown += SettingsWindow_MouseDown;
+            tbNewCombo.Visibility = Visibility.Visible;            
+            btnApplyNewCombo.Visibility = Visibility.Visible;
+            btnCancelNewCombo.Visibility = Visibility.Visible;
+            btnRecordNewCombo.Visibility = Visibility.Collapsed;
+        }
+   
+        private void SettingsWindow_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            this.DragMove();
+        }
+
+        private void SettingsWindow_KeyDown(object sender, KeyEventArgs e)
+        {
+            Key key = e.Key;
+            System.Windows.Forms.Keys formsKey = (System.Windows.Forms.Keys)KeyInterop.VirtualKeyFromKey(key);
+            ViewModel.AddKeyToNewCombo(formsKey);
+            tbNewCombo.Text = ViewModel.NewKeyCombo;
+        }
+        private void SettingsWindow_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            MouseButton mouseButton = e.ChangedButton;
+            System.Windows.Forms.Keys formsKey = System.Windows.Forms.Keys.None;
+
+            switch (mouseButton)
+            {
+                // left mouse is not allowed.
+
+                //case MouseButton.Left:
+                //    formsKey = System.Windows.Forms.Keys.LButton; 
+                //    break;
+                case MouseButton.Right:
+                    formsKey = System.Windows.Forms.Keys.RButton; 
+                    break;
+                case MouseButton.Middle:
+                    formsKey = System.Windows.Forms.Keys.MButton;
+                    break;
+                case MouseButton.XButton1:
+                    formsKey = System.Windows.Forms.Keys.XButton1; 
+                    break;
+                case MouseButton.XButton2:
+                    formsKey = System.Windows.Forms.Keys.XButton2;
+                    break;
+            }
+
+            ViewModel.AddKeyToNewCombo(formsKey);
+            tbNewCombo.Text = ViewModel.NewKeyCombo;
+            // Use formsKey as needed
+        }
+
     }
 }
