@@ -90,7 +90,7 @@ namespace QuickPick.UI.Views.Settings
             System.Windows.Forms.Keys formsKey = (System.Windows.Forms.Keys)KeyInterop.VirtualKeyFromKey(key);
 
             if (key == Key.System)
-                formsKey = System.Windows.Forms.Keys.Alt;
+                formsKey = System.Windows.Forms.Keys.LMenu;
             // todo:
             // Key system translates to Keys none
             ViewModel.AddKeyToNewCombo(formsKey);
