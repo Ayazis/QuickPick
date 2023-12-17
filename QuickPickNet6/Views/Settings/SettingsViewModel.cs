@@ -27,12 +27,12 @@ public class SettingsViewModel : ObservableObject
 
     public string CurrentKeyCombo { get; set; } = "ctrl + rMouse";
 
-    private HashSet<System.Windows.Forms.Keys> _newKeyComboKeys = new();
+    public HashSet<System.Windows.Forms.Keys> NewKeyCombination = new();
 
     public void AddKeyToNewCombo(System.Windows.Forms.Keys key)
     {
-        _newKeyComboKeys.Add(key);
-        NewKeyCombo = string.Join(" + ", _newKeyComboKeys);
+        NewKeyCombination.Add(key);
+        NewKeyCombo = string.Join(" + ", NewKeyCombination);
     }
 
     private string _newKeyCombo = " - ";
@@ -79,7 +79,7 @@ public class SettingsViewModel : ObservableObject
 
     internal void ClearNewKeyCombo()
     {
-        _newKeyComboKeys.Clear();
+        NewKeyCombination.Clear();
         NewKeyCombo = string.Empty;
     }
 }

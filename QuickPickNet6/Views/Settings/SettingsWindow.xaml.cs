@@ -48,6 +48,7 @@ namespace QuickPick.UI.Views.Settings
      
         private void btnApplyNewCombo_Click(object sender, RoutedEventArgs e)
         {
+            ViewModel.CurrentKeyCombo = ViewModel.NewKeyCombo;
             tbNewCombo.Visibility = Visibility.Collapsed;
             btnApplyNewCombo.Visibility = Visibility.Collapsed;
             btnCancelNewCombo.Visibility = Visibility.Collapsed;
@@ -58,6 +59,7 @@ namespace QuickPick.UI.Views.Settings
 
         private void btnCancelNewCombo_Click(object sender, RoutedEventArgs e)
         {
+            ViewModel.NewKeyCombo = string.Empty;
             tbNewCombo.Visibility = Visibility.Collapsed;
             btnApplyNewCombo.Visibility = Visibility.Collapsed;
             btnCancelNewCombo.Visibility = Visibility.Collapsed;
@@ -86,6 +88,11 @@ namespace QuickPick.UI.Views.Settings
         {
             Key key = e.Key;
             System.Windows.Forms.Keys formsKey = (System.Windows.Forms.Keys)KeyInterop.VirtualKeyFromKey(key);
+
+            if (key == Key.System)
+                formsKey = System.Windows.Forms.Keys.Alt;
+            // todo:
+            // Key system translates to Keys none
             ViewModel.AddKeyToNewCombo(formsKey);
             tbNewCombo.Text = ViewModel.NewKeyCombo;
         }
