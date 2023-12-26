@@ -28,16 +28,14 @@
                 
                 <!-- Record new Combo -->
                 <GroupBox BorderThickness="0">
-                    <StackPanel>
-                        
-                    <StackPanel Orientation="Horizontal" Margin="0,10">
-                        <TextBlock Text="KeyCombo:" IsEnabled="False" Foreground="LightGray" />
-                        <TextBlock x:Name="tbCurrentKeyCombo"                        
-                       FontStyle="Italic"
+                    <StackPanel IsEnabled="True">                                            
+                    
+                        <TextBlock                    
+                        FontStyle="Italic"
+                        IsEnabled="True"
                         Foreground="LightGray"
                         Margin="10,0"
-                   Text="{Binding CurrentKeyCombo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  />                          
-                    </StackPanel>
+                        Text="{Binding CurrentKeyCombo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  />                                              
                         <TextBlock Name="tbNewCombo" Text="{Binding NewKeyCombo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  Visibility="Collapsed"/>
                         <StackPanel Orientation="Horizontal">
                         <Button Name="btnApplyNewCombo" 

@@ -25,7 +25,22 @@ public class SettingsViewModel : ObservableObject
     private string _title => $"QuickPick {_version} - Settings";
     public string Title { get { return _title; } }
 
-    public string CurrentKeyCombo { get; set; } = "ctrl + rMouse";
+    private string _currentKeyCombo;
+    public string CurrentKeyCombo
+    {
+        get { return _currentKeyCombo; }
+        set
+        {
+            if (_currentKeyCombo != value)
+            {
+                _currentKeyCombo = value;
+                OnPropertyChanged(nameof(CurrentKeyCombo));
+            }
+        }
+
+    }
+
+
 
     public HashSet<System.Windows.Forms.Keys> NewKeyCombination = new();
 

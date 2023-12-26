@@ -48,7 +48,7 @@ namespace QuickPick.UI.Views.Settings
      
         private void btnApplyNewCombo_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.CurrentKeyCombo = ViewModel.NewKeyCombo;
+            Instance.ViewModel.CurrentKeyCombo = ViewModel.NewKeyCombo.ToLower();
             tbNewCombo.Visibility = Visibility.Collapsed;
             btnApplyNewCombo.Visibility = Visibility.Collapsed;
             btnCancelNewCombo.Visibility = Visibility.Collapsed;
