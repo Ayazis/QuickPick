@@ -43,15 +43,6 @@ public class QuickPickMainWindowModel : INotifyPropertyChanged
 		get { return 200; }
 	}
 
-	public string SettingsPath
-	{
-		get
-		{
-			return Directory.GetCurrentDirectory() + "/QuickPickSettings.Json";
-		}
-	}
-
-
 
 	private string _ShortCutsFolder = @"c:\shortcuts";
 	public string ShortCutsFolder

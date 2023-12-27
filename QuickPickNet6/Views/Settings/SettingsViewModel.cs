@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace QuickPick.UI.Views.Settings;
 public enum AutoUpdateSetting
@@ -16,31 +17,19 @@ public enum ActiveAppSetting
     ActiveAppsOnly
 }
 
-public class SettingsViewModel : ObservableObject
+public partial class SettingsViewModel : ObservableObject
 {
+    [ObservableProperty]
     private AutoUpdateSetting _autoUpdateSetting = AutoUpdateSetting.PreRelease;
+    [ObservableProperty]
     private ActiveAppSetting _activeAppSetting = ActiveAppSetting.IncludePinnedTaskBarApps;
 
     private string _version => Assembly.GetExecutingAssembly().GetName().Version.ToString();
     private string _title => $"QuickPick {_version} - Settings";
     public string Title { get { return _title; } }
 
-    private string _currentKeyCombo;
-    public string CurrentKeyCombo
-    {
-        get { return _currentKeyCombo; }
-        set
-        {
-            if (_currentKeyCombo != value)
-            {
-                _currentKeyCombo = value;
-                OnPropertyChanged(nameof(CurrentKeyCombo));
-            }
-        }
-
-    }
-
-
+    [ObservableProperty]
+    private string _currentKeyCombo = "placeholder";
 
     public HashSet<System.Windows.Forms.Keys> NewKeyCombination = new();
 
@@ -50,42 +39,9 @@ public class SettingsViewModel : ObservableObject
         NewKeyCombo = string.Join(" + ", NewKeyCombination);
     }
 
-    private string _newKeyCombo = " - ";
-    public string NewKeyCombo
-    {
-        get { return _newKeyCombo; }
-        set
-        {
-            _newKeyCombo = value;
-            OnPropertyChanged(nameof(NewKeyCombo));
-        }
-    }
+    [ObservableProperty]
+    private string _newKeyCombo = " - "; 
 
-    public AutoUpdateSetting AutoUpdateSetting
-    {
-        get { return _autoUpdateSetting; }
-        set
-        {
-            if (_autoUpdateSetting != value)
-            {
-                _autoUpdateSetting = value;
-                OnPropertyChanged(nameof(AutoUpdateSetting));
-            }
-        }
-    }
-
-    public ActiveAppSetting ActiveAppSetting
-    {
-        get { return _activeAppSetting; }
-        set
-        {
-            if (_activeAppSetting != value)
-            {
-                _activeAppSetting = value;
-                OnPropertyChanged(nameof(ActiveAppSetting));
-            }
-        }
-    }
     public void ApplySettings(QuickPick.Settings settings)
     {
         AutoUpdateSetting = settings.AutoUpdateSetting;

@@ -10,34 +10,35 @@ namespace QuickPick.UI.Views.Settings
     /// </summary>
     public partial class SettingsWindow : Window
     {
-		static SettingsWindow _instance;
-		public static SettingsWindow Instance => _instance ??= new SettingsWindow();
-		public SettingsViewModel ViewModel { get; private set; }
+        static SettingsWindow _instance;
+        public static SettingsWindow Instance => _instance ??= new SettingsWindow();
+        public SettingsViewModel ViewModel { get; private set; }
 
-		private SettingsWindow()
+        private SettingsWindow()
         {
+            InitializeComponent();
             ViewModel = new SettingsViewModel();
             this.DataContext = ViewModel;
-            InitializeComponent();
             this.MouseLeftButtonDown += SettingsWindow_MouseLeftButtonDown;
         }
 
-     
+
 
         public void ShowWindow()
         {
-			var mousePosition = MousePosition.GetCursorPosition();
-			Left = mousePosition.X - Width / 2;
-			Top = mousePosition.Y - Height / 2;
-			// get mouseposition.
+            var mousePosition = MousePosition.GetCursorPosition();
+            Left = mousePosition.X - Width / 2;
+            Top = mousePosition.Y - Height / 2;
+            // get mouseposition.
 
-			Show();
+            Show();
         }
 
-        public event EventHandler ApplySettings;
         private void Apply_Click(object sender, RoutedEventArgs e)
         {
-            ApplySettings?.Invoke(this, EventArgs.Empty);
+
+            SettingsManager.Instance.ApplySettings(ViewModel);
+
             this.Hide();
         }
 
@@ -45,7 +46,7 @@ namespace QuickPick.UI.Views.Settings
         {
             this.Hide();
         }
-     
+
         private void btnApplyNewCombo_Click(object sender, RoutedEventArgs e)
         {
             Instance.ViewModel.CurrentKeyCombo = ViewModel.NewKeyCombo.ToLower();
@@ -59,7 +60,7 @@ namespace QuickPick.UI.Views.Settings
 
         private void btnCancelNewCombo_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.NewKeyCombo = string.Empty;
+            Instance.ViewModel.NewKeyCombo = string.Empty;
             tbNewCombo.Visibility = Visibility.Collapsed;
             btnApplyNewCombo.Visibility = Visibility.Collapsed;
             btnCancelNewCombo.Visibility = Visibility.Collapsed;
@@ -73,12 +74,12 @@ namespace QuickPick.UI.Views.Settings
             ViewModel.ClearNewKeyCombo();
             this.KeyDown += SettingsWindow_KeyDown;
             this.MouseDown += SettingsWindow_MouseDown;
-            tbNewCombo.Visibility = Visibility.Visible;            
+            tbNewCombo.Visibility = Visibility.Visible;
             btnApplyNewCombo.Visibility = Visibility.Visible;
             btnCancelNewCombo.Visibility = Visibility.Visible;
             btnRecordNewCombo.Visibility = Visibility.Collapsed;
         }
-   
+
         private void SettingsWindow_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             this.DragMove();
@@ -109,13 +110,13 @@ namespace QuickPick.UI.Views.Settings
                 //    formsKey = System.Windows.Forms.Keys.LButton; 
                 //    break;
                 case MouseButton.Right:
-                    formsKey = System.Windows.Forms.Keys.RButton; 
+                    formsKey = System.Windows.Forms.Keys.RButton;
                     break;
                 case MouseButton.Middle:
                     formsKey = System.Windows.Forms.Keys.MButton;
                     break;
                 case MouseButton.XButton1:
-                    formsKey = System.Windows.Forms.Keys.XButton1; 
+                    formsKey = System.Windows.Forms.Keys.XButton1;
                     break;
                 case MouseButton.XButton2:
                     formsKey = System.Windows.Forms.Keys.XButton2;
@@ -123,7 +124,7 @@ namespace QuickPick.UI.Views.Settings
             }
 
             ViewModel.AddKeyToNewCombo(formsKey);
-            tbNewCombo.Text = ViewModel.NewKeyCombo;
+            //tbNewCombo.Text = ViewModel.NewKeyCombo;
             // Use formsKey as needed
         }
 

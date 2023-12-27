@@ -19,7 +19,7 @@ public class Program
     static TrayIconManager _trayIconManager = new TrayIconManager();
     static DesktopTracker _desktopTracker;
     static ClickWindow _clickwindow = new ClickWindow();
-    static MouseAndKeysCapture _inputCapture;    
+    static MouseAndKeysCapture _inputCapture;
     static IntPtr _quickPickMainWindowHandle;
 
     [STAThread]
@@ -41,8 +41,6 @@ public class Program
             // Hook into Keyboard and Mouse to listen for User set Keycombination.
             StartListeningToKeyboardAndMouse();
 
-            SettingsWindow.Instance.ApplySettings += ApplySettings;
-
             SubscribeToExitEvent_ToHandleCleanup();
 
             RunApplicationIndefinetely();
@@ -52,12 +50,6 @@ public class Program
         {
             Logs.Logger?.Log(ex);
         }
-    }
-
-    private static void ApplySettings(object sender, EventArgs e)
-    {
-        SettingsManager.Instance.ApplySettings(SettingsWindow.Instance.ViewModel);
-
     }
 
     private static void CheckInputArguments(string[] args)
@@ -125,8 +117,7 @@ public class Program
 
     private static void StartListeningToKeyboardAndMouse()
     {
-        List<Keys> keyCombination = new List<Keys> { Keys.LControlKey, Keys.RButton };
-        KeyInputHandler.Instance.SetKeycombination(keyCombination);
+        KeyInputHandler.Instance.SetKeycombination(SettingsManager.Instance.Settings.KeyCombination);
         _inputCapture = new MouseAndKeysCapture();
         _inputCapture.HookIntoMouseAndKeyBoard();
 

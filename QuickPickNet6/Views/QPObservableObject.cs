@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 namespace QuickPick.UI.Views;
 
 
-public abstract class ObservableObject : INotifyPropertyChanged
+public abstract class QPObservableObject : INotifyPropertyChanged
 {
     public event PropertyChangedEventHandler PropertyChanged;
 
