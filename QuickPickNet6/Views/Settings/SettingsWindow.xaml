@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="clr-namespace:QuickPick.UI.Views.Settings"
         xmlns:local="clr-namespace:QuickPick.UI.Views.Settings"
-        Title="QuickPick Settings" Height="300" Width="250"
+        Title="QuickPick Settings" Height="325" Width="250"
         Foreground="White"           
         Background="#303030" 
         WindowStyle="None"
@@ -27,27 +27,28 @@
                 <TextBlock Text="{Binding Title}" Foreground="{StaticResource ForegroundBrush}" Margin="0,-20" />                
                 
                 <!-- Record new Combo -->
-                <GroupBox BorderThickness="0">
-                    <StackPanel IsEnabled="True">                                                                
-                        <TextBlock                    
-                        FontStyle="Italic"
-                        IsEnabled="True"
-                        Foreground="LightGray"
-                        Margin="10,0"
-                        Text="{Binding CurrentKeyCombo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />                                              
+                <GroupBox BorderThickness="0" Margin="0,20">
+                    <StackPanel IsEnabled="True">
+                        <TextBlock Text="HotKeyCombo:" FontWeight="Bold"/>
+                        <TextBlock Text="{Binding CurrentKeyCombo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"                    
+                        FontStyle="Italic"                        
+                        Foreground="LightGray"                         />                                              
                         <TextBlock Name="tbNewCombo" Text="{Binding NewKeyCombo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  Visibility="Collapsed"/>
                         <StackPanel Orientation="Horizontal">
                         <Button Name="btnApplyNewCombo" 
                                 Width="100" 
                                 Click="btnApplyNewCombo_Click" 
-                                Visibility="Collapsed">Apply</Button>
+                                Visibility="Collapsed" 
+                                Style="{StaticResource ResourceKey =QpButtonStyle }"   
+                                >Apply</Button>
                         <Button Name="btnCancelNewCombo" 
-                                Width="100" 
+                                Width="100"                                 
                                 Click="btnCancelNewCombo_Click" 
+                                Style="{StaticResource ResourceKey =QpButtonStyle }"   
                                 Visibility="Collapsed">Cancel</Button>
                         </StackPanel>
                         <Button Name="btnRecordNewCombo" 
-                                Click="btnRecordNewCombo_Click" Content="Record New Combo" IsEnabled="True" />
+                                Click="btnRecordNewCombo_Click" Content="Record New Combo" IsEnabled="True"       Style="{StaticResource ResourceKey =QpButtonStyle }"    />
 
                     </StackPanel>
                 </GroupBox>

@@ -126,7 +126,7 @@ namespace QuickPick.UI.Views.Settings
             ViewModel.AddKeyToNewCombo(formsKey);
             //tbNewCombo.Text = ViewModel.NewKeyCombo;
             // Use formsKey as needed
-        }
+        }   
 
     }
 }

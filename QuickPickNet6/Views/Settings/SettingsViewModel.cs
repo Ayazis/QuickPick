@@ -46,6 +46,8 @@ public partial class SettingsViewModel : ObservableObject
     {
         AutoUpdateSetting = settings.AutoUpdateSetting;
         ActiveAppSetting = settings.ActiveAppSetting;
+        CurrentKeyCombo = string.Join(" + ", settings.KeyCombination);
+
     }
 
     internal void ClearNewKeyCombo()

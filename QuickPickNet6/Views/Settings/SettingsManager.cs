@@ -79,6 +79,9 @@ namespace QuickPick
             {
                 Trace.WriteLine($"An error occurred while loading the settings: {ex.Message}");
             }
+
+            
+
         }
 
     }
