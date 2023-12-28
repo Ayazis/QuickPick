@@ -39,7 +39,7 @@ namespace QuickPick
         {
             try
             {
-                var json = JsonConvert.SerializeObject(Settings, Formatting.Indented);
+                var json = Settings.Serialise();
 
                 // Use a FileStream to ensure proper handling of the file
                 using (FileStream fileStream = new FileStream(SettingsPath, FileMode.Create, FileAccess.Write, FileShare.None))
@@ -69,8 +69,7 @@ namespace QuickPick
                 using (StreamReader streamReader = new StreamReader(fileStream))
                 {
                     var json = streamReader.ReadToEnd();
-                    Settings = JsonConvert.DeserializeObject<Settings>(json);
-                    throw new Exception("Settings has 1 extra button?!");
+                    Settings = Settings.Deserialize(json);                    
                 }
 
                 Trace.WriteLine("Settings loaded successfully.");
