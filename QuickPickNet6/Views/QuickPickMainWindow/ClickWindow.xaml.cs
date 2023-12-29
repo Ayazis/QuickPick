@@ -104,8 +104,14 @@ public partial class ClickWindow : Window
         }
 
 
-        _qpm.PinnedApps = new ObservableCollection<AppLink>(apps);
-        _qpm.NotifyPropertyChanged(nameof(_qpm.PinnedApps));
+        Dispatcher.Invoke(() =>
+        {
+            _qpm.PinnedApps.Clear();
+            foreach (var item in apps)
+            {
+                _qpm.PinnedApps.Add(item);
+            }
+        });      
     }
 
     public void HideWindow()
@@ -133,13 +139,13 @@ public partial class ClickWindow : Window
     public void ShowWindow()
     {
         try
-        {   
+        {
             _timeStampLastShown = DateTime.Now;
             Visibility = Visibility.Visible;
             var mousePosition = MousePosition.GetCursorPosition();
             Left = mousePosition.X - ActualWidth / 2;
-            Top = mousePosition.Y - ActualHeight / 2;                                    
-            ShowAnimation.Begin(this);           
+            Top = mousePosition.Y - ActualHeight / 2;
+            ShowAnimation.Begin(this);
         }
         catch (Exception ex)
         {

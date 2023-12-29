@@ -52,5 +52,9 @@ public partial class RingButtonControl : UserControl
 	private void SmallMiddleButton_Click(object sender, System.Windows.RoutedEventArgs e)
 	{
 		SettingsWindow.Instance.ShowWindow();
-	}
+        SettingsWindow.Instance.Activate();
+		SettingsWindow.Instance.Focus();
+
+
+    }
 }

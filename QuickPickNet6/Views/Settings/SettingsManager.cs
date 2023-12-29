@@ -3,6 +3,7 @@ using QuickPick.UI.Views.Settings;
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using Utilities.Mouse_and_Keyboard;
 
 namespace QuickPick
@@ -30,8 +31,11 @@ namespace QuickPick
         {
             Settings.ActiveAppSetting = vm.ActiveAppSetting;
             Settings.AutoUpdateSetting = vm.AutoUpdateSetting;
-            Settings.KeyCombination = vm.NewKeyCombination;
-            KeyInputHandler.Instance.SetKeycombination(Settings.KeyCombination);
+            if (vm.NewKeyCombination?.Any() == true)
+            {
+                Settings.KeyCombination = vm.NewKeyCombination;
+                KeyInputHandler.Instance.SetKeycombination(Settings.KeyCombination);
+            }
             WriteSettingsToDisk();
         }
 
@@ -69,7 +73,7 @@ namespace QuickPick
                 using (StreamReader streamReader = new StreamReader(fileStream))
                 {
                     var json = streamReader.ReadToEnd();
-                    Settings = Settings.Deserialize(json);                    
+                    Settings = Settings.Deserialize(json);
                 }
 
                 Trace.WriteLine("Settings loaded successfully.");
@@ -80,7 +84,7 @@ namespace QuickPick
                 Trace.WriteLine($"An error occurred while loading the settings: {ex.Message}");
             }
 
-            
+
 
         }
 
