@@ -9,127 +9,45 @@ using System.Windows.Forms;
 using System.Windows.Input;
 using Point = System.Windows.Point;
 using System.Linq;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace QuickPick.UI.Views.QuickPickMainWindow
 {
-    public class QuickPickModel : INotifyPropertyChanged
+    public partial class QuickPickModel : ObservableObject
     {
-
+        [ObservableProperty]
         private string _Title = "QuickPick Settings                v.1.2.1alpha";
-        public string Title
-        {
-            get { return _Title; }
-        }
-
+  
+        [ObservableProperty]
         private string _ShortCutsFolder = @"c:\shortcuts";
-        public string ShortCutsFolder
-        {
-            get { return _ShortCutsFolder; }
-            set
-            {
-                _ShortCutsFolder = value;
-                NotifyPropertyChanged(nameof(ShortCutsFolder));
-            }
-        }
+    
 
+        [ObservableProperty]
+        private bool _SettingsAreSaved = false;       
+        
 
-        private bool _SettingsAreSaved = false;
+        public bool InstantShortCuts { get; set; }
 
-        public bool SettingsAreSaved
-        {
-            get { return _SettingsAreSaved; }
-            set
-            {
-                _SettingsAreSaved = value;
-                NotifyPropertyChanged(nameof(SettingsAreSaved));
-            }
-        }
-
-        public bool InstantShortCuts { get; set; } = false;
-
-        #region Properties        
+        
+        [ObservableProperty]
         private ObservableCollection<Keys> _HotKeys = new ObservableCollection<Keys> {
-     //   Keys.LControlKey,
+      //   Keys.LControlKey,
             Keys.LMenu,
             Keys.RButton
         };
-        public ObservableCollection<Keys> HotKeys
-        {
-            get { return _HotKeys; }
-            set
-            {
-                _HotKeys = value;
-                NotifyPropertyChanged(nameof(HotKeys));
-            }
-        }
-
-        private ObservableCollection<ShortCut> _ShortCuts = new ObservableCollection<ShortCut>();
-        public ObservableCollection<ShortCut> ShortCuts
-        {
-            get { return _ShortCuts; }
-            set
-            {
-                _ShortCuts = value;
-                NotifyPropertyChanged(nameof(ShortCuts));
-            }
-        }
-
-        private ObservableCollection<QpButton> _ShortCutButtons = new ObservableCollection<QpButton>();
-        public ObservableCollection<QpButton> ShortCutButtons
-        {
-            get { return _ShortCutButtons; }
-            set
-            {
-                _ShortCutButtons = value;
-                NotifyPropertyChanged(nameof(ShortCutButtons));
-            }
-        }
+  
+        [ObservableProperty]
+        private ObservableCollection<ShortCut> _ShortCuts = new();
 
 
-        private ObservableCollection<QpButton> _MainButtons = new ObservableCollection<QpButton>();
-        public ObservableCollection<QpButton> MainButtons
-        {
-            get { return _MainButtons; }
-            set
-            {
-                _MainButtons = value;
-                NotifyPropertyChanged(nameof(MainButtons));
-            }
-        }
-
-        public int NrOfButtons { get; set; } = 8;
-
-        private int _CircleRadius = 50;
-        public int CircleRadius
-        {
-            get { return _CircleRadius; }
-            set
-            {
-                _CircleRadius = value;
-                NotifyPropertyChanged(nameof(CircleRadius));
-            }
-        }
-        public Point Center
-        {
-            get { return new Point(WidthHeight / 2, WidthHeight / 2); }
-        }
-        public int WidthHeight
-        {
-            get { return 200; }
-        }
-        #endregion    
+        [ObservableProperty]
+        private ObservableCollection<QpButton> _ShortCutButtons = new();
 
 
-        #region Notify Property Changed And other Events
-        public event PropertyChangedEventHandler PropertyChanged;
+        [ObservableProperty]
+        private ObservableCollection<QpButton> _MainButtons = new();
 
-        public void NotifyPropertyChanged(string name)
-        {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(name));
-        }
-
-        #endregion
+           
 
     }
 }

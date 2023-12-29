@@ -19,8 +19,7 @@ public class Program
     static TrayIconManager _trayIconManager = new TrayIconManager();
     static DesktopTracker _desktopTracker;
     static ClickWindow _clickwindow = new ClickWindow();
-    static MouseAndKeysCapture _inputCapture;
-    static IntPtr _quickPickMainWindowHandle;
+    static MouseAndKeysCapture _inputCapture;    
 
     [STAThread]
     static void Main(string[] args)

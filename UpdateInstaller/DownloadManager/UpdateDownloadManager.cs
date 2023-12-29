@@ -14,7 +14,7 @@ namespace UpdateInstaller.Updates;
 
 public class UpdateDownloadManager
 {
-    IUpdateDownloader _updateDownloader;  
+    IUpdateDownloader _updateDownloader;
 
     public UpdateDownloadManager(IUpdateDownloader updateDownloader)
     {
@@ -45,7 +45,7 @@ public class UpdateDownloadManager
             targetFolder: currentDirectory,
             processIdToKill: processId,
             pathToExecutable: pathToCurrentExecutable
-            , arguments: null);
+            , arguments: Array.Empty<string>());
 
 
         return new InstallerParams(newInstallerPath, installerArguments); ;

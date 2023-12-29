@@ -41,26 +41,26 @@ public class GithubUpdateChecker : IUpdateChecker
 
 			if (updateType == eUpdateType.Stable)
 			{
-				return await GetLatestStableRelease(httpClient, url);
+				return await GetLatestStableReleaseAsync(httpClient, url);
 			}
 
 			if (updateType == eUpdateType.Pre_Release)
 			{
-				return await GetLatestPreRelease(httpClient, url);
+				return await GetLatestPreReleaseAsync(httpClient, url);
 			}
 		}
 		return default;
 	}
-	private async Task<(Version version, string downloadUrl)> GetLatestStableRelease(HttpClient httpClient, string url)
+	private async Task<(Version version, string downloadUrl)> GetLatestStableReleaseAsync(HttpClient httpClient, string url)
 	{
 		url += "/latest"; // pre-releases are not included in this result
 		var response = await httpClient.GetStringAsync(url);
 		JObject release = JObject.Parse(response);
 		return GetVersionAndDownloadLink(release);
 	}
-	private async Task<(Version version, string downloadUrl)> GetLatestPreRelease(HttpClient httpClient, string url)
+	private async Task<(Version version, string downloadUrl)> GetLatestPreReleaseAsync(HttpClient httpClient, string url)
 	{
-		var response = httpClient.GetStringAsync(url).Result;
+        string response = await httpClient.GetStringAsync(url);
 		JArray releases = JArray.Parse(response);
 		
 		// Filter and sort the releases

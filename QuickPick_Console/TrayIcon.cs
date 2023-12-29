@@ -9,8 +9,7 @@ namespace QuickPick;
 public class TrayIconManager
 {
 	private NotifyIcon _trayIcon;
-	private ContextMenuStrip _contextMenu;
-	SettingsWindow _settingsWindow;
+	private ContextMenuStrip _contextMenu;	
 
 	public void CreateTrayIcon()
 	{
@@ -55,10 +54,6 @@ public class TrayIconManager
 	{
 		Application.Exit(); // handling this event is done in program.cs
 	}
-
-	public delegate void SettingsMenuClickedEventHandler(object sender, EventArgs e);
-
-	public static event SettingsMenuClickedEventHandler SettingsMenuClicked;
 
 	private void OnSettingsClick(object sender, EventArgs e)
 	{

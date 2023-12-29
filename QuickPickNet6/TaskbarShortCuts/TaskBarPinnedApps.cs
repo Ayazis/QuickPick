@@ -98,7 +98,7 @@ public class AppLinkRetriever
 				{
 					filePath = process.MainModule?.FileName;
 				}
-				catch (Exception)
+				catch (System.ComponentModel.Win32Exception)
 				{
 					Console.WriteLine($"Unable to acces {process.ProcessName}");
 					continue;

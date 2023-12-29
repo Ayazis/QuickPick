@@ -30,7 +30,7 @@ public partial class ThumbnailView : UserControl
 
     }
 
-    public async Task FadeIn()
+    public void FadeIn()
     {
         this.Dispatcher.Invoke(() =>
         {
@@ -39,19 +39,11 @@ public partial class ThumbnailView : UserControl
 
         });
 
-        Task.Run(() => { ShowThumbnailViewAsync(); });
+        Task.Run(() => { ShowThumbnailView(); });
         Task.Run(() => { ThumbnailCreator.CreateAndFadeInThumbnail(_context.ThumbnailRelation, _context.Rect); });
 
-
-        return;
-
-        Task taskCreateAndFadeInThumbnail = new Task(() => { });
-        Task taskFadeInThisView = new Task(() => { });
-        taskFadeInThisView.Start();
-        taskCreateAndFadeInThumbnail.Start();
-        await Task.WhenAll(taskCreateAndFadeInThumbnail, taskFadeInThisView);
     }
-    private async Task ShowThumbnailViewAsync(bool fadeIn = false)
+    private void ShowThumbnailView(bool fadeIn = false)
     {
         if (fadeIn)
         {

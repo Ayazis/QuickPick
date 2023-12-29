@@ -41,9 +41,9 @@ public class FileLogger : ILogger
             //});
 
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            
+            // do nothing.
         }
     }
 

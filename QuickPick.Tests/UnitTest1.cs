@@ -9,9 +9,7 @@ namespace QuickPick.Tests
 
         [Test]
         public void Test1()
-        {
-            string path = "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe";
-            
+        {            
 
         }
     }
