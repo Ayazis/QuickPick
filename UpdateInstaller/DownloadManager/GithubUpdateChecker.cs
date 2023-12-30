@@ -96,6 +96,11 @@ public class GithubUpdateChecker : IUpdateChecker
             return (new Version(version), fileDownloadUrl);
         }
     }
+	/// <summary>
+	/// Deprecated code, old way of getting the download url, kept for backwards compatibility
+	/// </summary>
+	/// <param name="input"></param>
+	/// <returns></returns>
     private string GetStringBetweenParentheses(string input)
 	{
 		int startIndex = input.IndexOf('(') + 1;
