@@ -11,12 +11,12 @@ namespace QuickPick.UI.Views.Thumbnail;
 
 public partial class ThumbnailView : UserControl
 {
-    ThumbnailDataContext _context;
+    ThumbnailProperties _context;
     public ThumbnailView()
     {
 
     }
-    public ThumbnailView(ThumbnailDataContext context, double dpiScaling)
+    public ThumbnailView(ThumbnailProperties context, double dpiScaling)
     {
         var size = CalculateRenderSize(context.Rect);
         context.Width = size.Width * 1.25 / dpiScaling;

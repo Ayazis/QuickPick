@@ -11,7 +11,7 @@
              MouseLeave="UserControl_MouseLeave"
              MouseUp="UserControl_MouseUp">
     <UserControl.DataContext>
-        <local:ThumbnailDataContext/>
+        <local:ThumbnailProperties/>
     </UserControl.DataContext>
     <Border CornerRadius="0" Background="#E6202020" Margin="0,-10,0,0" Name="ThumbBackground">
         <Grid>     

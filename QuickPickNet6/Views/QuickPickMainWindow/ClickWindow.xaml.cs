@@ -212,7 +212,7 @@ public partial class ClickWindow : Window
             RECT rect = ThumbnailRectCreator.CreateRectForThumbnail(buttonCenter, xToWindowCenter, ytoWindowCenter, dpiScaling, i, aspectRatio);
 
             string windowTitle = ActiveWindows.GetWindowTitle(currentWindowHandle);
-            var thumbnailContext = new ThumbnailDataContext(newThumbnail, rect, currentWindowHandle, windowTitle);
+            var thumbnailContext = new ThumbnailProperties(newThumbnail, rect, currentWindowHandle, windowTitle);
             var thumbnailView = new ThumbnailView(thumbnailContext, dpiScaling);
 
             this.ThumbnailCanvas.Children.Add(thumbnailView);
