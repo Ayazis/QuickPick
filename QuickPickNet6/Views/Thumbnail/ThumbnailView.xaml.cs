@@ -40,7 +40,7 @@ public partial class ThumbnailView : UserControl
         });
 
         Task.Run(() => { ShowThumbnailView(); });
-        Task.Run(() => { ThumbnailCreator.CreateAndFadeInThumbnail(_context.ThumbnailRelation, _context.Rect); });
+        Task.Run(() => { WindowPreviewCreator.CreateAndFadeInThumbnail(_context.ThumbnailRelation, _context.Rect); });
 
     }
     private void ShowThumbnailView(bool fadeIn = false)
@@ -73,7 +73,7 @@ public partial class ThumbnailView : UserControl
     public void Hide()
     {
         this.Visibility = System.Windows.Visibility.Collapsed;
-        ThumbnailCreator.DwmUnregisterThumbnail(_context.ThumbnailRelation);
+        WindowPreviewCreator.DwmUnregisterThumbnail(_context.ThumbnailRelation);
     }
 
     private void UserControl_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)

@@ -4,7 +4,10 @@ using ThumbnailLogic;
 
 namespace QuickPick.UI
 {
-    public class ThumbnailRectCreator
+
+    // In charge of creating the RECT and it's position for the thumbnailpreview.
+    // The windows API for createing a Thumbnail requires a RECT.
+    public static class ThumbnailRectCreator
     {
 
         private const double MAX_DIMENSION = 180.0;
@@ -19,7 +22,7 @@ namespace QuickPick.UI
         /// <param name="i"></param>
         /// <param name="aspectRatio"></param>
         /// <returns></returns>
-        public RECT CreateRectForThumbnail(Point buttonCenter, double xToWindowCenter, double yToWindowCenter, double dpiScaling, int i, double aspectRatio)
+        public static RECT CreateRectForThumbnail(Point buttonCenter, double xToWindowCenter, double yToWindowCenter, double dpiScaling, int i, double aspectRatio)
         {
             var dimensions = CalculateThumbnailDimensions(aspectRatio);
             double thumbnailX = CalculateThumbnailX(buttonCenter.X, xToWindowCenter, dimensions.Width + 20);
@@ -28,7 +31,7 @@ namespace QuickPick.UI
             return CalculateRECT(thumbnailX, thumbnailY, dimensions, dpiScaling, i, xToWindowCenter < 0);
         }
 
-        private (double Width, double Height) CalculateThumbnailDimensions(double aspectRatio)
+        private static  (double Width, double Height) CalculateThumbnailDimensions(double aspectRatio)
         {
             double width, height;
             bool isLandscape = aspectRatio > 1;
@@ -47,7 +50,7 @@ namespace QuickPick.UI
             return (Width: width, Height: height);
         }
 
-        private double CalculateThumbnailX(double startPosition, double xDistanceToWindowCenter, double width)
+        private static double CalculateThumbnailX(double startPosition, double xDistanceToWindowCenter, double width)
         {
             // Position should increasingly shift depending on xDistanceToWindowCenter          
             double shiftCoEfficient = 2; // increase for more horizontal shifting
@@ -60,7 +63,7 @@ namespace QuickPick.UI
         }
 
 
-        private double CalculateThumbnailY(double startPosition, double YDistanceToWindowCenter, double height)
+        private static double CalculateThumbnailY(double startPosition, double YDistanceToWindowCenter, double height)
         {
             double shiftCoefficient = 1.5; // Increase to increase distance from thumbnail to the center
             double verticalShiftAmount = YDistanceToWindowCenter * shiftCoefficient;
@@ -72,7 +75,7 @@ namespace QuickPick.UI
             return offSetPosition;
         }
 
-        private RECT CalculateRECT(double thumbnailX, double thumbnailY, (double Width, double Height) dimensions, double dpiScaling, int i, bool isLeftToCenter)
+        private static RECT CalculateRECT(double thumbnailX, double thumbnailY, (double Width, double Height) dimensions, double dpiScaling, int i, bool isLeftToCenter)
         {
             // TODO: allow space for border in thumbnailview
 

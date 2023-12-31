@@ -34,9 +34,7 @@ public partial class ClickWindow : Window
     private QuickPickMainWindowModel _qpm = new QuickPickMainWindowModel();
     private IntPtr _quickPickWindowHandle;
     private List<ThumbnailView> _currentThumbnails = new List<ThumbnailView>();
-    public static ThumbnailTimer ThumbnailTimer;
-
-    private ThumbnailRectCreator _thumbnailRectCreator = new();
+    public static ThumbnailTimer ThumbnailTimer;    
     static DateTime _timeStampLastShown;
     public Storyboard HideAnimation { get; private set; }
     public Storyboard ShowAnimation { get; private set; }
@@ -206,12 +204,12 @@ public partial class ClickWindow : Window
             IntPtr currentWindowHandle = pinnedApp.WindowHandles[i];
 
             // Create thumbnailRelation
-            var newThumbnail = ThumbnailCreator.GetThumbnailRelations(currentWindowHandle, _quickPickWindowHandle);
+            var newThumbnail = WindowPreviewCreator.GetThumbnailRelations(currentWindowHandle, _quickPickWindowHandle);
             if (newThumbnail == default)
                 return;
 
-            double aspectRatio = ThumbnailCreator.GetWindowAspectRatio(currentWindowHandle);
-            RECT rect = _thumbnailRectCreator.CreateRectForThumbnail(buttonCenter, xToWindowCenter, ytoWindowCenter, dpiScaling, i, aspectRatio);
+            double aspectRatio = WindowPreviewCreator.GetWindowAspectRatio(currentWindowHandle);
+            RECT rect = ThumbnailRectCreator.CreateRectForThumbnail(buttonCenter, xToWindowCenter, ytoWindowCenter, dpiScaling, i, aspectRatio);
 
             string windowTitle = ActiveWindows.GetWindowTitle(currentWindowHandle);
             var thumbnailContext = new ThumbnailDataContext(newThumbnail, rect, currentWindowHandle, windowTitle);

@@ -1,8 +1,10 @@
-﻿using System.Runtime.InteropServices;
+﻿using System;
+using System.Runtime.InteropServices;
+using System.Threading;
 
 namespace ThumbnailLogic;
 
-public class ThumbnailCreator
+public class WindowPreviewCreator
 {
 	private const int DWM_TNP_VISIBLE = 0x8;
 	private const int DWM_TNP_RECTDESTINATION = 0x1;
