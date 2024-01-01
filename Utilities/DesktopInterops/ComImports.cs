@@ -40,7 +40,7 @@ namespace QuickPick.Utilities.DesktopInterops
         void GetCount(out int count);
         void GetAt(int index, ref Guid iid, [MarshalAs(UnmanagedType.Interface)] out object obj);
     }
- 
+
 
     [StructLayout(LayoutKind.Sequential)]
     internal struct Size

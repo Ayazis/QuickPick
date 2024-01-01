@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using QuickPick.UI.Views.Settings;
+﻿using QuickPick.UI.Views.Settings;
 using System;
 using System.Diagnostics;
 using System.IO;

@@ -1,5 +1,4 @@
 ﻿using MouseAndKeyBoardHooks;
-using System;
 using System.Windows;
 using System.Windows.Input;
 
@@ -126,7 +125,7 @@ namespace QuickPick.UI.Views.Settings
             ViewModel.AddKeyToNewCombo(formsKey);
             //tbNewCombo.Text = ViewModel.NewKeyCombo;
             // Use formsKey as needed
-        }   
+        }
 
     }
 }

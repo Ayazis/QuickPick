@@ -1,12 +1,9 @@
-﻿using System.Windows.Media;
-using System.Windows.Input;
-using System.Threading.Tasks;
-using System.Diagnostics;
-using System;
-using Newtonsoft.Json;
-using QuickPick.UI.Views;
-using System.Collections.ObjectModel;
+﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading.Tasks;
+using System.Windows.Input;
+using System.Windows.Media;
 
 namespace QuickPick.PinnedApps;
 [DebuggerDisplay("{Name} - {TargetPath}")]

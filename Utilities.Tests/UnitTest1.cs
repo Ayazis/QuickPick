@@ -1,6 +1,4 @@
 using QuickPick.PinnedApps;
-using QuickPick.UI;
-using System.Diagnostics;
 
 namespace Utilities.Tests
 {
@@ -12,10 +10,10 @@ namespace Utilities.Tests
         }
 
         [Test]
-        public void CreateRectTest() 
+        public void CreateRectTest()
         {
-           
-        
+
+
         }
 
 

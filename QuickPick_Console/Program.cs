@@ -1,16 +1,14 @@
-﻿using Utilities.VirtualDesktop;
+﻿using Ayazis.KeyHooks;
 using Ayazis.Utilities;
-using Ayazis.KeyHooks;
-using Utilities.Mouse_and_Keyboard;
-using Updates;
+using QuickPick.UI.Views.Settings;
+using System.Diagnostics;
+using System.Windows;
+using System.Windows.Threading;
 using UpdateInstaller;
 using UpdateInstaller.Updates;
-using System.Diagnostics;
-using System.Windows.Threading;
-using System.Runtime.InteropServices;
-using QuickPick.UI.Views.Settings;
-using Keys = System.Windows.Forms.Keys;
-using System.Windows;
+using Updates;
+using Utilities.Mouse_and_Keyboard;
+using Utilities.VirtualDesktop;
 
 namespace QuickPick;
 
@@ -19,11 +17,13 @@ public class Program
     static TrayIconManager _trayIconManager = new TrayIconManager();
     static DesktopTracker _desktopTracker;
     static ClickWindow _clickwindow = new ClickWindow();
-    static MouseAndKeysCapture _inputCapture;    
+    static MouseAndKeysCapture _inputCapture;
 
     [STAThread]
     static void Main(string[] args)
     {
+
+
         try
         {
             SettingsManager.Instance.LoadSettings();

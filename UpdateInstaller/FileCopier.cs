@@ -1,6 +1,4 @@
-﻿using UpdateInstaller;
-using System.Diagnostics;
-public static class FileCopier
+﻿public static class FileCopier
 {
     public static void CopyFiles(string sourceDirectory, string destinationDirectory)
     {

@@ -7,7 +7,7 @@ namespace Utilities.Mouse_and_Keyboard
         private static KeyInputHandler _instance;
         public static KeyInputHandler Instance => _instance ??= new KeyInputHandler();
 
-		private HashSet<Keys> _pressedKeys = new HashSet<Keys>();
+        private HashSet<Keys> _pressedKeys = new HashSet<Keys>();
         private HashSet<Keys> _presetKeyCombination;
 
 

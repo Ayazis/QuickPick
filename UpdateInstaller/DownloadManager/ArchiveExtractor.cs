@@ -1,8 +1,4 @@
-﻿using System;
-using System.IO;
-using System.IO.Compression;
-using System.Security.AccessControl;
-using System.Security.Principal;
+﻿using System.IO.Compression;
 
 namespace UpdateInstaller.Updates;
 public interface IArchiveExtractor
@@ -18,7 +14,7 @@ public class ArchiveExtractor : IArchiveExtractor
 
         try
         {
-            ZipFile.ExtractToDirectory(sourceFile, targetFolder,true);
+            ZipFile.ExtractToDirectory(sourceFile, targetFolder, true);
         }
         catch (Exception ex)
         {

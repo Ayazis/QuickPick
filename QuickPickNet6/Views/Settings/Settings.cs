@@ -29,7 +29,7 @@ namespace QuickPick
         {
             // Deserialise the key combination as string, and then convert it back to a hashset of keys.
             var settings = JsonConvert.DeserializeObject<Settings>(json);
-            if(settings.KeyCombinationAsStrings != null)
+            if (settings.KeyCombinationAsStrings != null)
                 settings.KeyCombination = new HashSet<Keys>(settings.KeyCombinationAsStrings.Select(k => Enum.Parse<Keys>(k)));
             return settings;
         }

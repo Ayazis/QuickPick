@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-
-public readonly struct InstallerArguments
+﻿public readonly struct InstallerArguments
 {
     public readonly string SourceFolder;
     public readonly string TargetFolder;

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using ThumbnailLogic;
 
 namespace QuickPick.UI
@@ -31,7 +30,7 @@ namespace QuickPick.UI
             return CalculateRECT(thumbnailX, thumbnailY, dimensions, dpiScaling, i, xToWindowCenter < 0);
         }
 
-        private static  (double Width, double Height) CalculateThumbnailDimensions(double aspectRatio)
+        private static (double Width, double Height) CalculateThumbnailDimensions(double aspectRatio)
         {
             double width, height;
             bool isLandscape = aspectRatio > 1;
@@ -80,16 +79,16 @@ namespace QuickPick.UI
             // TODO: allow space for border in thumbnailview
 
             int left = (int)(thumbnailX * dpiScaling);
-			if (isLeftToCenter)
-			{
-				left -= (int)(i * MAX_DIMENSION * dpiScaling);
-			}
-			else
-			{
-				left += (int)(i * MAX_DIMENSION * dpiScaling);
-			}
+            if (isLeftToCenter)
+            {
+                left -= (int)(i * MAX_DIMENSION * dpiScaling);
+            }
+            else
+            {
+                left += (int)(i * MAX_DIMENSION * dpiScaling);
+            }
 
-			int top = (int)(thumbnailY * dpiScaling);
+            int top = (int)(thumbnailY * dpiScaling);
             int right = (int)((thumbnailX + dimensions.Width) * dpiScaling);
             int bottom = (int)((thumbnailY + dimensions.Height) * dpiScaling);
 

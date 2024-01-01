@@ -1,10 +1,7 @@
-﻿using InstallerExecutableLauncher;
-using System.Diagnostics;
-using System.Net;
+﻿using System.Net;
 using System.Reflection;
-using Updates;
-using UpdateInstaller.Updates;
 using UpdateInstaller;
+using Updates;
 
 namespace QuickPick;
 

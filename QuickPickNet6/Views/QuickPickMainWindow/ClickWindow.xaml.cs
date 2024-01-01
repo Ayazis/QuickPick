@@ -1,28 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows;
-using QuickPick.PinnedApps;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using Ayazis.KeyHooks;
-using System.Windows.Media.Animation;
+﻿using Ayazis.Utilities;
 using MouseAndKeyBoardHooks;
-using Ayazis.Utilities;
-using ThumbnailLogic;
-using System.Linq;
-using System.Windows.Input;
-using Microsoft.VisualBasic;
-using QuickPick.UI.Views.Thumbnail;
-using System.Threading.Tasks;
-using System.Windows.Controls;
-using System.Windows.Forms;
-using System.Windows.Media.Effects;
-using System.Windows.Media;
-using System.Windows.Shapes;
-using System.Runtime.InteropServices;
-using System.Windows.Interop;
+using QuickPick.PinnedApps;
 using QuickPick.UI;
-using System.Runtime.CompilerServices;
+using QuickPick.UI.Views.Thumbnail;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media.Animation;
+using ThumbnailLogic;
 
 namespace QuickPick;
 /// <summary>
@@ -34,7 +23,7 @@ public partial class ClickWindow : Window
     private QuickPickMainWindowModel _qpm = new QuickPickMainWindowModel();
     private IntPtr _quickPickWindowHandle;
     private List<ThumbnailView> _currentThumbnails = new List<ThumbnailView>();
-    public static ThumbnailTimer ThumbnailTimer;    
+    public static ThumbnailTimer ThumbnailTimer;
     static DateTime _timeStampLastShown;
     public Storyboard HideAnimation { get; private set; }
     public Storyboard ShowAnimation { get; private set; }
@@ -109,7 +98,7 @@ public partial class ClickWindow : Window
             {
                 _qpm.PinnedApps.Add(item);
             }
-        });      
+        });
     }
 
     public void HideWindow()

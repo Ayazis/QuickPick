@@ -1,5 +1,4 @@
-﻿using NUnit.Framework;
-using QuickPick.UI;
+﻿using QuickPick.UI;
 using System.Windows; // Make sure to add PresentationCore as a reference for the Point class
 // Your namespace where ThumbnailRectCreator resides
 namespace YourNamespace.Tests
@@ -12,7 +11,7 @@ namespace YourNamespace.Tests
         [Test]
         public void TestCreateRectForThumbnail_Landscape_LeftToCenter()
         {
-         
+
             var rect = ThumbnailRectCreator.CreateRectForThumbnail(new Point(100, 100), -50, -50, 1, 0, 1.5);
 
             Assert.AreEqual(-130, rect.Left);

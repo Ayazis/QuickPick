@@ -1,8 +1,6 @@
-﻿using System.Reflection;
-using System;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using System.Collections.Generic;
-using System.Linq;
-using CommunityToolkit.Mvvm.ComponentModel;
+using System.Reflection;
 
 namespace QuickPick.UI.Views.Settings;
 public enum AutoUpdateSetting
@@ -40,7 +38,7 @@ public partial class SettingsViewModel : ObservableObject
     }
 
     [ObservableProperty]
-    private string _newKeyCombo = " - "; 
+    private string _newKeyCombo = " - ";
 
     public void ApplySettings(QuickPick.Settings settings)
     {
