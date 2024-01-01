@@ -93,7 +93,7 @@ public class AppLinkRetriever
                 }
                 catch (System.ComponentModel.Win32Exception)
                 {
-                    Console.WriteLine($"Unable to acces {process.ProcessName}");
+                    Console.WriteLine($"Unable to access {process.ProcessName}");
                     continue;
                 }
                 var appIcon = IconCreator.GetImage(filePath);
