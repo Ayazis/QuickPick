@@ -11,34 +11,34 @@ namespace QuickPick.PinnedApps;
 public class AppLinkRetriever
 {
     private const string TASKBAR_FOLDERPATH = @"Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar";
+    static string _taskbarFolder;
+    static AppLinkRetriever()
+    {
+        string appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+        // In this folder, shortcuts to pinned apps are stored by Windows.
+        _taskbarFolder = Path.Combine(appDataFolder, TASKBAR_FOLDERPATH);
+    }
 
-       
     static List<AppLink> _allShortCuts = new List<AppLink>();
 
     public static List<AppLink> GetPinnedAppsAndActiveWindows(bool includePinnedApps)
     {
-       
         _allShortCuts.Clear();
 
-        
         if (includePinnedApps)
-        {
-            GetPinnedTaskbarApps();            
-        }
-         GetAllActiveApplications();        
+            GetPinnedTaskbarApps();
+
+        GetAllActiveApplications();
 
         return _allShortCuts;
     }
 
     private static void GetPinnedTaskbarApps()
-    {   
-        string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-        string taskbarFolder = Path.Combine(appData, TASKBAR_FOLDERPATH);
-
-        if (!Directory.Exists(taskbarFolder))
+    {
+        if (!Directory.Exists(_taskbarFolder))
             return;
 
-        string[] pinnedAppPaths = Directory.GetFiles(taskbarFolder, "*.lnk", new EnumerationOptions { RecurseSubdirectories = true });
+        string[] pinnedAppPaths = Directory.GetFiles(_taskbarFolder, "*.lnk", new EnumerationOptions { RecurseSubdirectories = true });
 
         foreach (string pinnedAppPath in pinnedAppPaths)
         {
@@ -61,7 +61,7 @@ public class AppLinkRetriever
 
                 _allShortCuts.Add(appInfo);
             }
-        }        
+        }
     }
 
 
@@ -114,7 +114,7 @@ public class AppLinkRetriever
 
                 _allShortCuts.Add(activeWindow);
             }
-        }        
+        }
     }
 
 }
