@@ -12,36 +12,31 @@ public class AppLinkRetriever
 {
     private const string TASKBAR_FOLDERPATH = @"Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar";
 
-
-    private static List<AppLink> _pinnedApps = new List<AppLink>();
-    static List<AppLink> _activeWindows = new List<AppLink>();
+       
+    static List<AppLink> _allShortCuts = new List<AppLink>();
 
     public static List<AppLink> GetPinnedAppsAndActiveWindows(bool includePinnedApps)
     {
-        _pinnedApps.Clear();
-        _activeWindows.Clear();
+       
+        _allShortCuts.Clear();
 
-        List<AppLink> allShortCuts = new List<AppLink>();
+        
         if (includePinnedApps)
         {
-            _pinnedApps = GetPinnedTaskbarApps();
-            allShortCuts.AddRange(_pinnedApps);
+            GetPinnedTaskbarApps();            
         }
-        _activeWindows = GetAllActiveApplications();
-        allShortCuts.AddRange(_activeWindows);
+         GetAllActiveApplications();        
 
-        return allShortCuts;
+        return _allShortCuts;
     }
 
-    private static List<AppLink> GetPinnedTaskbarApps()
-    {
-        List<AppLink> pinnedApps = new List<AppLink>();
-
+    private static void GetPinnedTaskbarApps()
+    {   
         string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
         string taskbarFolder = Path.Combine(appData, TASKBAR_FOLDERPATH);
 
         if (!Directory.Exists(taskbarFolder))
-            return null;
+            return;
 
         string[] pinnedAppPaths = Directory.GetFiles(taskbarFolder, "*.lnk", new EnumerationOptions { RecurseSubdirectories = true });
 
@@ -64,15 +59,13 @@ public class AppLinkRetriever
                     StartInDirectory = startinDir,
                 };
 
-                pinnedApps.Add(appInfo);
+                _allShortCuts.Add(appInfo);
             }
-        }
-
-        return pinnedApps;
+        }        
     }
 
 
-    private static List<AppLink> GetAllActiveApplications()
+    private static void GetAllActiveApplications()
     {
         List<AppLink> activeWindows = new List<AppLink>();
 
@@ -80,11 +73,11 @@ public class AppLinkRetriever
 
         foreach (var activeProcess in openProcesses)
         {
-            var matchingPinnedApp = _pinnedApps.FirstOrDefault(a => a.Name.Equals(activeProcess.process.ProcessName, StringComparison.OrdinalIgnoreCase));
-            if (matchingPinnedApp is not null)
+            var applicationAlreadyFound = _allShortCuts.FirstOrDefault(a => a.Name.Equals(activeProcess.process.ProcessName, StringComparison.OrdinalIgnoreCase));
+            if (applicationAlreadyFound is not null)
             {
                 if (activeProcess.process.MainWindowHandle != IntPtr.Zero)
-                    matchingPinnedApp.WindowHandles.Add(activeProcess.handle);
+                    applicationAlreadyFound.WindowHandles.Add(activeProcess.handle);
 
                 continue;
             }
@@ -112,18 +105,16 @@ public class AppLinkRetriever
 
                 AppLink activeWindow = new AppLink()
                 {
-                    Name = process.MainWindowTitle,
+                    Name = process.ProcessName,
                     Arguments = string.Empty, // Arguments might not be directly available for running processes
                     TargetPath = filePath,
                     AppIcon = appIcon,
                     WindowHandles = new List<IntPtr> { activeProcess.handle }
                 };
 
-                activeWindows.Add(activeWindow);
+                _allShortCuts.Add(activeWindow);
             }
-        }
-
-        return activeWindows;
+        }        
     }
 
 }

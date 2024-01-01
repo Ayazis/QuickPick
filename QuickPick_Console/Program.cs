@@ -22,15 +22,13 @@ public class Program
     [STAThread]
     static void Main(string[] args)
     {
-
-
         try
         {
             SettingsManager.Instance.LoadSettings();
             SettingsWindow.Instance.ViewModel.ApplySettings(SettingsManager.Instance.Settings);
             _trayIconManager.CreateTrayIcon();
 #if !DEBUG
-			//CheckInputArguments(args);
+			CheckInputArguments(args);
 #else
             //CheckInputArguments(args);
 #endif
