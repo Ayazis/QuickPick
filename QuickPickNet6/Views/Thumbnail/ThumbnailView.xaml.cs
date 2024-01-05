@@ -9,7 +9,7 @@ namespace QuickPick.UI.Views.Thumbnail;
 
 public partial class ThumbnailView : UserControl
 {
-    ThumbnailProperties _context;
+    public ThumbnailProperties Properties;
     public ThumbnailView()
     {
 
@@ -22,10 +22,7 @@ public partial class ThumbnailView : UserControl
 
         InitializeComponent();
         this.DataContext = context;
-        _context = context;
-        //this.Visibility = System.Windows.Visibility.Hidden;
-
-
+        Properties = context;
     }
 
     public void FadeIn()
@@ -38,40 +35,40 @@ public partial class ThumbnailView : UserControl
         });
 
         Task.Run(() => { ShowThumbnailView(); });
-        Task.Run(() => { WindowPreviewCreator.CreateAndFadeInThumbnail(_context.ThumbnailRelation, _context.Rect); });
+        Task.Run(() => { WindowPreviewCreator.CreateAndFadeInThumbnail(Properties.ThumbnailRelation, Properties.Rect); });
 
     }
     private void ShowThumbnailView(bool fadeIn = false)
     {
-        if (fadeIn)
+        if (!fadeIn)
         {
-            // use dispatchers as short as possible to prevent lag.
-            // Gradually increase the opacity over time to create a fade-in effect. // Same logic as in ThumbnailCreator
-            for (double i = 0; i <= 255; i += 25)
+            this.Dispatcher.Invoke(() =>
             {
-                double newOpacityValue = i / 255;
-                double localOpacity = newOpacityValue;
-                this.Dispatcher.Invoke(() =>
-                {
-                    this.Opacity = localOpacity;
-                });
-                // Sleep for a bit to control the speed of the fade-in. Adjust this value as needed.
-                Thread.Sleep(20);
-            }
+                // Make sure the opacity ends at 1 for full visibiblity.
+                this.Opacity = 1;
+            });
+            return;
         }
-        this.Dispatcher.Invoke(() =>
+
+        // use dispatchers as short as possible to prevent lag.
+        // Gradually increase the opacity over time to create a fade-in effect. // Same logic as in WindowPreviewCreator
+        for (double i = 0; i <= 255; i += 25)
         {
-            // Make sure the opacity ends at 1 for full visibiblity.
-            this.Opacity = 1;
-        });
-
-
+            double newOpacityValue = i / 255;
+            double localOpacity = newOpacityValue;
+            this.Dispatcher.Invoke(() =>
+            {
+                this.Opacity = localOpacity;
+            });
+            // Sleep for a bit to control the speed of the fade-in. Adjust this value as needed.
+            Thread.Sleep(20);
+        }
     }
 
     public void Hide()
     {
         this.Visibility = System.Windows.Visibility.Collapsed;
-        WindowPreviewCreator.DwmUnregisterThumbnail(_context.ThumbnailRelation);
+        WindowPreviewCreator.DwmUnregisterThumbnail(Properties.ThumbnailRelation);
     }
 
     private void UserControl_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
@@ -97,7 +94,7 @@ public partial class ThumbnailView : UserControl
 
     private void UserControl_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
-        ActiveWindows.ToggleWindow(_context.WindowHandle);
+        ActiveWindows.ToggleWindow(Properties.WindowHandle);
         // Toggle.
     }
     public static System.Windows.Size CalculateRenderSize(RECT rect)

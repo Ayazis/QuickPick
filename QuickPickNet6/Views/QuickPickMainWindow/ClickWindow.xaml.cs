@@ -184,8 +184,7 @@ public partial class ClickWindow : Window
 
         // Get DPI information
         PresentationSource source = PresentationSource.FromVisual(this);
-        var m = source.CompositionTarget.TransformToDevice;
-        double dpiScaling = m.M11;
+        double dpiScaling = source.CompositionTarget.TransformToDevice.M11;        
 
         for (int i = 0; i < pinnedApp.WindowHandles.Count; i++)
         {
@@ -219,11 +218,16 @@ public partial class ClickWindow : Window
         {
             Popup popup = new();
             _currentPopups.Add(popup);
-            popup.Placement = PlacementMode.MousePoint;        
+            popup.Placement = PlacementMode.Absolute;
+            popup.HorizontalOffset = thumbnailView.Properties.Rect.Left + SystemParameters.VirtualScreenLeft;
+            popup.VerticalOffset = thumbnailView.Properties.Rect.Top + SystemParameters.VirtualScreenTop;
             popup.Child = thumbnailView;            
             popup.IsOpen = true;
             thumbnailView.FadeIn();
         }
+
+
+
     }
 
     private void Button_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)

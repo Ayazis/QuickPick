@@ -37,27 +37,27 @@ public class WindowPreviewCreator
     public static void CreateAndFadeInThumbnail(IntPtr thumbnailId, RECT rect, bool fadeIn = false)
     {
 
-        DWM_THUMBNAIL_PROPERTIES props = new DWM_THUMBNAIL_PROPERTIES();
-        props.fVisible = true;
-        props.dwFlags = DWM_TNP_VISIBLE | DWM_TNP_RECTDESTINATION | DWM_TNP_OPACITY;
-        props.opacity = (byte)0;  // Start with a completely transparent thumbnail.
-        props.rcDestination = rect;
+        DWM_THUMBNAIL_PROPERTIES properties = new DWM_THUMBNAIL_PROPERTIES();
+        properties.fVisible = true;
+        properties.dwFlags = DWM_TNP_VISIBLE | DWM_TNP_RECTDESTINATION | DWM_TNP_OPACITY;
+        properties.opacity = (byte)0;  // Start with a completely transparent thumbnail.
+        properties.rcDestination = rect;
 
         if (fadeIn)
         {
             // Gradually increase the opacity over time to create a fade-in effect.
             for (int i = 0; i <= 255; i += 25)
             {
-                props.opacity = (byte)i;
-                DwmUpdateThumbnailProperties(thumbnailId, ref props);
+                properties.opacity = (byte)i;
+                DwmUpdateThumbnailProperties(thumbnailId, ref properties);
 
                 // Sleep for a bit to control the speed of the fade-in. Adjust this value as needed.
                 Thread.Sleep(20);
             }
         }
         // Ensure the thumbnail is fully visible.
-        props.opacity = (byte)255;
-        DwmUpdateThumbnailProperties(thumbnailId, ref props);
+        properties.opacity = (byte)255;
+        DwmUpdateThumbnailProperties(thumbnailId, ref properties);
 
 
     }
