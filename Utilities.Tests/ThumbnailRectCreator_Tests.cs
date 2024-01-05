@@ -12,7 +12,7 @@ namespace YourNamespace.Tests
         public void TestCreateRectForThumbnail_Landscape_LeftToCenter()
         {
 
-            var rect = ThumbnailRectCreator.CreateRectForThumbnail(new Point(100, 100), -50, -50, 1, 0, 1.5);
+            var rect = ThumbnailRectCreator.CreateRectForPreviewImage(new Point(100, 100), -50, -50, 1, 0, 1.5);
 
             Assert.AreEqual(-130, rect.Left);
             Assert.AreEqual(-70, rect.Top);
@@ -22,7 +22,7 @@ namespace YourNamespace.Tests
         [Test]
         public void TestCreateRectForThumbnail_Landscape_RightToCenter()
         {
-            var rect = ThumbnailRectCreator.CreateRectForThumbnail(new Point(100, 100), 50, -50, 1, 0, 1.5);
+            var rect = ThumbnailRectCreator.CreateRectForPreviewImage(new Point(100, 100), 50, -50, 1, 0, 1.5);
 
             Assert.AreEqual(150, rect.Left);
             Assert.AreEqual(-70, rect.Top);
@@ -32,7 +32,7 @@ namespace YourNamespace.Tests
         [Test]
         public void TestCreateRectForThumbnail_Landscape_RightToCenter_IncrementedIndex()
         {
-            var rect = ThumbnailRectCreator.CreateRectForThumbnail(new Point(100, 100), 50, -50, 1, 1, 1.5);
+            var rect = ThumbnailRectCreator.CreateRectForPreviewImage(new Point(100, 100), 50, -50, 1, 1, 1.5);
 
             Assert.AreEqual(350, rect.Left);  // 150 (original Left) + 200 (i * 200)
             Assert.AreEqual(-70, rect.Top);
@@ -42,7 +42,7 @@ namespace YourNamespace.Tests
         [Test]
         public void TestCreateRectForThumbnail_Landscape_BelowCenter()
         {
-            var rect = ThumbnailRectCreator.CreateRectForThumbnail(new Point(100, 100), 50, 50, 1, 0, 1.5);
+            var rect = ThumbnailRectCreator.CreateRectForPreviewImage(new Point(100, 100), 50, 50, 1, 0, 1.5);
 
             Assert.AreEqual(150, rect.Left);
             Assert.AreEqual(150, rect.Top);  // Corrected Top value
@@ -52,7 +52,7 @@ namespace YourNamespace.Tests
         [Test]
         public void TestCreateRectForThumbnail_Landscape_AboveCenter()
         {
-            var rect = ThumbnailRectCreator.CreateRectForThumbnail(new Point(100, 100), 50, -50, 1, 0, 1.5);
+            var rect = ThumbnailRectCreator.CreateRectForPreviewImage(new Point(100, 100), 50, -50, 1, 0, 1.5);
 
             Assert.AreEqual(150, rect.Left);
             Assert.AreEqual(-70, rect.Top);  // 50 (original Top) - 120 (height)

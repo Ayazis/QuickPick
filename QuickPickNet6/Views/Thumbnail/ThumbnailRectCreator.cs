@@ -21,7 +21,7 @@ namespace QuickPick.UI
         /// <param name="i"></param>
         /// <param name="aspectRatio"></param>
         /// <returns></returns>
-        public static RECT CreateRectForThumbnail(Point buttonCenter, double xToWindowCenter, double yToWindowCenter, double dpiScaling, int i, double aspectRatio)
+        public static RECT CreateRectForPreviewImage(Point buttonCenter, double xToWindowCenter, double yToWindowCenter, double dpiScaling, int i, double aspectRatio)
         {
             var dimensions = CalculateThumbnailDimensions(aspectRatio);
             double thumbnailX = CalculateThumbnailX(buttonCenter.X, xToWindowCenter, dimensions.Width + 20);

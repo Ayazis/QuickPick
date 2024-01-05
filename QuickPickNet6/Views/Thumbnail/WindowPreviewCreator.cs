@@ -13,7 +13,7 @@ public class WindowPreviewCreator
 
 
 
-    public static IntPtr GetThumbnailRelations(IntPtr hwndSource, IntPtr hwndDestination)
+    public static IntPtr GetPreviewImagePointer(IntPtr hwndSource, IntPtr hwndDestination)
     {
         IntPtr thumb = IntPtr.Zero;
 

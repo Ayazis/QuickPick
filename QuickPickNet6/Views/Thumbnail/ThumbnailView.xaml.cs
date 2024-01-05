@@ -23,7 +23,7 @@ public partial class ThumbnailView : UserControl
         InitializeComponent();
         this.DataContext = context;
         _context = context;
-        this.Visibility = System.Windows.Visibility.Hidden;
+        //this.Visibility = System.Windows.Visibility.Hidden;
 
 
     }

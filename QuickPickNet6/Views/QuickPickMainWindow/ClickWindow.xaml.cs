@@ -9,7 +9,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Animation;
 using ThumbnailLogic;
 
@@ -20,11 +22,12 @@ namespace QuickPick;
 public partial class ClickWindow : Window
 {
     public static ClickWindow Instance;
-    private QuickPickMainWindowModel _qpm = new QuickPickMainWindowModel();
-    private IntPtr _quickPickWindowHandle;
-    private List<ThumbnailView> _currentThumbnails = new List<ThumbnailView>();
+    private QuickPickMainWindowModel _qpm = new();
+    private IntPtr _quickPickWindowHandle;    
     public static ThumbnailTimer ThumbnailTimer;
     static DateTime _timeStampLastShown;
+    private List<Popup> _currentPopups = new();
+
     public Storyboard HideAnimation { get; private set; }
     public Storyboard ShowAnimation { get; private set; }
     public ClickWindow()
@@ -160,14 +163,16 @@ public partial class ClickWindow : Window
         var button = (System.Windows.Controls.Button)sender;
         AppLink pinnedApp = button.DataContext as AppLink;
 
-        CreateThumbnails(pinnedApp, button);
+        var thumbnails = CreateThumbnails(pinnedApp, button);
+
+        ShowThumbnails(thumbnails);
     }
 
-    private void CreateThumbnails(AppLink pinnedApp, System.Windows.Controls.Button button)
+    private IEnumerable<ThumbnailView> CreateThumbnails(AppLink pinnedApp, System.Windows.Controls.Button button)
     {
         // Get the center of the button relative to its container (the window)
         var buttonCenter = button.TransformToAncestor(this)
-                                .Transform(new Point(button.ActualWidth / 2, button.ActualHeight / 2));
+                                    .Transform(new Point(button.ActualWidth / 2, button.ActualHeight / 2));
 
         // Get the center of the window
         double windowCenterX = this.ActualWidth / 2;
@@ -184,32 +189,39 @@ public partial class ClickWindow : Window
 
         for (int i = 0; i < pinnedApp.WindowHandles.Count; i++)
         {
-            ProcessThumbnail(i);
+            var thumbnail = ProcessThumbnail(i);
+            if (thumbnail != null)
+                yield return thumbnail;
         };
 
-        //local function for readability
-        void ProcessThumbnail(int i)
+        ThumbnailView ProcessThumbnail(int i)
         {
             IntPtr currentWindowHandle = pinnedApp.WindowHandles[i];
 
             // Create thumbnailRelation
-            var newThumbnail = WindowPreviewCreator.GetThumbnailRelations(currentWindowHandle, _quickPickWindowHandle);
+            IntPtr newThumbnail = WindowPreviewCreator.GetPreviewImagePointer(currentWindowHandle, _quickPickWindowHandle);
             if (newThumbnail == default)
-                return;
+                return null;
 
             double aspectRatio = WindowPreviewCreator.GetWindowAspectRatio(currentWindowHandle);
-            RECT rect = ThumbnailRectCreator.CreateRectForThumbnail(buttonCenter, xToWindowCenter, ytoWindowCenter, dpiScaling, i, aspectRatio);
+            RECT rect = ThumbnailRectCreator.CreateRectForPreviewImage(buttonCenter, xToWindowCenter, ytoWindowCenter, dpiScaling, i, aspectRatio);
 
             string windowTitle = ActiveWindows.GetWindowTitle(currentWindowHandle);
             var thumbnailContext = new ThumbnailProperties(newThumbnail, rect, currentWindowHandle, windowTitle);
             var thumbnailView = new ThumbnailView(thumbnailContext, dpiScaling);
 
-            this.ThumbnailCanvas.Children.Add(thumbnailView);
-            _currentThumbnails.Add(thumbnailView);
-
-            // Set the position of ThumbnailView based on translated coordinates.
-            Canvas.SetLeft(thumbnailView, rect.Left / dpiScaling - 20);
-            Canvas.SetTop(thumbnailView, rect.Top / dpiScaling - 20);
+            return thumbnailView;
+        }
+    }
+    void ShowThumbnails(IEnumerable<ThumbnailView> thumbnails)
+    {
+        foreach (var thumbnailView in thumbnails)
+        {
+            Popup popup = new();
+            _currentPopups.Add(popup);
+            popup.Placement = PlacementMode.MousePoint;        
+            popup.Child = thumbnailView;            
+            popup.IsOpen = true;
             thumbnailView.FadeIn();
         }
     }
@@ -222,11 +234,10 @@ public partial class ClickWindow : Window
 
     private void HideThumbnails()
     {
-        foreach (var thumbnailView in _currentThumbnails)
+        foreach (var popup in _currentPopups)
         {
-            if (thumbnailView != default)
-                thumbnailView.Hide();
+            popup.IsOpen = false;
         }
-        _currentThumbnails.Clear();
+        _currentPopups.Clear();
     }
 }
