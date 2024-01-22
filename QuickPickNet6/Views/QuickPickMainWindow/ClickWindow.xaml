@@ -7,8 +7,8 @@
              xmlns:converters="clr-namespace:QuickPick.Converters"
              xmlns:custom="clr-namespace:QuickPick.Custom"
              mc:Ignorable="d"                           
-             MinWidth="800" 
-             MinHeight="800"
+             MinWidth="2200" 
+             MinHeight="2200"
              SizeToContent="WidthAndHeight"
              Background="#00000000"         
              ShowInTaskbar="False"
@@ -30,11 +30,7 @@
         </ResourceDictionary>
     </Window.Resources>   
 
-        <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
-        <Canvas x:Name="ThumbnailCanvas" HorizontalAlignment="Center" VerticalAlignment="Center" 
-                Width="800" 
-                Height="800"                                 
-                />
+        <Grid VerticalAlignment="Center" HorizontalAlignment="Center">      
         <Ellipse Width="150" Height="150" Fill="#B3000000" />
         <local:RingButtonControl/>
             <ItemsControl x:Name="Applinks" ItemsSource="{Binding PinnedApps, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" >

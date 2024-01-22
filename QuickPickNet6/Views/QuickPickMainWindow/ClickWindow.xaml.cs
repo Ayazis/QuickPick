@@ -23,7 +23,7 @@ public partial class ClickWindow : Window
 {
     public static ClickWindow Instance;
     private QuickPickMainWindowModel _qpm = new();
-    private IntPtr _quickPickWindowHandle;    
+    private IntPtr _quickPickWindowHandle;
     public static ThumbnailTimer ThumbnailTimer;
     static DateTime _timeStampLastShown;
     private List<Popup> _currentPopups = new();
@@ -184,7 +184,7 @@ public partial class ClickWindow : Window
 
         // Get DPI information
         PresentationSource source = PresentationSource.FromVisual(this);
-        double dpiScaling = source.CompositionTarget.TransformToDevice.M11;        
+        double dpiScaling = source.CompositionTarget.TransformToDevice.M11;
 
         for (int i = 0; i < pinnedApp.WindowHandles.Count; i++)
         {
@@ -198,36 +198,40 @@ public partial class ClickWindow : Window
             IntPtr currentWindowHandle = pinnedApp.WindowHandles[i];
 
             // Create thumbnailRelation
-            IntPtr newThumbnail = WindowPreviewCreator.GetPreviewImagePointer(currentWindowHandle, _quickPickWindowHandle);
-            if (newThumbnail == default)
+            IntPtr newPreview = WindowPreviewCreator.GetPreviewImagePointer(currentWindowHandle, _quickPickWindowHandle);
+            if (newPreview == default)
                 return null;
 
             double aspectRatio = WindowPreviewCreator.GetWindowAspectRatio(currentWindowHandle);
             RECT rect = ThumbnailRectCreator.CreateRectForPreviewImage(buttonCenter, xToWindowCenter, ytoWindowCenter, dpiScaling, i, aspectRatio);
 
+
+            WindowPreviewCreator.CreateAndFadeInPreviewImage(newPreview, rect, fadeIn: false);
+            return null;
+
             string windowTitle = ActiveWindows.GetWindowTitle(currentWindowHandle);
-            var thumbnailContext = new ThumbnailProperties(newThumbnail, rect, currentWindowHandle, windowTitle);
-            var thumbnailView = new ThumbnailView(thumbnailContext, dpiScaling);
+            var thumbnailProperties = new ThumbnailProperties(newPreview, rect, currentWindowHandle, windowTitle);
+            var thumbnailView = new ThumbnailView(thumbnailProperties, dpiScaling);
 
             return thumbnailView;
         }
     }
     void ShowThumbnails(IEnumerable<ThumbnailView> thumbnails)
     {
+
+
         foreach (var thumbnailView in thumbnails)
         {
             Popup popup = new();
             _currentPopups.Add(popup);
             popup.Placement = PlacementMode.Absolute;
-            popup.HorizontalOffset = thumbnailView.Properties.Rect.Left + SystemParameters.VirtualScreenLeft;
-            popup.VerticalOffset = thumbnailView.Properties.Rect.Top + SystemParameters.VirtualScreenTop;
-            popup.Child = thumbnailView;            
-            popup.IsOpen = true;
+
+            popup.HorizontalOffset = thumbnailView.Properties.Rect.Left + Left - 40;
+            popup.VerticalOffset = thumbnailView.Properties.Rect.Top + Top + 40;
+            popup.Child = thumbnailView;
+            //popup.IsOpen = true;
             thumbnailView.FadeIn();
         }
-
-
-
     }
 
     private void Button_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
@@ -241,6 +245,7 @@ public partial class ClickWindow : Window
         foreach (var popup in _currentPopups)
         {
             popup.IsOpen = false;
+            (popup.Child as ThumbnailView)?.Hide();
         }
         _currentPopups.Clear();
     }

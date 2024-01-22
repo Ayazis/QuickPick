@@ -34,7 +34,7 @@ public class WindowPreviewCreator
         }
     }
 
-    public static void CreateAndFadeInThumbnail(IntPtr thumbnailId, RECT rect, bool fadeIn = false)
+    public static void CreateAndFadeInPreviewImage(IntPtr thumbnailId, RECT rect, bool fadeIn = false)
     {
 
         DWM_THUMBNAIL_PROPERTIES properties = new DWM_THUMBNAIL_PROPERTIES();
@@ -57,7 +57,7 @@ public class WindowPreviewCreator
         }
         // Ensure the thumbnail is fully visible.
         properties.opacity = (byte)255;
-        DwmUpdateThumbnailProperties(thumbnailId, ref properties);
+        var result = DwmUpdateThumbnailProperties(thumbnailId, ref properties);
 
 
     }

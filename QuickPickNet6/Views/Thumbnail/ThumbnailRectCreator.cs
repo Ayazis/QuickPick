@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Diagnostics;
+using System.Windows;
 using ThumbnailLogic;
 
 namespace QuickPick.UI
@@ -9,7 +10,7 @@ namespace QuickPick.UI
     public static class ThumbnailRectCreator
     {
 
-        private const double MAX_DIMENSION = 180.0;
+        private static readonly double _maxDimension = 180.0;
 
         /// <summary>
         /// Creates the RECT for the actual thumbnailpreview.
@@ -23,26 +24,33 @@ namespace QuickPick.UI
         /// <returns></returns>
         public static RECT CreateRectForPreviewImage(Point buttonCenter, double xToWindowCenter, double yToWindowCenter, double dpiScaling, int i, double aspectRatio)
         {
-            var dimensions = CalculateThumbnailDimensions(aspectRatio);
-            double thumbnailX = CalculateThumbnailX(buttonCenter.X, xToWindowCenter, dimensions.Width + 20);
-            double thumbnailY = CalculateThumbnailY(buttonCenter.Y, yToWindowCenter, dimensions.Height + 20);
+            double dpiAdjustedMaxDimensions = _maxDimension * dpiScaling;
+            var dimensions = CalculateThumbnailDimensions(aspectRatio, dpiScaling);
+            double X = CalculateThumbnailX(buttonCenter.X, xToWindowCenter, dimensions.Width + 20);
+            double Y = CalculateThumbnailY(buttonCenter.Y, yToWindowCenter, dimensions.Height + 20);
 
-            return CalculateRECT(thumbnailX, thumbnailY, dimensions, dpiScaling, i, xToWindowCenter < 0);
+
+            double dpiAdjustedX = X * dpiScaling;
+            double dpiAdjustedY = Y * dpiScaling;
+            bool isLefToCenter = xToWindowCenter < 0;
+
+
+            return CalculateRectPosition(dpiAdjustedX, dpiAdjustedY, dimensions.Width, dimensions.Height, dpiAdjustedMaxDimensions, i, isLefToCenter);
         }
 
-        private static (double Width, double Height) CalculateThumbnailDimensions(double aspectRatio)
+        private static (double Width, double Height) CalculateThumbnailDimensions(double aspectRatio, double dpiScaling)
         {
             double width, height;
             bool isLandscape = aspectRatio > 1;
 
             if (isLandscape)
             {
-                width = MAX_DIMENSION;
+                width = _maxDimension * dpiScaling;
                 height = width / aspectRatio;
             }
             else
             {
-                height = MAX_DIMENSION;
+                height = _maxDimension * dpiScaling;
                 width = height * aspectRatio;
             }
 
@@ -57,42 +65,52 @@ namespace QuickPick.UI
             double shiftedPosition = startPosition + horizontalShiftAmount;
 
             double offset = width / 2; // Default position is the thumbnail centered in the middle.            
-            double offSetPosition = shiftedPosition - offset;
+            const double offsetCorrection = 25; // For some reason things tend to be a bit more to the left than they should be. This corrects that.
+            double correctedOffset = offset - offsetCorrection;
+
+            double offSetPosition = shiftedPosition - correctedOffset;
             return offSetPosition;
         }
 
 
-        private static double CalculateThumbnailY(double startPosition, double YDistanceToWindowCenter, double height)
-        {
-            double shiftCoefficient = 1.5; // Increase to increase distance from thumbnail to the center
-            double verticalShiftAmount = YDistanceToWindowCenter * shiftCoefficient;
-            double shiftedPosition = startPosition + verticalShiftAmount;
+        private static double CalculateThumbnailY(double buttonYLocation, double verticalDistance, double height)
+        {   
+            // Normalize verticalDistance to a range of 0 to 1
+            double normalizedDistance = (-verticalDistance + 75) / 150;
 
-            double offset = height / 2;  // Default position is the thumbnail centered in the middle.        
-            double offSetPosition = shiftedPosition - offset;
+            // Adjust Offset based on normalizedDistance
+            double offset = height * normalizedDistance;
 
-            return offSetPosition;
+            const double offsetCorrection = 35; // For some reason things tend to be higher than they should be. This corrects that.
+            double correctedOffset = offset - offsetCorrection;
+            double finalYPosition = buttonYLocation -correctedOffset;
+
+            return finalYPosition;
+
         }
 
-        private static RECT CalculateRECT(double thumbnailX, double thumbnailY, (double Width, double Height) dimensions, double dpiScaling, int i, bool isLeftToCenter)
+        private static RECT CalculateRectPosition(double x, double y, double width, double Height, double maxDimension,
+           int i, bool isLeftToCenter)
         {
-            // TODO: allow space for border in thumbnailview
 
-            int left = (int)(thumbnailX * dpiScaling);
+            double left = x;
+            double top = y;
+            double right = x + width;
+            double bottom = y + Height;
+
             if (isLeftToCenter)
             {
-                left -= (int)(i * MAX_DIMENSION * dpiScaling);
+                left -= i * maxDimension;
+                right -= i * maxDimension;
             }
             else
             {
-                left += (int)(i * MAX_DIMENSION * dpiScaling);
+                left += i * maxDimension;
+                right += i * maxDimension;
             }
 
-            int top = (int)(thumbnailY * dpiScaling);
-            int right = (int)((thumbnailX + dimensions.Width) * dpiScaling);
-            int bottom = (int)((thumbnailY + dimensions.Height) * dpiScaling);
-
-            return new RECT(left, top, right, bottom);
+            var newRect = new RECT((int)left, (int)top, (int)right, (int)bottom);
+            return newRect;
         }
     }
 
