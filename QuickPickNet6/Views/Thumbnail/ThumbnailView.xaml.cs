@@ -34,7 +34,7 @@ public partial class ThumbnailView : UserControl
 
         });
 
-        //Task.Run(() => { ShowThumbnailView(); });
+        Task.Run(() => { ShowThumbnailView(); });
         Task.Run(() => { WindowPreviewCreator.CreateAndFadeInPreviewImage(Properties.ThumbnailRelation, Properties.Rect); });
 
     }

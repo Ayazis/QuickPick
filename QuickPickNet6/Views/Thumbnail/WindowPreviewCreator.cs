@@ -55,6 +55,7 @@ public class WindowPreviewCreator
                 Thread.Sleep(20);
             }
         }
+        
         // Ensure the thumbnail is fully visible.
         properties.opacity = (byte)255;
         var result = DwmUpdateThumbnailProperties(thumbnailId, ref properties);

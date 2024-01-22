@@ -165,7 +165,7 @@ public partial class ClickWindow : Window
 
         var thumbnails = CreateThumbnails(pinnedApp, button);
 
-        ShowThumbnails(thumbnails);
+        ShowThumbnails(thumbnails, button);
     }
 
     private IEnumerable<ThumbnailView> CreateThumbnails(AppLink pinnedApp, System.Windows.Controls.Button button)
@@ -206,8 +206,7 @@ public partial class ClickWindow : Window
             RECT rect = ThumbnailRectCreator.CreateRectForPreviewImage(buttonCenter, xToWindowCenter, ytoWindowCenter, dpiScaling, i, aspectRatio);
 
 
-            WindowPreviewCreator.CreateAndFadeInPreviewImage(newPreview, rect, fadeIn: false);
-            return null;
+
 
             string windowTitle = ActiveWindows.GetWindowTitle(currentWindowHandle);
             var thumbnailProperties = new ThumbnailProperties(newPreview, rect, currentWindowHandle, windowTitle);
@@ -216,21 +215,39 @@ public partial class ClickWindow : Window
             return thumbnailView;
         }
     }
-    void ShowThumbnails(IEnumerable<ThumbnailView> thumbnails)
+    void ShowThumbnails(IEnumerable<ThumbnailView> thumbnails, Button button)
     {
+        // Get DPI information
+        PresentationSource source = PresentationSource.FromVisual(this);
+        double dpiScaling = source.CompositionTarget.TransformToDevice.M11;
+
+        // Get the center of the button relative to its container (the window)
+        Point buttonCenter = button.TransformToAncestor(this)
+                                    .Transform(new Point(button.ActualWidth / 2, button.ActualHeight / 2));
+
+
+
+        // Get absolute coordinates.
+        Point screenCoordinates = PointToScreen(buttonCenter);
+
+
+
 
 
         foreach (var thumbnailView in thumbnails)
         {
             Popup popup = new();
             _currentPopups.Add(popup);
-            popup.Placement = PlacementMode.Absolute;
+            popup.Placement = PlacementMode.AbsolutePoint;
 
-            popup.HorizontalOffset = thumbnailView.Properties.Rect.Left + Left - 40;
-            popup.VerticalOffset = thumbnailView.Properties.Rect.Top + Top + 40;
+
+            popup.HorizontalOffset = screenCoordinates.X / dpiScaling;
+            popup.VerticalOffset = screenCoordinates.Y / dpiScaling;
+
             popup.Child = thumbnailView;
-            //popup.IsOpen = true;
+            popup.IsOpen = true;
             thumbnailView.FadeIn();
+
         }
     }
 
