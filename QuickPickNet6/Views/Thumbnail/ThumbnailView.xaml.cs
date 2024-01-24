@@ -1,6 +1,10 @@
-﻿using System.Threading;
+﻿using System;
+using System.ComponentModel;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Interop;
 using System.Windows.Media;
 using ThumbnailLogic;
 
@@ -10,22 +14,19 @@ namespace QuickPick.UI.Views.Thumbnail;
 public partial class ThumbnailView : UserControl
 {
     public ThumbnailProperties Properties;
+    public IntPtr PreviewPointer { get; set; }
     public ThumbnailView()
     {
 
     }
     public ThumbnailView(ThumbnailProperties context, double dpiScaling)
     {
-        var size = CalculateRenderSize(context.Rect);
-        context.Width = size.Width * 1.25 / dpiScaling;
-        context.Height = size.Height * 1.25 / dpiScaling;
-
         InitializeComponent();
         this.DataContext = context;
         Properties = context;
     }
 
-    public void FadeIn()
+    public void FadeIn(IntPtr parentHandle)
     {
         this.Dispatcher.Invoke(() =>
         {
@@ -35,7 +36,23 @@ public partial class ThumbnailView : UserControl
         });
 
         Task.Run(() => { ShowThumbnailView(); });
-        Task.Run(() => { WindowPreviewCreator.CreateAndFadeInPreviewImage(Properties.ThumbnailRelation, Properties.Rect); });
+
+
+
+      
+
+        PreviewPointer = WindowPreviewCreator.GetPreviewImagePointer(Properties.WindowHandle, parentHandle);
+        var rect = new RECT()
+        {
+            // todo: fix coordinates.
+            Left = 10,
+            Top = 10,
+            Bottom = (int) Properties.Height-10,
+            Right = (int) Properties.Height-10
+           
+        };
+
+        Task.Run(() => { WindowPreviewCreator.CreateAndFadeInPreviewImage(PreviewPointer, rect); });
 
     }
     private void ShowThumbnailView(bool fadeIn = false)
@@ -68,7 +85,7 @@ public partial class ThumbnailView : UserControl
     public void Hide()
     {
         this.Visibility = System.Windows.Visibility.Collapsed;
-        WindowPreviewCreator.DwmUnregisterThumbnail(Properties.ThumbnailRelation);
+        WindowPreviewCreator.DwmUnregisterThumbnail(PreviewPointer);
     }
 
     private void UserControl_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)

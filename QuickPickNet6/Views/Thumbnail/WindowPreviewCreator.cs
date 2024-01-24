@@ -12,7 +12,12 @@ public class WindowPreviewCreator
     private static DWM_THUMBNAIL_PROPERTIES thumbnailProperties;
 
 
-
+    /// <summary>
+    /// Registers a thumbnail of the applicationwindow with the given handle.
+    /// </summary>
+    /// <param name="hwndSource">handle of the applicationwindow for which to create a preview image</param>
+    /// <param name="hwndDestination">handle of the applicationwindow that will host the preview image</param>
+    /// <returns></returns>
     public static IntPtr GetPreviewImagePointer(IntPtr hwndSource, IntPtr hwndDestination)
     {
         IntPtr thumb = IntPtr.Zero;
@@ -34,6 +39,12 @@ public class WindowPreviewCreator
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="thumbnailId">The handle for the preview Image</param>
+    /// <param name="rect">The Rect that will host the preview image</param>
+    /// <param name="fadeIn"></param>
     public static void CreateAndFadeInPreviewImage(IntPtr thumbnailId, RECT rect, bool fadeIn = false)
     {
 

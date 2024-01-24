@@ -11,6 +11,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using ThumbnailLogic;
@@ -195,21 +196,9 @@ public partial class ClickWindow : Window
 
         ThumbnailView ProcessThumbnail(int i)
         {
-            IntPtr currentWindowHandle = pinnedApp.WindowHandles[i];
-
-            // Create thumbnailRelation
-            IntPtr newPreview = WindowPreviewCreator.GetPreviewImagePointer(currentWindowHandle, _quickPickWindowHandle);
-            if (newPreview == default)
-                return null;
-
-            double aspectRatio = WindowPreviewCreator.GetWindowAspectRatio(currentWindowHandle);
-            RECT rect = ThumbnailRectCreator.CreateRectForPreviewImage(buttonCenter, xToWindowCenter, ytoWindowCenter, dpiScaling, i, aspectRatio);
-
-
-
-
+            IntPtr currentWindowHandle = pinnedApp.WindowHandles[i];                      
             string windowTitle = ActiveWindows.GetWindowTitle(currentWindowHandle);
-            var thumbnailProperties = new ThumbnailProperties(newPreview, rect, currentWindowHandle, windowTitle);
+            var thumbnailProperties = new ThumbnailProperties(currentWindowHandle, windowTitle);
             var thumbnailView = new ThumbnailView(thumbnailProperties, dpiScaling);
 
             return thumbnailView;
@@ -246,7 +235,11 @@ public partial class ClickWindow : Window
 
             popup.Child = thumbnailView;
             popup.IsOpen = true;
-            thumbnailView.FadeIn();
+
+            IntPtr handle = ((HwndSource)PresentationSource.FromVisual(popup.Child)).Handle;           
+            
+            
+            thumbnailView.FadeIn(handle);
 
         }
     }
