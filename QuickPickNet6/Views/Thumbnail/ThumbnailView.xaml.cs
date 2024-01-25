@@ -39,6 +39,14 @@ public partial class ThumbnailView : UserControl
 
         PreviewPointer = WindowPreviewCreator.GetPreviewImagePointer(Properties.WindowHandle, parentHandle);
 
+        RECT rect = GetRectForPreviewImage();
+
+        Task.Run(() => { WindowPreviewCreator.CreateAndFadeInPreviewImage(PreviewPointer, rect); });
+
+    }
+
+    private RECT GetRectForPreviewImage()
+    {
         const int MARGIN = 15;
         int dpiAdjustedMargin = (int)(MARGIN * Properties.DpiScaling);
         int dpiAdjustedWidth = (int)(Properties.Width * Properties.DpiScaling);
@@ -51,10 +59,9 @@ public partial class ThumbnailView : UserControl
             Bottom = dpiAdjustedHeight - dpiAdjustedMargin,
             Right = dpiAdjustedWidth - dpiAdjustedMargin,
         };
-
-        Task.Run(() => { WindowPreviewCreator.CreateAndFadeInPreviewImage(PreviewPointer, rect); });
-
+        return rect;
     }
+
     private void ShowThumbnailView(bool fadeIn = false)
     {
         if (!fadeIn)
