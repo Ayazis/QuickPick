@@ -18,22 +18,18 @@ namespace QuickPick.UI
         /// <param name="buttonCenter"></param>
         /// <param name="xToWindowCenter"></param>
         /// <param name="yToWindowCenter"></param>
-        /// <param name="dpiScaling"></param>
+       
         /// <param name="i"></param>
         /// <param name="aspectRatio"></param>
         /// <returns></returns>
-        public static RECT CalculatePositionForThumbnailView(Point buttonCenter, double xToWindowCenter, double yToWindowCenter, double dpiScaling, int i, double width, double height)
+        public static RECT CalculatePositionForThumbnailView(Point buttonCenter, double xToWindowCenter, double yToWindowCenter,  int i, double width, double height)
         {   
             double X = CalculateThumbnailX(buttonCenter.X, xToWindowCenter, width + 20);
             double Y = CalculateThumbnailY(buttonCenter.Y, yToWindowCenter, height + 20);
-
-
-            double dpiAdjustedX = X * dpiScaling;
-            double dpiAdjustedY = Y * dpiScaling;
             bool isLefToCenter = xToWindowCenter < 0;
 
 
-            return CalculateRectPosition(dpiAdjustedX, dpiAdjustedY, width, height, i, isLefToCenter);
+            return CalculateRectPosition(X, Y, width, height, i, isLefToCenter);
         }
 
         private static double CalculateThumbnailX(double startPosition, double xDistanceToWindowCenter, double width)
@@ -44,7 +40,7 @@ namespace QuickPick.UI
             double shiftedPosition = startPosition + horizontalShiftAmount;
 
             double offset = width / 2; // Default position is the thumbnail centered in the middle.            
-            const double offsetCorrection = 0; // 25 For some reason things tend to be a bit more to the left than they should be. This corrects that.
+            const double offsetCorrection = 25; // 25 For some reason things tend to be a bit more to the left than they should be. This corrects that. // Todo: Adjust for DPI?
             double correctedOffset = offset - offsetCorrection;
 
             double offSetPosition = shiftedPosition - correctedOffset;
@@ -60,7 +56,7 @@ namespace QuickPick.UI
             // Adjust Offset based on normalizedDistance
             double offset = height * normalizedDistance;
 
-            const double offsetCorrection = 0; // 35 For some reason things tend to be higher than they should be. This corrects that.
+            const double offsetCorrection = 35; // 35 For some reason things tend to be higher than they should be. This corrects that. // Todo: Adjust for DPI?
             double correctedOffset = offset - offsetCorrection;
             double finalYPosition = buttonYLocation -correctedOffset;
 

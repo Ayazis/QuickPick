@@ -206,10 +206,6 @@ public partial class ClickWindow : Window
     }
     void ShowThumbnails(List<ThumbnailView> thumbnails, Button button)
     {
-        // Get DPI information
-        PresentationSource source = PresentationSource.FromVisual(this);
-        double dpiScaling = source.CompositionTarget.TransformToDevice.M11;
-
         // Get the center of the button relative to its container (the window)
         Point buttonCenter = button.TransformToAncestor(this)
                                     .Transform(new Point(button.ActualWidth / 2, button.ActualHeight / 2));
@@ -224,18 +220,18 @@ public partial class ClickWindow : Window
             _currentPopups.Add(popup);
             popup.Placement = PlacementMode.AbsolutePoint;
 
-           var horizontalOffset = buttonLocation.X / dpiScaling;
-           var verticalOffset = buttonLocation.Y / dpiScaling;
+            var horizontalOffset = buttonLocation.X; // / dpiScaling;
+            var verticalOffset = buttonLocation.Y;// / dpiScaling;
 
             Point startPoint = new Point(horizontalOffset, verticalOffset);
             // get x and y offset to the center
             double xToWindowCenter = buttonCenter.X - ActualWidth / 2;
             double yToWindowCenter = buttonCenter.Y - ActualHeight / 2;
 
-            var rect = ThumbnailRectCreator.CalculatePositionForThumbnailView(startPoint, xToWindowCenter, yToWindowCenter, dpiScaling, i, thumbnailView.Properties.Width, thumbnailView.Properties.Height);
+            var rect = ThumbnailRectCreator.CalculatePositionForThumbnailView(startPoint, xToWindowCenter, yToWindowCenter, i, thumbnailView.Properties.Width, thumbnailView.Properties.Height);
 
-            popup.HorizontalOffset = rect.Left;
-            popup.VerticalOffset = rect.Top;
+            popup.HorizontalOffset = rect.Left * thumbnailView.Properties.DpiScaling;
+            popup.VerticalOffset = rect.Top * thumbnailView.Properties.DpiScaling;
 
             popup.Child = thumbnailView;
             popup.IsOpen = true;
