@@ -198,8 +198,8 @@ public partial class ClickWindow : Window
         {
             IntPtr currentWindowHandle = pinnedApp.WindowHandles[i];                      
             string windowTitle = ActiveWindows.GetWindowTitle(currentWindowHandle);
-            var thumbnailProperties = new ThumbnailProperties(currentWindowHandle, windowTitle);
-            var thumbnailView = new ThumbnailView(thumbnailProperties, dpiScaling);
+            var thumbnailProperties = new PreviewImageProperties(currentWindowHandle, windowTitle, dpiScaling);
+            var thumbnailView = new ThumbnailView(thumbnailProperties);
 
             return thumbnailView;
         }

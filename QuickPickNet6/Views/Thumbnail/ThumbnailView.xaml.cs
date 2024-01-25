@@ -13,17 +13,17 @@ namespace QuickPick.UI.Views.Thumbnail;
 
 public partial class ThumbnailView : UserControl
 {
-    public ThumbnailProperties Properties;
+    public PreviewImageProperties Properties;
     public IntPtr PreviewPointer { get; set; }
     public ThumbnailView()
     {
 
     }
-    public ThumbnailView(ThumbnailProperties context, double dpiScaling)
+    public ThumbnailView(PreviewImageProperties previewImageProperties)
     {
         InitializeComponent();
-        this.DataContext = context;
-        Properties = context;
+        this.DataContext = previewImageProperties;
+        Properties = previewImageProperties;
     }
 
     public void FadeIn(IntPtr parentHandle)
@@ -37,19 +37,19 @@ public partial class ThumbnailView : UserControl
 
         Task.Run(() => { ShowThumbnailView(); });
 
-
-
-      
-
         PreviewPointer = WindowPreviewCreator.GetPreviewImagePointer(Properties.WindowHandle, parentHandle);
+
+        const int MARGIN = 15;
+        int dpiAdjustedMargin = (int)(MARGIN * Properties.DpiScaling);
+        int dpiAdjustedWidth = (int)(Properties.Width * Properties.DpiScaling);
+        int dpiAdjustedHeight = (int)(Properties.Height * Properties.DpiScaling);
+
         var rect = new RECT()
         {
-            // todo: fix coordinates.
-            Left = 10,
-            Top = 10,
-            Bottom = (int) Properties.Height-10,
-            Right = (int) Properties.Height-10
-           
+            Left = dpiAdjustedMargin,
+            Top = 2 * dpiAdjustedMargin,
+            Bottom = dpiAdjustedHeight - dpiAdjustedMargin,
+            Right = dpiAdjustedWidth - dpiAdjustedMargin,
         };
 
         Task.Run(() => { WindowPreviewCreator.CreateAndFadeInPreviewImage(PreviewPointer, rect); });
@@ -114,18 +114,5 @@ public partial class ThumbnailView : UserControl
         ActiveWindows.ToggleWindow(Properties.WindowHandle);
         // Toggle.
     }
-    public static System.Windows.Size CalculateRenderSize(RECT rect)
-    {
-        int width = rect.Right - rect.Left;
-        int height = rect.Bottom - rect.Top;
 
-        // Ensure width and height are positive
-        if (width < 0)
-            width = -width;
-
-        if (height < 0)
-            height = -height;
-
-        return new System.Windows.Size(width, height);
-    }
 }
