@@ -1,12 +1,15 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using System;
+using System.Drawing;
+using System.Windows.Media;
 using ThumbnailLogic;
 
 namespace QuickPick.UI.Views.Thumbnail;
 
 public partial class PreviewImageProperties : ObservableObject
 {
-
+    [ObservableProperty]
+    ImageSource _icon;
     const int MAX_SIZE = 200;
     // todo: Set width and height according to the aspect ratio of the applicationWindow..
     [ObservableProperty]
@@ -22,8 +25,9 @@ public partial class PreviewImageProperties : ObservableObject
     public double DpiScaling { get; private set; }
 
 
-    public PreviewImageProperties(IntPtr windowHandle, string windowTitle, double dpiScaling)
+    public PreviewImageProperties(IntPtr windowHandle, string windowTitle, double dpiScaling, ImageSource icon)
     {
+        _icon = icon;
         DpiScaling = dpiScaling;
         double aspectRatio = WindowPreviewCreator.GetWindowAspectRatio(windowHandle);
 
