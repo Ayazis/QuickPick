@@ -75,13 +75,22 @@ public partial class ClickWindow : Window
     public void UpdateTaskbarShortCuts()
     {
         bool includePinnedApps = SettingsManager.Instance.Settings.ActiveAppSetting == UI.Views.Settings.ActiveAppSetting.IncludePinnedTaskBarApps;
-        List<AppLink> apps = AppLinkRetriever.GetPinnedAppsAndActiveWindows(includePinnedApps);
-
-        foreach (var app in apps)
+        List<AppLink> apps;
+        try
         {
-            var handle = ActiveWindows.GetActiveWindowOnCurentDesktop(app.TargetPath);
-            if (handle != default)
-                app.HasWindowActiveOnCurrentDesktop = true;
+           apps = AppLinkRetriever.GetPinnedAppsAndActiveWindows(includePinnedApps);
+
+            foreach (var app in apps)
+            {
+                var handle = ActiveWindows.GetActiveWindowOnCurentDesktop(app.TargetPath);
+                if (handle != default)
+                    app.HasWindowActiveOnCurrentDesktop = true;
+            }
+        }
+        catch (InvalidOperationException)
+        {
+            // can happen when a user clicks too fast on the hotkey combination when starting the application.
+            return;
         }
 
 
