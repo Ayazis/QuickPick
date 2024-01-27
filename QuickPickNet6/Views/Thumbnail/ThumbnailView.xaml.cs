@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -121,5 +122,29 @@ public partial class ThumbnailView : UserControl
         ActiveWindows.ToggleWindow(Properties.WindowHandle);
         // Toggle.
     }
+    private void btnClose_Click(object sender, System.Windows.RoutedEventArgs e)
+    {
+        Debug.WriteLine("EVENT; Thumbnail close button clicked.");
+        ClickWindow.Instance.SetCurrentTimeOnTimeStamp();
+        ActiveWindows.CloseWindow(Properties.WindowHandle);
+        this.Visibility = System.Windows.Visibility.Collapsed;
+        CloseThumbnailEvent?.Invoke(this, new ThumbnailViewEventArgs(this));
+    }
+
+
+    // create new eventargs with thumbnailview as parameter
+    public class ThumbnailViewEventArgs : EventArgs
+    {
+        public ThumbnailViewEventArgs(ThumbnailView thumbnailView)
+        {
+            ThumbnailView = thumbnailView;
+        }
+
+        public ThumbnailView ThumbnailView { get; set; }
+    }
+
+
+    // add ThumbnailView as parameter to eventhandler
+    public event EventHandler<ThumbnailViewEventArgs> CloseThumbnailEvent;
 
 }

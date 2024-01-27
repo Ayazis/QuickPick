@@ -15,6 +15,7 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using ThumbnailLogic;
+using static QuickPick.UI.Views.Thumbnail.ThumbnailView;
 
 namespace QuickPick;
 /// <summary>
@@ -27,7 +28,7 @@ public partial class ClickWindow : Window
     private IntPtr _quickPickWindowHandle;
     public static ThumbnailTimer ThumbnailTimer;
     static DateTime _timeStampLastShown;
-    private List<Popup> _currentPopups = new();
+    private Dictionary<IntPtr, Popup> _currentPopups = new();
 
     public Storyboard HideAnimation { get; private set; }
     public Storyboard ShowAnimation { get; private set; }
@@ -103,6 +104,10 @@ public partial class ClickWindow : Window
                 _qpm.PinnedApps.Add(item);
             }
         });
+    }
+    public void SetCurrentTimeOnTimeStamp()
+    {
+        _timeStampLastShown = DateTime.Now;
     }
 
     public void HideWindow()
@@ -201,9 +206,24 @@ public partial class ClickWindow : Window
             var thumbnailProperties = new PreviewImageProperties(currentWindowHandle, windowTitle, dpiScaling, pinnedApp.AppIcon);
             var thumbnailView = new ThumbnailView(thumbnailProperties);
 
+            // subscribe to close event and handle it in pinnedApp
+            thumbnailView.CloseThumbnailEvent += ThumbnailView_CloseThumbnailEvent;
             return thumbnailView;
         }
     }
+
+    private void ThumbnailView_CloseThumbnailEvent(object sender, ThumbnailViewEventArgs e)
+    {
+        var closedWindowHandle = e.ThumbnailView.Properties.WindowHandle;        
+        bool popupFound = _currentPopups.TryGetValue(closedWindowHandle, out Popup popup);
+        if (!popupFound)
+            return;
+
+        popup.IsOpen = false;
+        popup = null; // set to null to allow garbage collection
+        _currentPopups.Remove(closedWindowHandle);
+    }
+
     void ShowThumbnails(List<ThumbnailView> thumbnails, Button button)
     {
         // Get the center of the button relative to its container (the window)
@@ -214,10 +234,11 @@ public partial class ClickWindow : Window
         Point buttonLocation = PointToScreen(buttonCenter);
 
         for (int i = 0; i < thumbnails.Count; i++)
-        {        
+        {
             var thumbnailView = thumbnails[i];
             Popup popup = new();
-            _currentPopups.Add(popup);
+            // store the windowhandle as key in the dictionary for this popup. This way we can find the popup later.    
+            _currentPopups[thumbnailView.Properties.WindowHandle] = popup;
             popup.Placement = PlacementMode.AbsolutePoint;
 
             var horizontalOffset = buttonLocation.X; // / dpiScaling;
@@ -252,8 +273,9 @@ public partial class ClickWindow : Window
 
     private void HideThumbnails()
     {
-        foreach (var popup in _currentPopups)
+        foreach (var item in _currentPopups)
         {
+            var popup = item.Value;
             popup.IsOpen = false;
             (popup.Child as ThumbnailView)?.Hide();
         }

@@ -181,5 +181,23 @@ public class ActiveWindows
 
     [DllImport("user32.dll")]
     private static extern bool IsIconic(IntPtr hWnd);
+
+    public static void CloseWindow(IntPtr windowHandle)
+    {
+        try
+        {
+            const UInt32 WM_CLOSE = 0x0010;
+            SendMessage(windowHandle, WM_CLOSE, IntPtr.Zero, IntPtr.Zero);
+        }
+        catch (Exception)
+        {
+            // Lowlevel call exception.
+            // Todo: Log but functionally ignore.
+        }
+    }
+
+    [DllImport("user32.dll", CharSet = CharSet.Auto)]
+    private static extern IntPtr SendMessage(IntPtr hWnd, UInt32 Msg, IntPtr wParam, IntPtr lParam);
+
     #endregion
 }

@@ -44,4 +44,9 @@ public class AppLink
             ClickWindow.Instance.HideWindow();
         }
     }
+
+    internal void CloseThumbnail(object s, EventArgs e)
+    {
+        throw new NotImplementedException();
+    }
 }

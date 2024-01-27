@@ -13,10 +13,37 @@
     <UserControl.DataContext>
         <local:PreviewImageProperties/>
     </UserControl.DataContext>
+    <UserControl.Resources>
+        <ResourceDictionary Source="../Resources.xaml"/>
+    </UserControl.Resources>
     <Border CornerRadius="0" Background="#E6202020" Margin="0,-10,0,0" Name="ThumbBackground">
         <Grid>
             <Image Source="{Binding Icon, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="15" Height="15" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="5,15"/>
             <TextBlock Text="{Binding WindowTitle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Foreground="White"   d:Text="PlaceholderTitle" Margin="30,15,15,15" />
+            <Button Name="btnClose" 
+                  Content=" X " 
+                  Width="25" 
+                  Height="25"                     
+                  Click="btnClose_Click"
+HorizontalAlignment="Right" 
+VerticalAlignment="Top"
+Background="Transparent" 
+BorderThickness="0"
+Foreground="{StaticResource ForegroundBrush}"
+Margin="0,10">
+                <Button.Template>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="border" Background="Transparent">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="DarkRed" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
         </Grid>
     </Border>
 </UserControl>
