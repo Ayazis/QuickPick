@@ -67,7 +67,7 @@
                                     </Style>
                                 </Image.Style>
                             </Image>
-                            <Rectangle Height="2" VerticalAlignment="Bottom" Fill="LightBlue" Visibility="{Binding HasWindowActiveOnCurrentDesktop, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                            <Rectangle Height="2" VerticalAlignment="Bottom" Fill="LightBlue" Visibility="{Binding HasWindowActiveOnCurrentDesktop, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                             <Button Style="{StaticResource RoundButtonNoMouseOver}" Width="35" Height="35" MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave" Opacity="0">
                                 <Button.InputBindings>
                                     <MouseBinding Gesture="LeftClick" Command="{Binding ClickCommand}" />

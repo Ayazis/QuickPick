@@ -204,7 +204,7 @@ public partial class ClickWindow : Window
             IntPtr currentWindowHandle = pinnedApp.WindowHandles[i];
             string windowTitle = ActiveWindows.GetWindowTitle(currentWindowHandle);
             var thumbnailProperties = new PreviewImageProperties(currentWindowHandle, windowTitle, dpiScaling, pinnedApp.AppIcon);
-            var thumbnailView = new ThumbnailView(thumbnailProperties);
+            var thumbnailView = new ThumbnailView(thumbnailProperties, pinnedApp);
 
             // subscribe to close event and handle it in pinnedApp
             thumbnailView.CloseThumbnailEvent += ThumbnailView_CloseThumbnailEvent;
@@ -212,17 +212,7 @@ public partial class ClickWindow : Window
         }
     }
 
-    private void ThumbnailView_CloseThumbnailEvent(object sender, ThumbnailViewEventArgs e)
-    {
-        var closedWindowHandle = e.ThumbnailView.Properties.WindowHandle;        
-        bool popupFound = _currentPopups.TryGetValue(closedWindowHandle, out Popup popup);
-        if (!popupFound)
-            return;
 
-        popup.IsOpen = false;
-        popup = null; // set to null to allow garbage collection
-        _currentPopups.Remove(closedWindowHandle);
-    }
 
     void ShowThumbnails(List<ThumbnailView> thumbnails, Button button)
     {
@@ -280,5 +270,19 @@ public partial class ClickWindow : Window
             (popup.Child as ThumbnailView)?.Hide();
         }
         _currentPopups.Clear();
+    }
+
+    private void ThumbnailView_CloseThumbnailEvent(object sender, ThumbnailViewEventArgs e)
+    {
+        var closedWindowHandle = e.ThumbnailView.Properties.WindowHandle;
+        bool popupFound = _currentPopups.TryGetValue(closedWindowHandle, out Popup popup);
+        if (!popupFound)
+            return;
+
+        popup.IsOpen = false;
+        popup = null; // set to null to allow garbage collection
+        _currentPopups.Remove(closedWindowHandle);
+
+       e.ThumbnailView.ParentApp.RemoveThumbnail(e.ThumbnailView.Properties.WindowHandle);
     }
 }

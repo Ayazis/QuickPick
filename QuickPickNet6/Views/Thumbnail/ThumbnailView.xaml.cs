@@ -1,4 +1,5 @@
-﻿using System;
+﻿using QuickPick.PinnedApps;
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading;
@@ -15,13 +16,16 @@ namespace QuickPick.UI.Views.Thumbnail;
 public partial class ThumbnailView : UserControl
 {
     public PreviewImageProperties Properties;
+    public readonly AppLink ParentApp;
+
     public IntPtr PreviewPointer { get; set; }
     public ThumbnailView()
     {
 
     }
-    public ThumbnailView(PreviewImageProperties previewImageProperties)
+    public ThumbnailView(PreviewImageProperties previewImageProperties, AppLink pinnedApp)
     {
+        ParentApp = pinnedApp;
         InitializeComponent();
         this.DataContext = previewImageProperties;
         Properties = previewImageProperties;

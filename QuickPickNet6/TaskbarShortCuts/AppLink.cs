@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -10,7 +11,7 @@ namespace QuickPick.PinnedApps;
 /// <summary>
 /// Wrapper for ShortCut to PinnedApps & open Windows, includes Icon.
 /// </summary>
-public class AppLink
+public partial class AppLink : ObservableObject
 {
     public AppLink()
     {
@@ -22,7 +23,9 @@ public class AppLink
     public ImageSource AppIcon { get; set; }
     public ICommand ClickCommand { get; set; }
     public string Arguments { get; set; }
-    public bool HasWindowActiveOnCurrentDesktop { get; set; }
+    [ObservableProperty]
+    bool _hasWindowActiveOnCurrentDesktop;
+  
     public List<IntPtr> WindowHandles { get; set; } = new();
     public string Info => $"{Name} - {TargetPath}";
 
@@ -48,5 +51,12 @@ public class AppLink
     internal void CloseThumbnail(object s, EventArgs e)
     {
         throw new NotImplementedException();
+    }
+
+    internal void RemoveThumbnail(IntPtr windowHandle)
+    {
+        WindowHandles.Remove(windowHandle);
+        if(WindowHandles.Count == 0)
+            HasWindowActiveOnCurrentDesktop = false;
     }
 }
