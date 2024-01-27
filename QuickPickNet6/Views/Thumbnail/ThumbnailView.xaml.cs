@@ -15,6 +15,8 @@ namespace QuickPick.UI.Views.Thumbnail;
 
 public partial class ThumbnailView : UserControl
 {
+    Color SemiGray = (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#333333");
+    Color almostBlack = (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#202020");
     public PreviewImageProperties Properties;
     public readonly AppLink ParentApp;
 
@@ -101,23 +103,25 @@ public partial class ThumbnailView : UserControl
     }
 
     private void UserControl_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
-    {
-        var color = (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#101010");
-
+    {    
         // Set the fill color of the rectangle
-        SolidColorBrush fillBrush = new SolidColorBrush(color);
+        SolidColorBrush fillBrush = new SolidColorBrush(SemiGray);
 
         ThumbBackground.Background = fillBrush;
         ClickWindow.ThumbnailTimer.StopTimer();
+        btnClose.Visibility= Visibility.Visible;
+        tbWindowTitle.Margin = new Thickness(tbWindowTitle.Margin.Left, tbWindowTitle.Margin.Top, tbWindowTitle.Margin.Right + 10, tbWindowTitle.Margin.Bottom);
     }
 
     private void UserControl_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
     {
-        var color = (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#202020");
-        SolidColorBrush fillBrush = new SolidColorBrush(color);
+    
+        SolidColorBrush fillBrush = new SolidColorBrush(almostBlack);
 
         ThumbBackground.Background = fillBrush;
         ClickWindow.ThumbnailTimer.StartTimer();
+        btnClose.Visibility = Visibility.Collapsed;
+        tbWindowTitle.Margin = new Thickness(tbWindowTitle.Margin.Left, tbWindowTitle.Margin.Top, tbWindowTitle.Margin.Right - 10, tbWindowTitle.Margin.Bottom);
         // starttimer
     }
 
