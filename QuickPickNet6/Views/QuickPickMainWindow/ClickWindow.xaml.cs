@@ -241,8 +241,8 @@ public partial class ClickWindow : Window
             _currentPopups[thumbnailView.Properties.WindowHandle] = popup;
             popup.Placement = PlacementMode.AbsolutePoint;
 
-            var horizontalOffset = buttonLocation.X; // / dpiScaling;
-            var verticalOffset = buttonLocation.Y;// / dpiScaling;
+            var horizontalOffset = buttonLocation.X; 
+            var verticalOffset = buttonLocation.Y;
 
             Point startPoint = new Point(horizontalOffset, verticalOffset);
             // get x and y offset to the center
@@ -250,10 +250,10 @@ public partial class ClickWindow : Window
             double yToWindowCenter = buttonCenter.Y - ActualHeight / 2;
 
             
-            var rect = ThumbnailRectCreator.CalculatePositionForThumbnailView(startPoint, xToWindowCenter, yToWindowCenter, i, thumbnailView.Properties.Width, thumbnailView.Properties.Height);
+            //var rect = ThumbnailRectCreator.CalculatePositionForThumbnailView(startPoint, xToWindowCenter, yToWindowCenter, i, thumbnailView.Properties.Width, thumbnailView.Properties.Height);
 
-            popup.HorizontalOffset = rect.Left / thumbnailView.Properties.DpiScaling;
-            popup.VerticalOffset = rect.Top / thumbnailView.Properties.DpiScaling;
+            popup.HorizontalOffset = startPoint.X / thumbnailView.Properties.DpiScaling;
+            popup.VerticalOffset = startPoint.Y/ thumbnailView.Properties.DpiScaling;
 
             popup.Child = thumbnailView;
             popup.IsOpen = true;
