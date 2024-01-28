@@ -8,10 +8,8 @@ namespace QuickPick.UI
     // In charge of creating the RECT and it's position for the thumbnailpreview.
     // The windows API for createing a Thumbnail requires a RECT.
     public static class ThumbnailRectCreator
-    {
-
-        private static readonly double _maxDimension = 180.0;
-
+    {   
+        public static double dpiScaling = 1;
         /// <summary>
         /// Creates the RECT for the actual thumbnailpreview.
         /// </summary>
@@ -24,12 +22,13 @@ namespace QuickPick.UI
         /// <returns></returns>
         public static RECT CalculatePositionForThumbnailView(Point buttonCenter, double xToWindowCenter, double yToWindowCenter,  int i, double width, double height)
         {   
-            double X = CalculateThumbnailX(buttonCenter.X, xToWindowCenter, width + 20);
-            double Y = CalculateThumbnailY(buttonCenter.Y, yToWindowCenter, height + 20);
+            const int EXTRA_MARGIN = 20;
+            double X = CalculateThumbnailX(buttonCenter.X, xToWindowCenter, width + EXTRA_MARGIN);
+            double Y = CalculateThumbnailY(buttonCenter.Y, yToWindowCenter, height + EXTRA_MARGIN);
             bool isLefToCenter = xToWindowCenter < 0;
 
 
-            return CalculateRectPosition(X, Y, width, height, i, isLefToCenter);
+            return CalculateRectPosition(X, Y, width+EXTRA_MARGIN, height+EXTRA_MARGIN, i, isLefToCenter);
         }
 
         private static double CalculateThumbnailX(double startPosition, double xDistanceToWindowCenter, double width)
@@ -40,7 +39,7 @@ namespace QuickPick.UI
             double shiftedPosition = startPosition + horizontalShiftAmount;
 
             double offset = width / 2; // Default position is the thumbnail centered in the middle.            
-            const double offsetCorrection = 25; // 25 For some reason things tend to be a bit more to the left than they should be. This corrects that. // Todo: Adjust for DPI?
+            double offsetCorrection = 0 * dpiScaling; // 25 For some reason things tend to be a bit more to the left than they should be. This corrects that. // Todo: Adjust for DPI?
             double correctedOffset = offset - offsetCorrection;
 
             double offSetPosition = shiftedPosition - correctedOffset;
@@ -49,14 +48,14 @@ namespace QuickPick.UI
 
 
         private static double CalculateThumbnailY(double buttonYLocation, double verticalDistance, double height)
-        {   
+        {            
             // Normalize verticalDistance to a range of 0 to 1
-            double normalizedDistance = (-verticalDistance + 75) / 150;
+            double normalizedDistance = ((-verticalDistance + 75) / 150) * dpiScaling; 
 
             // Adjust Offset based on normalizedDistance
-            double offset = height * normalizedDistance;
+            double offset = height * dpiScaling * normalizedDistance;
 
-            const double offsetCorrection = 35; // 35 For some reason things tend to be higher than they should be. This corrects that. // Todo: Adjust for DPI?
+            double offsetCorrection = 35 *dpiScaling; // 35 For some reason things tend to be higher than they should be. This corrects that. // Todo: Adjust for DPI?
             double correctedOffset = offset - offsetCorrection;
             double finalYPosition = buttonYLocation -correctedOffset;
 

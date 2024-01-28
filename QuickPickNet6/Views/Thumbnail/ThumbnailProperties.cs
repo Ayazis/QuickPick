@@ -10,12 +10,12 @@ public partial class PreviewImageProperties : ObservableObject
 {
     [ObservableProperty]
     ImageSource _icon;
-    const int MAX_SIZE = 200;
+    readonly double MAX_SIZE = 200;
     // todo: Set width and height according to the aspect ratio of the applicationWindow..
     [ObservableProperty]
-    private double _width = MAX_SIZE;
+    private double _width;
     [ObservableProperty]
-    public double _height = MAX_SIZE;
+    public double _height;
 
     public RECT Rect { get; private set; }
     [ObservableProperty]
@@ -27,6 +27,7 @@ public partial class PreviewImageProperties : ObservableObject
 
     public PreviewImageProperties(IntPtr windowHandle, string windowTitle, double dpiScaling, ImageSource icon)
     {
+        MAX_SIZE = MAX_SIZE / dpiScaling;
         _icon = icon;
         DpiScaling = dpiScaling;
         double aspectRatio = WindowPreviewCreator.GetWindowAspectRatio(windowHandle);

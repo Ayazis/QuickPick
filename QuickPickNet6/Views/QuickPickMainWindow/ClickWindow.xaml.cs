@@ -200,6 +200,7 @@ public partial class ClickWindow : Window
         // Get DPI information
         PresentationSource source = PresentationSource.FromVisual(this);
         double dpiScaling = source.CompositionTarget.TransformToDevice.M11;
+        ThumbnailRectCreator.dpiScaling =dpiScaling;
 
         for (int i = 0; i < pinnedApp.WindowHandles.Count; i++)
         {
@@ -248,10 +249,11 @@ public partial class ClickWindow : Window
             double xToWindowCenter = buttonCenter.X - ActualWidth / 2;
             double yToWindowCenter = buttonCenter.Y - ActualHeight / 2;
 
+            
             var rect = ThumbnailRectCreator.CalculatePositionForThumbnailView(startPoint, xToWindowCenter, yToWindowCenter, i, thumbnailView.Properties.Width, thumbnailView.Properties.Height);
 
-            popup.HorizontalOffset = rect.Left * thumbnailView.Properties.DpiScaling;
-            popup.VerticalOffset = rect.Top * thumbnailView.Properties.DpiScaling;
+            popup.HorizontalOffset = rect.Left / thumbnailView.Properties.DpiScaling;
+            popup.VerticalOffset = rect.Top / thumbnailView.Properties.DpiScaling;
 
             popup.Child = thumbnailView;
             popup.IsOpen = true;
