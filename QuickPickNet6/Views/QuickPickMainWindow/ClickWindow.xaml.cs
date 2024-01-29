@@ -78,7 +78,7 @@ public partial class ClickWindow : Window
         List<AppLink> apps;
         try
         {
-           apps = AppLinkRetriever.GetPinnedAppsAndActiveWindows(includePinnedApps);
+            apps = AppLinkRetriever.GetPinnedAppsAndActiveWindows(includePinnedApps);
 
             foreach (var app in apps)
             {
@@ -199,8 +199,7 @@ public partial class ClickWindow : Window
 
         // Get DPI information
         PresentationSource source = PresentationSource.FromVisual(this);
-        double dpiScaling = source.CompositionTarget.TransformToDevice.M11;
-        ThumbnailRectCreator.dpiScaling =dpiScaling;
+        double dpiScaling = source.CompositionTarget.TransformToDevice.M11;        
 
         for (int i = 0; i < pinnedApp.WindowHandles.Count; i++)
         {
@@ -241,19 +240,23 @@ public partial class ClickWindow : Window
             _currentPopups[thumbnailView.Properties.WindowHandle] = popup;
             popup.Placement = PlacementMode.AbsolutePoint;
 
-            var horizontalOffset = buttonLocation.X; 
-            var verticalOffset = buttonLocation.Y;
+            var x = buttonLocation.X;
+            var y = buttonLocation.Y;
 
-            Point startPoint = new Point(horizontalOffset, verticalOffset);
+            Point startPoint = new Point(x, y);
             // get x and y offset to the center
             double xToWindowCenter = buttonCenter.X - ActualWidth / 2;
             double yToWindowCenter = buttonCenter.Y - ActualHeight / 2;
 
-            
-            //var rect = ThumbnailRectCreator.CalculatePositionForThumbnailView(startPoint, xToWindowCenter, yToWindowCenter, i, thumbnailView.Properties.Width, thumbnailView.Properties.Height);
+            // Get DPI information
+            PresentationSource source = PresentationSource.FromVisual(this);
+            double dpiScaling = source.CompositionTarget.TransformToDevice.M11;
+            var thumbnailPositionCalculator = new ThumbnailRectCreator();
+            thumbnailPositionCalculator.dpiScaling = dpiScaling;
+            Point rect = thumbnailPositionCalculator.CalculatePositionForThumbnailView(startPoint, xToWindowCenter, yToWindowCenter, i, thumbnailView.Properties.Width, thumbnailView.Properties.Height);
 
-            popup.HorizontalOffset = startPoint.X / thumbnailView.Properties.DpiScaling;
-            popup.VerticalOffset = startPoint.Y/ thumbnailView.Properties.DpiScaling;
+            popup.HorizontalOffset = rect.X / thumbnailView.Properties.DpiScaling;
+            popup.VerticalOffset = rect.Y / thumbnailView.Properties.DpiScaling;
 
             popup.Child = thumbnailView;
             popup.IsOpen = true;
@@ -294,6 +297,6 @@ public partial class ClickWindow : Window
         popup = null; // set to null to allow garbage collection
         _currentPopups.Remove(closedWindowHandle);
 
-       e.ThumbnailView.ParentApp.RemoveThumbnail(e.ThumbnailView.Properties.WindowHandle);
+        e.ThumbnailView.ParentApp.RemoveThumbnail(e.ThumbnailView.Properties.WindowHandle);
     }
 }
