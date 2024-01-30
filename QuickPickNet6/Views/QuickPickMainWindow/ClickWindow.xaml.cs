@@ -251,8 +251,8 @@ public partial class ClickWindow : Window
             // Get DPI information
             PresentationSource source = PresentationSource.FromVisual(this);
             double dpiScaling = source.CompositionTarget.TransformToDevice.M11;
-            var thumbnailPositionCalculator = new ThumbnailRectCreator();
-            thumbnailPositionCalculator.dpiScaling = dpiScaling;
+
+            var thumbnailPositionCalculator = new DpiSafeThumbnailPositioner();            
             Point rect = thumbnailPositionCalculator.CalculatePositionForThumbnailView(startPoint, xToWindowCenter, yToWindowCenter, i, thumbnailView.Properties.Width, thumbnailView.Properties.Height);
 
             popup.HorizontalOffset = rect.X / thumbnailView.Properties.DpiScaling;
