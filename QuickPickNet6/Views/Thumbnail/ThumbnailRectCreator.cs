@@ -5,25 +5,47 @@ using ThumbnailLogic;
 
 namespace QuickPick.UI
 {
-    public class IDpiSafeThumbnailRectCreator : IThumbnailRectCreator
+    public class IDpiSafeThumbnailPositioner : IThumbnailPositioner
     {
+        // this is the hardcoded size of the circular panel, found in the main ui xaml file. Todo: fetch dynamically
+        const double UI_SIZE = 150;
+        readonly double _halfSize = UI_SIZE / 2;  
 
-        public Point CalculatePositionForThumbnailView(Point buttonCenter, double xToWindowCenter, double yToWindowCenter, int i, double width, double height)
-        {
-            throw new NotImplementedException();
+
+
+        //</inheritdoc>
+        public Point CalculatePositionForThumbnailView(Point buttonCenterOnScreen, double xToWindowCenter, double yToWindowCenter, int i, double width, double height)
+        {   
+            // calculate how far the button is from the center of the window in percentages. _halfsize is 100% and 0 is the center.
+            double xPercentage = xToWindowCenter / _halfSize;
+            double yPercentage = yToWindowCenter / _halfSize;
+
+
+            
+
         }
     }
 
 
 
-    public interface IThumbnailRectCreator
+    public interface IThumbnailPositioner
     {
-        Point CalculatePositionForThumbnailView(Point buttonCenter, double xToWindowCenter, double yToWindowCenter, int i, double width, double height);
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="buttonCenter">the point of the center of the ApplinkButton, as fullscreen coordinates.</param>
+		/// <param name="xToWindowCenter">The horizontal WPF distance of the button to the center of the main UI.</param>
+		/// <param name="yToWindowCenter">The vertical WPF distance of the button to the center of the main UI.</param>
+		/// <param name="thumbnailIndex">The index of the thumbnail within all the app's thumbnails.</param>
+		/// <param name="width">Width of the thumbnail.</param>
+		/// <param name="height">Height of the thumbnail.</param>
+		/// <returns></returns>
+		Point CalculatePositionForThumbnailView(Point buttonCenter, double xToWindowCenter, double yToWindowCenter, int thumbnailIndex, double width, double height);
     }
 
     // In charge of creating the RECT and it's position for the thumbnailpreview.
     // The windows API for createing a Thumbnail requires a RECT.
-    public class ThumbnailRectCreator : IThumbnailRectCreator
+    public class ThumbnailRectCreator : IThumbnailPositioner
     {
         public double dpiScaling = 1;
         /// <summary>
