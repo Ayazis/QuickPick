@@ -9,7 +9,10 @@
              Height="{Binding Height}"
              MouseEnter="UserControl_MouseEnter"
              MouseLeave="UserControl_MouseLeave"
-             MouseUp="UserControl_MouseUp">
+             MouseUp="UserControl_MouseUp"
+             BorderBrush="Black"
+             BorderThickness="1"
+             >
     <UserControl.DataContext>
         <local:PreviewImageProperties/>
     </UserControl.DataContext>

@@ -32,7 +32,10 @@ public partial class ThumbnailView : UserControl
         this.DataContext = previewImageProperties;
         Properties = previewImageProperties;
     }
-
+    /// <summary>
+    /// Shows the thumbnailView and the previewImage.
+    /// </summary>
+    /// <param name="parentHandle">The handle of the parentWindow in which the previewImage will be shown.</param>
     public void FadeIn(IntPtr parentHandle)
     {
         this.Dispatcher.Invoke(() =>
