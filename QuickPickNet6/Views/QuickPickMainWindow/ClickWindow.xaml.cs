@@ -14,6 +14,7 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using System.Windows.Media.Effects;
 using ThumbnailLogic;
 using static QuickPick.UI.Views.Thumbnail.ThumbnailView;
 
@@ -258,6 +259,9 @@ public partial class ClickWindow : Window
             popup.HorizontalOffset = rect.X / thumbnailView.Properties.DpiScaling;
             popup.VerticalOffset = rect.Y / thumbnailView.Properties.DpiScaling;
 
+            thumbnailView.BorderBrush = new SolidColorBrush(Color.FromRgb(0, 0, 0));
+            thumbnailView.BorderThickness = new Thickness(1);
+         
             popup.Child = thumbnailView;
             popup.IsOpen = true;
 

@@ -26,12 +26,12 @@
                   Width="25" 
                   Height="25"                     
                   Click="btnClose_Click"
-HorizontalAlignment="Right" 
-VerticalAlignment="Top"
-Background="Transparent" 
-BorderThickness="0"
-Foreground="{StaticResource ForegroundBrush}"
-Margin="0,10">
+                  HorizontalAlignment="Right" 
+                  VerticalAlignment="Top"
+                  Background="Transparent" 
+                  BorderThickness="0"
+                  Foreground="{StaticResource ForegroundBrush}"
+                  Margin="0,10">
                 <Button.Template>
                     <ControlTemplate TargetType="{x:Type Button}">
                         <Border x:Name="border" Background="Transparent">
