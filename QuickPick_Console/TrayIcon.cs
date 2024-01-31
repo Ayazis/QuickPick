@@ -49,8 +49,8 @@ public class TrayIconManager
         }
     }
     public void OnExitClick(object sender, EventArgs e)
-    {
-        Application.Exit(); // handling this event is done in program.cs
+    {        
+        System.Windows.Application.Current.Shutdown();
     }
 
     private void OnSettingsClick(object sender, EventArgs e)

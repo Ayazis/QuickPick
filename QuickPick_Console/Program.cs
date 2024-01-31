@@ -108,7 +108,7 @@ public class Program
     }
 
     private static void SubscribeToExitEvent_ToHandleCleanup()
-    {
+    {        
         AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
     }
 
