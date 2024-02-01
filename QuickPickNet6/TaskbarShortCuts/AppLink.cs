@@ -44,7 +44,7 @@ public partial class AppLink : ObservableObject
 
                 Process.Start(info);
             });
-            ClickWindow.Instance.HideWindow();
+            ClickWindow.Instance.HideUI();
         }
     }
 

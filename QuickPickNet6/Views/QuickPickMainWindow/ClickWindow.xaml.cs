@@ -50,7 +50,7 @@ public partial class ClickWindow : Window
 
     public void HandleFocusLost(object sender, EventArgs e)
     {
-        HideWindow();
+        HideUI();
     }
 
     private void ClickWindow_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
@@ -120,7 +120,7 @@ public partial class ClickWindow : Window
         _timeStampLastShown = DateTime.Now;
     }
 
-    public void HideWindow()
+    public void HideUI()
     {
         try
         {
@@ -134,8 +134,9 @@ public partial class ClickWindow : Window
             Deactivated -= HandleFocusLost;
             LostFocus -= HandleFocusLost;
             HideAnimation.Begin(this);
+            HideThumbnails();
 
-        }
+		}
         catch (Exception ex)
         {
             Logs.Logger.Log(ex);

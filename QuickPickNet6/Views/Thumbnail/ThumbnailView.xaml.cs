@@ -131,8 +131,9 @@ public partial class ThumbnailView : UserControl
     private void UserControl_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
         ActiveWindows.ToggleWindow(Properties.WindowHandle);
-        // Toggle.
-    }
+        ClickWindow.Instance.HideUI();
+		// Toggle.
+	}
     private void btnClose_Click(object sender, System.Windows.RoutedEventArgs e)
     {
         Debug.WriteLine("EVENT; Thumbnail close button clicked.");

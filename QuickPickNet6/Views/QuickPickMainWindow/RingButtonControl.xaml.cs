@@ -34,7 +34,7 @@ public partial class RingButtonControl : UserControl
         if (source.Name == nameof(this.TopRight))
         {
             InputSim.CtrlAltBreak();
-            ClickWindow.Instance.HideWindow();
+            ClickWindow.Instance.HideUI();
         }
 
     }
