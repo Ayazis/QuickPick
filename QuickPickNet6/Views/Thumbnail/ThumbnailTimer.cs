@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Threading;
 
 namespace QuickPick.UI.Views.Thumbnail
@@ -18,10 +14,10 @@ namespace QuickPick.UI.Views.Thumbnail
         public ThumbnailTimer(Action callback)
         {
             MouseLeaveTimer.Tick += MouseLeaveTimer_Tick;
-                _callback = callback;
+            _callback = callback;
         }
 
-      
+
         public void StartTimer()
         {
             MouseLeaveTimer.Stop(); // Reset if there was one already runnning.
@@ -33,7 +29,7 @@ namespace QuickPick.UI.Views.Thumbnail
         private void MouseLeaveTimer_Tick(object sender, EventArgs e)
         {
             StopTimer();
-            _callback?.Invoke();           
+            _callback?.Invoke();
         }
 
         public void StopTimer()

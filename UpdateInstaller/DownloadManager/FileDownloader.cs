@@ -10,22 +10,22 @@ public interface IFileDownloader
 
 public class FileDownloader : IFileDownloader
 {
-	private string _destinationFolder;
+    private string _destinationFolder;
 
-	public FileDownloader(string destinationFolder)
-	{
-		this._destinationFolder = destinationFolder;
+    public FileDownloader(string destinationFolder)
+    {
+        this._destinationFolder = destinationFolder;
         CreateDestinationFolderIfNotExists();
-	}
-	void CreateDestinationFolderIfNotExists()
-	{
-		if(!Directory.Exists(this._destinationFolder)) 
+    }
+    void CreateDestinationFolderIfNotExists()
+    {
+        if (!Directory.Exists(this._destinationFolder))
         {
-            Directory.CreateDirectory(this._destinationFolder); 
+            Directory.CreateDirectory(this._destinationFolder);
         }
-	}
+    }
 
-	public event EventHandler<DownloadProgressChangedEventArgs> DownloadProgressChanged;
+    public event EventHandler<DownloadProgressChangedEventArgs> DownloadProgressChanged;
 
     public void DownloadFile(Uri source)
     {

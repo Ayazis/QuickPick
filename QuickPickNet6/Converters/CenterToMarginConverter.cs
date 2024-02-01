@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 
@@ -15,10 +11,10 @@ public class CenterToMarginConverter : IValueConverter
     {
         try
         {
-            var diameter = double.Parse(value.ToString()) /2;
+            var diameter = double.Parse(value.ToString()) / 2;
             var buttonSize = double.Parse(parameter.ToString());
 
-            var margin = new Thickness(diameter-buttonSize/2);
+            var margin = new Thickness(diameter - buttonSize / 2);
             return margin;
         }
         catch (Exception)

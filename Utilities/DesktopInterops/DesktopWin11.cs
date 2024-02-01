@@ -8,8 +8,8 @@ namespace QuickPick.Utilities.DesktopInterops
         static DesktopWin11()
         {
             var shell = (IServiceProvider10)Activator.CreateInstance(Type.GetTypeFromCLSID(Guids.CLSID_ImmersiveShell));
-            VirtualDesktopManagerInternal = 
-                (Win11Interop.IVirtualDesktopManagerInternal)shell.QueryService(Guids.CLSID_VirtualDesktopManagerInternal,                 
+            VirtualDesktopManagerInternal =
+                (Win11Interop.IVirtualDesktopManagerInternal)shell.QueryService(Guids.CLSID_VirtualDesktopManagerInternal,
                 typeof(Win11Interop.IVirtualDesktopManagerInternal).GUID);
             VirtualDesktopManager = (IVirtualDesktopManager)Activator.CreateInstance(Type.GetTypeFromCLSID(Guids.CLSID_VirtualDesktopManager));
 

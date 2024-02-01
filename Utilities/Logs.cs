@@ -15,7 +15,7 @@ public static class Logs
 
 public class FileLogger : ILogger
 {
-    public string LogPath { get;} = @"C:\temp\QuickPicLogs\";
+    public string LogPath { get; } = @"C:\temp\QuickPicLogs\";
     public void CreateDirectory()
     {
         if (!Directory.Exists(LogPath))
@@ -35,22 +35,22 @@ public class FileLogger : ILogger
             // Run the actual logging in a seperate task so it doesn't slow down the App's main processes.
             //Task.Run(() =>
             //{
-                var dateNow = DateTime.Now.ToString("yyyyMMdd");
+            var dateNow = DateTime.Now.ToString("yyyyMMdd");
 
-                File.AppendAllText($@"{LogPath}QpLog{dateNow}.txt", Environment.NewLine+logEntry);
+            File.AppendAllText($@"{LogPath}QpLog{dateNow}.txt", Environment.NewLine + logEntry);
             //});
 
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            
+            // do nothing.
         }
     }
 
 }
 
 public interface ILogger
-{        
+{
     string LogPath { get; }
 
     void Log(string entry);

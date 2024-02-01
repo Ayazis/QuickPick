@@ -1,5 +1,4 @@
 Features
-- Display Thumbnails when long-hoover over Applinks with active window(s)
 - Right Click menu on Applinks
 - Programmable buttons
 - Application specific programmable buttons

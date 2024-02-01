@@ -1,19 +1,17 @@
-﻿using System.Windows.Media;
-using System.Windows.Input;
-using System.Threading.Tasks;
-using System.Diagnostics;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using System;
-using Newtonsoft.Json;
-using QuickPick.UI.Views;
-using System.Collections.ObjectModel;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading.Tasks;
+using System.Windows.Input;
+using System.Windows.Media;
 
 namespace QuickPick.PinnedApps;
 [DebuggerDisplay("{Name} - {TargetPath}")]
 /// <summary>
 /// Wrapper for ShortCut to PinnedApps & open Windows, includes Icon.
 /// </summary>
-public class AppLink
+public partial class AppLink : ObservableObject
 {
     public AppLink()
     {
@@ -25,7 +23,9 @@ public class AppLink
     public ImageSource AppIcon { get; set; }
     public ICommand ClickCommand { get; set; }
     public string Arguments { get; set; }
-    public bool HasWindowActiveOnCurrentDesktop { get; set; }
+    [ObservableProperty]
+    bool _hasWindowActiveOnCurrentDesktop;
+  
     public List<IntPtr> WindowHandles { get; set; } = new();
     public string Info => $"{Name} - {TargetPath}";
 
@@ -44,7 +44,19 @@ public class AppLink
 
                 Process.Start(info);
             });
-            ClickWindow.Instance.HideWindow();
+            ClickWindow.Instance.HideUI();
         }
+    }
+
+    internal void CloseThumbnail(object s, EventArgs e)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal void RemoveThumbnail(IntPtr windowHandle)
+    {
+        WindowHandles.Remove(windowHandle);
+        if(WindowHandles.Count == 0)
+            HasWindowActiveOnCurrentDesktop = false;
     }
 }

@@ -36,10 +36,5 @@
 	</ItemGroup>
 
 
-	<ItemGroup>
-	  <ProjectReference Include="..\QuickPick.Tests\QuickPick.Tests.csproj" />
-	</ItemGroup>
-
-
 
 </Project>

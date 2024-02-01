@@ -1,10 +1,7 @@
-﻿using InstallerExecutableLauncher;
-using System.Diagnostics;
-using System.Net;
+﻿using System.Net;
 using System.Reflection;
-using Updates;
-using UpdateInstaller.Updates;
 using UpdateInstaller;
+using Updates;
 
 namespace QuickPick;
 
@@ -29,7 +26,7 @@ public class UpdateDownloader : IUpdateDownloader
     }
     public async Task<bool> IsUpdateAvailableAsync()
     {
-        Assembly assembly = Assembly.GetExecutingAssembly();
+        Assembly assembly = Assembly.GetEntryAssembly();
         Version currentVersion = assembly.GetName().Version;
 #if DEBUG
         currentVersion = new Version("0.0.0");

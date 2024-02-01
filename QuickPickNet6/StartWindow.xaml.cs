@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
-using Updates;
 
 namespace QuickPick.UI;
 /// <summary>
@@ -11,7 +9,7 @@ namespace QuickPick.UI;
 public partial class StartWindow : Window
 {
     public StartWindow()
-    {        
+    {
         InitializeComponent();
         ShowDownloadStartMessage();
     }

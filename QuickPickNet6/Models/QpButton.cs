@@ -1,5 +1,5 @@
-﻿using QuickPick.Enums;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using QuickPick.Enums;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
@@ -48,7 +48,7 @@ namespace QuickPick.Models
             ,ClickAction.TakeSnippet
             ,ClickAction.PasteText
             ,ClickAction.ExitQuickPick
-            
+
         };
         [JsonIgnore]
         public ObservableCollection<ClickAction> ClickActions

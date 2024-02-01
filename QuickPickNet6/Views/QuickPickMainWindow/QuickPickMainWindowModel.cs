@@ -1,76 +1,13 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.IO;
-using System.Reflection;
-using System.Windows;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using QuickPick.PinnedApps;
+using System.Collections.ObjectModel;
 
 namespace QuickPick;
 
-public class QuickPickMainWindowModel : INotifyPropertyChanged
+public partial class QuickPickMainWindowModel : ObservableObject
 {
-	public ObservableCollection<AppLink> PinnedApps { get; set; } = new ObservableCollection<AppLink>()
-	{
-		new AppLink{ },
-		new AppLink{ },
-		new AppLink{ },
-		new AppLink{ },
-		new AppLink{ },
-		new AppLink{ },
-		new AppLink{ },
-		new AppLink{ },
-	};
-	public ObservableCollection<string> ButtonLabels { get; set; } = new ObservableCollection<string>() { "1", "2", "3", "4", /*"5", "7", "8", "9", "10"*/ };
-
-
-	private int _CircleRadius = 50;
-	public int CircleRadius
-	{
-		get { return _CircleRadius; }
-		set
-		{
-			_CircleRadius = value;
-			NotifyPropertyChanged(nameof(CircleRadius));
-		}
-	}
-	public Point Center
-	{
-		get { return new Point(WidthHeight / 2, WidthHeight / 2); }
-	}
-	public int WidthHeight
-	{
-		get { return 200; }
-	}
-
-	public string SettingsPath
-	{
-		get
-		{
-			return Directory.GetCurrentDirectory() + "/QuickPickSettings.Json";
-		}
-	}
-
-
-
-	private string _ShortCutsFolder = @"c:\shortcuts";
-	public string ShortCutsFolder
-	{
-		get { return _ShortCutsFolder; }
-		set
-		{
-			_ShortCutsFolder = value;
-			NotifyPropertyChanged(nameof(ShortCutsFolder));
-		}
-	}
-	#region Notify Property Changed And other Events
-	public event PropertyChangedEventHandler PropertyChanged;
-
-	public void NotifyPropertyChanged(string name)
-	{
-		if (PropertyChanged != null)
-			PropertyChanged(this, new PropertyChangedEventArgs(name));
-	}
-
-	#endregion
+    public ObservableCollection<AppLink> PinnedApps { get; set; } = new();
+    public ObservableCollection<string> ButtonLabels { get; set; } = new();
+    [ObservableProperty]
+    private string _ShortCutsFolder = @"c:\shortcuts";
 }

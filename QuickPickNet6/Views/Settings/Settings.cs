@@ -1,86 +1,37 @@
-﻿using Microsoft.VisualBasic;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using QuickPick.UI.Views.Settings;
 using System;
-using System.Diagnostics;
-using System.IO;
-using System.Reflection.Metadata;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Forms;
 
 namespace QuickPick
 {
-	public class SettingsManager
-	{
-		const string SETTINGS_FILENAME = "QuickPickSettings.json";
-		static SettingsManager _instance;
-		public static SettingsManager Instance => _instance ??= new SettingsManager();
-		static SettingsManager()
-		{
-			// prevent public constructin
-		}
+    public class Settings
+    {
+        public ActiveAppSetting ActiveAppSetting { get; set; } = ActiveAppSetting.IncludePinnedTaskBarApps;
+        public AutoUpdateSetting AutoUpdateSetting { get; set; } = AutoUpdateSetting.PreRelease;
 
-		public Settings Settings { get; private set; } = new();
+        [JsonIgnore]
+        public HashSet<Keys> KeyCombination { get; set; } = new() { Keys.LControlKey, Keys.RButton };
 
-		public void ApplySettings(SettingsViewModel vm)
-		{
-			this.Settings.ActiveAppSetting = vm.ActiveAppSetting;
-			this.Settings.AutoUpdateSetting = vm.AutoUpdateSetting;
+        [JsonProperty]
+        private HashSet<string> KeyCombinationAsStrings;
+        public string Serialise()
+        {
+            // Set the key combination as a string so that it can be serialised
+            // This is because the keys enum will not Deserialise properly.
+            KeyCombinationAsStrings = new HashSet<string>(KeyCombination.Select(k => k.ToString()));
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
+        }
 
-			try
-			{
-				string tempPath = Path.GetTempPath();
-				string settingsPath = Path.Combine(tempPath, SETTINGS_FILENAME);
-
-				var json = JsonConvert.SerializeObject(Settings, Formatting.Indented);
-
-				// Use a FileStream to ensure proper handling of the file
-				using (FileStream fileStream = new FileStream(settingsPath, FileMode.Create, FileAccess.Write, FileShare.None))
-				using (StreamWriter streamWriter = new StreamWriter(fileStream))
-				{
-					streamWriter.Write(json);
-				}
-
-				Trace.WriteLine("Settings saved successfully.");
-			}
-			catch (Exception ex)
-			{
-				Trace.WriteLine($"An error occurred while saving the settings: {ex.Message}");
-			}
-		}
-
-		public void LoadSettings()
-		{
-			try
-			{
-				string tempPath = Path.GetTempPath();
-				string settingsPath = Path.Combine(tempPath, SETTINGS_FILENAME);
-
-				if (File.Exists(settingsPath))
-				{
-					using (FileStream fileStream = new FileStream(settingsPath, FileMode.Open, FileAccess.Read, FileShare.Read))
-					using (StreamReader streamReader = new StreamReader(fileStream))
-					{
-						var json = streamReader.ReadToEnd();
-						Settings = JsonConvert.DeserializeObject<Settings>(json);
-					}
-
-					Trace.WriteLine("Settings loaded successfully.");
-				}
-				else
-				{
-					// Handle the case where the settings file doesn't exist yet
-					Trace.WriteLine("Settings file does not exist.");
-				}
-			}
-			catch (Exception ex)
-			{
-				Trace.WriteLine($"An error occurred while loading the settings: {ex.Message}");
-			}
-		}
-
-	}
-	public class Settings
-	{
-		public ActiveAppSetting ActiveAppSetting { get; set; } = ActiveAppSetting.IncludePinnedTaskBarApps;
-		public AutoUpdateSetting AutoUpdateSetting { get; set; } = AutoUpdateSetting.PreRelease;
-	}
+        public static Settings Deserialize(string json)
+        {
+            // Deserialise the key combination as string, and then convert it back to a hashset of keys.
+            var settings = JsonConvert.DeserializeObject<Settings>(json);
+            if (settings.KeyCombinationAsStrings != null)
+                settings.KeyCombination = new HashSet<Keys>(settings.KeyCombinationAsStrings.Select(k => Enum.Parse<Keys>(k)));
+            return settings;
+        }
+    }
 }
