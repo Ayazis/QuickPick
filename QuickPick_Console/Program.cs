@@ -1,6 +1,5 @@
 ﻿using Ayazis.KeyHooks;
 using Ayazis.Utilities;
-using QuickPick.UI.TaskbarShortCuts;
 using QuickPick.UI.Views.Settings;
 using System.Diagnostics;
 using System.Windows;
@@ -25,7 +24,7 @@ public class Program
     {
         try
         {
-            new JumpListprovider().GetShellLinks   ();
+            new JumpListProvider().GetJumpList();
             return;
             SettingsManager.Instance.LoadSettings();
             SettingsWindow.Instance.ViewModel.ApplySettings(SettingsManager.Instance.Settings);

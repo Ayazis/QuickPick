@@ -1,42 +1,27 @@
-﻿using System.IO;
+﻿using JumpList.Automatic;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
-using OpenMcdf;
-
-namespace QuickPick.UI.TaskbarShortCuts;
-public class JumpListprovider
+using System.IO;
+using System.Text;
+namespace QuickPick
 {
-	public void GetShellLinks()
-	{
-        string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-        string targetPath = Path.Combine(appDataPath, @"Microsoft\Windows\Recent\AutomaticDestinations");
-
-        foreach (var filePath in Directory.GetFiles(targetPath))
+    public class JumpListProvider
+    {
+        string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+        string recentFilesDir => Path.Combine(appData, @"Microsoft\Windows\Recent\AutomaticDestinations");
+        public IEnumerable<AutomaticDestination> GetJumpList()
         {
-            CompoundFile cf = new CompoundFile(filePath);
-            
-          ProcessStorage(cf.RootStorage, string.Empty);
-            cf.Close();
+          var destinationFiles = new List<AutomaticDestination>();
+
+            foreach (var filePath in Directory.GetFiles(recentFilesDir))
+            {
+                AutomaticDestination jlist = JumpList.JumpList.LoadAutoJumplist(filePath);
+
+                // todo: Find out which files are recently opened by which program.
+                destinationFiles.Add(jlist);
+            }
+            return destinationFiles;
         }
     }
-
-    public void ProcessStorage(CFStorage stg, string path)
-    {
-
-        stg.VisitEntries(entry =>
-        {
-            string entryPath = path + "\\" + entry.Name;
-            if (entry is CFStream)
-            {
-                Debug.WriteLine("Stream: " + entryPath);
-            }
-            else if (entry is CFStorage)
-            {
-                Debug.WriteLine("Storage: " + entryPath);
-                ProcessStorage((CFStorage)entry, entryPath);
-            }
-        }, false);
-    }
-
-
 }
