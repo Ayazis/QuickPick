@@ -28,7 +28,7 @@ public class Program
             SettingsWindow.Instance.ViewModel.ApplySettings(SettingsManager.Instance.Settings);
             _trayIconManager.CreateTrayIcon();
 #if !DEBUG
-			CheckInputArguments(args);
+			      CheckInputArguments(args);
 #else
             //CheckInputArguments(args);
 #endif

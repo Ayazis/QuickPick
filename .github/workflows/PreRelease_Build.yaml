@@ -89,7 +89,7 @@ jobs:
       - name: Create Release and Upload Asset
         run: |
           # Create release
-          gh release create ${{ env.VERSION }} --title "QuickPick ${{ env.VERSION }}" --notes "Release notes for ${{ env.VERSION }}"
+          gh release create ${{ env.VERSION }} --title "QuickPick ${{ env.VERSION }}" --notes "Release notes for ${{ env.VERSION }}" --prerelease
         
       - name: Upload to Release
         run: |
