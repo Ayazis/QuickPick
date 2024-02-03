@@ -24,7 +24,8 @@ public class Program
     {
         try
         {
-            new JumpListProvider().GetJumpList();
+            string notepad = @"C:\Program Files (x86)\Notepad++";
+            new JumpListProvider().GetAppIdForApplication(notepad);
             return;
             SettingsManager.Instance.LoadSettings();
             SettingsWindow.Instance.ViewModel.ApplySettings(SettingsManager.Instance.Settings);
@@ -110,7 +111,7 @@ public class Program
     }
 
     private static void SubscribeToExitEvent_ToHandleCleanup()
-    {        
+    {
         AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
     }
 
