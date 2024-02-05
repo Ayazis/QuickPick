@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:QuickPick"    
+             xmlns:usercontrols="clr-namespace:QuickPick.UI.Views"
              mc:Ignorable="d" 
              d:DesignHeight="150" d:DesignWidth="150">
     <UserControl.Resources>
@@ -43,7 +44,7 @@
             </Grid.Clip>
             <Button x:Name="BackgroundButton0" Style="{StaticResource ResourceKey=RoundButton}"
                     Width="80" Height="80" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <Grid>
+            <Grid Visibility="Hidden">
                 <Path Name="BottomRight" Fill="Transparent"  Data="M0,0 L50,0 A50,50,0,0,1,0,50 Z" Stretch="Fill" Margin="50,50,12,12" RenderTransformOrigin="0.5,0.5"
           MouseEnter="Path_MouseEnter" MouseLeave="Path_MouseLeave" MouseUp="Path_MouseUp"/>
                 <Path Name="BottomLeft" Fill="Transparent" Data="M0,0 L50,0 A50,50,0,0,1,0,50 Z" Stretch="Fill" Margin="12,50,50,12" RenderTransformOrigin="0.5,0.5"
@@ -88,6 +89,8 @@
             Width="30" Height="30" Margin="35" HorizontalAlignment="Center" VerticalAlignment="Center"
             Panel.ZIndex="1"/>
 
-
+        <usercontrols:MusicControl>
+            
+        </usercontrols:MusicControl>
     </Grid>
 </UserControl>
