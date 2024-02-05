@@ -32,6 +32,9 @@ namespace QuickPick.Logic
             Simulator.Keyboard.KeyDown(VirtualKeyCode.F5);
         }
 
-
+        public static void PlayPause()
+        {
+            Simulator.Keyboard.KeyPress(VirtualKeyCode.MEDIA_PLAY_PAUSE);
+        }
     }
 }

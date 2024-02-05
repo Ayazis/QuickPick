@@ -16,18 +16,19 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <ScrollViewer VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Hidden" Width="100" Name="TitleScroller" MouseDown="TitleScroller_MouseDown">
+
+        <ScrollViewer VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Hidden" 
+                      Width="100" Name="TitleScroller">
         <TextBlock Grid.Row="0" Text="{Binding TitlePlaying, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                    HorizontalAlignment="Center"
                    VerticalAlignment="Center" 
                    Foreground="White" 
                    TextWrapping="Wrap"                   
-                   FontSize="20"
-                    MouseDown="TitleScroller_MouseDown"
+                   FontSize="20"                
                    />
         </ScrollViewer>
         <fa5:ImageAwesome Grid.Row="1" Icon="Solid_Pause" Foreground="White" Width="15" Visibility="Collapsed" />
-        <fa5:ImageAwesome Grid.Row="1" Icon="Solid_Play" Foreground="White" Width="15"/>
+        <fa5:ImageAwesome Name="PlayButton"  Grid.Row="1" Icon="Solid_Play" Foreground="White" Width="15" MouseDown="PlayButton_MouseDown"/>
 
 
     </Grid>
