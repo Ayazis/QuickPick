@@ -61,6 +61,7 @@ namespace QuickPick.UI.Views
                     if (TitleScroller.HorizontalOffset >= _maxScrollLength)
                     {
                         TitleScroller.ScrollToLeftEnd();
+                        ScrollText();
                     }
                 });
             
