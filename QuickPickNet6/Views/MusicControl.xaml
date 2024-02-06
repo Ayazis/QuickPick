@@ -6,12 +6,11 @@
              xmlns:local="clr-namespace:QuickPick.UI.Views"
              xmlns:fa5="http://schemas.fontawesome.com/icons/"
              mc:Ignorable="d" 
-             d:DesignHeight="100" d:DesignWidth="100" d:DataContext="local:MusicControlViewModel">
-    <Grid>
-        <Grid.DataContext>
-            <local:MusicControlViewModel/>
-        </Grid.DataContext>
-
+             d:DesignHeight="50" d:DesignWidth="100" d:DataContext="local:MusicControlViewModel">
+    <UserControl.DataContext>
+        <local:MusicControlViewModel/>
+    </UserControl.DataContext>
+    <Grid MaxHeight="30">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
@@ -19,16 +18,29 @@
 
         <ScrollViewer VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Hidden" 
                       Width="100" Name="TitleScroller">
-        <TextBlock Grid.Row="0" Text="{Binding TitlePlaying, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            <TextBlock Grid.Row="0" Text="{Binding TitlePlaying, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                    HorizontalAlignment="Center"
                    VerticalAlignment="Center" 
                    Foreground="White" 
                    TextWrapping="Wrap"                   
-                   FontSize="20"                
+                   FontSize="12"                
                    />
         </ScrollViewer>
-        <fa5:ImageAwesome Grid.Row="1" Icon="Solid_Pause" Foreground="White" Width="15" Visibility="Collapsed" />
-        <fa5:ImageAwesome Name="PlayButton"  Grid.Row="1" Icon="Solid_Play" Foreground="White" Width="15" MouseDown="PlayButton_MouseDown"/>
+    
+
+        <Rectangle Width="100" Height="100">
+            <Rectangle.Fill>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                    <GradientStop Color="Black" Offset="0.0" />
+                    <GradientStop Color="#00000000" Offset="0.1" />
+                    <GradientStop Color="#00000000" Offset="0.9" />
+                    <GradientStop Color="Black" Offset="1.0" />
+                </LinearGradientBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+
+        <fa5:ImageAwesome Grid.Row="1" Icon="Solid_Pause" Foreground="White" Width="10" Visibility="Collapsed" />
+        <fa5:ImageAwesome Name="PlayButton"  Grid.Row="1" Icon="Solid_Play" Foreground="White" Width="10" MouseDown="PlayButton_MouseDown"/>
 
 
     </Grid>
