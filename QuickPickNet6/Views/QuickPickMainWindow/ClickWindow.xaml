@@ -51,7 +51,7 @@
                     <DataTemplate>
                         <Grid>
                             <Button Style="{StaticResource RoundButtonNoMouseOver}" Width="35" Height="35" />
-                            <Image Source="{Binding AppIcon}" Width="23" Height="23" >
+                            <Image Source="{Binding AppIcon}" Width="16" Height="16" >
                                 <Image.ToolTip>
                                     <ToolTip Content="{Binding Info}" />
                                 </Image.ToolTip>
@@ -74,14 +74,18 @@
                                         </Style.Triggers>
                                     </Style>
                                 </Image.Style>
-                            </Image>
-                            <Rectangle Height="2" VerticalAlignment="Bottom" Fill="LightBlue" Visibility="{Binding HasWindowActiveOnCurrentDesktop, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                            <Button Style="{StaticResource RoundButtonNoMouseOver}" Width="35" Height="35" MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave" Opacity="0">
+                            </Image>                        
+                            <Rectangle Height="2" Width="16" VerticalAlignment="Bottom" Fill="LightBlue" 
+                                       Visibility="{Binding HasWindowActiveOnCurrentDesktop, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                            <Button Style="{StaticResource RoundButtonNoMouseOver}" Width="35" Height="35" 
+                                    MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave" Opacity="0"                                  
+                                    >
                                 <Button.InputBindings>
                                     <MouseBinding Gesture="LeftClick" Command="{Binding ClickCommand}" />
                                 </Button.InputBindings>
-                            </Button>
-                        </Grid>
+                            </Button>                        
+                            
+                    </Grid>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>

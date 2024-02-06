@@ -15,6 +15,7 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Effects;
+using System.Windows.Shapes;
 using ThumbnailLogic;
 using static QuickPick.UI.Views.Thumbnail.ThumbnailView;
 
@@ -172,18 +173,7 @@ public partial class ClickWindow : Window
         Hide();
 
     }
-    private void Button_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
-    {
-        ThumbnailTimer.StopTimer();
-        HideThumbnails();
-        // todo: Move logic out of xaml.xs
-        var button = (System.Windows.Controls.Button)sender;
-        AppLink pinnedApp = button.DataContext as AppLink;
-
-        var thumbnails = CreateThumbnails(pinnedApp, button).ToList();
-
-        ShowThumbnails(thumbnails, button);
-    }
+ 
 
     private IEnumerable<ThumbnailView> CreateThumbnails(AppLink pinnedApp, System.Windows.Controls.Button button)
     {
@@ -273,10 +263,64 @@ public partial class ClickWindow : Window
 
         thumbnailView.FadeIn(handle);
     }
+	private void Button_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+	{
+		ThumbnailTimer.StopTimer();
+		HideThumbnails();
+		// todo: Move logic out of xaml.xs
+		Button button = (System.Windows.Controls.Button)sender;      
+        
+        // slightly enlarge the buttons
+		var parent = button.Parent as Grid;
+		var children = parent.Children;
+        foreach (var child in children)
+		{
+			if (child is not Button btn )
+				continue;
+          
+			btn.Width += 5;
+			btn.Height += 5;
+        }
 
-    private void Button_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+
+		if (button != null)
+		{
+			var container = ItemsControl.ContainerFromElement(Applinks, button) as UIElement;
+			if (container != null)
+			{
+				Panel.SetZIndex(container, 1);
+			}
+		}
+
+		AppLink pinnedApp = button.DataContext as AppLink;
+
+		var thumbnails = CreateThumbnails(pinnedApp, button).ToList();
+
+		ShowThumbnails(thumbnails, button);
+	}
+	private void Button_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
     {
-        ThumbnailTimer.StartTimer();
+		Button button = (System.Windows.Controls.Button)sender;
+
+		// reset size of the buttons
+		var parent = button.Parent as Grid;
+		var children = parent.Children;
+		foreach (var child in children)
+		{
+			if (child is not Button)
+				continue;
+
+			var userControl = child as FrameworkElement;
+			userControl.Width -= 5;
+			userControl.Height -= 5;
+		}
+
+		var container = ItemsControl.ContainerFromElement(Applinks, button) as UIElement;
+		if (container != null)
+		{                        
+			Panel.SetZIndex(container, 0);
+		}
+		ThumbnailTimer.StartTimer();
     }
 
 
