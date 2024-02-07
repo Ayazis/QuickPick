@@ -28,16 +28,16 @@ public partial class ClickWindow : Window
     public static ClickWindow Instance;
     private QuickPickMainWindowModel _qpm = new();
     private IntPtr _quickPickWindowHandle;
-    public static ThumbnailTimer ThumbnailTimer;
-    static DateTime _timeStampLastShown;
+    public static ThumbnailTimer MouseLeftTimer;	
+	static DateTime _timeStampLastShown;
     private Dictionary<IntPtr, Popup> _currentPopups = new();
 
     public Storyboard HideAnimation { get; private set; }
     public Storyboard ShowAnimation { get; private set; }
     public ClickWindow()
     {
-        ThumbnailTimer = new(HideThumbnails);
-        InitializeComponent();
+        MouseLeftTimer = new(HideThumbnails);      
+		InitializeComponent();
         this.PreviewMouseWheel += ClickWindow_PreviewMouseWheel;
         DataContext = _qpm;
 
@@ -265,7 +265,8 @@ public partial class ClickWindow : Window
     }
 	private void Button_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
 	{
-		ThumbnailTimer.StopTimer();
+		MouseLeftTimer.StopTimer();
+		MouseLeftTimer.StartTimer();
 		HideThumbnails();
 		// todo: Move logic out of xaml.xs
 		Button button = (System.Windows.Controls.Button)sender;      
@@ -320,7 +321,7 @@ public partial class ClickWindow : Window
 		{                        
 			Panel.SetZIndex(container, 0);
 		}
-		ThumbnailTimer.StartTimer();
+		MouseLeftTimer.StartTimer();
     }
 
 

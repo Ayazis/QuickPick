@@ -15,8 +15,11 @@ namespace QuickPick;
 /// </summary>
 public partial class RingButtonControl : UserControl
 {
+	MMDevice SoundDevice;
 	public RingButtonControl()
 	{
+		var enumerator = new MMDeviceEnumerator();
+		SoundDevice = enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Console);
 		InitializeComponent();
 
 		this.IsVisibleChanged += RingButtonControl_IsVisibleChanged;
@@ -41,12 +44,11 @@ public partial class RingButtonControl : UserControl
 
 	public bool IsAudioPlaying()
 	{
-		var enumerator = new MMDeviceEnumerator();
-		var device = enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Console);
-		var count = device.AudioMeterInformation.PeakValues.Count;
+		
+		var count = SoundDevice.AudioMeterInformation.PeakValues.Count;
 		for (int i = 0; i < count; i++)
 		{
-			float peakValue = device.AudioMeterInformation.PeakValues[i];
+			float peakValue = SoundDevice.AudioMeterInformation.PeakValues[i];
 			if (peakValue > 0)
 			{
 				return true;
