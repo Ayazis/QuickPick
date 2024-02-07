@@ -26,7 +26,7 @@ public partial class ThumbnailView : UserControl
     }
     public ThumbnailView(PreviewImageProperties previewImageProperties, AppLink pinnedApp)
     {
-        MouseEnterTimer = new ThumbnailTimer(ShowApplication);
+        MouseEnterTimer = new ThumbnailTimer(ActivateAeroPeek);
         ParentApp = pinnedApp;
         InitializeComponent();
         this.DataContext = previewImageProperties;
@@ -108,7 +108,7 @@ public partial class ThumbnailView : UserControl
     private void UserControl_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
     {
         if (MouseEnterTimer == null)
-            MouseEnterTimer = new ThumbnailTimer(ShowApplication);
+            MouseEnterTimer = new ThumbnailTimer(ActivateAeroPeek);
 
         MouseEnterTimer.StopTimer();
         MouseEnterTimer.StartTimer();
@@ -123,7 +123,8 @@ public partial class ThumbnailView : UserControl
 
     private void UserControl_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
     {
-
+        MouseEnterTimer.StopTimer();
+        ActiveWindows.DeactivatePeek(Properties.WindowHandle);
         SolidColorBrush fillBrush = new SolidColorBrush(almostBlack);
 
         ThumbBackground.Background = fillBrush;
@@ -135,7 +136,8 @@ public partial class ThumbnailView : UserControl
 
     private void UserControl_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
-        ActiveWindows.ToggleWindow(Properties.WindowHandle);
+        ActiveWindows.DeactivatePeek(Properties.WindowHandle); // always disactivate peek when activating a window.        
+        ActiveWindows.ActivateWindow(Properties.WindowHandle);
         ClickWindow.Instance.HideUI();
         // Toggle.
     }
@@ -149,7 +151,7 @@ public partial class ThumbnailView : UserControl
     }
 
 
-    public void ShowApplication()
+    public void ActivateAeroPeek()
     {
         ActiveWindows.ActivatePeek(Properties.WindowHandle);
     }

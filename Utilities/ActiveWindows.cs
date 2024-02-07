@@ -10,53 +10,77 @@ public class ActiveWindows
     // Constants for ShowWindow, from Microsoft documentation.
     const int SW_SHOWNOACTIVATE = 4;
     const int SW_MINIMIZE = 6;
+    const UInt32 SWP_NOSIZE = 0x0001;
+    const UInt32 SWP_NOMOVE = 0x0002;
+
     private const int SW_RESTORE = 9;
-    private static IntPtr _quickPickHandle;
-
     static ActiveWindows()
-    {        
+    {
     }
 
-    static void setQuickPickHandleAndDisableAeroPeek()
+
+    static void DisableAeroPeekForAllQuickPickWindowHandles()
     {
-        _quickPickHandle = Process.GetCurrentProcess().MainWindowHandle;
-        DisableAeroPeekOnQuickPick();
+
+        var currentProcess = Process.GetCurrentProcess();
+        // get all windowhandles for currentprocess
+        IntPtr[] qpWindowHandles = GetProcessWindows(currentProcess.Id);
+
+        foreach (var handle in qpWindowHandles)
+        {
+            DisableAeroPeekOnQuickPick(handle);
+        }
     }
-    private static void DisableAeroPeekOnQuickPick()
-    {        
+    private static void DisableAeroPeekOnQuickPick(IntPtr handleToDisable)
+    {
         // Create a value that represents the DWMWA_EXCLUDED_FROM_PEEK attribute
-        int attrValue = (int)DwmWindowAttribute.DWMWA_EXCLUDED_FROM_PEEK;
+        int exclude = (int)DwmWindowAttribute.DWMWA_EXCLUDED_FROM_PEEK;
         // Set the attribute for your window
-        DwmSetWindowAttribute(_quickPickHandle, attrValue, ref attrValue, sizeof(int));
+        DwmSetWindowAttribute(handleToDisable, exclude, ref exclude, sizeof(int));
     }
 
     // A method to activate the window peek effect
-    public static void ActivatePeek(IntPtr  handle)
+    public static void ActivatePeek(IntPtr handle)
     {
-        if (_quickPickHandle == default)
-            setQuickPickHandleAndDisableAeroPeek();
+        Trace.WriteLine("Activating Peek");
+        // since everytime we activatea a peek we have new thumbnails that have window handles,
+        // we need to disable aeropeek for all quickpick windows every time.
+
+        DisableAeroPeekForAllQuickPickWindowHandles();
 
         // Check if DWM composition is enabled
         if (DwmIsCompositionEnabled())
         {
             // Get the handle of the main form            
             // Activate the window peek effect
-            DwmpActivateLivePreview(1, handle, _quickPickHandle, 3, 0);
+            DwmpActivateLivePreview(1, handle, IntPtr.Zero, 3, 0);
+        }
+        var currentProcess = Process.GetCurrentProcess();
+        // get all windowhandles for currentprocess
+        IntPtr[] qpWindowHandles = GetProcessWindows(currentProcess.Id);
+
+        foreach (var whandle in qpWindowHandles)
+        {
+            // Set the window position and flags
+            SetWindowPos(whandle, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOACTIVATE | SWP_NOSIZE | SWP_NOMOVE);
         }
     }
 
     // A method to deactivate the window peek effect
     public static void DeactivatePeek(IntPtr handle)
     {
+        Debug.WriteLine("De-Activating Peek");
+        Trace.WriteLine("De-Activating Peek");
         // Check if DWM composition is enabled
         if (DwmIsCompositionEnabled())
         {
             // Deactivate the window peek effect
-            DwmpActivateLivePreview(0, handle, _quickPickHandle, 3, 0);
+            DwmpActivateLivePreview(0, handle, IntPtr.Zero, 3, 0);
         }
+        //Task.Delay(300).Wait(); // take time to deactivate peek, otherwise peek mode will remain.
     }
 
-  
+
 
     public static IEnumerable<(IntPtr handle, Process process)> GetAllOpenWindows()
     {
@@ -105,6 +129,30 @@ public class ActiveWindows
         {
             return IntPtr.Zero;
         }
+    }
+
+    public static void ActivateWindow(IntPtr hWnd)
+    {
+        if (hWnd != IntPtr.Zero)
+        {
+
+            DeactivatePeek(hWnd); // always disactivate peek when activating a window.
+
+
+            if (IsIconic(hWnd))
+            {
+                // Window is currently minimized - restore it
+                ShowWindow(hWnd, SW_SHOWNOACTIVATE);
+                SetForegroundWindow(hWnd);
+            }
+            else
+            {
+                // Window is currently restored - minimize it
+                SetForegroundWindow(hWnd);
+            }
+        }
+
+
     }
     public static void ToggleWindow(IntPtr hWnd)
     {
@@ -168,7 +216,7 @@ public class ActiveWindows
         return _classnamesToIgnore.Contains(className);
     }
     static readonly string[] _classnamesToIgnore = new string[] { "WorkerW", "Progman", "SysShadow" };
-    
+
 
     static string GetClassName(IntPtr hWnd)
     {
@@ -234,10 +282,10 @@ public class ActiveWindows
 
     [DllImport("dwmapi.dll", EntryPoint = "#113", SetLastError = true)]
     internal static extern uint DwmpActivateLivePreview(uint peekOn, IntPtr hPeekWindow, IntPtr hTopmostWindow, uint peekType1or3, uint newForWin10); // To Activate LivePreview
-    
+
     [DllImport("dwmapi.dll", PreserveSig = false)]
     public static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize); // used to prevent mainApp from dissapearing when aeropeeking
-    
+
     [Flags] // used by DwmSetWindowAttribute
     public enum DwmWindowAttribute : uint
     {
@@ -255,6 +303,14 @@ public class ActiveWindows
         DWMWA_EXCLUDED_FROM_PEEK,
         DWMWA_LAST
     }
+
+
+    // Used to set application at topmost position.
+    [DllImport("user32.dll")]
+    static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
+
+    static readonly IntPtr HWND_TOPMOST = new IntPtr(-1);
+    const uint SWP_NOACTIVATE = 0x0010;
 
     public static void CloseWindow(IntPtr windowHandle)
     {

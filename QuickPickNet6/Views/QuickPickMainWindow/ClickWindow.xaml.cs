@@ -265,8 +265,7 @@ public partial class ClickWindow : Window
     }
 	private void Button_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
 	{
-		MouseLeftTimer.StopTimer();
-		MouseLeftTimer.StartTimer();
+		MouseLeftTimer.StopTimer();		
 		HideThumbnails();
 		// todo: Move logic out of xaml.xs
 		Button button = (System.Windows.Controls.Button)sender;      
