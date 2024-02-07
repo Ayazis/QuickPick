@@ -254,7 +254,7 @@ public partial class ClickWindow : Window
             ShowThumbnail(thumbnailView, popup);
         }
     }
-
+    
     private static void ShowThumbnail(ThumbnailView thumbnailView, Popup popup)
     {
         popup.IsOpen = true;
