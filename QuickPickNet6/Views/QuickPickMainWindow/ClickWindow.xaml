@@ -89,8 +89,5 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-        
-        <music:MusicControl Width="100" Height="50" VerticalAlignment="Bottom" Grid.Row="3" Margin="0,0,0,-65">
-        </music:MusicControl>
     </Grid>   
 </Window>

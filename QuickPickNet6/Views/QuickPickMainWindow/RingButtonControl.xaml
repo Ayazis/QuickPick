@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:QuickPick"    
              xmlns:usercontrols="clr-namespace:QuickPick.UI.Views"
              mc:Ignorable="d" 
+             xmlns:fa5="http://schemas.fontawesome.com/icons/"
              d:DesignHeight="150" d:DesignWidth="150">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -15,6 +16,8 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
+        
+        
         <Grid Width="100" Height="100" >
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
@@ -22,6 +25,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
+
             <Grid.Clip>
                 <GeometryGroup>
                     <!-- The clipping rectangle that covers the entire area except the circle -->
@@ -41,7 +45,7 @@
                     <!-- The small circle coutout in the middle -->
                     <EllipseGeometry Center="50,50" RadiusX="20" RadiusY="20" />
                 </GeometryGroup>
-            </Grid.Clip>
+            </Grid.Clip>           
             <Button x:Name="BackgroundButton0" Style="{StaticResource ResourceKey=RoundButton}"
                     Width="80" Height="80" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             <Grid>
@@ -69,7 +73,7 @@
                             <TranslateTransform/>
                         </TransformGroup>
                     </Path.RenderTransform>
-                </Path>
+                </Path>               
                 <Path Name="TopRight" Fill="Transparent" Data="M0,0 L50,0 A50,50,0,0,1,0,50 Z" Stretch="Fill" Margin="50,12,12,50" RenderTransformOrigin="0.5,0.5"
           MouseEnter="Path_MouseEnter" MouseLeave="Path_MouseLeave" MouseUp="Path_MouseUp">
                     <Path.RenderTransform>
@@ -84,10 +88,25 @@
             </Grid>
 
         </Grid>
-
         <Button x:Name="SmallMiddleButton" Style="{StaticResource ResourceKey=RoundButton}" Click="SmallMiddleButton_Click"
                 Content="..."
             Width="30" Height="30" Margin="35" HorizontalAlignment="Center" VerticalAlignment="Center"
-            Panel.ZIndex="1"/>     
+            Panel.ZIndex="1"/>
+        <fa5:ImageAwesome Name="PlayButton"  
+                          Icon="Solid_Play" 
+                          Foreground="White" 
+                          Width="10" 
+                          Height="10"
+                          MouseDown="PlayButton_MouseDown"                            
+                          Panel.ZIndex="1" Margin="43,43,0,0" />
+        <fa5:ImageAwesome Name="PauseButton"  
+                   Icon="Solid_Pause" 
+                   Foreground="White" 
+                   Width="10" 
+                   Height="10"
+                   MouseDown="PauseButton_MouseDown"                            
+                   Panel.ZIndex="1" Margin="43,43,0,0" 
+                          Visibility="Collapsed" />
+
     </Grid>
 </UserControl>
