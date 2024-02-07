@@ -1,4 +1,5 @@
-﻿using QuickPick.Logic;
+﻿using NAudio.CoreAudioApi;
+using QuickPick.Logic;
 using QuickPick.UI.Views.Settings;
 using System.Windows.Controls;
 
@@ -17,6 +18,41 @@ public partial class RingButtonControl : UserControl
 	public RingButtonControl()
 	{
 		InitializeComponent();
+
+		this.IsVisibleChanged += RingButtonControl_IsVisibleChanged;
+	}
+
+	private void RingButtonControl_IsVisibleChanged(object sender, System.Windows.DependencyPropertyChangedEventArgs e)
+	{
+		if (IsAudioPlaying())
+		{
+			PlayButton.Visibility = System.Windows.Visibility.Collapsed;
+			PauseButton.Visibility = System.Windows.Visibility.Visible;
+		}
+		else
+		{
+			PauseButton.Visibility = System.Windows.Visibility.Collapsed;
+			PlayButton.Visibility = System.Windows.Visibility.Visible;
+		}
+
+
+		//	throw new System.NotImplementedException();
+	}
+
+	public bool IsAudioPlaying()
+	{
+		var enumerator = new MMDeviceEnumerator();
+		var device = enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Console);
+		var count = device.AudioMeterInformation.PeakValues.Count;
+		for (int i = 0; i < count; i++)
+		{
+			float peakValue = device.AudioMeterInformation.PeakValues[i];
+			if (peakValue > 0)
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 	private void Path_MouseEnter(object sender, MouseEventArgs e)
 	{
