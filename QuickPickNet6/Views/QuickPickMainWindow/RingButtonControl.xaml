@@ -95,18 +95,44 @@
         <fa5:ImageAwesome Name="PlayButton"  
                           Icon="Solid_Play" 
                           Foreground="White" 
-                          Width="10" 
-                          Height="10"
+                          Width="8" 
+                          Height="8"
                           MouseDown="PlayButton_MouseDown"                            
-                          Panel.ZIndex="1" Margin="43,43,0,0" />
+                          Panel.ZIndex="1" Margin="55,25,0,0" />
         <fa5:ImageAwesome Name="PauseButton"  
                    Icon="Solid_Pause" 
                    Foreground="White" 
-                   Width="10" 
-                   Height="10"
+                   Width="8" 
+                   Height="8"
                    MouseDown="PauseButton_MouseDown"                            
-                   Panel.ZIndex="1" Margin="43,43,0,0" 
-                          Visibility="Collapsed" />
+                   Panel.ZIndex="1" Margin="55,25,0,0" 
+                    Visibility="Collapsed" />
+        <fa5:ImageAwesome Name="VolumeButton" Icon="Solid_VolumeUp"
+                          Foreground="White" Width="10" Height="10" 
+                          MouseEnter="VolumeButton_MouseEnter"
+                          MouseLeave="VolumeButton_MouseLeave"                          
+                          Panel.ZIndex="1" Margin="30,50,0,0"
+                          ToolTip="Scroll to adjust volume."
+                          MouseDown="VolumeButton_MouseDown"
+                          />
+        <fa5:ImageAwesome Name="VolumeOffButton" Icon="Solid_VolumeMute"
+                    Foreground="White" Width="10" Height="10" 
+                    MouseEnter="VolumeButton_MouseEnter"
+                    MouseLeave="VolumeButton_MouseLeave"                          
+                    Panel.ZIndex="1" Margin="30,50,0,0"                    
+                    Visibility="Collapsed"
+                    MouseDown="VolumeOffButton_MouseDown"/>
+        <ProgressBar Name="VolumeBar"
+                     Orientation="Vertical"
+                     Panel.ZIndex="1" 
+                     Width="5" 
+                     Height="50" 
+                     Margin="30,40,0,0" 
+                     VerticalAlignment="Top" 
+                     Background="{StaticResource BackgroundBrush}"
+                     Foreground="{StaticResource ForegroundBrush}"
+                     Visibility="Collapsed"                      />
+
 
     </Grid>
 </UserControl>

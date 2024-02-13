@@ -1,6 +1,7 @@
 ﻿using NAudio.CoreAudioApi;
 using QuickPick.Logic;
 using QuickPick.UI.Views.Settings;
+using System;
 using System.Windows.Controls;
 
 using System.Windows.Input;
@@ -44,7 +45,7 @@ public partial class RingButtonControl : UserControl
 
 	public bool IsAudioPlaying()
 	{
-		
+
 		var count = SoundDevice.AudioMeterInformation.PeakValues.Count;
 		for (int i = 0; i < count; i++)
 		{
@@ -120,4 +121,72 @@ public partial class RingButtonControl : UserControl
 		}
 
 	}
+
+	private void VolumeButton_MouseEnter(object sender, MouseEventArgs e)
+	{
+		ClickWindow.Instance.DisableMouseScroll();
+		this.PreviewMouseWheel += RingButtonControl_PreviewMouseWheel;
+	}
+
+	private void RingButtonControl_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+	{
+		if (VolumeBar.Visibility == System.Windows.Visibility.Collapsed)
+			VolumeBar.Visibility = System.Windows.Visibility.Visible;
+
+		bool scrollUp = e.Delta > 0;
+		if (scrollUp)
+		{
+			InputSim.VolummeUp();
+			UpdateVolumeBar();
+		}
+		else
+		{
+			InputSim.VolummeDown();
+			UpdateVolumeBar();
+		}
+	}
+
+	private void UpdateVolumeBar()
+	{	
+		MMDeviceEnumerator devEnum = new MMDeviceEnumerator();
+		MMDevice defaultDevice = devEnum.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);
+		float currentVolume = defaultDevice.AudioEndpointVolume.MasterVolumeLevelScalar * 100;
+
+		VolumeBar.Value = currentVolume;
+	}
+
+	private void VolumeButton_MouseLeave(object sender, MouseEventArgs e)
+	{
+		VolumeBar.Visibility = System.Windows.Visibility.Collapsed;
+		ClickWindow.Instance.EnableMouseScroll();
+		this.PreviewMouseWheel -= RingButtonControl_PreviewMouseWheel;
+	}
+
+	private void VolumeButton_MouseDown(object sender, MouseButtonEventArgs e)
+	{
+		ToggleVolumeAndVolumeOffButtons();
+		InputSim.ToggleMute();
+	}
+	private void VolumeOffButton_MouseDown(object sender, MouseButtonEventArgs e)
+	{
+		ToggleVolumeAndVolumeOffButtons();
+		InputSim.ToggleMute();
+	}
+
+	private void ToggleVolumeAndVolumeOffButtons()
+	{
+		if (VolumeButton.Visibility == System.Windows.Visibility.Visible)
+		{
+			VolumeButton.Visibility = System.Windows.Visibility.Collapsed;
+			VolumeOffButton.Visibility = System.Windows.Visibility.Visible;
+		}
+		else
+		{
+			VolumeOffButton.Visibility = System.Windows.Visibility.Collapsed;
+			VolumeButton.Visibility = System.Windows.Visibility.Visible;
+		}
+
+	}
+
+
 }

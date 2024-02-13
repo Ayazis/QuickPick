@@ -18,6 +18,7 @@
              WindowStartupLocation="Manual"
              Topmost="True"                   
              BorderThickness="0"
+             UseLayoutRounding="True"
              >
     
 
@@ -51,8 +52,10 @@
                     <DataTemplate>
                         <Grid>
                             <Button Style="{StaticResource RoundButtonNoMouseOver}" Width="35" Height="35" />
-                            <Image Source="{Binding AppIcon}" Width="16" Height="16" >
-                                <Image.ToolTip>
+                        <Image Source="{Binding AppIcon}" Width="16" Height="16"                                                                   
+                               SnapsToDevicePixels="True"                            
+                               >
+                            <Image.ToolTip>
                                     <ToolTip Content="{Binding Info}" />
                                 </Image.ToolTip>
                                 <Image.Style>
