@@ -3,12 +3,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:QuickPick"                         
+             xmlns:local="clr-namespace:QuickPick"      
+             xmlns:music="clr-namespace:QuickPick.UI.Views"
              xmlns:converters="clr-namespace:QuickPick.Converters"
              xmlns:custom="clr-namespace:QuickPick.Custom"
              mc:Ignorable="d"                           
-             MinWidth="2200" 
-             MinHeight="2200"
+             MinWidth="300" 
+             MinHeight="300"
              SizeToContent="WidthAndHeight"
              Background="#00000000"         
              ShowInTaskbar="False"
@@ -16,7 +17,10 @@
              WindowStyle="None" 
              WindowStartupLocation="Manual"
              Topmost="True"                   
+             BorderThickness="0"
+             UseLayoutRounding="True"
              >
+    
 
     <Window.DataContext>
         <local:QuickPickMainWindowModel/>
@@ -30,10 +34,15 @@
         </ResourceDictionary>
     </Window.Resources>   
 
-        <Grid VerticalAlignment="Center" HorizontalAlignment="Center">      
+        <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
         <Ellipse Width="150" Height="150" Fill="#B3000000" />
         <local:RingButtonControl/>
-            <ItemsControl x:Name="Applinks" ItemsSource="{Binding PinnedApps, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" >
+         <ItemsControl x:Name="Applinks" ItemsSource="{Binding PinnedApps, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" >
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <custom:CircularPanel x:Name="AppsCircularPanel" Width="150" Height="150" />
@@ -43,8 +52,10 @@
                     <DataTemplate>
                         <Grid>
                             <Button Style="{StaticResource RoundButtonNoMouseOver}" Width="35" Height="35" />
-                            <Image Source="{Binding AppIcon}" Width="23" Height="23" >
-                                <Image.ToolTip>
+                        <Image Source="{Binding AppIcon}" Width="16" Height="16"                                                                   
+                               SnapsToDevicePixels="True"                            
+                               >
+                            <Image.ToolTip>
                                     <ToolTip Content="{Binding Info}" />
                                 </Image.ToolTip>
                                 <Image.Style>
@@ -66,16 +77,20 @@
                                         </Style.Triggers>
                                     </Style>
                                 </Image.Style>
-                            </Image>
-                            <Rectangle Height="2" VerticalAlignment="Bottom" Fill="LightBlue" Visibility="{Binding HasWindowActiveOnCurrentDesktop, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                            <Button Style="{StaticResource RoundButtonNoMouseOver}" Width="35" Height="35" MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave" Opacity="0">
+                            </Image>                        
+                            <Rectangle Height="2" Width="16" VerticalAlignment="Bottom" Fill="LightBlue" 
+                                       Visibility="{Binding HasWindowActiveOnCurrentDesktop, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                            <Button Style="{StaticResource RoundButtonNoMouseOver}" Width="35" Height="35" 
+                                    MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave" Opacity="0"                                  
+                                    >
                                 <Button.InputBindings>
                                     <MouseBinding Gesture="LeftClick" Command="{Binding ClickCommand}" />
                                 </Button.InputBindings>
-                            </Button>
-                        </Grid>
+                            </Button>                        
+                            
+                    </Grid>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
-            </ItemsControl>   
-        </Grid>   
+            </ItemsControl>
+    </Grid>   
 </Window>

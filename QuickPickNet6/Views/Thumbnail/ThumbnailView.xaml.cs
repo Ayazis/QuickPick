@@ -1,12 +1,10 @@
 ﻿using QuickPick.PinnedApps;
 using System;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Interop;
 using System.Windows.Media;
 using ThumbnailLogic;
 
@@ -19,14 +17,16 @@ public partial class ThumbnailView : UserControl
     Color almostBlack = (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#202020");
     public PreviewImageProperties Properties;
     public readonly AppLink ParentApp;
+    public ThumbnailTimer MouseEnterTimer;
 
     public IntPtr PreviewPointer { get; set; }
     public ThumbnailView()
     {
-
+        this.MouseLeave += UserControl_MouseLeave;
     }
     public ThumbnailView(PreviewImageProperties previewImageProperties, AppLink pinnedApp)
     {
+        MouseEnterTimer = new ThumbnailTimer(ActivateAeroPeek);
         ParentApp = pinnedApp;
         InitializeComponent();
         this.DataContext = previewImageProperties;
@@ -106,23 +106,29 @@ public partial class ThumbnailView : UserControl
     }
 
     private void UserControl_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
-    {    
+    {
+        if (MouseEnterTimer == null)
+            MouseEnterTimer = new ThumbnailTimer(ActivateAeroPeek);
+
+        MouseEnterTimer.StopTimer();
+        MouseEnterTimer.StartTimer();
         // Set the fill color of the rectangle
         SolidColorBrush fillBrush = new SolidColorBrush(SemiGray);
 
         ThumbBackground.Background = fillBrush;
-        ClickWindow.ThumbnailTimer.StopTimer();
-        btnClose.Visibility= Visibility.Visible;
+        ClickWindow.MouseLeftTimer.StopTimer();
+        btnClose.Visibility = Visibility.Visible;
         tbWindowTitle.Margin = new Thickness(tbWindowTitle.Margin.Left, tbWindowTitle.Margin.Top, tbWindowTitle.Margin.Right + 10, tbWindowTitle.Margin.Bottom);
     }
 
     private void UserControl_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
     {
-    
+        MouseEnterTimer.StopTimer();
+        ActiveWindows.DeactivatePeek(Properties.WindowHandle);
         SolidColorBrush fillBrush = new SolidColorBrush(almostBlack);
 
         ThumbBackground.Background = fillBrush;
-        ClickWindow.ThumbnailTimer.StartTimer();
+        ClickWindow.MouseLeftTimer.StartTimer();
         btnClose.Visibility = Visibility.Collapsed;
         tbWindowTitle.Margin = new Thickness(tbWindowTitle.Margin.Left, tbWindowTitle.Margin.Top, tbWindowTitle.Margin.Right - 10, tbWindowTitle.Margin.Bottom);
         // starttimer
@@ -130,10 +136,11 @@ public partial class ThumbnailView : UserControl
 
     private void UserControl_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
-        ActiveWindows.ToggleWindow(Properties.WindowHandle);
+        ActiveWindows.DeactivatePeek(Properties.WindowHandle); // always disactivate peek when activating a window.        
+        ActiveWindows.ActivateWindow(Properties.WindowHandle);
         ClickWindow.Instance.HideUI();
-		// Toggle.
-	}
+        // Toggle.
+    }
     private void btnClose_Click(object sender, System.Windows.RoutedEventArgs e)
     {
         Debug.WriteLine("EVENT; Thumbnail close button clicked.");
@@ -141,6 +148,12 @@ public partial class ThumbnailView : UserControl
         ActiveWindows.CloseWindow(Properties.WindowHandle);
         this.Visibility = System.Windows.Visibility.Collapsed;
         CloseThumbnailEvent?.Invoke(this, new ThumbnailViewEventArgs(this));
+    }
+
+
+    public void ActivateAeroPeek()
+    {
+        ActiveWindows.ActivatePeek(Properties.WindowHandle);
     }
 
 
