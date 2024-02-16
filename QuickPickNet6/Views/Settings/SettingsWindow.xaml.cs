@@ -25,6 +25,7 @@ namespace QuickPick.UI.Views.Settings
 
         public void ShowWindow()
         {
+            WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
             var mousePosition = MousePosition.GetCursorPosition();
             Left = mousePosition.X - Width / 2;
             Top = mousePosition.Y - Height / 2;
