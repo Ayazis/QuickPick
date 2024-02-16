@@ -83,8 +83,7 @@ public class ActiveWindows
 
 
     public static IEnumerable<(IntPtr handle, Process process)> GetAllOpenWindows()
-    {
-        var currentDesktop = DesktopInterop.GetCurrentDesktopGuid();
+    {        
         foreach (var process in Process.GetProcesses())
         {
             IntPtr[] windows = GetProcessWindows(process.Id);
@@ -103,8 +102,7 @@ public class ActiveWindows
     public static IntPtr GetActiveWindowOnCurentDesktop(string filePath)
     {
         try
-        {
-            var currentDesktop = DesktopInterop.GetCurrentDesktopGuid();
+        {            
             string fileName = Path.GetFileNameWithoutExtension(filePath);
 
             Process[] matchingProcesses = Process.GetProcessesByName(fileName);

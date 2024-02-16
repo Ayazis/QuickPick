@@ -9,6 +9,7 @@
         WindowStyle="None"
         ResizeMode="CanResizeWithGrip" 
         AllowsTransparency="True"
+        WindowStartupLocation="Manual"
         >
 
     <Window.Resources>
