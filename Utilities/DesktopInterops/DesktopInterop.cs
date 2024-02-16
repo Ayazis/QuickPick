@@ -46,7 +46,7 @@ namespace QuickPick.Utilities.DesktopInterops
             {
                 VirtualDesktopManagerFailure = true;
                 // interface-local .dll mismatch
-                return true; // at least we keep functionality.
+                return true; // at least we keep basic functionality.
             }
         }
         [DllImport("user32.dll", SetLastError = true)]
