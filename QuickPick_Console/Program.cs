@@ -24,6 +24,8 @@ public class Program
     {
         try
         {
+            SetupGlobalExceptionHandling();
+
             SettingsManager.Instance.LoadSettings();
             SettingsWindow.Instance.ViewModel.ApplySettings(SettingsManager.Instance.Settings);
             _trayIconManager.CreateTrayIcon();
@@ -47,6 +49,20 @@ public class Program
         {
             Logs.Logger?.Log(ex);
         }
+    }
+
+    private static void SetupGlobalExceptionHandling()
+    {
+        // handle all exceptions
+        AppDomain.CurrentDomain.UnhandledException += (sender, e) =>
+        {
+            Logs.Logger?.Log((Exception)e.ExceptionObject);
+        };
+
+        AppDomain.CurrentDomain.FirstChanceException += (sender, e) =>
+        {
+            Logs.Logger?.Log(e.Exception);
+        };
     }
 
     private static void CheckInputArguments(string[] args)
@@ -108,7 +124,7 @@ public class Program
     }
 
     private static void SubscribeToExitEvent_ToHandleCleanup()
-    {        
+    {
         AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
     }
 

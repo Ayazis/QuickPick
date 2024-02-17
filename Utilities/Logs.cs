@@ -15,11 +15,12 @@ public static class Logs
 
 public class FileLogger : ILogger
 {
-    public string LogPath { get; } = @"C:\temp\QuickPicLogs\";
+    // get appdata/quickpick/logs
+    public string LogDirectory => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "QuickPick", "Logs");
     public void CreateDirectory()
     {
-        if (!Directory.Exists(LogPath))
-            Directory.CreateDirectory(LogPath);
+        if (!Directory.Exists(LogDirectory))
+            Directory.CreateDirectory(LogDirectory);
     }
     public void Log(Exception ex)
     {
@@ -37,7 +38,8 @@ public class FileLogger : ILogger
             //{
             var dateNow = DateTime.Now.ToString("yyyyMMdd");
 
-            File.AppendAllText($@"{LogPath}QpLog{dateNow}.txt", Environment.NewLine + logEntry);
+            string finalPath = Path.Combine(LogDirectory, $"QpLog{dateNow}.log");
+            File.AppendAllText(finalPath, Environment.NewLine + logEntry);
             //});
 
         }
@@ -50,9 +52,7 @@ public class FileLogger : ILogger
 }
 
 public interface ILogger
-{
-    string LogPath { get; }
-
+{   
     void Log(string entry);
     void Log(Exception ex);
 
