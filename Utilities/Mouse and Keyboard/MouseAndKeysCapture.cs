@@ -5,7 +5,12 @@ using Utilities.Mouse_and_Keyboard;
 
 namespace Ayazis.KeyHooks;
 
-public class MouseAndKeysCapture
+public interface IMouseAndKeysCapture
+{
+    void HookIntoMouseAndKeyBoard();
+}
+
+public class MouseAndKeysCapture : IMouseAndKeysCapture
 {
     private enum MouseMessages
     {

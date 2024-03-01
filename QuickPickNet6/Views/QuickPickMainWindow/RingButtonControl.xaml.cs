@@ -72,7 +72,7 @@ public partial class RingButtonControl : UserControl
 		Path source = sender as Path;
 		if (source.Name == nameof(this.TopRight))
 		{
-			InputSim.CtrlAltBreak();
+			InputSim.WinD();
 			ClickWindow.Instance.HideUI();
 		}
 

@@ -4,7 +4,13 @@ using System.Reflection;
 using System.Windows.Forms;
 
 namespace QuickPick;
-public class TrayIconManager
+public interface ITrayIconService
+{
+    void CreateTrayIcon();
+    void OnExitClick(object sender, EventArgs e);
+    void RemoveTrayIcon();
+}
+public class TrayIconService : ITrayIconService
 {
     private NotifyIcon _trayIcon;
     private ContextMenuStrip _contextMenu;
@@ -49,7 +55,7 @@ public class TrayIconManager
         }
     }
     public void OnExitClick(object sender, EventArgs e)
-    {        
+    {
         System.Windows.Application.Current.Shutdown();
     }
 
