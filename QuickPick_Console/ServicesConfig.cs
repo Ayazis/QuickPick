@@ -1,7 +1,9 @@
 ﻿using Ayazis.KeyHooks;
+using Ayazis.Utilities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using QuickPick.Services;
+using QuickPick.UI.Views.Settings;
 using QuickPick.Utilities.VirtualDesktop;
 
 
@@ -18,11 +20,14 @@ public class ServicesConfig : IServicesConfig
         Host.CreateDefaultBuilder()
         .ConfigureServices((_, services) =>
             {
+                services.AddSingleton<ILogger, FileLogger>();
                 services.AddSingleton<IGlobalExceptions, GlobalExceptions>();
                 services.AddSingleton<ITrayIconService, TrayIconService>();
                 services.AddSingleton<IDesktopTracker, DesktopTracker>();
                 services.AddSingleton<IClickWindow, ClickWindow>();
                 services.AddSingleton<IMouseAndKeysCapture, MouseAndKeysCapture>();
+                services.AddSingleton<ISettingsManager, SettingsManager>();
+                services.AddSingleton<ISettingsWindow, SettingsWindow>();
                 services.AddSingleton<IStartup, Startup>();
             }
         );

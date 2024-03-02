@@ -4,6 +4,8 @@ using System.Windows;
 using System.Windows.Threading;
 using Utilities.Mouse_and_Keyboard;
 using QuickPick.Utilities.VirtualDesktop;
+using QuickPick.UI.Views.Settings;
+using Ayazis.Utilities;
 
 namespace QuickPick;
 
@@ -14,34 +16,58 @@ internal interface IStartup
 
 internal class Startup : IStartup
 {
+    ILogger _logger;
     IGlobalExceptions _globalExceptions;
     ITrayIconService _trayIconService;
     IDesktopTracker _desktopTracker;
     IClickWindow _clickWindow;
     IMouseAndKeysCapture _mouseAndKeysCapture;
+    ISettingsManager _settingsManager;
+    ISettingsWindow _settingsWindow;
+
     public Startup(IGlobalExceptions globalExceptions,
         ITrayIconService trayIconService,
         IClickWindow clickWindow,
         IDesktopTracker desktopTracker,
-        IMouseAndKeysCapture mouseAndKeysCapture)
+        IMouseAndKeysCapture mouseAndKeysCapture,
+        ISettingsManager settingsManager,
+        ISettingsWindow settingsWindow,
+        ILogger logger)
     {
         _globalExceptions = globalExceptions;
         _trayIconService = trayIconService;
         _clickWindow = clickWindow;
         _desktopTracker = desktopTracker;
         _mouseAndKeysCapture = mouseAndKeysCapture;
+        _settingsManager = settingsManager;
+        _settingsWindow = settingsWindow;
+        _logger = logger;
     }
     public void StartApplication()
     {
-        _globalExceptions.SetupGlobalExceptionHandling();
-        _trayIconService.CreateTrayIcon();
+        try
+        {
+            _globalExceptions.SetupGlobalExceptionHandling();
+            _trayIconService.CreateTrayIcon();
 
-        StartDesktopTracking();
-        SubscribeToExitEventToHandleCleanup();
-        StartListeningToKeyboardAndMouse();
+            StartDesktopTracking();
+            SubscribeToExitEventToHandleCleanup();
+            StartListeningToKeyboardAndMouse();
+            LoadAndApplyQuickPickSettings();
 
-        // Run the application indefinetely.
-        new Application().Run();
+            // Run the application indefinetely.
+            new Application().Run();
+        }
+        catch (Exception e)
+        {
+            _logger.Log(e);
+        }
+    }
+
+    private void LoadAndApplyQuickPickSettings()
+    {
+        _settingsManager.LoadSettings();
+        _settingsWindow.ViewModel.ApplySettings(_settingsManager.Settings);
     }
 
     private void StartListeningToKeyboardAndMouse()
@@ -97,7 +123,7 @@ internal class Startup : IStartup
         AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
     }
 
-     void CurrentDomain_ProcessExit(object? sender, EventArgs e)
+    void CurrentDomain_ProcessExit(object? sender, EventArgs e)
     {
         _desktopTracker?.Dispose();
         _trayIconService.RemoveTrayIcon();

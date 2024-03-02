@@ -15,20 +15,11 @@ public class Program
     [STAThread]
     static void Main(string[] args)
     {
-        try
-        {
-            IHost host = new ServicesConfig().CreateHostBuilder().Build();
-            IStartup startup = host.Services.GetRequiredService<IStartup>();          
+        IHost host = new ServicesConfig()
+            .CreateHostBuilder()
+            .Build();
 
-            SettingsManager.Instance.LoadSettings();
-            SettingsWindow.Instance.ViewModel.ApplySettings(SettingsManager.Instance.Settings);           
-
-            startup.StartApplication();        
-
-        }
-        catch (Exception ex)
-        {
-            Logs.Logger?.Log(ex);
-        }
-    } 
+        IStartup startup = host.Services.GetRequiredService<IStartup>();
+        startup.StartApplication();
+    }
 }

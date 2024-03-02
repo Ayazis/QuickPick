@@ -7,13 +7,21 @@ using Utilities.Mouse_and_Keyboard;
 
 namespace QuickPick
 {
-    public class SettingsManager
+    public interface ISettingsManager
     {
-        static SettingsManager _instance;
-        public static SettingsManager Instance => _instance ??= new SettingsManager();
+        Settings Settings { get; }
+        string SettingsPath { get; }
+
+        void ApplySettings(SettingsViewModel vm);
+        void LoadSettings();
+    }
+
+    public class SettingsManager : ISettingsManager
+    {     
+        public static SettingsManager Instance;
         public string SettingsPath { get; private set; }
 
-        private SettingsManager()
+        public SettingsManager()
         {
             string saveDirectory = Path.Combine(Path.GetTempPath(), "QuickPick");
             if (!Directory.Exists(saveDirectory))
@@ -21,9 +29,8 @@ namespace QuickPick
                 Directory.CreateDirectory(saveDirectory);
             }
             SettingsPath = Path.Combine(saveDirectory, "QpSettings.Json");
+            Instance = this;    
         }
-
-
         public Settings Settings { get; private set; } = new();
 
         public void ApplySettings(SettingsViewModel vm)
@@ -82,10 +89,6 @@ namespace QuickPick
             {
                 Trace.WriteLine($"An error occurred while loading the settings: {ex.Message}");
             }
-
-
-
         }
-
     }
 }

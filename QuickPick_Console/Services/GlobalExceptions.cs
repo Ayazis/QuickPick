@@ -6,17 +6,23 @@ internal interface IGlobalExceptions
 }
 internal class GlobalExceptions : IGlobalExceptions
 {
+    private ILogger _logger;
+
+    public GlobalExceptions(ILogger logger)
+    {
+        _logger = logger;
+    }
     public void SetupGlobalExceptionHandling()
     {
         // handle all exceptions
         AppDomain.CurrentDomain.UnhandledException += (sender, e) =>
         {
-            Logs.Logger?.Log((Exception)e.ExceptionObject);
+            _logger.Log((Exception)e.ExceptionObject);
         };
 
         AppDomain.CurrentDomain.FirstChanceException += (sender, e) =>
         {
-            Logs.Logger?.Log(e.Exception);
+            _logger.Log(e.Exception);
         };
     }
 }

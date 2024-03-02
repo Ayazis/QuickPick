@@ -12,25 +12,10 @@ public interface IMouseAndKeysCapture
 
 public class MouseAndKeysCapture : IMouseAndKeysCapture
 {
-    private enum MouseMessages
-    {
-        WM_LBUTTONDOWN = 0x0201,
-        WM_LBUTTONUP = 0x0202,
-        WM_MOUSEMOVE = 0x0200,
-        WM_MOUSEWHEEL = 0x020A,
-        WM_RBUTTONDOWN = 0x0204,
-        WM_RBUTTONUP = 0x0205
-    }
-    private const int WH_MOUSE_LL = 14;
-    private const int WH_KEYBOARD_LL = 13;
-    private const int WM_KEYDOWN = 0x0100;
-    private const int WM_KEYUP = 0x101;
-    private const int WM_SYSKEYDOWN = 0x0104;
-
-    internal LowLevelKeyboardProc _keyboardProc;
-    internal LowLevelMouseProc _mouseProc;
-    internal IntPtr _keyboardHookID = IntPtr.Zero;
-    internal IntPtr _mouseHookId = IntPtr.Zero;
+    private LowLevelKeyboardProc _keyboardProc;
+    private LowLevelMouseProc _mouseProc;
+    private IntPtr _keyboardHookID = IntPtr.Zero;
+    private IntPtr _mouseHookId = IntPtr.Zero;
 
     public MouseAndKeysCapture()
     {
@@ -116,6 +101,21 @@ public class MouseAndKeysCapture : IMouseAndKeysCapture
     {
         KeyInputHandler.Instance.KeyReleased(key);
     }
+
+    private enum MouseMessages
+    {
+        WM_LBUTTONDOWN = 0x0201,
+        WM_LBUTTONUP = 0x0202,
+        WM_MOUSEMOVE = 0x0200,
+        WM_MOUSEWHEEL = 0x020A,
+        WM_RBUTTONDOWN = 0x0204,
+        WM_RBUTTONUP = 0x0205
+    }
+    private const int WH_MOUSE_LL = 14;
+    private const int WH_KEYBOARD_LL = 13;
+    private const int WM_KEYDOWN = 0x0100;
+    private const int WM_KEYUP = 0x101;
+    private const int WM_SYSKEYDOWN = 0x0104;
 
     #region dllImports
     internal delegate IntPtr LowLevelKeyboardProc(int nCode, IntPtr wParam, IntPtr lParam);
