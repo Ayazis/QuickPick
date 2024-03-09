@@ -16,11 +16,13 @@ public class MouseAndKeysCapture : IMouseAndKeysCapture
     private LowLevelMouseProc _mouseProc;
     private IntPtr _keyboardHookID = IntPtr.Zero;
     private IntPtr _mouseHookId = IntPtr.Zero;
+    private IKeyInputHandler _keyInputHandler;
 
-    public MouseAndKeysCapture()
+    public MouseAndKeysCapture(IKeyInputHandler keyInputHandler)
     {
         _keyboardProc = KeyBoardHookCallback;
         _mouseProc = MouseHookCallBack;
+        _keyInputHandler = keyInputHandler;
     }
 
     public void HookIntoMouseAndKeyBoard()
@@ -94,12 +96,12 @@ public class MouseAndKeysCapture : IMouseAndKeysCapture
     }
     bool KeyPressed(Keys key)
     {
-        return KeyInputHandler.Instance.IsPresetKeyCombinationHit(key);
+        return _keyInputHandler.IsPresetKeyCombinationHit(key);
     }
 
     void KeyReleased(Keys key)
     {
-        KeyInputHandler.Instance.KeyReleased(key);
+        _keyInputHandler.KeyReleased(key);
     }
 
     private enum MouseMessages

@@ -24,6 +24,7 @@ internal class Startup : IStartup
     IMouseAndKeysCapture _mouseAndKeysCapture;
     ISettingsManager _settingsManager;
     ISettingsWindow _settingsWindow;
+    IKeyInputHandler _keyInputHandler;
 
     public Startup(IGlobalExceptions globalExceptions,
         ITrayIconService trayIconService,
@@ -32,7 +33,8 @@ internal class Startup : IStartup
         IMouseAndKeysCapture mouseAndKeysCapture,
         ISettingsManager settingsManager,
         ISettingsWindow settingsWindow,
-        ILogger logger)
+        ILogger logger,
+        IKeyInputHandler keyInputHandler)
     {
         _globalExceptions = globalExceptions;
         _trayIconService = trayIconService;
@@ -42,6 +44,7 @@ internal class Startup : IStartup
         _settingsManager = settingsManager;
         _settingsWindow = settingsWindow;
         _logger = logger;
+        _keyInputHandler = keyInputHandler;
     }
     public void StartApplication()
     {
@@ -72,11 +75,11 @@ internal class Startup : IStartup
 
     private void StartListeningToKeyboardAndMouse()
     {
-        KeyInputHandler.Instance.SetKeycombination(SettingsManager.Instance.Settings.KeyCombination);
+        _keyInputHandler.SetKeyCombination(_settingsManager.Settings.KeyCombination);
 
         _mouseAndKeysCapture.HookIntoMouseAndKeyBoard();
 
-        KeyInputHandler.Instance.KeyCombinationHit += _keyInputHandler_KeyCombinationHit;
+        _keyInputHandler.KeyCombinationHit += _keyInputHandler_KeyCombinationHit;
     }
     private void _keyInputHandler_KeyCombinationHit()
     {

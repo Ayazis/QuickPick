@@ -1,12 +1,9 @@
 ﻿using NAudio.CoreAudioApi;
 using QuickPick.Logic;
 using QuickPick.UI.Views.Settings;
-using System;
 using System.Windows.Controls;
-
 using System.Windows.Input;
 using System.Windows.Media;
-
 using System.Windows.Shapes;
 
 namespace QuickPick;
@@ -37,10 +34,7 @@ public partial class RingButtonControl : UserControl
 		{
 			PauseButton.Visibility = System.Windows.Visibility.Collapsed;
 			PlayButton.Visibility = System.Windows.Visibility.Visible;
-		}
-
-
-		//	throw new System.NotImplementedException();
+		}		
 	}
 
 	public bool IsAudioPlaying()

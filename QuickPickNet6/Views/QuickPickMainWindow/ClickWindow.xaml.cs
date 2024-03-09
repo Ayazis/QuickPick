@@ -12,11 +12,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Interop;
-using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.Windows.Media.Effects;
-using System.Windows.Shapes;
-using ThumbnailLogic;
 using static QuickPick.UI.Views.Thumbnail.ThumbnailView;
 
 namespace QuickPick;
@@ -47,11 +43,15 @@ public partial class ClickWindow : Window, IClickWindow
     public static ThumbnailTimer MouseLeftTimer;
     static DateTime _timeStampLastShown;
     private Dictionary<IntPtr, Popup> _currentPopups = new();
+    readonly ILogger _logger;
+    readonly ISettingsManager _settingsManager;
 
     public Storyboard HideAnimation { get; private set; }
     public Storyboard ShowAnimation { get; private set; }
-    public ClickWindow()
+    public ClickWindow(ILogger logger, ISettingsManager settingsManager)
     {
+        _settingsManager = settingsManager;
+        _logger = logger;
         MouseLeftTimer = new(HideThumbnails);
         InitializeComponent();
         EnableMouseScroll();
@@ -104,7 +104,7 @@ public partial class ClickWindow : Window, IClickWindow
 
     public void UpdateTaskbarShortCuts()
     {
-        bool includePinnedApps = SettingsManager.Instance.Settings.ActiveAppSetting == UI.Views.Settings.ActiveAppSetting.IncludePinnedTaskBarApps;
+        bool includePinnedApps = _settingsManager.Settings.ActiveAppSetting == UI.Views.Settings.ActiveAppSetting.IncludePinnedTaskBarApps;
         List<AppLink> apps;
         try
         {
@@ -168,7 +168,7 @@ public partial class ClickWindow : Window, IClickWindow
         }
         catch (Exception ex)
         {
-            Logs.Logger.Log(ex);
+            _logger.Log(ex);
         }
     }
 
@@ -185,7 +185,7 @@ public partial class ClickWindow : Window, IClickWindow
         }
         catch (Exception ex)
         {
-            Logs.Logger.Log(ex);
+            _logger.Log(ex);
         }
     }
 

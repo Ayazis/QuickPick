@@ -5,6 +5,7 @@ using Microsoft.Extensions.Hosting;
 using QuickPick.Services;
 using QuickPick.UI.Views.Settings;
 using QuickPick.Utilities.VirtualDesktop;
+using Utilities.Mouse_and_Keyboard;
 
 
 namespace QuickPick;
@@ -26,6 +27,7 @@ public class ServicesConfig : IServicesConfig
                 services.AddSingleton<IDesktopTracker, DesktopTracker>();
                 services.AddSingleton<IClickWindow, ClickWindow>();
                 services.AddSingleton<IMouseAndKeysCapture, MouseAndKeysCapture>();
+                services.AddSingleton<IKeyInputHandler, KeyInputHandler>();
                 services.AddSingleton<ISettingsManager, SettingsManager>();
                 services.AddSingleton<ISettingsWindow, SettingsWindow>();
                 services.AddSingleton<IStartup, Startup>();

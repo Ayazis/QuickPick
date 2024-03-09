@@ -5,10 +5,10 @@ namespace QuickPick.Utilities.DesktopInterops
 {
     public class DesktopInterop
     {
-       static bool VirtualDesktopManagerFailure = false;
+        static bool VirtualDesktopManagerFailure = false;
         public static Guid GetCurrentDesktopGuid()
         {
-            if(VirtualDesktopManagerFailure)
+            if (VirtualDesktopManagerFailure)
                 return default;
 
             try
@@ -23,7 +23,7 @@ namespace QuickPick.Utilities.DesktopInterops
                 VirtualDesktopManagerFailure = true;
                 // most probably a mismatch between pre-defined interface and actual interface in local .dll.
                 return default;
-                
+
             }
         }
         public static bool IsWindowOnCurrentVirtualDesktop(IntPtr windowHandle)

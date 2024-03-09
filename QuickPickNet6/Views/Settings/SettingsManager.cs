@@ -17,19 +17,19 @@ namespace QuickPick
     }
 
     public class SettingsManager : ISettingsManager
-    {     
-        public static SettingsManager Instance;
+    {             
         public string SettingsPath { get; private set; }
+        public IKeyInputHandler _keyInputHandler;
 
-        public SettingsManager()
+        public SettingsManager(IKeyInputHandler keyInputHandler)
         {
             string saveDirectory = Path.Combine(Path.GetTempPath(), "QuickPick");
             if (!Directory.Exists(saveDirectory))
             {
                 Directory.CreateDirectory(saveDirectory);
             }
-            SettingsPath = Path.Combine(saveDirectory, "QpSettings.Json");
-            Instance = this;    
+            SettingsPath = Path.Combine(saveDirectory, "QpSettings.Json");            
+            _keyInputHandler = keyInputHandler;
         }
         public Settings Settings { get; private set; } = new();
 
@@ -40,7 +40,7 @@ namespace QuickPick
             if (vm.NewKeyCombination?.Any() == true)
             {
                 Settings.KeyCombination = vm.NewKeyCombination;
-                KeyInputHandler.Instance.SetKeycombination(Settings.KeyCombination);
+                _keyInputHandler.SetKeyCombination(Settings.KeyCombination);
             }
             WriteSettingsToDisk();
         }
