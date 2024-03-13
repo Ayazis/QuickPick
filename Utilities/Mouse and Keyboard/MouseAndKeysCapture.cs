@@ -7,6 +7,8 @@ namespace Ayazis.KeyHooks;
 
 public interface IMouseAndKeysCapture
 {
+    event EventHandler MouseButtonClicked;
+
     void HookIntoMouseAndKeyBoard();
 }
 
@@ -18,6 +20,7 @@ public class MouseAndKeysCapture : IMouseAndKeysCapture
     private IntPtr _mouseHookId = IntPtr.Zero;
     private IKeyInputHandler _keyInputHandler;
 
+    public event EventHandler MouseButtonClicked;
     public MouseAndKeysCapture(IKeyInputHandler keyInputHandler)
     {
         _keyboardProc = KeyBoardHookCallback;
@@ -53,6 +56,8 @@ public class MouseAndKeysCapture : IMouseAndKeysCapture
                 // If a key combination is hit, prevent other software or Windows from receiving the key input
                 if (keyCombinationHit)
                     return IntPtr.Zero;
+                else
+                    MouseButtonClicked?.Invoke(this, null); // Raise the MouseButtonClicked event, we can check if the UI is active, and if not, hide it.
                 break;
 
             case MouseMessages.WM_LBUTTONUP:

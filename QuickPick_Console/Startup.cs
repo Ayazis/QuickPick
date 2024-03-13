@@ -78,6 +78,7 @@ internal class Startup : IStartup
         _keyInputHandler.SetKeyCombination(_settingsManager.Settings.KeyCombination);
 
         _mouseAndKeysCapture.HookIntoMouseAndKeyBoard();
+        _mouseAndKeysCapture.MouseButtonClicked += _clickWindow.HandleMouseButtonClicked;
 
         _keyInputHandler.KeyCombinationHit += _keyInputHandler_KeyCombinationHit;
     }

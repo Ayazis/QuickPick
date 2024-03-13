@@ -13,6 +13,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media.Animation;
+using System.Windows.Xps.Serialization;
 using static QuickPick.UI.Views.Thumbnail.ThumbnailView;
 
 namespace QuickPick;
@@ -30,6 +31,8 @@ public interface IClickWindow
     void SetCurrentTimeOnTimeStamp();
     void ShowWindow();
     void UpdateTaskbarShortCuts();
+    void HandleMouseButtonClicked(object sender, EventArgs e);
+
 }
 
 /// <summary>
@@ -375,5 +378,13 @@ public partial class ClickWindow : Window, IClickWindow
         _currentPopups.Remove(closedWindowHandle);
 
         e.ThumbnailView.ParentApp.RemoveThumbnail(e.ThumbnailView.Properties.WindowHandle);
+    }
+    public void HandleMouseButtonClicked(object sender, EventArgs e)
+    {
+        bool mouseOverMainWindow = IsMouseOver;
+        bool mouseOverPopups = _currentPopups.Any(p => p.Value.IsMouseOver);
+
+        if (!mouseOverMainWindow && !mouseOverPopups)
+            HideUI();        
     }
 }
