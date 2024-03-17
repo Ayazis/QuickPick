@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Utilities;
+using System.Windows.Automation;
 
 namespace QuickPick.PinnedApps;
 
@@ -87,6 +89,22 @@ public class AppLinkRetriever
 
             if (process.MainWindowHandle != IntPtr.Zero)  // Exclude processes without a main window
             {
+                RECT rect;
+                if (GetWindowRect(process.MainWindowHandle, out rect))
+                {
+                    bool windowsIsInsideBounds = rect.Bottom - rect.Top > 0 && rect.Right - rect.Left > 0;
+                    if (windowsIsInsideBounds)
+                    {
+                        // Get the AutomationElement for the main window of the process
+                        var element = AutomationElement.FromHandle(process.MainWindowHandle);
+                        // skip if the element is not a window. This can happen for UWP apps (and maybe others).
+                        if (element.Current.ControlType != ControlType.Window)
+                        {
+                            continue;
+                        }
+                    }
+                }
+
                 try
                 {
                     filePath = process.MainModule?.FileName;
@@ -117,4 +135,15 @@ public class AppLinkRetriever
         }
     }
 
+    [DllImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
+
+    public struct RECT
+    {
+        public int Left;        // x position of upper-left corner
+        public int Top;         // y position of upper-left corner
+        public int Right;       // x position of lower-right corner
+        public int Bottom;      // y position of lower-right corner
+    }
 }

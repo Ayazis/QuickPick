@@ -83,8 +83,11 @@ public class ActiveWindows
 
 
     public static IEnumerable<(IntPtr handle, Process process)> GetAllOpenWindows()
-    {        
-        foreach (var process in Process.GetProcesses())
+    {
+        var allProcesses = Process.GetProcesses();
+        //var uwpApps = allProcesses.Where(p => p.ProcessName == "ApplicationFrameHost");
+        //var allTitles = allProcesses.Select(s => s.ProcessName ?? "").Distinct().ToList();
+        foreach (var process in allProcesses)
         {
             IntPtr[] windows = GetProcessWindows(process.Id);
             foreach (var windowHandle in windows)
@@ -102,7 +105,7 @@ public class ActiveWindows
     public static IntPtr GetActiveWindowOnCurentDesktop(string filePath)
     {
         try
-        {            
+        {
             string fileName = Path.GetFileNameWithoutExtension(filePath);
 
             Process[] matchingProcesses = Process.GetProcessesByName(fileName);
