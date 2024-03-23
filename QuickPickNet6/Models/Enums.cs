@@ -16,5 +16,4 @@ namespace QuickPick.Enums
         [Display(Name = "Paste text")]
         PasteText,
     }
-
 }

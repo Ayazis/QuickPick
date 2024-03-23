@@ -13,7 +13,7 @@ namespace QuickPick
         public AutoUpdateSetting AutoUpdateSetting { get; set; } = AutoUpdateSetting.PreRelease;
 
         [JsonIgnore]
-        public HashSet<Keys> KeyCombination { get; set; } = new() { Keys.LControlKey, Keys.RButton };
+        public HashSet<Keys> KeyCombination { get; set; } = new() { Keys.LControlKey, Keys.RControlKey };
 
         [JsonProperty]
         private HashSet<string> KeyCombinationAsStrings;

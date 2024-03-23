@@ -48,6 +48,7 @@ internal class Startup : IStartup
     }
     public void StartApplication()
     {
+        
         try
         {
             _globalExceptions.SetupGlobalExceptionHandling();
