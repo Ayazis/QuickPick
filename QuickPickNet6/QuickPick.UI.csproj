@@ -63,6 +63,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+		<PackageReference Include="FluentWpfChromes" Version="1.0.1" />
 		<PackageReference Include="FontAwesome5" Version="2.1.11" />
 		<PackageReference Include="Microsoft.Windows.Compatibility" Version="6.0.4" />
 		<PackageReference Include="NAudio" Version="2.2.1" />

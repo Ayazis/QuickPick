@@ -192,6 +192,7 @@ public partial class RingButtonControl : UserControl
     private void BrightnessButton_MouseDown(object sender, MouseButtonEventArgs e)
     {
         _brightnessButtonDown = true;
+        BrightnessBar.Visibility = Visibility.Visible;        
         _previousPosition = e.GetPosition(this);
         // Capture the mouse
         (sender as FontAwesome5.ImageAwesome).CaptureMouse();
@@ -199,6 +200,7 @@ public partial class RingButtonControl : UserControl
 
     private void BrightnessButton_MouseUp(object sender, MouseButtonEventArgs e)
     {
+        BrightnessBar.Visibility = Visibility.Collapsed;
         _brightnessButtonDown = false;
         // Release the mouse
         (sender as FontAwesome5.ImageAwesome).ReleaseMouseCapture();
@@ -214,11 +216,12 @@ public partial class RingButtonControl : UserControl
             var pointDifference = -(position.Y - _previousPosition.Y);
             _percentage += pointDifference;
 
-            if (_percentage > 90)
-                _percentage = 90;
-            if (_percentage < 0)
-                _percentage = 0;
+            if (_percentage > 100)
+                _percentage = 100;
+            if (_percentage < 10)
+                _percentage = 10;
 
+            BrightnessBar.Value = _percentage;
             ExposeNewBrightnessLevel();
             _previousPosition = position;
         }

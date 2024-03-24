@@ -16,8 +16,8 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-        
-        
+
+
         <Grid Width="100" Height="100" >
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
@@ -45,7 +45,7 @@
                     <!-- The small circle coutout in the middle -->
                     <EllipseGeometry Center="50,50" RadiusX="20" RadiusY="20" />
                 </GeometryGroup>
-            </Grid.Clip>           
+            </Grid.Clip>
             <Button x:Name="BackgroundButton0" Style="{StaticResource ResourceKey=RoundButton}"
                     Width="80" Height="80" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             <Grid>
@@ -73,7 +73,7 @@
                             <TranslateTransform/>
                         </TransformGroup>
                     </Path.RenderTransform>
-                </Path>               
+                </Path>
                 <Path Name="TopRight" Fill="Transparent" Data="M0,0 L50,0 A50,50,0,0,1,0,50 Z" Stretch="Fill" Margin="50,12,12,50" RenderTransformOrigin="0.5,0.5"
           MouseEnter="Path_MouseEnter" MouseLeave="Path_MouseLeave" MouseUp="Path_MouseUp">
                     <Path.RenderTransform>
@@ -92,6 +92,25 @@
                 Content="..."
             Width="30" Height="30" Margin="35" HorizontalAlignment="Center" VerticalAlignment="Center"
             Panel.ZIndex="1"/>
+
+        <fa5:ImageAwesome Name="BrightnessButton" Icon="Solid_Lightbulb"
+         Foreground="White" Width="10" Height="10"                           
+         Panel.ZIndex="1" Margin="-45,-40,0,0"                    
+         Visibility="Visible"
+         MouseDown="BrightnessButton_MouseDown"
+         MouseUp="BrightnessButton_MouseUp"
+         MouseMove="BrightnessButton_MouseMove"/>
+        <ProgressBar Name="BrightnessBar"
+               Orientation="Vertical"
+               Panel.ZIndex="1" 
+               Width="5" 
+               Height="50" 
+               Margin="-60,30,0,0" 
+               VerticalAlignment="Top" 
+               Background="{StaticResource BackgroundBrush}"
+               Foreground="{StaticResource ForegroundBrush}"
+               Visibility="Collapsed"  />
+
         <fa5:ImageAwesome Name="PlayButton"  
                           Icon="Solid_Play" 
                           Foreground="White" 
@@ -123,13 +142,7 @@
                     Visibility="Collapsed"
                     MouseDown="VolumeOffButton_MouseDown"/>
 
-        <fa5:ImageAwesome Name="BrightnessButton" Icon="Solid_Lightbulb"
-             Foreground="White" Width="10" Height="10"                           
-             Panel.ZIndex="1" Margin="-45,-40,0,0"                    
-             Visibility="Visible"
-             MouseDown="BrightnessButton_MouseDown"
-             MouseUp="BrightnessButton_MouseUp"
-             MouseMove="BrightnessButton_MouseMove"/>
+
         <ProgressBar Name="VolumeBar"
                      Orientation="Vertical"
                      Panel.ZIndex="1" 

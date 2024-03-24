@@ -1,17 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using QuickPick.UI.BrightnessControls;
 namespace QuickPick;
 public class Program
 {
     [STAThread]
     static void Main(string[] args)
-    {        
-        IHost host = new ServicesConfig()
-            .CreateHostBuilder()
-            .Build();
-
-        IStartup startup = host.Services.GetRequiredService<IStartup>();
+    {
+        IStartup startup = ServicesConfig.AppHost.Services.GetRequiredService<IStartup>();
         startup.StartApplication();
     }
 }

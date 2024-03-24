@@ -12,7 +12,7 @@ using System.Windows.Media;
 
 namespace QuickPick.UI.BrightnessControls
 {
-    public class BrightnessControl
+    public class BrightnessControl 
     {
 
         Dictionary<string, BrightnessDimmerWindow> _windowDimmers;
@@ -22,7 +22,7 @@ namespace QuickPick.UI.BrightnessControls
 
         static BrightnessControl _instance;
         public static BrightnessControl Instance => _instance ??= new BrightnessControl();
-        private BrightnessControl()
+        public BrightnessControl()
         {
 
         }

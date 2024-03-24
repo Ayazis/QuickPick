@@ -3,19 +3,22 @@ using Ayazis.Utilities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using QuickPick.Services;
+using QuickPick.UI.BrightnessControls;
 using QuickPick.UI.Views.Settings;
 using QuickPick.Utilities.VirtualDesktop;
 using Utilities.Mouse_and_Keyboard;
 
-
 namespace QuickPick;
-public interface IServicesConfig
+
+public static class ServicesConfig
 {
-    IHostBuilder CreateHostBuilder();
-}
-public class ServicesConfig : IServicesConfig
-{
-    public IHostBuilder CreateHostBuilder()
+    public static IHost AppHost;
+    static ServicesConfig()
+    {
+        AppHost = CreateHostBuilder().Build();
+    }
+
+    private static IHostBuilder CreateHostBuilder()
     {
         return
         Host.CreateDefaultBuilder()
