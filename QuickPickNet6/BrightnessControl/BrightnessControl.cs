@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -19,9 +20,19 @@ namespace QuickPick.UI.BrightnessControls
         Dictionary<string, BrightnessDimmerWindow> WindowDimmers => _windowDimmers ??= CreateWindowDimmers();
 
 
-        public BrightnessControl()
+        static BrightnessControl _instance;
+        public static BrightnessControl Instance => _instance ??= new BrightnessControl();
+        private BrightnessControl()
         {
 
+        }
+
+        public void SetBrightnessOnAllScreens(int brightnessLevel)
+        {
+            foreach (var item in WindowDimmers)
+            {
+                SetBrightness(brightnessLevel, item.Key);
+            }
         }
 
         public void SetBrightness(int brightnessLevel, string monitorId)

@@ -122,6 +122,14 @@
                     Panel.ZIndex="1" Margin="30,50,0,0"                    
                     Visibility="Collapsed"
                     MouseDown="VolumeOffButton_MouseDown"/>
+
+        <fa5:ImageAwesome Name="BrightnessButton" Icon="Solid_Lightbulb"
+             Foreground="White" Width="10" Height="10"                           
+             Panel.ZIndex="1" Margin="-45,-40,0,0"                    
+             Visibility="Visible"
+             MouseDown="BrightnessButton_MouseDown"
+             MouseUp="BrightnessButton_MouseUp"
+             MouseMove="BrightnessButton_MouseMove"/>
         <ProgressBar Name="VolumeBar"
                      Orientation="Vertical"
                      Panel.ZIndex="1" 
