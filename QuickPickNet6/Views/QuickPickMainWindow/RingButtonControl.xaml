@@ -64,7 +64,7 @@
                     </Path.RenderTransform>
                 </Path>
                 <Path Name="TopLeft" Fill="Transparent" Data="M0,0 L50,0 A50,50,0,0,1,0,50 Z" Stretch="Fill" Margin="12,12,50,50" RenderTransformOrigin="0.5,0.5"
-          MouseEnter="Path_MouseEnter" MouseLeave="Path_MouseLeave" MouseUp="Path_MouseUp">
+          MouseEnter="Path_MouseEnter" MouseLeave="Path_MouseLeave" MouseUp="TopLeft_MouseUp" MouseDown="TopLeft_MouseDown" MouseMove="TopLeft_MouseMove">
                     <Path.RenderTransform>
                         <TransformGroup>
                             <ScaleTransform/>

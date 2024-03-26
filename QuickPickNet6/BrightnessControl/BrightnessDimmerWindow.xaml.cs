@@ -25,10 +25,8 @@ namespace QuickPick.UI.BrightnessControl
         public const int WS_EX_TOOLWINDOW = 0x00000080; // Does not show up in alt-tab
         const int GWL_EXSTYLE = (-20);
         public BrightnessDimmerWindow()
-        {
-            MakeWindowTransparentForMouseEvents();
-            InitializeComponent();
-            MakeWindowTransparentForMouseEvents();
+        {        
+            InitializeComponent();        
         }
 
         public void SetBrightness(int brightnessLevel)

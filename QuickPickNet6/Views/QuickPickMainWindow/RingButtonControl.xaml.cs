@@ -190,16 +190,16 @@ public partial class RingButtonControl : UserControl
     }
 
     private void BrightnessButton_MouseDown(object sender, MouseButtonEventArgs e)
-    {
+    {        
         _brightnessButtonDown = true;
-        BrightnessBar.Visibility = Visibility.Visible;        
+        BrightnessBar.Visibility = Visibility.Visible;
         _previousPosition = e.GetPosition(this);
         // Capture the mouse
         (sender as FontAwesome5.ImageAwesome).CaptureMouse();
     }
 
     private void BrightnessButton_MouseUp(object sender, MouseButtonEventArgs e)
-    {
+    {       
         BrightnessBar.Visibility = Visibility.Collapsed;
         _brightnessButtonDown = false;
         // Release the mouse
@@ -208,6 +208,7 @@ public partial class RingButtonControl : UserControl
 
     private void BrightnessButton_MouseMove(object sender, MouseEventArgs e)
     {
+      
         if (_brightnessButtonDown)
         {
             // get current mousePosition
@@ -233,6 +234,45 @@ public partial class RingButtonControl : UserControl
     public void ExposeNewBrightnessLevel()
     {
         BrightnessControl.Instance.SetBrightnessOnAllScreens((int)_percentage);
+    }
+
+    private void TopLeft_MouseDown(object sender, MouseButtonEventArgs e)
+    {
+        _brightnessButtonDown = true;
+        BrightnessBar.Visibility = Visibility.Visible;
+        _previousPosition = e.GetPosition(this);
+        // Capture the mouse
+        (sender as Path).CaptureMouse();
+    }
+
+    private void TopLeft_MouseUp(object sender, MouseButtonEventArgs e)
+    {
+        BrightnessBar.Visibility = Visibility.Collapsed;
+        _brightnessButtonDown = false;
+        // Release the mouse
+        (sender as Path).ReleaseMouseCapture();
+    }
+
+    private void TopLeft_MouseMove(object sender, MouseEventArgs e)
+    {
+        if (_brightnessButtonDown)
+        {
+            // get current mousePosition
+            Point position = e.GetPosition(this);
+            // compare with previousposition, calculate vertical distance:
+            var pointDifference = -(position.Y - _previousPosition.Y);
+            _percentage += pointDifference;
+
+            if (_percentage > 100)
+                _percentage = 100;
+            if (_percentage < 10)
+                _percentage = 10;
+
+            BrightnessBar.Value = _percentage;
+            ExposeNewBrightnessLevel();
+            _previousPosition = position;
+        }
+
     }
 }
 
