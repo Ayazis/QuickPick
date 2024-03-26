@@ -21,11 +21,14 @@ namespace QuickPick.UI.BrightnessControl
     /// </summary>
     public partial class BrightnessDimmerWindow : Window
     {
-        const int WS_EX_TRANSPARENT = 0x00000020;
+        public const int WS_EX_TRANSPARENT = 0x00000020; // Makes the window transparent to mouse events
+        public const int WS_EX_TOOLWINDOW = 0x00000080; // Does not show up in alt-tab
         const int GWL_EXSTYLE = (-20);
         public BrightnessDimmerWindow()
         {
+            MakeWindowTransparentForMouseEvents();
             InitializeComponent();
+            MakeWindowTransparentForMouseEvents();
         }
 
         public void SetBrightness(int brightnessLevel)
@@ -39,13 +42,19 @@ namespace QuickPick.UI.BrightnessControl
         {
             base.OnSourceInitialized(e);
 
+            MakeWindowTransparentForMouseEvents();
+        }
+
+        private void MakeWindowTransparentForMouseEvents()
+        {
             // Get this window's handle
             IntPtr hwnd = new WindowInteropHelper(this).Handle;
 
-            // Change the extended window style to include WS_EX_TRANSPARENT
+            // Change the extended window style to include WS_EX_TRANSPARENT and WS_EX_TOOLWINDOW
             int extendedStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
-            SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle | WS_EX_TRANSPARENT);
+            SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle | WS_EX_TRANSPARENT | WS_EX_TOOLWINDOW); // WS_EX_TOOLWINDOW
         }
+
 
         [DllImport("user32.dll")]
         static extern int GetWindowLong(IntPtr hwnd, int index);
