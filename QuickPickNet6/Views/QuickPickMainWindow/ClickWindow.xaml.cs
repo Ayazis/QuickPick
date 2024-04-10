@@ -82,7 +82,8 @@ public partial class ClickWindow : Window, IClickWindow
 
     public void HandleFocusLost(object sender, EventArgs e)
     {
-        HideUI();
+        if (!IsMouseOver)
+            HideUI();
     }
 
     private void ClickWindow_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
@@ -385,6 +386,6 @@ public partial class ClickWindow : Window, IClickWindow
         bool mouseOverPopups = _currentPopups.Any(p => p.Value.IsMouseOver);
 
         if (!mouseOverMainWindow && !mouseOverPopups)
-            HideUI();        
+            HideUI();
     }
 }
