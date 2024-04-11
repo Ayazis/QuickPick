@@ -133,7 +133,7 @@ public partial class ThumbnailView : UserControl
         tbWindowTitle.Margin = new Thickness(tbWindowTitle.Margin.Left, tbWindowTitle.Margin.Top, tbWindowTitle.Margin.Right - 10, tbWindowTitle.Margin.Bottom);
         // starttimer
     }
-
+     
     private void UserControl_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
         ActiveWindows.DeactivatePeek(Properties.WindowHandle); // always disactivate peek when activating a window.        

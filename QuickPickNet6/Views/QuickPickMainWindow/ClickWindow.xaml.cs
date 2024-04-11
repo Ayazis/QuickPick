@@ -2,6 +2,7 @@
 using MouseAndKeyBoardHooks;
 using QuickPick.PinnedApps;
 using QuickPick.UI;
+using QuickPick.UI.Views.Settings;
 using QuickPick.UI.Views.Thumbnail;
 using System;
 using System.Collections.Generic;
@@ -387,5 +388,13 @@ public partial class ClickWindow : Window, IClickWindow
 
         if (!mouseOverMainWindow && !mouseOverPopups)
             HideUI();
+    }
+
+    private void MenuButton_Click(object sender, RoutedEventArgs e)
+    {
+        SettingsWindow.Instance.ShowWindow();
+        SettingsWindow.Instance.Activate();
+        SettingsWindow.Instance.Focus();
+        HideUI();
     }
 }
