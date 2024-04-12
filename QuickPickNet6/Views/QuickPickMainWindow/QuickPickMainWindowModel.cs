@@ -13,7 +13,7 @@ public partial class QuickPickMainWindowModel : ObservableObject
         new AppLink(),
         new AppLink(),
         new AppLink(),
-        new AppLink(),        
+        new AppLink(),    
     };
     public ObservableCollection<AppLink> PinnedApps { get; set; } = new();
     public ObservableCollection<string> ButtonLabels { get; set; } = new();

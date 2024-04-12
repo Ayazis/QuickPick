@@ -40,9 +40,12 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
+            
         <Ellipse Width="150" Height="150" Fill="#B3000000" />
         <!--<local:RingButtonControl/>-->
-        <Button Name="MenuButton"  Content="..." Style="{StaticResource RoundButtonNoMouseOver}" Width="35" Height="35" Click="MenuButton_Click" />
+       
+            
+            
         <ItemsControl x:Name="QuickLinks" ItemsSource="{Binding QuickLinks, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" >
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -52,7 +55,7 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Grid>
-                        <Button Style="{StaticResource RoundButtonNoMouseOver}" Width="35" Height="35" />
+                        <Button Style="{StaticResource OctagonButtonStyle}" Width="35" Height="35" />
                         <Image Source="{Binding AppIcon}" Width="16" Height="16"                                                                   
                          SnapsToDevicePixels="True"                            
                          >
@@ -79,7 +82,7 @@
                                 </Style>
                             </Image.Style>
                         </Image>                        
-                        <Button Style="{StaticResource RoundButtonNoMouseOver}" Width="35" Height="35" 
+                        <Button Style="{StaticResource RoundButtonNoMouseOver}" Width="25" Height="25" 
                               MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave" Opacity="0"                                  
                               >
                             <Button.InputBindings>
@@ -141,5 +144,7 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
+        <Button Style="{StaticResource OctagonButtonStyle}" Width="35" Height="35" />
+
     </Grid>   
 </Window>
