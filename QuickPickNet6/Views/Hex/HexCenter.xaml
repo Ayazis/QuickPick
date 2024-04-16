@@ -1,0 +1,40 @@
+﻿<UserControl x:Class="QuickPick.UI.Views.Hex.HexCenter"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:hex="clr-namespace:QuickPick.UI.Views.Hex"
+             xmlns:local="clr-namespace:QuickPick.UI.Views.Hex"
+             mc:Ignorable="d" 
+             d:DesignHeight="100" d:DesignWidth="100">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="..\Resources.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid Width="100" Height="100">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+
+        <hex:Hexagon Grid.Row="0" Width="33" Height="33" Style="{StaticResource HexagonButtonStyle}" Grid.ColumnSpan="2" Margin="33,2,1,32" Grid.RowSpan="2" />
+        <hex:Hexagon Grid.Row="0" Grid.Column="1" Width="33" Height="33" Style="{StaticResource HexagonButtonStyle}"  Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="27,17,7,16" />
+        <hex:Hexagon Grid.Row="0" Grid.Column="0" Width="33" Height="33" Style="{StaticResource HexagonButtonStyle}"  Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="7,17,27,16" />
+        <hex:Hexagon Grid.Row="1" Grid.Column="1" Width="33" Height="33" Style="{StaticResource HexagonButtonStyle}"  Grid.RowSpan="1" Grid.ColumnSpan="1" />
+        <hex:Hexagon Grid.Row="2" Grid.Column="1" Width="33" Height="33" Style="{StaticResource HexagonButtonStyle}"  Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="27,-17,7,17"/>
+        <hex:Hexagon Grid.Row="1" Grid.Column="1" Width="33" Height="33" Style="{StaticResource HexagonButtonStyle}"  Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="1,32,33,2" />
+        <hex:Hexagon Grid.Row="1" Grid.Column="0" Width="33" Height="33" Style="{StaticResource HexagonButtonStyle}"  Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="7,17,27,17"/>
+
+
+
+    </Grid>
+</UserControl>
