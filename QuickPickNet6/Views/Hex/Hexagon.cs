@@ -40,9 +40,10 @@ namespace QuickPick.UI.Views.Hex
 		{
 			double radius = Width / 2;
 			double centerY = Height / 2;
+			var startPoint = new Point(radius * Math.Cos(Math.PI / 6) + radius, centerY + radius * Math.Sin(Math.PI / 6));
 			return new PathFigure
 			{
-				StartPoint = new Point(radius * Math.Cos(Math.PI / 6) + radius, centerY + radius * Math.Sin(Math.PI / 6)),
+				StartPoint = startPoint,
 				Segments =
 			{
 				new LineSegment {Point = new Point(radius * Math.Cos(Math.PI / 2) + radius, centerY + radius * Math.Sin(Math.PI / 2))},
@@ -50,6 +51,7 @@ namespace QuickPick.UI.Views.Hex
 				new LineSegment {Point = new Point(radius * Math.Cos(7 * Math.PI / 6) + radius, centerY + radius * Math.Sin(7 * Math.PI / 6))},
 				new LineSegment {Point = new Point(radius * Math.Cos(3 * Math.PI / 2) + radius, centerY + radius * Math.Sin(3 * Math.PI / 2))},
 				new LineSegment {Point = new Point(radius * Math.Cos(11 * Math.PI / 6) + radius, centerY + radius * Math.Sin(11 * Math.PI / 6))},
+				new LineSegment {Point = startPoint} // Add this line to close the hexagon.
 			}
 			};
 		}
@@ -58,17 +60,20 @@ namespace QuickPick.UI.Views.Hex
 			double radius = Width / 2;
 			double centerX = Width / 2;
 			double centerY = Height / 2;
+
+			var startPoint = new Point(centerX + radius * Math.Cos(0), centerY + radius * Math.Sin(0));
 			return new PathFigure
 			{
-				StartPoint = new Point(centerX + radius * Math.Cos(0), centerY + radius * Math.Sin(0)),
+				StartPoint = startPoint,
 				Segments =
-	{
-		new LineSegment {Point = new Point(centerX + radius * Math.Cos(Math.PI / 3), centerY + radius * Math.Sin(Math.PI / 3))},
-		new LineSegment {Point = new Point(centerX + radius * Math.Cos(2 * Math.PI / 3), centerY + radius * Math.Sin(2 * Math.PI / 3))},
-		new LineSegment {Point = new Point(centerX + radius * Math.Cos(Math.PI), centerY + radius * Math.Sin(Math.PI))},
-		new LineSegment {Point = new Point(centerX + radius * Math.Cos(4 * Math.PI / 3), centerY + radius * Math.Sin(4 * Math.PI / 3))},
-		new LineSegment {Point = new Point(centerX + radius * Math.Cos(5 * Math.PI / 3), centerY + radius * Math.Sin(5 * Math.PI / 3))},
-	}
+				{
+					new LineSegment {Point = new Point(centerX + radius * Math.Cos(Math.PI / 3), centerY + radius * Math.Sin(Math.PI / 3))},
+					new LineSegment {Point = new Point(centerX + radius * Math.Cos(2 * Math.PI / 3), centerY + radius * Math.Sin(2 * Math.PI / 3))},
+					new LineSegment {Point = new Point(centerX + radius * Math.Cos(Math.PI), centerY + radius * Math.Sin(Math.PI))},
+					new LineSegment {Point = new Point(centerX + radius * Math.Cos(4 * Math.PI / 3), centerY + radius * Math.Sin(4 * Math.PI / 3))},
+					new LineSegment {Point = new Point(centerX + radius * Math.Cos(5 * Math.PI / 3), centerY + radius * Math.Sin(5 * Math.PI / 3))},
+					new LineSegment {Point = startPoint} // Add this line to close the hexagon.
+				}
 			};
 		}
 
