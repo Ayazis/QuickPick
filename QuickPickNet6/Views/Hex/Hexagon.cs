@@ -6,7 +6,7 @@ using System.Windows.Shapes;
 namespace QuickPick.UI.Views.Hex
 {
 	public class Hexagon : Shape
-	{		
+	{
 		public enum Orientation
 		{
 			Horizontal,
@@ -36,7 +36,7 @@ namespace QuickPick.UI.Views.Hex
 			}
 		}
 
-		private PathFigure CreateHorizontalHexagon()
+		private PathFigure CreateVerticalHexagon()
 		{
 			double radius = Width / 2;
 			double centerY = Height / 2;
@@ -53,25 +53,28 @@ namespace QuickPick.UI.Views.Hex
 			}
 			};
 		}
-
-		private PathFigure CreateVerticalHexagon()
+		private PathFigure CreateHorizontalHexagon()
 		{
-			double radius = Height / 2;
+			double radius = Width / 2;
 			double centerX = Width / 2;
+			double centerY = Height / 2;
 			return new PathFigure
 			{
-				StartPoint = new Point(centerX + radius * Math.Cos(0), radius * Math.Sin(0) + radius),
+				StartPoint = new Point(centerX + radius * Math.Cos(0), centerY + radius * Math.Sin(0)),
 				Segments =
-			{
-				new LineSegment {Point = new Point(centerX + radius * Math.Cos(2 * Math.PI / 3), radius * Math.Sin(2 * Math.PI / 3) + radius)},
-				new LineSegment {Point = new Point(centerX + radius * Math.Cos(4 * Math.PI / 3), radius * Math.Sin(4 * Math.PI / 3) + radius)},
-				new LineSegment {Point = new Point(centerX + radius * Math.Cos(2 * Math.PI), radius * Math.Sin(2 * Math.PI) + radius)},
-				new LineSegment {Point = new Point(centerX + radius * Math.Cos(4 * Math.PI / 3), radius * Math.Sin(4 * Math.PI / 3) + radius)},
-				new LineSegment {Point = new Point(centerX + radius * Math.Cos(2 * Math.PI / 3), radius * Math.Sin(2 * Math.PI / 3) + radius)},
-			}
+	{
+		new LineSegment {Point = new Point(centerX + radius * Math.Cos(Math.PI / 3), centerY + radius * Math.Sin(Math.PI / 3))},
+		new LineSegment {Point = new Point(centerX + radius * Math.Cos(2 * Math.PI / 3), centerY + radius * Math.Sin(2 * Math.PI / 3))},
+		new LineSegment {Point = new Point(centerX + radius * Math.Cos(Math.PI), centerY + radius * Math.Sin(Math.PI))},
+		new LineSegment {Point = new Point(centerX + radius * Math.Cos(4 * Math.PI / 3), centerY + radius * Math.Sin(4 * Math.PI / 3))},
+		new LineSegment {Point = new Point(centerX + radius * Math.Cos(5 * Math.PI / 3), centerY + radius * Math.Sin(5 * Math.PI / 3))},
+	}
 			};
 		}
+
 	}
 
 
 }
+
+
