@@ -143,8 +143,6 @@
                     </Grid>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        <Button Style="{StaticResource OctagonButtonStyle}" Width="35" Height="35" />
-
+            </ItemsControl>    
     </Grid>   
 </Window>
