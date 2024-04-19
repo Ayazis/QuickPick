@@ -102,6 +102,5 @@ namespace QuickPick.UI.Views.Hex
 				}
             };
         }
-
     }
 }
