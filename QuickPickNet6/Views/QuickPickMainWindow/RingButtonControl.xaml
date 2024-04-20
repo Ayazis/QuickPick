@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:QuickPick"    
+             xmlns:local="clr-namespace:QuickPick"       
              xmlns:usercontrols="clr-namespace:QuickPick.UI.Views"
              mc:Ignorable="d" 
              xmlns:fa5="http://schemas.fontawesome.com/icons/"
@@ -92,6 +92,9 @@
                 Content="..."
             Width="30" Height="30" Margin="35" HorizontalAlignment="Center" VerticalAlignment="Center"
             Panel.ZIndex="1"/>
+
+
+
 
         <fa5:ImageAwesome Name="BrightnessButton" Icon="Solid_Lightbulb"
          Foreground="White" Width="10" Height="10"                           

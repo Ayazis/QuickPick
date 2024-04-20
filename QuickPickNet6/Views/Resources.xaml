@@ -1,5 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                     xmlns:hex="clr-namespace:QuickPick.UI.Views.Hex"
                     xmlns:converters="clr-namespace:QuickPick.Converters">
 
     <converters:CenterToMarginConverter x:Key="CenterToMarginConverter"/>
@@ -100,6 +101,19 @@
     </Style>
 
 
+    <Style x:Key="HexagonButtonStyle" TargetType="{x:Type hex:Hexagon}">
+        <Setter Property="Fill">
+            <Setter.Value>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Offset="1" Color="#303030"/>
+                    <GradientStop Offset="0.3" Color="#434343"/>
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Stroke" Value="{StaticResource BorderBrush}"/>
+        <Setter Property="StrokeThickness" Value="1"/>
+    </Style>
+    
     <Style x:Key="QpButtonStyle" TargetType="{x:Type Button}">
         <Setter Property="Background" Value="#00000000" />
         <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}" />
@@ -118,39 +132,8 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-    </Style>
-
-    
-        <Style x:Key="OctagonButtonStyle" TargetType="Button">
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="Button">
-                    <Viewbox>
-                        <Grid Width="1" Height="1">
-                            <Path Fill="{TemplateBinding Background}" Stroke="{TemplateBinding BorderBrush}" StrokeThickness="0.01">
-                                <Path.Data>
-                                    <PathGeometry>
-                                        <PathFigure StartPoint="0.5,0">
-                                            <LineSegment Point="1,0.3"/>
-                                            <LineSegment Point="1,0.7"/>
-                                            <LineSegment Point="0.5,1"/>
-                                            <LineSegment Point="0,0.7"/>
-                                            <LineSegment Point="0,0.3"/>
-                                            <LineSegment Point="0.5,0"/>
-                                        </PathFigure>
-                                    </PathGeometry>
-                                </Path.Data>
-                            </Path>
-                        </Grid>
-                    </Viewbox>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-
-
-
+    </Style>  
+   
 
 
     <Storyboard x:Key="showMe">
