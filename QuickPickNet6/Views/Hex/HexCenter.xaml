@@ -37,11 +37,11 @@
          VerticalAlignment="Top" 
          Background="{StaticResource BackgroundBrush}"
          Foreground="{StaticResource ForegroundBrush}"
-         Visibility="Visible" Grid.Column="1" Grid.RowSpan="2"  />
+         Visibility="Collapsed" Grid.Column="1" Grid.RowSpan="2"  />
         <hex:HexagonButton x:Name="Hex1" FontIcon="Solid_Adjust" Grid.Row="0" Width="auto" Height="auto" Grid.ColumnSpan="2" Margin="33,2,1,32" Grid.RowSpan="2" 
                            PreviewMouseDown="BrightnessButton_MouseDown" PreviewMouseUp="BrightnessButton_MouseUp" PreviewMouseMove="BrightnessButton_MouseMove"/>
         <hex:HexagonButton x:Name="Hex2" Click="Hex2_Click"  FontIcon="Solid_Play"  Grid.Row="0" Grid.Column="1" Width="auto" Height="auto" Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="28,17,6,17" />
-        <hex:HexagonButton x:Name="Hex3" Click="Hex3_Click" FontIcon="Solid_Pause" Grid.Row="1" Grid.Column="1" Width="auto" Height="auto" Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="29,16,5,18"/>
+        <hex:HexagonButton x:Name="Hex3" Click="Hex3_Click" FontIcon="Solid_VolumeUp" Grid.Row="1" Grid.Column="1" Width="auto" Height="auto" Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="29,16,5,18"/>
         <hex:HexagonButton x:Name="Hex4"  Grid.Row="1" Grid.Column="1" Width="auto" Height="auto" Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="1,32,33,2" />
         <hex:HexagonButton x:Name="Hex5"  Grid.Row="1" Grid.Column="0" Width="auto" Height="auto" Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="7,17,27,17"/>
         <hex:HexagonButton x:Name="Hex6"  Grid.Row="0" Grid.Column="0" Width="auto" Height="auto" Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="6,18,28,16" />

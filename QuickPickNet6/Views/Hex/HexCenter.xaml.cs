@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using QuickPick.UI.BrightnessControls;
+using QuickPick.Logic;
 
 namespace QuickPick.UI.Views.Hex;
 /// <summary>
@@ -90,11 +91,31 @@ public partial class HexCenter : UserControl
     }
     private void Hex2_Click(object sender, RoutedEventArgs e)
     {
-
+        ToggleVolumeAndVolumeOffButtons(sender as HexagonButton);
     }
 
     private void Hex3_Click(object sender, RoutedEventArgs e)
     {
-
+        ToggleMute(sender as HexagonButton);
     }
+    void ToggleMute(HexagonButton muteButton)
+    {
+        InputSim.ToggleMute();
+
+        if (muteButton.FontIcon == FontAwesome5.EFontAwesomeIcon.Solid_VolumeUp)
+            muteButton.FontIcon = FontAwesome5.EFontAwesomeIcon.Solid_VolumeMute;
+        else
+            muteButton.FontIcon = FontAwesome5.EFontAwesomeIcon.Solid_VolumeUp;
+    }
+
+    private void ToggleVolumeAndVolumeOffButtons(HexagonButton musicButton)
+    {
+        InputSim.PlayPause();
+
+        if (musicButton.FontIcon == FontAwesome5.EFontAwesomeIcon.Solid_Play)
+            musicButton.FontIcon = FontAwesome5.EFontAwesomeIcon.Solid_Pause;
+        else
+            musicButton.FontIcon = FontAwesome5.EFontAwesomeIcon.Solid_Play;        
+    }
+
 }
