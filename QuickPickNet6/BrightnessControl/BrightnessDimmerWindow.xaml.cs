@@ -14,7 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace QuickPick.UI.BrightnessControl
+namespace QuickPick.UI.BrightnessControls
 {
     /// <summary>
     /// Interaction logic for BrightnessDimmerWindow.xaml

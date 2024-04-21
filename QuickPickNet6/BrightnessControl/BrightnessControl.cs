@@ -1,4 +1,4 @@
-﻿using QuickPick.UI.BrightnessControl;
+﻿using QuickPick.UI.BrightnessControls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -65,7 +65,5 @@ namespace QuickPick.UI.BrightnessControls
         }
 
     }
-
-
 
 }

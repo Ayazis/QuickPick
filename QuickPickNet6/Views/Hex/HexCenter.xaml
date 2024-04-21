@@ -26,8 +26,20 @@
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
 
-        <hex:HexagonButton x:Name="HexCenter"  Click="HexCenter_Click" FontIcon="Solid_Tools"  Grid.Row="1" Grid.Column="1" Width="auto" Height="auto" Grid.RowSpan="1" Grid.ColumnSpan="1" />
-        <hex:HexagonButton x:Name="Hex1" Click="Hex1_Click" FontIcon="Solid_Adjust" Grid.Row="0" Width="auto" Height="auto" Grid.ColumnSpan="2" Margin="33,2,1,32" Grid.RowSpan="2" />
+        <hex:HexagonButton x:Name="CenterHex"  Click="CenterHex_Click" FontIcon="Solid_Tools"  Grid.Row="1" Grid.Column="1" Width="auto" Height="auto" Grid.RowSpan="1" Grid.ColumnSpan="1"                            
+                           />
+        <ProgressBar Name="BrightnessBar"
+         Orientation="Vertical"
+         Panel.ZIndex="1" 
+         Width="5" 
+         Height="50" 
+         Margin="6,-7,23,0" 
+         VerticalAlignment="Top" 
+         Background="{StaticResource BackgroundBrush}"
+         Foreground="{StaticResource ForegroundBrush}"
+         Visibility="Visible" Grid.Column="1" Grid.RowSpan="2"  />
+        <hex:HexagonButton x:Name="Hex1" FontIcon="Solid_Adjust" Grid.Row="0" Width="auto" Height="auto" Grid.ColumnSpan="2" Margin="33,2,1,32" Grid.RowSpan="2" 
+                           PreviewMouseDown="BrightnessButton_MouseDown" PreviewMouseUp="BrightnessButton_MouseUp" PreviewMouseMove="BrightnessButton_MouseMove"/>
         <hex:HexagonButton x:Name="Hex2" Click="Hex2_Click"  FontIcon="Solid_Play"  Grid.Row="0" Grid.Column="1" Width="auto" Height="auto" Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="28,17,6,17" />
         <hex:HexagonButton x:Name="Hex3" Click="Hex3_Click" FontIcon="Solid_Pause" Grid.Row="1" Grid.Column="1" Width="auto" Height="auto" Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="29,16,5,18"/>
         <hex:HexagonButton x:Name="Hex4"  Grid.Row="1" Grid.Column="1" Width="auto" Height="auto" Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="1,32,33,2" />

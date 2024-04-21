@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using QuickPick.UI.BrightnessControls;
 
 namespace QuickPick.UI.Views.Hex;
 /// <summary>
@@ -20,12 +21,16 @@ namespace QuickPick.UI.Views.Hex;
 /// </summary>
 public partial class HexCenter : UserControl
 {
-	public HexCenter()
-	{
-		InitializeComponent();
-	}
+    BrightnessControl _brightnessControl = new();
+    bool _brightnessButtonDown;
+    Point _previousPosition;
+    double _percentage;
+    public HexCenter()
+    {
+        InitializeComponent();
+    }
 
-    private void HexCenter_Click(object sender, RoutedEventArgs e)
+    private void CenterHex_Click(object sender, RoutedEventArgs e)
     {
         SettingsWindow.Instance.ShowWindow();
         SettingsWindow.Instance.Activate();
@@ -37,7 +42,52 @@ public partial class HexCenter : UserControl
     {
 
     }
+    private void BrightnessButton_MouseDown(object sender, MouseButtonEventArgs e)
+    {
+        _brightnessButtonDown = true;
+        BrightnessBar.Visibility = Visibility.Visible;
+        _previousPosition = e.GetPosition(this);
+        // Capture the mouse
+        ((dynamic)sender).CaptureMouse();
+    }
 
+    private void BrightnessButton_MouseUp(object sender, MouseButtonEventArgs e)
+    {
+        BrightnessBar.Visibility = Visibility.Collapsed;
+        _brightnessButtonDown = false;
+        // Release the mouse
+        ((dynamic)sender).ReleaseMouseCapture();
+    }
+
+    private void BrightnessButton_MouseMove(object sender, MouseEventArgs e)
+    {
+
+        if (_brightnessButtonDown)
+        {
+            // get current mousePosition
+            Point position = e.GetPosition(this);
+            // compare with previousposition, calculate vertical distance:
+            var pointDifference = -(position.Y - _previousPosition.Y);
+            _percentage += pointDifference;
+
+            if (_percentage > 100)
+                _percentage = 100;
+            if (_percentage < 50)
+                _percentage = 50;
+
+            BrightnessBar.Value = _percentage;
+            ExposeNewBrightnessLevel();
+            _previousPosition = position;
+        }
+    }
+
+    public delegate void IntValueChangedEventHandler(double value);
+    public event IntValueChangedEventHandler BrightnessLevelChanged;
+
+    public void ExposeNewBrightnessLevel()
+    {
+        _brightnessControl.SetBrightnessOnAllScreens((int)_percentage);
+    }
     private void Hex2_Click(object sender, RoutedEventArgs e)
     {
 
