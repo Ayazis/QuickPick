@@ -115,7 +115,12 @@ public partial class HexCenter : UserControl
         if (musicButton.FontIcon == FontAwesome5.EFontAwesomeIcon.Solid_Play)
             musicButton.FontIcon = FontAwesome5.EFontAwesomeIcon.Solid_Pause;
         else
-            musicButton.FontIcon = FontAwesome5.EFontAwesomeIcon.Solid_Play;        
+            musicButton.FontIcon = FontAwesome5.EFontAwesomeIcon.Solid_Play;
     }
 
+    private void Hex4_Click(object sender, RoutedEventArgs e)
+    {
+        InputSim.WinD();
+        ClickWindow.Instance.HideUI();
+    }
 }

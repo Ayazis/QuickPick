@@ -7,6 +7,10 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using Utilities;
 using System.Windows.Automation;
+using System.Windows.Media;
+using FontAwesome5;
+using FontAwesome5.Extensions;
+using System.Windows;
 
 namespace QuickPick.PinnedApps;
 
@@ -32,9 +36,24 @@ public class AppLinkRetriever
 
         GetAllActiveApplications();
 
+        GetCustomApps();
+
         return _allShortCuts;
     }
+    static void GetCustomApps()
+    {
+        string[] customExecutablePaths = new string[]
+        {
+            @"C:\Program Files\WindowsApps\5319275A.WhatsAppDesktop_2.2414.8.0_x64__cv1g1gvanyjgm\WhatsApp.exe"
+        };
 
+        foreach (var path in customExecutablePaths)
+        {
+            IWshShortcut shortCutLink = CreateNewLnkFileForExecutable(path);
+            CreateAppLinkFromShortCutFile(shortCutLink);
+        }
+
+    }
     private static void GetPinnedTaskbarApps()
     {
         if (!Directory.Exists(_taskbarFolder))
@@ -44,28 +63,77 @@ public class AppLinkRetriever
 
         foreach (string pinnedAppPath in pinnedAppPaths)
         {
-            WshShell shell = new WshShell();
-            var shortcut = shell.CreateShortcut(pinnedAppPath);
-            string targetPath = shortcut.TargetPath;
-            string arguments = shortcut.Arguments;
-            string startinDir = shortcut.WorkingDirectory;
-
-            if (!string.IsNullOrEmpty(targetPath))
-            {
-                AppLink appInfo = new AppLink()
-                {
-                    Name = Path.GetFileNameWithoutExtension(targetPath),
-                    Arguments = arguments,
-                    TargetPath = targetPath,
-                    AppIcon = IconCreator.GetImage(targetPath),
-                    StartInDirectory = startinDir,
-                };
-
-                _allShortCuts.Add(appInfo);
-            }
+            IWshShortcut shortCutLink = CreateShortCutObjectForExistingLink(pinnedAppPath);
+            CreateAppLinkFromShortCutFile(shortCutLink);
         }
     }
+    static IWshShortcut CreateShortCutObjectForExistingLink(string LnkLocation)
+    {
+        if (!System.IO.File.Exists(LnkLocation))
+            throw new FileNotFoundException("Nonexistent.", LnkLocation);
 
+        WshShell shell = new WshShell();
+        IWshShortcut shortcut = (IWshShortcut)shell.CreateShortcut(LnkLocation);
+        return shortcut;
+
+    }
+    static IWshShortcut CreateNewLnkFileForExecutable(string executablePath)
+    {
+        string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+        string shortCutsFolder = Path.Combine(appDataPath, "QuickPick", "ShortCuts");
+
+        if (!Directory.Exists(shortCutsFolder))
+            Directory.CreateDirectory(shortCutsFolder);
+
+        string appName = Path.GetFileNameWithoutExtension(executablePath);
+        string LnkLocation = Path.Combine(shortCutsFolder, appName, ".lnk");
+
+        WshShell shell = new WshShell();
+        IWshShortcut shortcut = (IWshShortcut)shell.CreateShortcut(LnkLocation);
+
+        shortcut.TargetPath = executablePath;
+        shortcut.WorkingDirectory = Path.GetDirectoryName(executablePath);
+
+        return shortcut;
+    }
+
+
+
+
+
+    private static void CreateAppLinkFromShortCutFile(IWshShortcut shortcut)
+    {
+        ImageSource icon = IconCreator.GetImage(shortcut.TargetPath);
+        if (icon == null)
+        {
+            icon = TryCreateIconWithFontAwesome(shortcut.TargetPath);
+        }
+        if (!string.IsNullOrEmpty(shortcut.TargetPath))
+        {
+            AppLink appInfo = new AppLink()
+            {
+                Name = Path.GetFileNameWithoutExtension(shortcut.TargetPath),
+                Arguments = shortcut.Arguments,
+                TargetPath = shortcut.TargetPath,
+                AppIcon = icon,
+                StartInDirectory = shortcut.WorkingDirectory,
+            };
+
+            _allShortCuts.Add(appInfo);
+        }
+    }
+    static ImageSource TryCreateIconWithFontAwesome(string targetPath)
+    {
+        ImageSource imageSource = null;
+        if (targetPath.Contains("whatsapp", StringComparison.CurrentCultureIgnoreCase))
+        {
+            ClickWindow.Instance.Dispatcher.Invoke(() =>
+            {
+                imageSource = EFontAwesomeIcon.Brands_Whatsapp.CreateImageSource(Brushes.LightGreen);
+            });
+        }
+        return imageSource;
+    }
 
     private static void GetAllActiveApplications()
     {

@@ -35,7 +35,9 @@ public static class IconCreator
         IntPtr[] largeIcons = new IntPtr[1];
         IntPtr[] smallIcons = new IntPtr[1];
 
-        ExtractIconEx(targetPath, 0, largeIcons, smallIcons, 1);
+        uint result = ExtractIconEx(targetPath, 0, largeIcons, smallIcons, 1);
+        if (result == 0)
+            return null;
 
         if (largeIcons[0] != IntPtr.Zero)
         {
@@ -48,6 +50,7 @@ public static class IconCreator
             return icon;
         }
 
+        
         return null;
     }
     [DllImport("shell32.dll", CharSet = CharSet.Auto)]
