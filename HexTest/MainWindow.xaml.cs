@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using QuickPick.UI.Views.Hex;
+using System.ComponentModel;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -24,46 +25,48 @@ namespace HexTest
         public MainWindow()
         {
             InitializeComponent();
-            //CreateNewHex();
-
+            tbCount.Text = maxNumber.ToString();
+            //CreateNewHex();        
         }
 
-        private void CreateNewHex()
+
+        public void DrawHexagonalGrid(List<HexPositionsCalculator.Point> grid, double size)
         {
             Canvas?.Children.Clear();
-            var positions = new HexGridCalculator().CreateHexPositions(length, maxNumber);
-            // Assuming you have a Canvas or Grid control named 'container' in your XAML
-            foreach (Point pos in positions)
+            foreach (var point in grid)
             {
-                // Create a visual representation of the cell
-                Ellipse hexagon = new Ellipse();
-                hexagon.Width = 25;
-                hexagon.Height = 25;
-                hexagon.Fill = Brushes.LightGray;
-                hexagon.Stroke = Brushes.Black;
-
-                // Scale and position the ellipse
-                Canvas.SetLeft(hexagon, pos.X * 25);
-                Canvas.SetTop(hexagon, pos.Y * 25);
-
-                // Add the hexagon to the visual tree
-                
-                Canvas?.Children.Add(hexagon);
-                UpdateLayout();
+                double x = size/1.75 * (3.0 / 2 * point.Q);
+                double y = size/1.75 * (Math.Sqrt(3) * (point.R + 0.5 * point.Q));
+                var hexagon = new HexagonButton() { Width = size, Height = size };
+                //hexagon.Fill = Brushes.LightGray;
+                //hexagon.Stroke = Brushes.Black;
+                Canvas.Children.Add(hexagon);
+                Canvas.SetLeft(hexagon, x);
+                Canvas.SetTop(hexagon, y);
             }
         }
 
-        private void Button1_Click(object sender, RoutedEventArgs e)
+
+
+    private void IncreaseCount()
         {
             maxNumber++;
-            CreateNewHex();
+            tbCount.Text = maxNumber.ToString();
+        }
+
+        private void DecreaseCount()
+        {
+            maxNumber--;
+            tbCount.Text = maxNumber.ToString();
+        }
+        private void Button1_Click(object sender, RoutedEventArgs e)
+        {
+            IncreaseCount();
 
         }
         private void Button2_Click(object sender, RoutedEventArgs e)
         {
-            maxNumber--;
-            CreateNewHex();
-
+            DecreaseCount();
         }
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -71,7 +74,8 @@ namespace HexTest
             try
             {
                 length = int.TryParse(e.ToString(), out int result) ? result : length;
-                CreateNewHex();
+                var grid = HexPositionsCalculator.GenerateHexagonalGridFixed(maxNumber);
+                DrawHexagonalGrid(grid, 50);
 
             }
             catch (Exception)

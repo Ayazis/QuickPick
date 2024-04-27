@@ -2,72 +2,72 @@
 using System.Collections.Generic;
 using System.Windows;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
-public class HexGridCalculator
+public class HexPositionsCalculator
 {
-    public List<Point> CreateHexPositions(int edgeLength, int numHexagons)
+    [DebuggerDisplay("{Q}, {R}")]
+    public class Point
     {
-        int gridSize = CalculateGridSize(edgeLength, numHexagons);
-        double vx = Math.Sin(Math.PI / 6), vy = Math.Cos(Math.PI / 6);
-        int topLeftBound = edgeLength - 1, bottomRightBound = 3 * edgeLength - 2;
-        List<Point> positions = new List<Point>();
+        public int Q { get; }
+        public int R { get; }
 
-
-        int count = 0;
-        for (int y = 0; y < gridSize; ++y)
+        public Point(int q, int r)
         {
-            for (int x = 0; x < gridSize; ++x)
-            {
-                if (ShouldNotPlaceHexagonAtThisPosition(edgeLength, y, x))
-                    continue;
-
-                positions.Add(new Point
-                {
-                    X = vx * y + x,
-                    Y = vy * y
-                });
-                count++;
-
-                if (positions.Count >= numHexagons)
-                    return positions;
-            }
+            Q = q;
+            R = r;
         }
-        return positions;
+
+        // Optionally, if Cartesian coordinates are needed:
+        public int X => ConvertToX(Q, R);
+        public int Y => ConvertToY(Q, R);
+
+        private static int ConvertToX(int q, int r)
+        {
+            return (int)(3.0 / 2 * q);
+        }
+
+        private static int ConvertToY(int q, int r)
+        {
+            return (int)(Math.Sqrt(3) * (r + 0.5 * q));
+        }
     }
 
-    private int CalculateGridSize(int edgeLength, int numHexagons)
+    public static List<Point> GenerateHexagonalGridFixed(int numberOfHexes)
     {
-        const int maxGridSize = int.MaxValue / 2; // Limit to prevent integer overflow
-        int gridSize = 2 * edgeLength - 1;
+        List<Point> grid = new List<Point> { new Point(0, 0) }; // Start with the central hexagon at (0, 0)
+        int hexCount = 1;
+        int layer = 1;
 
-        while (true)
+        while (hexCount < numberOfHexes)
         {
-            int count = 0;
-            for (int y = 0; y < gridSize; ++y)
+            int q = 0, r = -layer;
+            (int, int)[] directions = { (1, 0), (0, 1), (-1, 1), (-1, 0), (0, -1), (1, -1) };
+
+            foreach (var (dq, dr) in directions)
             {
-                for (int x = 0; x < gridSize; ++x)
+                for (int i = 0; i < layer; i++)
                 {
-                    if (ShouldNotPlaceHexagonAtThisPosition(edgeLength, y, x)) continue;
-                    count++;
-                    if (count >= numHexagons)
-                        return gridSize;
+                    if (hexCount >= numberOfHexes)
+                        break;
+
+                    grid.Add(new Point(q, r));
+                    hexCount++;
+                    q += dq;
+                    r += dr;
                 }
             }
-
-            if (gridSize >= maxGridSize)
-                return -1; // Maximum grid size reached, cannot accommodate desired number of hexagons
-
-            gridSize++;
+            layer++;
         }
-    }
-
-    private static bool ShouldNotPlaceHexagonAtThisPosition(int edgeLength, int y, int x)
-    {
-       // return false;
-        double tl = edgeLength - 1, br = 3 * edgeLength - 2;
-        return !(x + y < tl || x + y >= br);
+        var json = JsonConvert.SerializeObject(grid);
+        return grid;
     }
 }
+
 
 
 // code snippet from working js

@@ -9,7 +9,7 @@
     <Grid>
         <Button Content="+" Click="Button1_Click" Width="20" Height="20" VerticalAlignment="Top" />
         <Button Content="-" Click="Button2_Click" Width="20" Height="20" VerticalAlignment="Top" Margin="20" />
-        <TextBox Text="5"  TextChanged="TextBox_TextChanged" Width="20" Height="20" VerticalAlignment="Top" Margin="0,20,50,50"/>
+        <TextBox  Name="tbCount"  TextChanged="TextBox_TextChanged" Width="20" Height="20" VerticalAlignment="Top" Margin="0,20,50,50"/>
         <Canvas Name="Canvas" VerticalAlignment="Center" HorizontalAlignment="Center"></Canvas>
     </Grid>
 </Window>
