@@ -14,8 +14,8 @@ namespace HexTest
 
         public void DrawHexagonalGrid(Canvas canvas, int hexagonSize, int numberOfHexes)
         {
-            double xOffSet = canvas.Width / 2;
-            double yOffset = canvas.Height / 2;
+            double xOffSet = (canvas.Width / 2) - (hexagonSize/2);
+            double yOffset = (canvas.Height / 2) - (hexagonSize / 2);
 
             // todo: Add offset the size of the button
 

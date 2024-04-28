@@ -39,7 +39,7 @@
 
         <Ellipse Width="150" Height="150" Fill="#B3000000" />
 
-        <hex:HexCenter HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="1" BorderBrush="Green"/>
+        <hex:HexCenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
         <ItemsControl x:Name="Applinks" ItemsSource="{Binding PinnedApps, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" >
             <ItemsControl.ItemsPanel>

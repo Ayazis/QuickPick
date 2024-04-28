@@ -7,19 +7,14 @@ namespace QuickPick.UI.Views.Hex;
 /// </summary>
 public partial class HexCenter : UserControl
 {
+    private int _size = 35;
+    private int _hexCount =7;
     HexGridCreator _hexGridCreator = new(new HexPositionsCalculator());
     public HexCenter()
     {
         InitializeComponent();
 
-        _hexGridCreator.DrawHexagonalGrid(HexCanvas, 30, 7);
+        _hexGridCreator.DrawHexagonalGrid(HexCanvas, _size, _hexCount);
 
     }
-
-
-
-
-
-
-
 }
