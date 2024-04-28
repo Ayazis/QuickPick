@@ -1,14 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text.Json.Serialization;
 using Newtonsoft.Json;
 
-public class HexPositionsCalculator
+public interface IHexPositionsCalculator
+{
+    List<HexPositionsCalculator.Point> GenerateHexagonalGridFixed(int numberOfHexes);
+}
+
+public class HexPositionsCalculator : IHexPositionsCalculator
 {
     [DebuggerDisplay("{Q}, {R}")]
     public class Point
@@ -37,7 +41,7 @@ public class HexPositionsCalculator
         }
     }
 
-    public static List<Point> GenerateHexagonalGridFixed(int numberOfHexes)
+    public List<Point> GenerateHexagonalGridFixed(int numberOfHexes)
     {
         List<Point> grid = new List<Point> { new Point(0, 0) }; // Start with the central hexagon at (0, 0)
         int hexCount = 1;

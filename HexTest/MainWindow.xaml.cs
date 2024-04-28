@@ -14,14 +14,16 @@ using System.Windows.Shapes;
 namespace HexTest
 {
 
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
-        int length = 2;
+        int length = 50;
         int maxNumber = 12;
 
+        HexGridCreator _hexGridCreator = new(new HexPositionsCalculator());
         public MainWindow()
         {
             InitializeComponent();
@@ -30,25 +32,14 @@ namespace HexTest
         }
 
 
-        public void DrawHexagonalGrid(List<HexPositionsCalculator.Point> grid, double size)
+        public void DrawHexagonalGrid()
         {
-            Canvas?.Children.Clear();
-            foreach (var point in grid)
-            {
-                double x = size/1.75 * (3.0 / 2 * point.Q);
-                double y = size/1.75 * (Math.Sqrt(3) * (point.R + 0.5 * point.Q));
-                var hexagon = new HexagonButton() { Width = size, Height = size };
-                //hexagon.Fill = Brushes.LightGray;
-                //hexagon.Stroke = Brushes.Black;
-                Canvas.Children.Add(hexagon);
-                Canvas.SetLeft(hexagon, x);
-                Canvas.SetTop(hexagon, y);
-            }
+            _hexGridCreator.DrawHexagonalGrid(this.Canvas, length, maxNumber);
         }
 
 
 
-    private void IncreaseCount()
+        private void IncreaseCount()
         {
             maxNumber++;
             tbCount.Text = maxNumber.ToString();
@@ -74,8 +65,7 @@ namespace HexTest
             try
             {
                 length = int.TryParse(e.ToString(), out int result) ? result : length;
-                var grid = HexPositionsCalculator.GenerateHexagonalGridFixed(maxNumber);
-                DrawHexagonalGrid(grid, 50);
+                DrawHexagonalGrid();
 
             }
             catch (Exception)

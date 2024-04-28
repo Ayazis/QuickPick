@@ -19,9 +19,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UpdateInstaller", "UpdateInstaller\UpdateInstaller.csproj", "{B390A926-1E2E-406A-A3BC-8C4F6C7B3694}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HexTest", "HexTest\HexTest.csproj", "{C6884570-C893-4DCE-8964-496547254741}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HexGrid", "HexTest\HexGrid.csproj", "{C6884570-C893-4DCE-8964-496547254741}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HexTest.Tests", "HexTest.Tests\HexTest.Tests.csproj", "{CC3CA7E6-76EC-4A8B-904C-D8EA41DE4F9D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HexGrid.Tests", "HexTest.Tests\HexGrid.Tests.csproj", "{CC3CA7E6-76EC-4A8B-904C-D8EA41DE4F9D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -80,6 +80,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\HexTest\HexGrid.csproj" />
 	  <ProjectReference Include="..\UpdateInstaller\UpdateInstaller.csproj" />
 	  <ProjectReference Include="..\Utilities\QuickPick.Utilities.csproj" />
 	</ItemGroup>
