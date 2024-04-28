@@ -6,6 +6,8 @@
              xmlns:hex="clr-namespace:QuickPick.UI.Views.Hex"
              xmlns:local="clr-namespace:QuickPick.UI.Views.Hex"
              mc:Ignorable="d" 
+             Width="auto"
+             Height="auto"
              d:DesignHeight="125" d:DesignWidth="125">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -14,38 +16,7 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid Width="100" Height="100">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*"/>
-            <ColumnDefinition Width="1*"/>
-            <ColumnDefinition Width="1*"/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="1*"/>
-            <RowDefinition Height="1*"/>
-            <RowDefinition Height="1*"/>
-        </Grid.RowDefinitions>
-
-        <hex:HexagonButton x:Name="CenterHex"  Click="CenterHex_Click" FontIcon="Solid_Tools"  Grid.Row="1" Grid.Column="1" Width="auto" Height="auto" Grid.RowSpan="1" Grid.ColumnSpan="1"                            
-                           />
-        <ProgressBar Name="BrightnessBar"
-         Orientation="Vertical"
-         Panel.ZIndex="1" 
-         Width="5" 
-         Height="50" 
-         Margin="6,-7,23,0" 
-         VerticalAlignment="Top" 
-         Background="{StaticResource BackgroundBrush}"
-         Foreground="{StaticResource ForegroundBrush}"
-         Visibility="Collapsed" Grid.Column="1" Grid.RowSpan="2"  />
-        <hex:HexagonButton x:Name="Hex1" FontIcon="Solid_Adjust" Grid.Row="0" Width="auto" Height="auto" Grid.ColumnSpan="2" Margin="33,2,1,32" Grid.RowSpan="2" 
-                           PreviewMouseDown="BrightnessButton_MouseDown" PreviewMouseUp="BrightnessButton_MouseUp" PreviewMouseMove="BrightnessButton_MouseMove"/>
-        <hex:HexagonButton x:Name="Hex2" Click="Hex2_Click"  FontIcon="Solid_Play"  Grid.Row="0" Grid.Column="1" Width="auto" Height="auto" Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="28,17,6,17" />
-        <hex:HexagonButton x:Name="Hex3" Click="Hex3_Click" FontIcon="Solid_VolumeUp" Grid.Row="1" Grid.Column="1" Width="auto" Height="auto" Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="29,16,5,18"/>
-        <hex:HexagonButton x:Name="Hex4"  Grid.Row="1" Grid.Column="1" Width="auto" Height="auto" Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="1,32,33,2" 
-                           Click="Hex4_Click" FontIcon="Solid_Desktop"
-                           />
-        <hex:HexagonButton x:Name="Hex5"  Grid.Row="1" Grid.Column="0" Width="auto" Height="auto" Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="7,17,27,17"/>
-        <hex:HexagonButton x:Name="Hex6"  Grid.Row="0" Grid.Column="0" Width="auto" Height="auto" Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="6,18,28,16" />
+    <Grid Width="125" Height="125">
+        <Canvas Width="125" Height="125" Name="HexCanvas" HorizontalAlignment="Center" VerticalAlignment="Center"/>
     </Grid>
 </UserControl>

@@ -14,6 +14,11 @@ namespace HexTest
 
         public void DrawHexagonalGrid(Canvas canvas, int hexagonSize, int numberOfHexes)
         {
+            double xOffSet = canvas.Width / 2;
+            double yOffset = canvas.Height / 2;
+
+            // todo: Add offset the size of the button
+
             if (canvas == null)
                 throw new ArgumentNullException(nameof(canvas));
 
@@ -24,9 +29,12 @@ namespace HexTest
             {
                 double x = hexagonSize / 1.75 * (3.0 / 2 * point.Q);
                 double y = hexagonSize / 1.75 * (Math.Sqrt(3) * (point.R + 0.5 * point.Q));
+
+                // add offset so that the grid is centered.
+                x += xOffSet;
+                y += yOffset;
+
                 var hexagon = new HexagonButton() { Width = hexagonSize, Height = hexagonSize };
-                //hexagon.Fill = Brushes.LightGray;
-                //hexagon.Stroke = Brushes.Black;
                 canvas.Children.Add(hexagon);
                 Canvas.SetLeft(hexagon, x);
                 Canvas.SetTop(hexagon, y);
