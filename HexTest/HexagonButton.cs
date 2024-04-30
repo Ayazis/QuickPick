@@ -3,16 +3,20 @@ using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace QuickPick.UI.Views.Hex;
-
 public class HexagonButton : Button
 {
-    Hexagon _hexagon;
-   // ImageAwesome Image;
+    public Hexagon HexagonShape;
+    // ImageAwesome Image;
 
     double hexScale = 1.1;
     double iconScale = .3;
+
+
+    private static Style _noHooverOverStyle;
+
     public HexagonButton()
     {
+
         this.BorderThickness = new Thickness(0);
         Padding = new Thickness(-5);
         Background = Brushes.Transparent;
@@ -21,14 +25,16 @@ public class HexagonButton : Button
         Grid grid = new Grid();
 
         // Create the Hexagon shape
-        _hexagon = new Hexagon()
+        HexagonShape = new Hexagon()
         {
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center,
         };
 
+
+
         // Add the Hexagon to the Grid
-        grid.Children.Add(_hexagon);
+        grid.Children.Add(HexagonShape);
 
         //// Create the FontAwesome icon
         //Image = new ImageAwesome
@@ -47,13 +53,53 @@ public class HexagonButton : Button
         this.Content = grid;
 
         SizeChanged += HexagonButton_SizeChanged; ;
+
+        Style = CreateStyle();
     }
 
+
+    private Style CreateStyle()
+    {
+        if (_noHooverOverStyle != null)
+            return _noHooverOverStyle;
+
+        // Create a new style
+        Style noHooverOverStyle = new Style(typeof(Button));
+
+        // Set OverridesDefaultStyle to true
+        noHooverOverStyle.Setters.Add(new Setter { Property = Control.OverridesDefaultStyleProperty, Value = true });
+
+        // Create a new control template
+        ControlTemplate template = new ControlTemplate(typeof(Button));
+
+        // Create a border for the template
+        FrameworkElementFactory border = new FrameworkElementFactory(typeof(Border));
+        border.Name = "border";
+        border.SetValue(BackgroundProperty, Brushes.Transparent);
+
+        // Create a content presenter for the template
+        FrameworkElementFactory presenter = new FrameworkElementFactory(typeof(ContentPresenter));
+        presenter.SetValue(ContentPresenter.ContentProperty, new TemplateBindingExtension(ContentProperty));
+        presenter.SetValue(ContentPresenter.HorizontalAlignmentProperty, new TemplateBindingExtension(HorizontalContentAlignmentProperty));
+        presenter.SetValue(ContentPresenter.VerticalAlignmentProperty, new TemplateBindingExtension(VerticalContentAlignmentProperty));
+
+        // Add the content presenter to the border
+        border.AppendChild(presenter);
+
+        // Set the visual tree of the template
+        template.VisualTree = border;
+
+        // Add the template to the style
+        noHooverOverStyle.Setters.Add(new Setter { Property = TemplateProperty, Value = template });
+
+        _noHooverOverStyle = noHooverOverStyle;
+        return noHooverOverStyle;
+    }
     private void HexagonButton_SizeChanged(object sender, SizeChangedEventArgs e)
     {
         // Set the Width and Height of the Hexagon to be the same as the ActualWidth and ActualHeight of the HexagonButton
-        _hexagon.Width = this.ActualWidth * hexScale;
-        _hexagon.Height = this.ActualHeight * hexScale;
+        HexagonShape.Width = this.ActualWidth * hexScale;
+        HexagonShape.Height = this.ActualHeight * hexScale;
 
         //Image.Width = this.ActualWidth * iconScale;
     }

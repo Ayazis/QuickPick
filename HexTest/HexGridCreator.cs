@@ -35,6 +35,7 @@ namespace HexTest
                 y += yOffset;
 
                 var hexagon = new HexagonButton() { Width = hexagonSize, Height = hexagonSize };
+                
                 canvas.Children.Add(hexagon);
                 Canvas.SetLeft(hexagon, x);
                 Canvas.SetTop(hexagon, y);

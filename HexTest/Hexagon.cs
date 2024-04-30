@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
@@ -7,36 +8,78 @@ namespace QuickPick.UI.Views.Hex
 {
     public class Hexagon : Shape
     {
+        private static LinearGradientBrush _defaultGradient;
+        private static LinearGradientBrush _reversedGradient;
+
+        static Hexagon()
+        {
+            CreateBrushes();
+        }
+
+
         const string BorderBrush = "#6F6F6F";
         Color BorderColor = (Color)ColorConverter.ConvertFromString(BorderBrush);
 
         public Hexagon()
         {
+            // Create a new trigger
+            Trigger mouseOverTrigger = new Trigger { Property = UIElement.IsMouseOverProperty, Value = true };
+            // Create setter for the trigger
+            Setter backgroundSetter = new Setter { Property = Shape.FillProperty, Value = _reversedGradient };
+            // Add the setter to the trigger
+            mouseOverTrigger.Setters.Add(backgroundSetter);
+
+
             // Set the style directly in the constructor
             Style = new Style(typeof(Hexagon))
             {
                 Setters =
-            {
-                new Setter(Shape.FillProperty, new LinearGradientBrush
+                  {
+                      new Setter(Shape.FillProperty, _defaultGradient ),
+                      new Setter(Shape.StrokeProperty, new SolidColorBrush(BorderColor)),
+                      new Setter(Shape.StrokeThicknessProperty, 1.0)
+                  },
+                Triggers =
                 {
-                    StartPoint = new Point(0, 0),
-                    EndPoint = new Point(1, 1),
-                    GradientStops = new GradientStopCollection
-                    {
-                        new GradientStop(Color.FromRgb(48, 48, 48), 1),
-                        new GradientStop(Color.FromRgb(67, 67, 67), 0.3)
-                    }
-                }),
-                new Setter(Shape.StrokeProperty, new SolidColorBrush(BorderColor)),
-                new Setter(Shape.StrokeThicknessProperty, 1.0)
-            }
+                    mouseOverTrigger
+                }
             };
+
+
+
 
         }
         public enum Orientation
         {
             Horizontal,
             Vertical
+        }
+        static void CreateBrushes()
+        {
+            _defaultGradient = new LinearGradientBrush
+            {
+                StartPoint = new Point(0, 0),
+                EndPoint = new Point(1, 1),
+                GradientStops = new GradientStopCollection
+                          {
+                              new GradientStop(Color.FromRgb(48, 48, 48), 1),
+                              new GradientStop(Color.FromRgb(67, 67, 67), 0.3)
+                          }
+            };
+
+            _reversedGradient = new LinearGradientBrush
+            {
+                StartPoint = new Point(1, 1),
+                EndPoint = new Point(0, 0),
+                GradientStops = new GradientStopCollection
+                          {
+                              new GradientStop(Color.FromRgb(48, 48, 48), 1),
+                              new GradientStop(Color.FromRgb(67, 67, 67), 0.3)
+                          }
+            };
+
+
+
         }
 
         public static readonly DependencyProperty OrientationProperty = DependencyProperty.Register(
@@ -102,5 +145,6 @@ namespace QuickPick.UI.Views.Hex
 				}
             };
         }
+
     }
 }
