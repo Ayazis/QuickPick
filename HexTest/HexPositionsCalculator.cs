@@ -10,8 +10,9 @@ public class HexPositionsCalculator : IHexPositionsCalculator
 {
     List<HexPoint> _grid = new List<HexPoint> { new HexPoint(0, 0) }; // Start with the central hexagon at (0, 0)
     Point[] _directions = { new(1, 0), new(0, 1), new(-1, 1), new(-1, 0), new(0, -1), new(1, -1) };
-    int _layer = 1;
+    int _nrOfRings = 1;
     int _maxNumberOfHexes;
+    bool _finishedGrid;
 
     public List<HexPoint> GenerateHexagonalGridFixed(int numberOfHexes)
     {
@@ -26,31 +27,34 @@ public class HexPositionsCalculator : IHexPositionsCalculator
     {
         for (int i = _grid.Count; i < _maxNumberOfHexes; i++)
         {
-            LoopThroughDirections();
-            _layer++;
+            int q = 0;
+            int r = -_nrOfRings;
+            LoopThroughDirections(q, r);
+            _nrOfRings++;
+            if (_finishedGrid)
+                return;
         }
-
     }
 
-    private void LoopThroughDirections()
+    private void LoopThroughDirections(int q, int r)
     {
-        int q = 0;
-        int r = -_layer;
-
         for (int i = 0; i < _directions.Length; i++)
         {
             Point direction = _directions[i];
-            CreateHexagonByDirection(ref q, ref r, direction);
+            CreateHexagonsByDirection(ref q, ref r, direction);
         }
     }
 
-    private void CreateHexagonByDirection(ref int q, ref int r, Point d)
+    private void CreateHexagonsByDirection(ref int q, ref int r, Point d)
     {
-        for (int i = 0; i < _layer; i++)
+        // The ringNumber corresponds with the number of tiles in the same direction on that ring.
+        for (int i = 0; i < _nrOfRings; i++)
         {
             if (_grid.Count >= _maxNumberOfHexes)
+            {
+                _finishedGrid = true;
                 return;
-
+            }
             _grid.Add(new HexPoint(q, r));
             q += d.X;
             r += d.Y;
