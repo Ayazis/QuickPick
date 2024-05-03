@@ -21,7 +21,7 @@ namespace HexTest
     public partial class MainWindow : Window
     {
         int length = 50;
-        int maxNumber = 12;
+        int maxNumber = 48;
 
         HexGridCreator _hexGridCreator = new(new HexPositionsCalculator());
         public MainWindow()

@@ -27,8 +27,8 @@ namespace HexTest
             canvas?.Children.Clear();
             foreach (var point in hexPositions)
             {
-                double x = hexagonSize / 1.75 * (3.0 / 2 * point.Q);
-                double y = hexagonSize / 1.75 * (Math.Sqrt(3) * (point.R + 0.5 * point.Q));
+                double x = hexagonSize / 1.75 * (3.0 / 2 * point.Column);
+                double y = hexagonSize / 1.75 * (Math.Sqrt(3) * (point.Row + 0.5 * point.Column));
 
                 // add offset so that the grid is centered.
                 x += xOffSet;
