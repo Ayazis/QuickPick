@@ -1,5 +1,6 @@
 ﻿using QuickPick.UI.Views.Hex;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace HexTest
 {
@@ -14,7 +15,7 @@ namespace HexTest
 
         public void DrawHexagonalGrid(Canvas canvas, int hexagonSize, int numberOfHexes)
         {
-            double xOffSet = (canvas.Width / 2) - (hexagonSize/2);
+            double xOffSet = (canvas.Width / 2) - (hexagonSize / 2);
             double yOffset = (canvas.Height / 2) - (hexagonSize / 2);
 
             // todo: Add offset the size of the button
@@ -35,7 +36,17 @@ namespace HexTest
                 y += yOffset;
 
                 var hexagon = new HexagonButton() { Width = hexagonSize, Height = hexagonSize };
-                
+#if DEBUG
+                string nr = hexPositions.IndexOf(point).ToString();
+                hexagon.Grid.Children.Add(new TextBlock()
+                {
+                    Text = nr,
+                    VerticalAlignment = System.Windows.VerticalAlignment.Center,
+                    HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
+                    Foreground = Brushes.White
+                });
+#endif
+
                 canvas.Children.Add(hexagon);
                 Canvas.SetLeft(hexagon, x);
                 Canvas.SetTop(hexagon, y);

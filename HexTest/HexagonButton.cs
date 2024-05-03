@@ -8,9 +8,10 @@ public class HexagonButton : Button
     public Hexagon HexagonShape;
     // ImageAwesome Image;
 
-    double hexScale = 1.1;
+    double hexScale = 1.0;
     double iconScale = .3;
-
+    // Create a Grid to hold the Hexagon and the icon
+    public Grid Grid = new Grid();
 
     private static Style _noHooverOverStyle;
 
@@ -21,8 +22,7 @@ public class HexagonButton : Button
         Padding = new Thickness(-5);
         Background = Brushes.Transparent;
 
-        // Create a Grid to hold the Hexagon and the icon
-        Grid grid = new Grid();
+       
 
         // Create the Hexagon shape
         HexagonShape = new Hexagon()
@@ -34,7 +34,7 @@ public class HexagonButton : Button
 
 
         // Add the Hexagon to the Grid
-        grid.Children.Add(HexagonShape);
+        Grid.Children.Add(HexagonShape);
 
         //// Create the FontAwesome icon
         //Image = new ImageAwesome
@@ -50,7 +50,7 @@ public class HexagonButton : Button
         //grid.Children.Add(Image);
 
         // Set the Content of the Button to the Grid
-        this.Content = grid;
+        this.Content = Grid;
 
         SizeChanged += HexagonButton_SizeChanged; ;
 
