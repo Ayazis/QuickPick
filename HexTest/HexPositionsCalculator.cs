@@ -37,16 +37,16 @@ public class HexPositionsCalculator : IHexPositionsCalculator
 
     private void LoopThroughDirections()
     {
-        int q = 0;
-        int r = -_nrOfRings;
+        int column = 0;
+        int row = -_nrOfRings;
         for (int i = 0; i < _directions.Length; i++)
         {
             Point direction = _directions[i];
-            CreateHexagonsByDirection(ref q, ref r, direction);
+            CreateHexagonsByDirection(ref column, ref row, direction);
         }
     }
 
-    private void CreateHexagonsByDirection(ref int q, ref int r, Point d)
+    private void CreateHexagonsByDirection(ref int column, ref int row, Point d)
     {
         // The ringNumber corresponds with the number of tiles in the same direction on that ring.
         for (int i = 0; i < _nrOfRings; i++)
@@ -56,9 +56,9 @@ public class HexPositionsCalculator : IHexPositionsCalculator
                 _finishedGrid = true;
                 return;
             }
-            _grid.Add(new HexPoint(q, r));
-            q += d.X;
-            r += d.Y;
+            _grid.Add(new HexPoint(column, row));
+            column += d.X;
+            row += d.Y;
         }
     }
 }
