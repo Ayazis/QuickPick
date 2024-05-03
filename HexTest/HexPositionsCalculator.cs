@@ -38,7 +38,7 @@ public class HexPositionsCalculator : IHexPositionsCalculator
     private void LoopThroughDirections()
     {
         int column = 0;
-        int row = -_nrOfRings;
+        int row = -_nrOfRings; // use negative, this places the start of the new ring above the previous one.
         for (int i = 0; i < _directions.Length; i++)
         {
             Point direction = _directions[i];
