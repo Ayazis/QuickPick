@@ -27,17 +27,18 @@ public class HexPositionsCalculator : IHexPositionsCalculator
     {
         for (int i = _grid.Count; i < _maxNumberOfHexes; i++)
         {
-            int q = 0;
-            int r = -_nrOfRings;
-            LoopThroughDirections(q, r);
+
+            LoopThroughDirections();
             _nrOfRings++;
             if (_finishedGrid)
                 return;
         }
     }
 
-    private void LoopThroughDirections(int q, int r)
+    private void LoopThroughDirections()
     {
+        int q = 0;
+        int r = -_nrOfRings;
         for (int i = 0; i < _directions.Length; i++)
         {
             Point direction = _directions[i];
