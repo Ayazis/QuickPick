@@ -1,6 +1,4 @@
 ﻿using System.Drawing;
-using System.Windows.Controls;
-
 public interface IHexPositionsCalculator
 {
     List<HexPoint> GenerateHexagonalGridFixed(int numberOfHexes);
@@ -8,57 +6,69 @@ public interface IHexPositionsCalculator
 
 public class HexPositionsCalculator : IHexPositionsCalculator
 {
-    List<HexPoint> _grid = new List<HexPoint> { new HexPoint(0, 0) }; // Start with the central hexagon at (0, 0)
+    const int COLUMN_START = 0;
     Point[] _directions = { new(1, 0), new(0, 1), new(-1, 1), new(-1, 0), new(0, -1), new(1, -1) };
-    int _nrOfRings = 1;
     int _maxNumberOfHexes;
     bool _finishedGrid;
 
+    private Grid _grid = new();
+
+
     public List<HexPoint> GenerateHexagonalGridFixed(int numberOfHexes)
     {
-        _maxNumberOfHexes = 48;
+        _maxNumberOfHexes = 37;
 
         FinishGrid();
 
-        return _grid;
+        return _grid.HexPoints;
     }
 
     private void FinishGrid()
     {
-        for (int i = _grid.Count; i < _maxNumberOfHexes; i++)
+        for (int i = _grid.HexPoints.Count; i < _maxNumberOfHexes; i++)
         {
-
-            LoopThroughDirections();
-            _nrOfRings++;
-            if (_finishedGrid)
-                return;
+            ContinueGrid();
         }
     }
 
-    private void LoopThroughDirections()
+    private void ContinueGrid()
     {
-        int column = 0;
-        int row = -_nrOfRings; // use negative, this places the start of the new ring above the previous one.
-        for (int i = 0; i < _directions.Length; i++)
+        _grid.CurrentRow = -_grid.NrOfRings; // Use negative, this places the start of the new ring above the previous one.
+        for (int i = _grid.DirectionIndex; i < _directions.Length; i++) // Use directionIndex to continue with the correct direction.
         {
             Point direction = _directions[i];
-            CreateHexagonsByDirection(ref column, ref row, direction);
+            CreateHexagonsByDirection(direction);
         }
+        _grid.DirectionIndex = 0; // if done with directions, reset to 0 for next layer.
+        _grid.NrOfRings++;
+        if (_finishedGrid)
+            return;
     }
 
-    private void CreateHexagonsByDirection(ref int column, ref int row, Point d)
+    private void CreateHexagonsByDirection(Point d)
     {
         // The ringNumber corresponds with the number of tiles in the same direction on that ring.
-        for (int i = 0; i < _nrOfRings; i++)
+        // So, say on circle 3, we need to do 3 tiles in the same direction before moving to the next direction.
+        for (int i = 0; i < _grid.NrOfRings; i++)
         {
-            if (_grid.Count >= _maxNumberOfHexes)
+            if (_grid.HexPoints.Count >= _maxNumberOfHexes)
             {
                 _finishedGrid = true;
                 return;
             }
-            _grid.Add(new HexPoint(column, row));
-            column += d.X;
-            row += d.Y;
+            var nexHexpoint = new HexPoint(_grid.CurrentColumn, _grid.CurrentRow);
+            _grid.HexPoints.Add(nexHexpoint);
+            _grid.CurrentColumn += d.X;
+            _grid.CurrentRow += d.Y;
         }
+    }
+
+    private class Grid
+    {
+        public List<HexPoint> HexPoints = new List<HexPoint> { new HexPoint(0, 0) }; // Start with the central hexagon at (0, 0)
+        public int CurrentColumn = COLUMN_START;
+        public int DirectionIndex;
+        public int NrOfRings = 1;
+        public int CurrentRow;
     }
 }

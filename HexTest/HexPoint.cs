@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Drawing;
 
 [DebuggerDisplay("{Column}, {Row}")]
 public class HexPoint
 {
+    public Point Direction { get; set; }
+
     public int Column { get; }
     public int Row { get; }
 
