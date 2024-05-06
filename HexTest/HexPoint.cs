@@ -2,11 +2,11 @@
 using System.Diagnostics;
 using System.Drawing;
 
+namespace Hexgrid;
 [DebuggerDisplay("{Column}, {Row}")]
-public class HexPoint
+public struct HexPoint
 {
-    public Point Direction { get; set; }
-
+  
     public int Column { get; }
     public int Row { get; }
 

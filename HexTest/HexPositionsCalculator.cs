@@ -1,4 +1,6 @@
-﻿using System.Drawing;
+﻿using Hexgrid;
+using Newtonsoft.Json;
+using System.Drawing;
 public interface IHexPositionsCalculator
 {
     List<HexPoint> GenerateHexagonalGridFixed(int numberOfHexes);
@@ -20,6 +22,7 @@ public class HexPositionsCalculator : IHexPositionsCalculator
 
         FinishGrid();
 
+        var json = JsonConvert.SerializeObject(_grid);
         return _grid.HexPoints;
     }
 
