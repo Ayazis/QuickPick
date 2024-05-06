@@ -1,6 +1,7 @@
 ﻿using Hexgrid;
 using Newtonsoft.Json;
 using System.Drawing;
+using System.Windows.Xps;
 public interface IHexPositionsCalculator
 {
     List<HexPoint> GenerateHexagonalGridFixed(int numberOfHexes);
@@ -40,7 +41,14 @@ public class HexPositionsCalculator : IHexPositionsCalculator
         for (int i = _grid.DirectionIndex; i < _directions.Length; i++) // Use directionIndex to continue with the correct direction.
         {
             Point direction = _directions[i];
-            CreateHexagonsByDirection(direction);
+            CreateHexagonsByDirection(direction, out bool finished);
+            if(finished)
+            {
+                // todo:
+                // check if we are done with currentDirection
+                // set new direction if needed
+                // 
+            }
         }
         _grid.DirectionIndex = 0; // if done with directions, reset to 0 for next layer.
         _grid.NrOfRings++;
@@ -48,22 +56,26 @@ public class HexPositionsCalculator : IHexPositionsCalculator
             return;
     }
 
-    private void CreateHexagonsByDirection(Point d)
+    private void CreateHexagonsByDirection(Point d, out bool finishedGrid)
     {
         // The ringNumber corresponds with the number of tiles in the same direction on that ring.
         // So, say on circle 3, we need to do 3 tiles in the same direction before moving to the next direction.
+        // Todo: I might not always be 0. we need to keep track of how many movements in the currentDirection we've had.
+
         for (int i = 0; i < _grid.NrOfRings; i++)
         {
             if (_grid.HexPoints.Count >= _maxNumberOfHexes)
             {
-                _finishedGrid = true;
+                finishedGrid = true;
                 return;
             }
+
             var nexHexpoint = new HexPoint(_grid.CurrentColumn, _grid.CurrentRow);
             _grid.HexPoints.Add(nexHexpoint);
             _grid.CurrentColumn += d.X;
             _grid.CurrentRow += d.Y;
         }
+        finishedGrid = false;
     }
 
     private class Grid
