@@ -12,7 +12,6 @@ public class HexPositionsCalculator : IHexPositionsCalculator
     const int COLUMN_START = 0;
     Point[] _directions = { new(1, 0), new(0, 1), new(-1, 1), new(-1, 0), new(0, -1), new(1, -1) };
     int _maxNumberOfHexes;
-    bool _finishedGrid;
 
     private Grid _grid = new();
 
@@ -42,25 +41,27 @@ public class HexPositionsCalculator : IHexPositionsCalculator
         {
             Point direction = _directions[i];
             CreateHexagonsByDirection(direction, out bool finished);
-            if(finished)
+            if (finished)
             {
-                // todo:
-                // check if we are done with currentDirection
-                // set new direction if needed
-                // 
+                if (_grid.DirectionIndex == _directions.Length - 1)
+                {
+                    _grid.DirectionIndex = 0; // if done with directions, reset to 0 for next layer.
+                    _grid.NrOfRings++;
+                    return;
+                }
             }
+            _grid.DirectionIndex++;
         }
         _grid.DirectionIndex = 0; // if done with directions, reset to 0 for next layer.
         _grid.NrOfRings++;
-        if (_finishedGrid)
-            return;
+        return;
     }
 
     private void CreateHexagonsByDirection(Point d, out bool finishedGrid)
     {
         // The ringNumber corresponds with the number of tiles in the same direction on that ring.
         // So, say on circle 3, we need to do 3 tiles in the same direction before moving to the next direction.
-        // Todo: I might not always be 0. we need to keep track of how many movements in the currentDirection we've had.
+        // Todo: i might not always be 0. we need to keep track of how many movements in the currentDirection we've had.
 
         for (int i = 0; i < _grid.NrOfRings; i++)
         {
@@ -75,6 +76,7 @@ public class HexPositionsCalculator : IHexPositionsCalculator
             _grid.CurrentColumn += d.X;
             _grid.CurrentRow += d.Y;
         }
+        _grid.MovementIndex++;
         finishedGrid = false;
     }
 
@@ -83,6 +85,7 @@ public class HexPositionsCalculator : IHexPositionsCalculator
         public List<HexPoint> HexPoints = new List<HexPoint> { new HexPoint(0, 0) }; // Start with the central hexagon at (0, 0)
         public int CurrentColumn = COLUMN_START;
         public int DirectionIndex;
+        public int MovementIndex;
         public int NrOfRings = 1;
         public int CurrentRow;
     }

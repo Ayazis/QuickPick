@@ -19,11 +19,12 @@ namespace HexTest.Tests
             List<HexPoint>? expectedResult = JsonConvert.DeserializeObject<List<HexPoint>>(result37AsString);
 
             var hexCreator = new HexPositionsCalculator();
-            var actualresult = hexCreator.GenerateHexagonalGridFixed(37);
+            List<HexPoint> actualresult = hexCreator.GenerateHexagonalGridFixed(37);
             var actualJson = JsonConvert.SerializeObject(actualresult);
 
             Assert.That(actualJson, Is.EqualTo(result37AsString));
 
+            Assert.That(actualresult.Count, Is.EqualTo(37));
         }
     }
 }
