@@ -14,12 +14,25 @@ namespace HexTest.Tests
         }
 
         [Test]
-        public void Given_number_37_Places_37_hexes_correct()
+        public void Given_number_37_Places_37_hexes_correct_using_OLD_METHOD()
         {
             List<HexPoint>? expectedResult = JsonConvert.DeserializeObject<List<HexPoint>>(result37AsString);
 
             var hexCreator = new HexPositionsCalculator();
-            List<HexPoint> actualresult = hexCreator.GenerateHexagonalGridFixed(37);
+            List<HexPoint> actualresult = hexCreator.GenerateHexagonalGridFixed(37,false);
+            var actualJson = JsonConvert.SerializeObject(actualresult);
+
+            Assert.That(actualJson, Is.EqualTo(result37AsString));
+
+            Assert.That(actualresult.Count, Is.EqualTo(37));
+        }
+        [Test]
+        public void Given_number_37_Places_37_hexes_correct_using_NEW_METHOD()
+        {
+            List<HexPoint>? expectedResult = JsonConvert.DeserializeObject<List<HexPoint>>(result37AsString);
+
+            var hexCreator = new HexPositionsCalculator();
+            List<HexPoint> actualresult = hexCreator.GenerateHexagonalGridFixed(37, true);
             var actualJson = JsonConvert.SerializeObject(actualresult);
 
             Assert.That(actualJson, Is.EqualTo(result37AsString));

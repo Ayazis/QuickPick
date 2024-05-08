@@ -4,11 +4,14 @@ using System.Drawing;
 using System.Windows.Xps;
 public interface IHexPositionsCalculator
 {
-    List<HexPoint> GenerateHexagonalGridFixed(int numberOfHexes);
+    List<HexPoint> GenerateHexagonalGridFixed(int numberOfHexes, bool useNewMethod = false);
 }
-
 public class HexPositionsCalculator : IHexPositionsCalculator
 {
+    public HexPositionsCalculator()
+    {
+
+    }
     const int COLUMN_START = 0;
     Point[] _directions = { new(1, 0), new(0, 1), new(-1, 1), new(-1, 0), new(0, -1), new(1, -1) };
     int _maxNumberOfHexes;
@@ -16,14 +19,33 @@ public class HexPositionsCalculator : IHexPositionsCalculator
     private Grid _grid = new();
 
 
-    public List<HexPoint> GenerateHexagonalGridFixed(int numberOfHexes)
+    public List<HexPoint> GenerateHexagonalGridFixed(int numberOfHexes, bool useNewMethod = false)
     {
-        _maxNumberOfHexes = 37;
 
-        FinishGrid();
+        if (useNewMethod)
+            NewMethod(numberOfHexes);
+        else
+            Oldmethod();
+
 
         var json = JsonConvert.SerializeObject(_grid);
         return _grid.HexPoints;
+    }
+
+    private void NewMethod(int numberOfHexes)
+    {
+        for (int i = 0; i < numberOfHexes; i++)
+        {
+            _maxNumberOfHexes++;
+            FinishGrid();
+        }
+    }
+
+    void Oldmethod()
+    {
+        _maxNumberOfHexes = 37;
+        FinishGrid();
+
     }
 
     private void FinishGrid()
@@ -40,34 +62,42 @@ public class HexPositionsCalculator : IHexPositionsCalculator
         for (int i = _grid.DirectionIndex; i < _directions.Length; i++) // Use directionIndex to continue with the correct direction.
         {
             Point direction = _directions[i];
-            CreateHexagonsByDirection(direction, out bool finished);
-            if (finished)
+            CreateHexagonsByDirection(direction, out bool finishedGridState, out bool finishedDirection);
+            if (finishedGridState)
             {
-                if (_grid.DirectionIndex == _directions.Length - 1)
+                if (finishedDirection)
                 {
-                    _grid.DirectionIndex = 0; // if done with directions, reset to 0 for next layer.
-                    _grid.NrOfRings++;
+                    FinishLayer();
                     return;
                 }
+                return;
             }
             _grid.DirectionIndex++;
+            _grid.MovementIndex = 0;
         }
-        _grid.DirectionIndex = 0; // if done with directions, reset to 0 for next layer.
-        _grid.NrOfRings++;
+        FinishLayer();
         return;
     }
 
-    private void CreateHexagonsByDirection(Point d, out bool finishedGrid)
+    private void FinishLayer()
+    {
+        _grid.DirectionIndex = 0; // if done with directions, reset to 0 for next layer.
+        _grid.MovementIndex = 0;
+        _grid.NrOfRings++;
+    }
+
+    private void CreateHexagonsByDirection(Point d, out bool finishedGrid, out bool finishedDirection)
     {
         // The ringNumber corresponds with the number of tiles in the same direction on that ring.
         // So, say on circle 3, we need to do 3 tiles in the same direction before moving to the next direction.
         // Todo: i might not always be 0. we need to keep track of how many movements in the currentDirection we've had.
 
-        for (int i = 0; i < _grid.NrOfRings; i++)
+        for (int i = _grid.MovementIndex; i < _grid.NrOfRings; i++)
         {
             if (_grid.HexPoints.Count >= _maxNumberOfHexes)
             {
                 finishedGrid = true;
+                finishedDirection = false;
                 return;
             }
 
@@ -75,8 +105,9 @@ public class HexPositionsCalculator : IHexPositionsCalculator
             _grid.HexPoints.Add(nexHexpoint);
             _grid.CurrentColumn += d.X;
             _grid.CurrentRow += d.Y;
+            _grid.MovementIndex++;
         }
-        _grid.MovementIndex++;
+        finishedDirection = true;
         finishedGrid = false;
     }
 
