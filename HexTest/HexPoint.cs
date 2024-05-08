@@ -4,11 +4,11 @@ using System.Drawing;
 
 namespace Hexgrid;
 [DebuggerDisplay("{Column}, {Row}")]
-public struct HexPoint
+public struct HexPoint : IEquatable<HexPoint>
 {
-  
-    public int Column { get; }
-    public int Row { get; }
+
+    public int Column { get; set; }
+    public int Row { get; set; }
 
     public HexPoint(int q, int r)
     {
@@ -29,4 +29,26 @@ public struct HexPoint
     {
         return (int)(Math.Sqrt(3) * (r + 0.5 * q));
     }
+
+    bool IEquatable<HexPoint>.Equals(HexPoint other)
+    {
+        return other.Column == Column && other.Row == Row;
+    }
+    public override bool Equals(object obj)
+    {
+        if (obj is HexPoint other)
+        {
+            return this.Column == other.Column && this.Row == other.Row;
+        }
+        return false;
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Column, Row);
+    }
+
 }
+
+
+

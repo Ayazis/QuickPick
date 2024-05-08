@@ -1,6 +1,7 @@
 ﻿using Hexgrid;
 using Newtonsoft.Json;
 using System.Drawing;
+using System.Text;
 using System.Windows.Xps;
 public interface IHexPositionsCalculator
 {
@@ -25,7 +26,7 @@ public class HexPositionsCalculator : IHexPositionsCalculator
         if (useNewMethod)
             NewMethod(numberOfHexes);
         else
-            Oldmethod();
+            Oldmethod(numberOfHexes);
 
 
         var json = JsonConvert.SerializeObject(_grid);
@@ -41,9 +42,9 @@ public class HexPositionsCalculator : IHexPositionsCalculator
         }
     }
 
-    void Oldmethod()
+    void Oldmethod(int numberOfHexes)
     {
-        _maxNumberOfHexes = 37;
+        _maxNumberOfHexes = numberOfHexes;
         FinishGrid();
 
     }
@@ -119,5 +120,19 @@ public class HexPositionsCalculator : IHexPositionsCalculator
         public int MovementIndex;
         public int NrOfRings = 1;
         public int CurrentRow;
+
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine($"HexPoints: {HexPoints.Count}");
+            sb.AppendLine($"CurrentColumn: {CurrentColumn}");
+            sb.AppendLine($"DirectionIndex: {DirectionIndex}");
+            sb.AppendLine($"MovementIndex: {MovementIndex}");
+            sb.AppendLine($"NrOfRings: {NrOfRings}");
+            sb.AppendLine($"CurrentRow: {CurrentRow}");
+
+            return sb.ToString();
+
+        }
     }
 }
