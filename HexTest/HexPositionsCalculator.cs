@@ -14,7 +14,15 @@ public class HexPositionsCalculator : IHexPositionsCalculator
 
     }
     const int COLUMN_START = 0;
-    Point[] _directions = { new(1, 0), new(0, 1), new(-1, 1), new(-1, 0), new(0, -1), new(1, -1) };
+    Point[] _directions = new Point[] { Right, Down, LeftDown, Left, Up, RightUp };
+
+    static Point Right = new Point(1, 0);
+    static Point Down = new Point(0, 1);
+    static Point LeftDown = new Point(-1, 1);
+    static Point Left = new Point(-1, 0);
+    static Point Up = new Point(0, -1);
+    static Point RightUp = new Point(1, -1);
+
     int _maxNumberOfHexes;
 
     private Grid _grid = new();
