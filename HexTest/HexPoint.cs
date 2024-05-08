@@ -47,7 +47,10 @@ public struct HexPoint : IEquatable<HexPoint>
     {
         return HashCode.Combine(Column, Row);
     }
-
+    public override string ToString()
+    {
+        return $"{Column}, {Row}";
+    }
 }
 
 
