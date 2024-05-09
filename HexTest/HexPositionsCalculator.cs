@@ -120,6 +120,52 @@ public class HexPositionsCalculator : IHexPositionsCalculator
         finishedGrid = false;
     }
 
+    public Point GetDirectionForNextHexagon(int hexNumber)
+    {
+        int ringNumber = CalculateRingNumber(hexNumber);
+        int totalPrevious = ringNumber == 0 ? 0 : 1 + 3 * (ringNumber - 1) * ringNumber; // Total hexagons up to previous ring
+        int positionInRing = hexNumber - totalPrevious;
+
+        //    Point[] directions = new Point[] {
+        //    new Point(1, 0),    // Right
+        //    new Point(0, 1),    // Down
+        //    new Point(-1, 1),   // LeftDown
+        //    new Point(-1, 0),   // Left
+        //    new Point(0, -1),   // Up
+        //    new Point(1, -1)    // RightUp
+        //};
+
+        // Check if the hexagon is the first one in a new ring
+        if (positionInRing == 1)
+        {
+            // Optionally, adjust this direction if your grid starts differently
+            return _directions[0]; // Typically 'Right' for the first hexagon in a new ring
+        }
+
+        // Find which side the hexagon is on within the ring
+        int side = (positionInRing - 1) / ringNumber;
+        return _directions[side];
+    }
+    public int CalculateRingNumber(int hexNumber)
+    {
+        if (hexNumber == 1)
+            return 0; // The central hexagon is always in ring 0.
+
+        int n = 1; // Start checking from the first ring.
+        int totalHexagons = 1; // Start with the central hexagon.
+
+        // Calculate the total number of hexagons up to and including ring n
+        while (true)
+        {
+            totalHexagons += 6 * n;
+            if (totalHexagons >= hexNumber)
+                break;
+            n++;
+        }
+
+        return n;
+    }
+
     private class Grid
     {
         public List<HexPoint> HexPoints = new List<HexPoint> { new HexPoint(0, 0) }; // Start with the central hexagon at (0, 0)
