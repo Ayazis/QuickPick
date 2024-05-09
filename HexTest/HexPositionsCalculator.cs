@@ -1,6 +1,8 @@
 ﻿using Hexgrid;
 using Newtonsoft.Json;
+using System.Diagnostics;
 using System.Drawing;
+using System.Security.Cryptography;
 using System.Text;
 using System.Windows.Xps;
 public interface IHexPositionsCalculator
@@ -14,13 +16,20 @@ public class HexPositionsCalculator : IHexPositionsCalculator
 
     }
     const int COLUMN_START = 0;
-    Point[] _directions = new Point[] { Right, Down, LeftDown, Left, Up, RightUp };
+    // old method:
+    // Point[] _directions = new Point[] { Right, Down, LeftDown, Left, Up, RightUp };
+
+    // new method
+    Point[] _directions = new Point[] { Up, Right, Down, LeftDown, Left, Up, RightUp };
+
+    // start RightUp
+    //Point[] _directions = new Point[] { RightUp, Down, LeftDown, Left, Up, RightUp };
 
     static Point Right = new Point(1, 0);
+    static Point Up = new Point(0, -1);
     static Point Down = new Point(0, 1);
     static Point LeftDown = new Point(-1, 1);
     static Point Left = new Point(-1, 0);
-    static Point Up = new Point(0, -1);
     static Point RightUp = new Point(1, -1);
 
     int _maxNumberOfHexes;
@@ -30,11 +39,13 @@ public class HexPositionsCalculator : IHexPositionsCalculator
 
     public List<HexPoint> GenerateHexagonalGridFixed(int numberOfHexes, bool useNewMethod = false)
     {
+        Oldmethod(numberOfHexes);
+        //NewMethod(numberOfHexes);
 
-        if (useNewMethod)
-            NewMethod(numberOfHexes);
-        else
-            Oldmethod(numberOfHexes);
+        //if (useNewMethod)
+        //    NewMethod(numberOfHexes);
+        //else
+        //    Oldmethod(numberOfHexes);
 
 
         var json = JsonConvert.SerializeObject(_grid);
@@ -43,10 +54,12 @@ public class HexPositionsCalculator : IHexPositionsCalculator
 
     private void NewMethod(int numberOfHexes)
     {
-        for (int i = 0; i < numberOfHexes; i++)
+        for (int i = 1; i < numberOfHexes; i++)
         {
-            _maxNumberOfHexes++;
-            FinishGrid();
+            Point newDirection = GetDirectionForNextHexagon(i);
+            var prev = _grid.HexPoints.Last();
+            var newPoint = new HexPoint(prev.Column + newDirection.X, prev.Row + newDirection.Y);
+            _grid.HexPoints.Add(newPoint);
         }
     }
 
@@ -71,6 +84,7 @@ public class HexPositionsCalculator : IHexPositionsCalculator
         for (int i = _grid.DirectionIndex; i < _directions.Length; i++) // Use directionIndex to continue with the correct direction.
         {
             Point direction = _directions[i];
+            Debug.WriteLine(direction.X + " " + direction.Y);
             CreateHexagonsByDirection(direction, out bool finishedGridState, out bool finishedDirection);
             if (finishedGridState)
             {
@@ -123,7 +137,7 @@ public class HexPositionsCalculator : IHexPositionsCalculator
     public Point GetDirectionForNextHexagon(int hexNumber)
     {
         int ringNumber = CalculateRingNumber(hexNumber);
-        int totalPrevious = ringNumber == 0 ? 0 : 1 + 3 * (ringNumber - 1) * ringNumber; // Total hexagons up to previous ring
+        int totalPrevious = GetTotalHexesUpUntillThisRing(ringNumber);
         int positionInRing = hexNumber - totalPrevious;
 
         //    Point[] directions = new Point[] {
@@ -136,35 +150,79 @@ public class HexPositionsCalculator : IHexPositionsCalculator
         //};
 
         // Check if the hexagon is the first one in a new ring
-        if (positionInRing == 1)
+        if (positionInRing == 0 && hexNumber != 1)
         {
             // Optionally, adjust this direction if your grid starts differently
-            return _directions[0]; // Typically 'Right' for the first hexagon in a new ring
+            var horseMove = _directions[0].AddPoint(_directions.Last());
+            return horseMove;
         }
 
-        // Find which side the hexagon is on within the ring
-        int side = (positionInRing - 1) / ringNumber;
+        int side = GetSideIndex(ringNumber, hexNumber);
+
         return _directions[side];
     }
+
+    public static int GetSideIndex(int ringNum, int hexNum)
+    {
+        if (ringNum == 1)
+            return hexNum - 1;
+
+        int offset = 1;
+        for (int i = 2; i <= ringNum; i++)
+        {
+            offset += 6 * (i - 1);
+        }
+
+        hexNum -= offset;
+
+        if (hexNum <= ringNum)
+            return 0;
+        else if (hexNum <= 2 * ringNum)
+            return 1;
+        else if (hexNum <= 3 * ringNum)
+            return 2;
+        else if (hexNum <= 4 * ringNum)
+            return 3;
+        else if (hexNum <= 5 * ringNum)
+            return 4;
+        else
+            return 5;
+    }
+
+    private static int GetTotalHexesUpUntillThisRing(int ringNumber)
+    {
+        int totalPrevious = 1; // Starting with 1 hexagon in the central position.
+        for (int i = 1; i < ringNumber; i++)
+        {
+            totalPrevious += 6 * i;
+
+
+            //return ringNumber == 0 ? 0 : 1 + 3 * (ringNumber - 1) * ringNumber;
+            // Total hexagons up to previous ring
+        }
+        return totalPrevious;
+    }
+
     public int CalculateRingNumber(int hexNumber)
     {
-        if (hexNumber == 1)
-            return 0; // The central hexagon is always in ring 0.
+        if (hexNumber == 1) return 1; // The central hexagon is considered to be in Ring 1.
 
-        int n = 1; // Start checking from the first ring.
-        int totalHexagons = 1; // Start with the central hexagon.
+        int n = 1; // Start from ring 1
+        int totalHexagons = 0; // Start with the central hexagon, part of Ring 1.
 
-        // Calculate the total number of hexagons up to and including ring n
         while (true)
         {
-            totalHexagons += 6 * n;
+            totalHexagons += 6 * n; // Add the hexagons in the current ring
             if (totalHexagons >= hexNumber)
+            {
                 break;
-            n++;
+            }
+            n++; // Increment to the next ring
         }
 
         return n;
     }
+
 
     private class Grid
     {
@@ -188,5 +246,13 @@ public class HexPositionsCalculator : IHexPositionsCalculator
             return sb.ToString();
 
         }
+    }
+
+}
+public static class PointExtensions
+{
+    public static Point AddPoint(this Point point1, Point point2)
+    {
+        return new Point(point1.X + point2.X, point1.Y + point2.Y);
     }
 }
