@@ -12,10 +12,10 @@ public class HexPositionsCalculator : IHexPositionsCalculator
     private List<HexPoint> _hexPoints = new List<HexPoint> { new HexPoint(0, 0) }; // Start with the central hexagon at (0, 0)      
     public HexPositionsCalculator()
     {
+        //_directions = DirectionHelper.StartRightUp;
+    }
 
-    }  
-    
-    
+
     Point[] _directions = new Point[] { Right, Down, LeftDown, Left, Up, RightUp };
 
     static Point Right = new Point(1, 0);
@@ -23,13 +23,13 @@ public class HexPositionsCalculator : IHexPositionsCalculator
     static Point Down = new Point(0, 1);
     static Point LeftDown = new Point(-1, 1);
     static Point Left = new Point(-1, 0);
-    static Point RightUp = new Point(1, -1);   
+    static Point RightUp = new Point(1, -1);
 
 
 
     public List<HexPoint> GenerateHexagonalGridFixed(int numberOfHexes)
-    {       
-        CreateGrid(numberOfHexes); 
+    {
+        CreateGrid(numberOfHexes);
 
         var json = JsonConvert.SerializeObject(_hexPoints);
         return _hexPoints;
@@ -44,7 +44,7 @@ public class HexPositionsCalculator : IHexPositionsCalculator
             var newPoint = new HexPoint(prev.Column + newDirection.X, prev.Row + newDirection.Y);
             _hexPoints.Add(newPoint);
         }
-    } 
+    }
 
     public Point GetDirectionForNextHexagon(int hexNumber)
     {
@@ -52,7 +52,7 @@ public class HexPositionsCalculator : IHexPositionsCalculator
         int ringNumber = CalculateRingNumber(hexNumber);
         int totalPrevious = GetTotalHexesUpUntillThisRing(ringNumber);
         int positionInRing = hexNumber - totalPrevious;
-        
+
         int side = GetSideIndex(ringNumber, hexNumber);
 
         if (positionInRing == 0)
@@ -83,7 +83,7 @@ public class HexPositionsCalculator : IHexPositionsCalculator
         int totalPrevious = 1; // Starting with 1 hexagon in the central position.
         for (int i = 1; i < ringNumber; i++)
         {
-            totalPrevious += 6 * i;          
+            totalPrevious += 6 * i;
         }
         return totalPrevious;
     }
@@ -109,7 +109,7 @@ public class HexPositionsCalculator : IHexPositionsCalculator
     }
 
 
-  
+
 
 }
 public static class PointExtensions
