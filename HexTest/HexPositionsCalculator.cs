@@ -20,10 +20,10 @@ public class HexPositionsCalculator : IHexPositionsCalculator
     // Point[] _directions = new Point[] { Right, Down, LeftDown, Left, Up, RightUp };
 
     // new method
-    Point[] _directions = new Point[] { Up, Right, Down, LeftDown, Left, Up, RightUp };
+    //Point[] _directions = new Point[] { Up, Right, Down, LeftDown, Left, Up, RightUp };
 
     // start RightUp
-    //Point[] _directions = new Point[] { RightUp, Down, LeftDown, Left, Up, RightUp };
+    Point[] _directions = new Point[] { Right, Down, LeftDown, Left, Up, RightUp };
 
     static Point Right = new Point(1, 0);
     static Point Up = new Point(0, -1);
@@ -39,8 +39,8 @@ public class HexPositionsCalculator : IHexPositionsCalculator
 
     public List<HexPoint> GenerateHexagonalGridFixed(int numberOfHexes, bool useNewMethod = false)
     {
-        Oldmethod(numberOfHexes);
-        //NewMethod(numberOfHexes);
+        //Oldmethod(numberOfHexes);
+        NewMethod(numberOfHexes);
 
         //if (useNewMethod)
         //    NewMethod(numberOfHexes);
@@ -136,58 +136,35 @@ public class HexPositionsCalculator : IHexPositionsCalculator
 
     public Point GetDirectionForNextHexagon(int hexNumber)
     {
+
         int ringNumber = CalculateRingNumber(hexNumber);
         int totalPrevious = GetTotalHexesUpUntillThisRing(ringNumber);
         int positionInRing = hexNumber - totalPrevious;
-
-        //    Point[] directions = new Point[] {
-        //    new Point(1, 0),    // Right
-        //    new Point(0, 1),    // Down
-        //    new Point(-1, 1),   // LeftDown
-        //    new Point(-1, 0),   // Left
-        //    new Point(0, -1),   // Up
-        //    new Point(1, -1)    // RightUp
-        //};
-
-        // Check if the hexagon is the first one in a new ring
-        if (positionInRing == 0 && hexNumber != 1)
-        {
-            // Optionally, adjust this direction if your grid starts differently
-            var horseMove = _directions[0].AddPoint(_directions.Last());
-            return horseMove;
-        }
-
+        
         int side = GetSideIndex(ringNumber, hexNumber);
+
+        if (positionInRing == 0)
+            return _directions.Last(); // repeat last move to start new ring.
 
         return _directions[side];
     }
 
     public int GetSideIndex(int ringNum, int hexNum)
     {
-        if (ringNum == 1)
-            return hexNum - 1;
+        if (ringNum == 0)
+            return -1;  // Central hexagon, no side index.
 
-        int offset = 1;
-        for (int i = 2; i <= ringNum; i++)
-        {
-            offset += 6 * (i - 1);
-        }
+        // Calculate the starting hex number of the current ring
+        int startOfRing = 1 + 3 * ringNum * (ringNum - 1);
 
-        hexNum -= offset;
+        // Determine the offset within the ring
+        int offset = hexNum - startOfRing;
 
-        if (hexNum <= ringNum)
-            return 0;
-        else if (hexNum <= 2 * ringNum)
-            return 1;
-        else if (hexNum <= 3 * ringNum)
-            return 2;
-        else if (hexNum <= 4 * ringNum)
-            return 3;
-        else if (hexNum <= 5 * ringNum)
-            return 4;
-        else
-            return 5;
+        // Calculate side index based on the offset
+        int sideIndex = (offset / ringNum) % 6;
+        return sideIndex;
     }
+
 
     private static int GetTotalHexesUpUntillThisRing(int ringNumber)
     {
