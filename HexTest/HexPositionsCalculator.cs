@@ -162,7 +162,7 @@ public class HexPositionsCalculator : IHexPositionsCalculator
         return _directions[side];
     }
 
-    public static int GetSideIndex(int ringNum, int hexNum)
+    public int GetSideIndex(int ringNum, int hexNum)
     {
         if (ringNum == 1)
             return hexNum - 1;
