@@ -3,10 +3,10 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <Version>1.1.7</Version>
-    <TargetFramework>net6.0-windows</TargetFramework>
+ 
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>disable</Nullable>
-	  <language>latest</language>    
+  
   </PropertyGroup>
 
   <ItemGroup>
