@@ -10,20 +10,13 @@ public interface IHexPositionsCalculator
 public class HexPositionsCalculator : IHexPositionsCalculator
 {
     private List<HexPoint> _hexPoints = new List<HexPoint> { new HexPoint(0, 0) }; // Start with the central hexagon at (0, 0)      
+    Direction[] _directions;
     public HexPositionsCalculator()
     {
-        //_directions = DirectionHelper.StartRightUp;
+         _directions = DirectionHelper.StartRightUp;
     }
 
 
-    Point[] _directions = new Point[] { Right, Down, LeftDown, Left, Up, RightUp };
-
-    static Point Right = new Point(1, 0);
-    static Point Up = new Point(0, -1);
-    static Point Down = new Point(0, 1);
-    static Point LeftDown = new Point(-1, 1);
-    static Point Left = new Point(-1, 0);
-    static Point RightUp = new Point(1, -1);
 
 
 
@@ -56,9 +49,9 @@ public class HexPositionsCalculator : IHexPositionsCalculator
         int side = GetSideIndex(ringNumber, hexNumber);
 
         if (positionInRing == 0)
-            return _directions.Last(); // repeat last move to start new ring.
+            return _directions.Last().Movement; // repeat last move to start new ring.
 
-        return _directions[side];
+        return _directions[side].Movement;
     }
 
     public int GetSideIndex(int ringNum, int hexNum)
