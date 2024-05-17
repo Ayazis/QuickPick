@@ -25,7 +25,7 @@ namespace HexTest
 
             var hexPositions = _hexPositionsCalculator.GenerateHexagonalGridFixed(numberOfHexes);
 
-            canvas?.Children.Clear();
+            canvas.Children.Clear();
             foreach (var point in hexPositions)
             {
                 double x = hexagonSize / 1.75 * (3.0 / 2 * point.Column);
@@ -43,7 +43,8 @@ namespace HexTest
                     Text = nr,
                     VerticalAlignment = System.Windows.VerticalAlignment.Center,
                     HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
-                    Foreground = Brushes.White
+                    Foreground = Brushes.White,
+                    Margin = new System.Windows.Thickness(15, 15, 0, 0)
                 });
 #endif
 

@@ -1,64 +1,63 @@
-﻿using System.Windows;
+﻿using FontAwesome5;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace QuickPick.UI.Views.Hex;
 public class HexagonButton : Button
 {
-    public Hexagon HexagonShape;
-    // ImageAwesome Image;
-
+    Hexagon _hexagonShape = new();
+    ImageAwesome Image;
+    public Grid Grid = new Grid();
     double hexScale = 1.0;
     double iconScale = .3;
-    // Create a Grid to hold the Hexagon and the icon
-    public Grid Grid = new Grid();
 
     private static Style _noHooverOverStyle;
 
     public HexagonButton()
     {
-
-        this.BorderThickness = new Thickness(0);
+        BorderThickness = new Thickness(0);
         Padding = new Thickness(-5);
         Background = Brushes.Transparent;
 
-       
 
-        // Create the Hexagon shape
-        HexagonShape = new Hexagon()
-        {
-            HorizontalAlignment = HorizontalAlignment.Center,
-            VerticalAlignment = VerticalAlignment.Center,
-        };
-
-
-
-        // Add the Hexagon to the Grid
-        Grid.Children.Add(HexagonShape);
-
-        //// Create the FontAwesome icon
-        //Image = new ImageAwesome
-        //{            
-        //    Foreground = Brushes.White,
-        //    HorizontalAlignment = HorizontalAlignment.Center,
-        //    VerticalAlignment = VerticalAlignment.Center,
-        //    Width = this.Width * iconScale,
-        //    Height = this.Height * iconScale
-        //};
-
-        // Add the icon to the Grid
-        //grid.Children.Add(Image);
-
-        // Set the Content of the Button to the Grid
-        this.Content = Grid;
+        AddHexaonShapeAndIcon();
 
         SizeChanged += HexagonButton_SizeChanged; ;
 
-        Style = CreateStyle();
+        _noHooverOverStyle = CreateStyle();
+        Style = _noHooverOverStyle;
     }
 
+    private void AddHexaonShapeAndIcon()
+    {
+        // Create the FontAwesome icon
+        SetDefaultImage();
 
-    private Style CreateStyle()
+        // Add the Hexagon to the Grid
+        Grid.Children.Add(_hexagonShape);
+
+        //Add the icon to the Grid
+        Grid.Children.Add(Image);
+
+        // Set the Content of the Button to the Grid
+        this.Content = Grid;
+    }
+
+    private void SetDefaultImage()
+    {
+        Image = new ImageAwesome
+        {
+            Foreground = Brushes.White,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center,
+            Width = this.Width * iconScale,
+            Height = this.Height * iconScale,
+            //Icon = EFontAwesomeIcon.Regular_Eye
+        };
+    }
+
+    private static Style CreateStyle()
     {
         if (_noHooverOverStyle != null)
             return _noHooverOverStyle;
@@ -98,27 +97,33 @@ public class HexagonButton : Button
     private void HexagonButton_SizeChanged(object sender, SizeChangedEventArgs e)
     {
         // Set the Width and Height of the Hexagon to be the same as the ActualWidth and ActualHeight of the HexagonButton
-        HexagonShape.Width = this.ActualWidth * hexScale;
-        HexagonShape.Height = this.ActualHeight * hexScale;
+        _hexagonShape.Width = this.ActualWidth * hexScale;
+        _hexagonShape.Height = this.ActualHeight * hexScale;
 
-        //Image.Width = this.ActualWidth * iconScale;
+        // Update icon size
+        UpdateIconSize();
     }
-    //public static readonly DependencyProperty IconProperty = DependencyProperty.Register(
-    //    "Icon", typeof(EFontAwesomeIcon), typeof(HexagonButton), new PropertyMetadata(default(EFontAwesomeIcon), OnIconChanged));
+    public static readonly DependencyProperty IconProperty = DependencyProperty.Register(
+        "Icon", typeof(EFontAwesomeIcon), typeof(HexagonButton), new PropertyMetadata(default(EFontAwesomeIcon), OnIconChanged));
+    private static void OnIconChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        var button = (HexagonButton)d;
+        button.Image.Icon = (EFontAwesomeIcon)e.NewValue;
+        button.Image.Width = button.ActualWidth * button.iconScale;
+        button.Image.Height = button.ActualHeight * button.iconScale;
+        button.HexagonButton_SizeChanged(button, null);
+    }
+    public EFontAwesomeIcon FontIcon
+    {
+        get { return (EFontAwesomeIcon)GetValue(IconProperty); }
+        set { SetValue(IconProperty, value); }
+    }
 
+    private void UpdateIconSize()
+    {
+        Image.Width = this.ActualWidth * iconScale;
+        Image.Height = this.ActualHeight * iconScale;
+    }
 
-    //private static void OnIconChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    //{
-    //    var button = (HexagonButton)d;
-    //    button.Image.Icon = (EFontAwesomeIcon)e.NewValue;
-    //    button.Image.Width = button.ActualWidth * button.iconScale;
-    //  //  button.Image.Height = button.ActualHeight * button.iconScale;
-    //    button.HexagonButton_SizeChanged(button, null);
-    //}
-    //public EFontAwesomeIcon FontIcon
-    //{
-    //    get { return (EFontAwesomeIcon)GetValue(IconProperty); }
-    //    set { SetValue(IconProperty, value); }
-    //}
 
 }

@@ -44,7 +44,8 @@ namespace QuickPick.UI.Views.Hex
             };
 
 
-
+            HorizontalAlignment = HorizontalAlignment.Center;
+            VerticalAlignment = VerticalAlignment.Center;
 
         }
         public enum Orientation
