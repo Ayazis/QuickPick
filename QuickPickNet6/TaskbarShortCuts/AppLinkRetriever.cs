@@ -28,8 +28,7 @@ public class AppLinkRetriever
     static List<AppLink> _allShortCuts = new List<AppLink>();
 
     public static List<AppLink> GetPinnedAppsAndActiveWindows(bool includePinnedApps)
-    {
-        return _allShortCuts; 
+    {        
         _allShortCuts.Clear();
 
         if (includePinnedApps)

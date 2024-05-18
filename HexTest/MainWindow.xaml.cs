@@ -34,7 +34,7 @@ namespace HexTest
 
         public void DrawHexagonalGrid()
         {
-            _hexGridCreator.DrawHexagonalGrid(this.Canvas, length, maxNumber);
+            _hexGridCreator.CreateHexButtonsInHoneyCombStructure(this.Canvas.Width, length, maxNumber);
         }
 
 

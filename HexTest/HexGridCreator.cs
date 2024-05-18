@@ -1,9 +1,16 @@
 ﻿using QuickPick.UI.Views.Hex;
+using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
+
 
 namespace HexTest
 {
+    public class HexPosition
+    {
+        public HexagonButton HexButton { get; set; }
+        public Point Position { get; set; }
+    }
+
     public class HexGridCreator
     {
         IHexPositionsCalculator _hexPositionsCalculator;
@@ -13,19 +20,16 @@ namespace HexTest
             _hexPositionsCalculator = hexPositionsCalculator;
         }
 
-        public void DrawHexagonalGrid(Canvas canvas, int hexagonSize, int numberOfHexes)
+        public IEnumerable<HexPosition> CreateHexButtonsInHoneyCombStructure(double canvasWidth, int hexagonSize, int numberOfHexes)
         {
-            double xOffSet = (canvas.Width / 2) - (hexagonSize / 2);
-            double yOffset = (canvas.Height / 2) - (hexagonSize / 2);
+
+            double xOffSet = (canvasWidth / 2) - (hexagonSize / 2);
+            double yOffset = (canvasWidth / 2) - (hexagonSize / 2);
 
             // todo: Add offset the size of the button
 
-            if (canvas == null)
-                throw new ArgumentNullException(nameof(canvas));
-
             var hexPositions = _hexPositionsCalculator.GenerateHexagonalGridFixed(numberOfHexes);
 
-            canvas.Children.Clear();
             foreach (var point in hexPositions)
             {
                 double x = hexagonSize / 1.75 * (3.0 / 2 * point.Column);
@@ -35,7 +39,7 @@ namespace HexTest
                 x += xOffSet;
                 y += yOffset;
 
-                var hexagon = new HexagonButton() { Width = hexagonSize, Height = hexagonSize };
+                var hexbutton = new HexagonButton() { Width = hexagonSize, Height = hexagonSize };
 #if DEBUG
                 //string nr = hexPositions.IndexOf(point).ToString();
                 //hexagon.Grid.Children.Add(new TextBlock()
@@ -48,9 +52,7 @@ namespace HexTest
                 //});
 #endif
 
-                canvas.Children.Add(hexagon);
-                Canvas.SetLeft(hexagon, x);
-                Canvas.SetTop(hexagon, y);
+                yield return new HexPosition() { HexButton = hexbutton, Position = new(x, y) };
             }
         }
     }
