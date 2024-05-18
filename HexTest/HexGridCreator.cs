@@ -37,15 +37,15 @@ namespace HexTest
 
                 var hexagon = new HexagonButton() { Width = hexagonSize, Height = hexagonSize };
 #if DEBUG
-                string nr = hexPositions.IndexOf(point).ToString();
-                hexagon.Grid.Children.Add(new TextBlock()
-                {
-                    Text = nr,
-                    VerticalAlignment = System.Windows.VerticalAlignment.Center,
-                    HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
-                    Foreground = Brushes.White,
-                    Margin = new System.Windows.Thickness(15, 15, 0, 0)
-                });
+                //string nr = hexPositions.IndexOf(point).ToString();
+                //hexagon.Grid.Children.Add(new TextBlock()
+                //{
+                //    Text = nr,
+                //    VerticalAlignment = System.Windows.VerticalAlignment.Center,
+                //    HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
+                //    Foreground = Brushes.White,
+                //    Margin = new System.Windows.Thickness(15, 15, 0, 0)
+                //});
 #endif
 
                 canvas.Children.Add(hexagon);
