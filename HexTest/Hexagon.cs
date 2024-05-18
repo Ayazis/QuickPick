@@ -23,9 +23,12 @@ namespace QuickPick.UI.Views.Hex
             // Create a new trigger
             Trigger mouseOverTrigger = new Trigger { Property = UIElement.IsMouseOverProperty, Value = true };
             // Create setter for the trigger
-            Setter backgroundSetter = new Setter { Property = Shape.FillProperty, Value = _reversedGradient };
+            //Setter backgroundSetter = new Setter { Property = Shape.FillProperty, Value = _reversedGradient };
+
+            Setter strokeSetter = new Setter { Property = Shape.StrokeProperty, Value = Brushes.LightCyan };
+
             // Add the setter to the trigger
-            mouseOverTrigger.Setters.Add(backgroundSetter);
+            mouseOverTrigger.Setters.Add(strokeSetter);
 
 
             // Set the style directly in the constructor
