@@ -1,9 +1,40 @@
-﻿using System.Windows;
+﻿using System.Security.Cryptography.X509Certificates;
+using System.Windows;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
 namespace QuickPick.UI.Views.Hex
 {
+    public interface IHasValueBar
+    {
+        void Increase(int value);
+        void Decrease(int value);
+
+        int GetCurrentValue();
+    }
+    public class ValuebarButton : Hexagon, IHasValueBar
+    {
+        Action<int> _valueChange;
+        Func<int> _currentValue;
+        public ValuebarButton(Action<int> valueChange, Func<int> getCurrentValue)
+        {
+            _valueChange = valueChange;
+            _currentValue = getCurrentValue;
+        }
+        public void Decrease(int value)
+        { 
+            _valueChange.Invoke(-value);
+        }
+
+        public void Increase(int value)
+        {
+            _valueChange.Invoke(value);
+        }
+        public int GetCurrentValue()
+        {
+            return _currentValue.Invoke();
+        }
+    }
     public class Hexagon : Shape
     {
         private static LinearGradientBrush _defaultGradient;
