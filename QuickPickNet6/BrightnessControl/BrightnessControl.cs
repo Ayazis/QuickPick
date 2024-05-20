@@ -13,19 +13,19 @@ using System.Windows.Media;
 
 namespace QuickPick.UI.BrightnessControls
 {
-    public class BrightnessControl : IValueHandler
+    public class BrightnessControl : IPercentageValueHandler
     {
 
-        Dictionary<string, BrightnessDimmerWindow> _windowDimmers;
+        
 
-        Dictionary<string, BrightnessDimmerWindow> WindowDimmers => _windowDimmers ??= CreateWindowDimmers();
+        Dictionary<string, BrightnessDimmerWindow> WindowDimmers;
 
 
         static BrightnessControl _instance;
         public static BrightnessControl Instance => _instance ??= new BrightnessControl();
         public BrightnessControl()
         {
-
+            WindowDimmers = CreateWindowDimmers();
         }
 
         public void HandleNewValue(double brightnessLevel)
@@ -64,6 +64,7 @@ namespace QuickPick.UI.BrightnessControls
                 window.IsHitTestVisible = false;
                 window.Show();
                 windowDimmers.Add(screen.DeviceName, window);
+                window.SetBrightness(100);
             }
             return windowDimmers;
         }

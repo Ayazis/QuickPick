@@ -2,7 +2,7 @@
 
 namespace QuickPick.Utilities
 {
-    public class VolumeControl : IValueHandler
+    public class VolumeControl : IPercentageValueHandler
     {
         MMDevice _defaultDevice;
 
@@ -16,11 +16,11 @@ namespace QuickPick.Utilities
         {
             _defaultDevice.AudioEndpointVolume.MasterVolumeLevelScalar = (float)value / 100;
         }
-
         private double GetCurrentVolume()
         {
             float currentVolume = _defaultDevice.AudioEndpointVolume.MasterVolumeLevelScalar * 100;
             return (double)currentVolume;
         }
+
     }
 }

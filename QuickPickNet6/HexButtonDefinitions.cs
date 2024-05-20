@@ -4,8 +4,12 @@ using QuickPick.UI.BrightnessControls;
 using QuickPick.UI.Views.Hex;
 using QuickPick.UI.Views.Settings;
 using QuickPick.Utilities;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace QuickPick
 {
@@ -35,7 +39,7 @@ namespace QuickPick
 
         public static void AsBrightnessControl(this HexagonButton button)
         {
-            IValueHandler brightnessControl = new BrightnessControl();
+            IPercentageValueHandler brightnessControl = new BrightnessControl();
             double startValue = 100;
             button.FontIcon = EFontAwesomeIcon.Solid_Adjust;
             var sliderControl = AddSliderControl(button, startValue);
@@ -59,11 +63,29 @@ namespace QuickPick
             };
         }
 
+
+        public static void AsPlayPauseToggle(this HexagonButton button)
+        {
+            var playBackControl = new PlayBackControl();
+            button.FontIcon = playBackControl.IsAudioPlaying ? EFontAwesomeIcon.Solid_Pause : EFontAwesomeIcon.Solid_Play;
+
+            button.Hexagon.MouseDown += (sender, e) =>
+            {
+                InputSim.PlayPause();
+                Dispatcher.CurrentDispatcher.Invoke(async () =>
+                 {
+                     await Task.Delay(500); // wait for the fade..
+                     bool isAudioPlaying = playBackControl.IsAudioPlaying;
+                     button.FontIcon = isAudioPlaying ? EFontAwesomeIcon.Solid_Pause : EFontAwesomeIcon.Solid_Play;
+                 });
+            };
+        }
+
         private static SliderUiControl AddSliderControl(HexagonButton button, double startValue)
         {
             var progressBar = CreateProgressbar();
             button.Grid.Children.Add(progressBar);
-            progressBar.Value = startValue;            
+            progressBar.Value = startValue;
             var sliderControl = new SliderUiControl(button, progressBar);
             sliderControl.AttachToButtonEvents();
             return sliderControl;

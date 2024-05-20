@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace QuickPick.Utilities
 {
-    public interface IValueHandler
+    public interface IPercentageValueHandler
     {
         void HandleNewValue(double value);
     }

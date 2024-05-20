@@ -2,8 +2,6 @@
 using QuickPick.Logic;
 using QuickPick.UI.BrightnessControls;
 using QuickPick.UI.Views.Settings;
-using System;
-using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -27,7 +25,7 @@ public partial class RingButtonControl : UserControl
         SoundDevice = enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Console);
         InitializeComponent();
 
-        this.IsVisibleChanged += RingButtonControl_IsVisibleChanged;
+        IsVisibleChanged += RingButtonControl_IsVisibleChanged;
     }
 
     private void RingButtonControl_IsVisibleChanged(object sender, System.Windows.DependencyPropertyChangedEventArgs e)
@@ -46,7 +44,6 @@ public partial class RingButtonControl : UserControl
 
     public bool IsAudioPlaying()
     {
-
         var count = SoundDevice.AudioMeterInformation.PeakValues.Count;
         for (int i = 0; i < count; i++)
         {
@@ -190,7 +187,7 @@ public partial class RingButtonControl : UserControl
     }
 
     private void BrightnessButton_MouseDown(object sender, MouseButtonEventArgs e)
-    {        
+    {
         _brightnessButtonDown = true;
         BrightnessBar.Visibility = Visibility.Visible;
         _previousPosition = e.GetPosition(this);
@@ -199,7 +196,7 @@ public partial class RingButtonControl : UserControl
     }
 
     private void BrightnessButton_MouseUp(object sender, MouseButtonEventArgs e)
-    {       
+    {
         BrightnessBar.Visibility = Visibility.Collapsed;
         _brightnessButtonDown = false;
         // Release the mouse
@@ -208,7 +205,7 @@ public partial class RingButtonControl : UserControl
 
     private void BrightnessButton_MouseMove(object sender, MouseEventArgs e)
     {
-      
+
         if (_brightnessButtonDown)
         {
             // get current mousePosition
