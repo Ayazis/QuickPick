@@ -233,7 +233,7 @@ public partial class RingButtonControl : UserControl
 
     public void ExposeNewBrightnessLevel()
     {
-        BrightnessControl.Instance.SetBrightnessOnAllScreens((int)_percentage);
+        BrightnessControl.Instance.HandleNewValue((int)_percentage);
     }
 
     private void TopLeft_MouseDown(object sender, MouseButtonEventArgs e)

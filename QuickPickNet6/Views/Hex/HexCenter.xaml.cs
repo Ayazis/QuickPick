@@ -98,7 +98,7 @@ public partial class HexCenter : UserControl
 
     public void ExposeNewBrightnessLevel()
     {
-        _brightnessControl.SetBrightnessOnAllScreens((int)_percentage);
+        _brightnessControl.HandleNewValue((int)_percentage);
     }
     private void Hex2_Click(object sender, RoutedEventArgs e)
     {

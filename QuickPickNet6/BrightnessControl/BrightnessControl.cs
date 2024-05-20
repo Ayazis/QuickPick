@@ -27,7 +27,7 @@ namespace QuickPick.UI.BrightnessControls
 
         }
 
-        public void SetBrightnessOnAllScreens(int brightnessLevel)
+        public void HandleNewValue(int brightnessLevel)
         {
             foreach (var item in WindowDimmers)
             {

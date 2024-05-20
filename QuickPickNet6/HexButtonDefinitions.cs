@@ -3,6 +3,7 @@ using QuickPick.Logic;
 using QuickPick.UI.BrightnessControls;
 using QuickPick.UI.Views.Hex;
 using QuickPick.UI.Views.Settings;
+using QuickPick.Utilities;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -41,18 +42,18 @@ namespace QuickPick
 
             sliderControl.ValueChanged += (value) =>
             {
-                brightnessControl.SetBrightnessOnAllScreens((int)value);
+                brightnessControl.HandleNewValue((int)value);
             };
         }
 
         public static void AsVolumeControl(this HexagonButton button)
         {
             button.FontIcon = EFontAwesomeIcon.Solid_VolumeUp;
-            var sliderControl = AddSliderControl(button);            
-
+            var sliderControl = AddSliderControl(button);
+            var volumeControl = new VolumeControl();
             sliderControl.ValueChanged += (value) =>
             {
-                brightnessControl.SetBrightnessOnAllScreens((int)value);
+                volumeControl.HandleNewValue(value);
             };
         }
 
