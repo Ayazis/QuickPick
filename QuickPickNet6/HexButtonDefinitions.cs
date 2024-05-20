@@ -38,11 +38,11 @@ namespace QuickPick
         {
             button.FontIcon = EFontAwesomeIcon.Solid_Adjust;
             var sliderControl = AddSliderControl(button);
-            var brightnessControl = new BrightnessControl();
+            IValueHandler brightnessControl = new BrightnessControl();
 
             sliderControl.ValueChanged += (value) =>
             {
-                brightnessControl.HandleNewValue((int)value);
+                brightnessControl.HandleNewValue(value);
             };
         }
 
@@ -50,7 +50,7 @@ namespace QuickPick
         {
             button.FontIcon = EFontAwesomeIcon.Solid_VolumeUp;
             var sliderControl = AddSliderControl(button);
-            var volumeControl = new VolumeControl();
+            IValueHandler volumeControl = new VolumeControl();
             sliderControl.ValueChanged += (value) =>
             {
                 volumeControl.HandleNewValue(value);
@@ -59,11 +59,11 @@ namespace QuickPick
 
 
 
-        private static SliderControl AddSliderControl(HexagonButton button)
+        private static SliderUiControl AddSliderControl(HexagonButton button)
         {
             var progressBar = AddProgressBar(button);
             button.Grid.Children.Add(progressBar);
-            var sliderControl = new SliderControl(button, progressBar);
+            var sliderControl = new SliderUiControl(button, progressBar);
             sliderControl.AttachToButtonEvents();
             return sliderControl;
         }

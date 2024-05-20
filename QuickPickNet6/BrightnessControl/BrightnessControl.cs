@@ -1,4 +1,5 @@
 ﻿using QuickPick.UI.BrightnessControls;
+using QuickPick.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,7 @@ using System.Windows.Media;
 
 namespace QuickPick.UI.BrightnessControls
 {
-    public class BrightnessControl 
+    public class BrightnessControl : IValueHandler
     {
 
         Dictionary<string, BrightnessDimmerWindow> _windowDimmers;
@@ -27,11 +28,11 @@ namespace QuickPick.UI.BrightnessControls
 
         }
 
-        public void HandleNewValue(int brightnessLevel)
+        public void HandleNewValue(double brightnessLevel)
         {
             foreach (var item in WindowDimmers)
             {
-                SetBrightness(brightnessLevel, item.Key);
+                SetBrightness((int)brightnessLevel, item.Key);
             }
         }
 

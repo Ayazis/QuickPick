@@ -4,7 +4,7 @@ using System.Windows.Input;
 
 namespace QuickPick
 {
-    public class SliderControl
+    public class SliderUiControl
     {
         readonly IInputElement _inputElement;
         bool _buttonDown;
@@ -12,7 +12,7 @@ namespace QuickPick
         Point _previousPosition;
         private double _percentage;
 
-        public SliderControl(IInputElement inputElement, ProgressBar progressBar)
+        public SliderUiControl(IInputElement inputElement, ProgressBar progressBar)
         {
             _inputElement = inputElement;
             _progressBar = progressBar;
