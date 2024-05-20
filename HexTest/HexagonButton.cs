@@ -6,7 +6,8 @@ using System.Windows.Media;
 namespace QuickPick.UI.Views.Hex;
 public class HexagonButton : Button
 {
-    public Hexagon HexagonShape { get; private set; } = new();
+    Hexagon _hexagonShapeBackground = new();
+    public Hexagon Hexagon { get; private set; } = new Hexagon() { Fill = Brushes.Transparent };
     ImageAwesome Image;
     public Grid Grid = new Grid();
     double hexScale = 1.0;
@@ -23,7 +24,8 @@ public class HexagonButton : Button
 
         AddHexaonShapeAndIcon();
 
-        SizeChanged += HexagonButton_SizeChanged; ;
+        SizeChanged += HexagonButton_SizeChanged;
+
 
         _noHooverOverStyle = CreateStyle();
         Style = _noHooverOverStyle;
@@ -35,10 +37,13 @@ public class HexagonButton : Button
         SetDefaultImage();
 
         // Add the Hexagon to the Grid
-        Grid.Children.Add(HexagonShape);
+        Grid.Children.Add(_hexagonShapeBackground);
 
         //Add the icon to the Grid
         Grid.Children.Add(Image);
+
+        Grid.Children.Add(Hexagon);
+
 
         // Set the Content of the Button to the Grid
         this.Content = Grid;
@@ -97,11 +102,16 @@ public class HexagonButton : Button
     private void HexagonButton_SizeChanged(object sender, SizeChangedEventArgs e)
     {
         // Set the Width and Height of the Hexagon to be the same as the ActualWidth and ActualHeight of the HexagonButton
-        HexagonShape.Width = this.ActualWidth * hexScale;
-        HexagonShape.Height = this.ActualHeight * hexScale;
+        _hexagonShapeBackground.Width = this.ActualWidth * hexScale;
+        _hexagonShapeBackground.Height = this.ActualHeight * hexScale;
+        Hexagon.Width = this.ActualWidth * hexScale;
+        Hexagon.Height = this.ActualHeight * hexScale;
+
 
         // Update icon size
         UpdateIconSize();
+
+        UpdateLayout();
     }
     public static readonly DependencyProperty IconProperty = DependencyProperty.Register(
         "Icon", typeof(EFontAwesomeIcon), typeof(HexagonButton), new PropertyMetadata(default(EFontAwesomeIcon), OnIconChanged));

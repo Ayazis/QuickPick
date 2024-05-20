@@ -44,7 +44,7 @@
         <ItemsControl x:Name="Applinks" ItemsSource="{Binding PinnedApps, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" >
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <custom:CircularPanel x:Name="AppsCircularPanel" Width="150" Height="150" />
+                    <custom:CircularPanel x:Name="AppsCircularPanel" Width="175" Height="175" />
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>

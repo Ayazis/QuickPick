@@ -20,8 +20,9 @@ namespace HexTest
             _hexPositionsCalculator = hexPositionsCalculator;
         }
 
-        public IEnumerable<HexPosition> CreateHexButtonsInHoneyCombStructure(double canvasWidth, int hexagonSize, int numberOfHexes)
+        public List<HexPosition> CreateHexButtonsInHoneyCombStructure(double canvasWidth, int hexagonSize, int numberOfHexes)
         {
+            var hexes = new List<HexPosition>();
 
             double xOffSet = (canvasWidth / 2) - (hexagonSize / 2);
             double yOffset = (canvasWidth / 2) - (hexagonSize / 2);
@@ -52,8 +53,11 @@ namespace HexTest
                 //});
 #endif
 
-                yield return new HexPosition() { HexButton = hexbutton, Position = new(x, y) };
+                hexes.Add(new HexPosition() { HexButton = hexbutton, Position = new(x, y) });
+                
             }
+
+            return hexes;
         }
     }
 }

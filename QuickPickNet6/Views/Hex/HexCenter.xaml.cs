@@ -16,24 +16,26 @@ namespace QuickPick.UI.Views.Hex;
 /// </summary>
 public partial class HexCenter : UserControl
 {
-    private int _size = 35;
+    private int _size = 40;
     private int _hexCount = 1 + 6;
     HexGridCreator _hexGridCreator = new(new HexPositionsCalculator());
-    IEnumerable<HexPosition> _hexes;
+    List<HexPosition> _hexes;
     public HexCenter()
     {
         InitializeComponent();
         HexCanvas.Children.Clear();
 
         _hexes = _hexGridCreator.CreateHexButtonsInHoneyCombStructure(HexCanvas.Width, _size, _hexCount);
+
+
         foreach (var hexPosition in _hexes)
         {
             HexCanvas.Children.Add(hexPosition.HexButton);
             Canvas.SetLeft(hexPosition.HexButton, hexPosition.Position.X);
             Canvas.SetTop(hexPosition.HexButton, hexPosition.Position.Y);
         }
-
         SetCustomHexButtons();
+
     }
 
     BrightnessControl _brightnessControl = new();
@@ -42,62 +44,53 @@ public partial class HexCenter : UserControl
     double _percentage;
     void SetCustomHexButtons()
     {
-        HexagonButton centerHex = _hexes.First().HexButton;
-        centerHex.FontIcon = EFontAwesomeIcon.
-        centerHex.HexagonShape.MouseDown += CenterHex_Click;
+        _hexes[0].HexButton.AsSettingsButton();
+        _hexes[1].HexButton.AsShowDesktopButton();
     }
 
-
-    private void CenterHex_Click(object sender, RoutedEventArgs e)
-    {
-        SettingsWindow.Instance.ShowWindow();
-        SettingsWindow.Instance.Activate();
-        SettingsWindow.Instance.Focus();
-        ClickWindow.Instance.HideUI();
-    }
 
     private void Hex1_Click(object sender, RoutedEventArgs e)
     {
 
     }
-    private void BrightnessButton_MouseDown(object sender, MouseButtonEventArgs e)
-    {
-        _brightnessButtonDown = true;
-        BrightnessBar.Visibility = Visibility.Visible;
-        _previousPosition = e.GetPosition(this);
-        // Capture the mouse
-        ((dynamic)sender).CaptureMouse();
-    }
+    //private void BrightnessButton_MouseDown(object sender, MouseButtonEventArgs e)
+    //{
+    //    _brightnessButtonDown = true;
+    //    BrightnessBar.Visibility = Visibility.Visible;
+    //    _previousPosition = e.GetPosition(this);
+    //    // Capture the mouse
+    //    ((dynamic)sender).CaptureMouse();
+    //}
 
-    private void BrightnessButton_MouseUp(object sender, MouseButtonEventArgs e)
-    {
-        BrightnessBar.Visibility = Visibility.Collapsed;
-        _brightnessButtonDown = false;
-        // Release the mouse
-        ((dynamic)sender).ReleaseMouseCapture();
-    }
+    //private void BrightnessButton_MouseUp(object sender, MouseButtonEventArgs e)
+    //{
+    //    BrightnessBar.Visibility = Visibility.Collapsed;
+    //    _brightnessButtonDown = false;
+    //    // Release the mouse
+    //    ((dynamic)sender).ReleaseMouseCapture();
+    //}
 
-    private void BrightnessButton_MouseMove(object sender, MouseEventArgs e)
-    {
+    //private void BrightnessButton_MouseMove(object sender, MouseEventArgs e)
+    //{
 
-        if (_brightnessButtonDown)
-        {
-            // get current mousePosition
-            Point position = e.GetPosition(this);
-            // compare with previousposition, calculate vertical distance:
-            var pointDifference = -(position.Y - _previousPosition.Y);
-            _percentage += pointDifference;
+    //    if (_brightnessButtonDown)
+    //    {
+    //        // get current mousePosition
+    //        Point position = e.GetPosition(this);
+    //        // compare with previousposition, calculate vertical distance:
+    //        var pointDifference = -(position.Y - _previousPosition.Y);
+    //        _percentage += pointDifference;
 
-            if (_percentage > 100)
-                _percentage = 100;
-            if (_percentage < 50)
-                _percentage = 50;
+    //        if (_percentage > 100)
+    //            _percentage = 100;
+    //        if (_percentage < 50)
+    //            _percentage = 50;
 
-            BrightnessBar.Value = _percentage;
-            ExposeNewBrightnessLevel();
-            _previousPosition = position;
-        }
-    }
+    //        BrightnessBar.Value = _percentage;
+    //        ExposeNewBrightnessLevel();
+    //        _previousPosition = position;
+    //    }
+    //}
 
     public delegate void IntValueChangedEventHandler(double value);
     public event IntValueChangedEventHandler BrightnessLevelChanged;
@@ -115,14 +108,14 @@ public partial class HexCenter : UserControl
     {
         ToggleMute(sender as HexagonButton);
     }
-    void ToggleMute(HexagonButton muteButton)
+    void ToggleMute(HexagonButton button)
     {
         InputSim.ToggleMute();
 
-        if (muteButton.FontIcon == EFontAwesomeIcon.Solid_VolumeUp)
-            muteButton.FontIcon = FontAwesome5.EFontAwesomeIcon.Solid_VolumeMute;
+        if (button.FontIcon == EFontAwesomeIcon.Solid_VolumeUp)
+            button.FontIcon = FontAwesome5.EFontAwesomeIcon.Solid_VolumeMute;
         else
-            muteButton.FontIcon = FontAwesome5.EFontAwesomeIcon.Solid_VolumeUp;
+            button.FontIcon = FontAwesome5.EFontAwesomeIcon.Solid_VolumeUp;
     }
 
     private void ToggleVolumeAndVolumeOffButtons(HexagonButton musicButton)
@@ -135,10 +128,6 @@ public partial class HexCenter : UserControl
             musicButton.FontIcon = FontAwesome5.EFontAwesomeIcon.Solid_Play;
     }
 
-    private void Hex4_Click(object sender, RoutedEventArgs e)
-    {
-        InputSim.WinD();
-        ClickWindow.Instance.HideUI();
-    }
+
 
 }
