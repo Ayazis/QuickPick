@@ -6,7 +6,6 @@ using QuickPick.UI.Views.Settings;
 using QuickPick.Utilities;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 
 namespace QuickPick
 {
@@ -36,9 +35,11 @@ namespace QuickPick
 
         public static void AsBrightnessControl(this HexagonButton button)
         {
-            button.FontIcon = EFontAwesomeIcon.Solid_Adjust;
-            var sliderControl = AddSliderControl(button);
             IValueHandler brightnessControl = new BrightnessControl();
+            double startValue = 100;
+            button.FontIcon = EFontAwesomeIcon.Solid_Adjust;
+            var sliderControl = AddSliderControl(button, startValue);
+
 
             sliderControl.ValueChanged += (value) =>
             {
@@ -48,29 +49,27 @@ namespace QuickPick
 
         public static void AsVolumeControl(this HexagonButton button)
         {
+            var volumeControl = new VolumeControl();
+
             button.FontIcon = EFontAwesomeIcon.Solid_VolumeUp;
-            var sliderControl = AddSliderControl(button);
-            IValueHandler volumeControl = new VolumeControl();
+            var sliderControl = AddSliderControl(button, volumeControl.CurrentVolume);
             sliderControl.ValueChanged += (value) =>
             {
                 volumeControl.HandleNewValue(value);
             };
         }
 
-
-
-        private static SliderUiControl AddSliderControl(HexagonButton button)
+        private static SliderUiControl AddSliderControl(HexagonButton button, double startValue)
         {
-            var progressBar = AddProgressBar(button);
+            var progressBar = CreateProgressbar();
             button.Grid.Children.Add(progressBar);
+            progressBar.Value = startValue;            
             var sliderControl = new SliderUiControl(button, progressBar);
             sliderControl.AttachToButtonEvents();
             return sliderControl;
         }
 
-
-
-        private static ProgressBar AddProgressBar(HexagonButton button)
+        private static ProgressBar CreateProgressbar()
         {
             // Create the ProgressBar
             ProgressBar progressBar = new ProgressBar

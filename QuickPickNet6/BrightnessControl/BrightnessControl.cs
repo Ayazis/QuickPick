@@ -30,6 +30,9 @@ namespace QuickPick.UI.BrightnessControls
 
         public void HandleNewValue(double brightnessLevel)
         {
+            // Make sure we never let the screen go dark.
+            if (brightnessLevel < 20)
+                brightnessLevel = 20;
             foreach (var item in WindowDimmers)
             {
                 SetBrightness((int)brightnessLevel, item.Key);

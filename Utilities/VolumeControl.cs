@@ -1,25 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NAudio.CoreAudioApi;
+﻿using NAudio.CoreAudioApi;
 
 namespace QuickPick.Utilities
 {
     public class VolumeControl : IValueHandler
     {
-        public void HandleNewValue(double value)
+        MMDevice _defaultDevice;
+
+        public double CurrentVolume => GetCurrentVolume();
+        public VolumeControl()
         {
             MMDeviceEnumerator devEnum = new MMDeviceEnumerator();
-            MMDevice defaultDevice = devEnum.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);
+            _defaultDevice = devEnum.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);
+        }
+        public void HandleNewValue(double value)
+        {
+            _defaultDevice.AudioEndpointVolume.MasterVolumeLevelScalar = (float)value / 100;
+        }
 
-
-            float currentVolume = defaultDevice.AudioEndpointVolume.MasterVolumeLevelScalar * 100;
-            defaultDevice.AudioEndpointVolume.MasterVolumeLevelScalar = (float)value / 100;
-
-
+        private double GetCurrentVolume()
+        {
+            float currentVolume = _defaultDevice.AudioEndpointVolume.MasterVolumeLevelScalar * 100;
+            return (double)currentVolume;
         }
     }
 }

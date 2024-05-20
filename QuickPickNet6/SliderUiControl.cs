@@ -16,6 +16,7 @@ namespace QuickPick
         {
             _inputElement = inputElement;
             _progressBar = progressBar;
+            _percentage = progressBar.Value;
         }
 
         public void AttachToButtonEvents()
@@ -52,8 +53,8 @@ namespace QuickPick
 
                 if (_percentage > 100)
                     _percentage = 100;
-                if (_percentage < 50)
-                    _percentage = 50;
+                if (_percentage < 0)
+                    _percentage = 0;
 
                 _progressBar.Value = _percentage;
                 ValueChanged?.Invoke(_progressBar.Value);
