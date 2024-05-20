@@ -14,9 +14,11 @@ namespace QuickPick.Utilities
         {
             MMDeviceEnumerator devEnum = new MMDeviceEnumerator();
             MMDevice defaultDevice = devEnum.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);
-            defaultDevice.AudioEndpointVolume.MasterVolumeLevelScalar = (float)value;
 
-            //float currentVolume = defaultDevice.AudioEndpointVolume.MasterVolumeLevelScalar * 100;
+
+            float currentVolume = defaultDevice.AudioEndpointVolume.MasterVolumeLevelScalar * 100;
+            defaultDevice.AudioEndpointVolume.MasterVolumeLevelScalar = (float)value / 100;
+
 
         }
     }
