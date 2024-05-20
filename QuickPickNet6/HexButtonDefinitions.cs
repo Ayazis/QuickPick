@@ -1,10 +1,11 @@
 ﻿using FontAwesome5;
 using QuickPick.Logic;
+using QuickPick.UI.BrightnessControls;
 using QuickPick.UI.Views.Hex;
 using QuickPick.UI.Views.Settings;
-using System.Drawing;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace QuickPick
 {
@@ -35,36 +36,38 @@ namespace QuickPick
         public static void AsBrightnessControl(this HexagonButton button)
         {
             button.FontIcon = EFontAwesomeIcon.Solid_Adjust;
-            AddProgressControl(button);
+            var sliderControl = AddSliderControl(button);
+            var brightnessControl = new BrightnessControl();
+
+            sliderControl.ValueChanged += (value) =>
+            {
+                brightnessControl.SetBrightnessOnAllScreens((int)value);
+            };
         }
 
-        private static void AddProgressControl(HexagonButton button)
+        public static void AsVolumeControl(this HexagonButton button)
+        {
+            button.FontIcon = EFontAwesomeIcon.Solid_VolumeUp;
+            var sliderControl = AddSliderControl(button);            
+
+            sliderControl.ValueChanged += (value) =>
+            {
+                brightnessControl.SetBrightnessOnAllScreens((int)value);
+            };
+        }
+
+
+
+        private static SliderControl AddSliderControl(HexagonButton button)
         {
             var progressBar = AddProgressBar(button);
             button.Grid.Children.Add(progressBar);
-
-            button.Hexagon.PreviewMouseDown += (sender, e) =>
-            {
-
-            };
-
-            button.Hexagon.PreviewMouseUp += (sender, e) =>
-            {
-
-            };
-
-            button.Hexagon.PreviewMouseMove += (sender, e) =>
-            {
-
-            };
-
-
+            var sliderControl = new SliderControl(button, progressBar);
+            sliderControl.AttachToButtonEvents();
+            return sliderControl;
         }
 
-        private static void Hexagon_PreviewMouseMove(object sender, System.Windows.Input.MouseEventArgs e)
-        {
-            throw new System.NotImplementedException();
-        }
+
 
         private static ProgressBar AddProgressBar(HexagonButton button)
         {

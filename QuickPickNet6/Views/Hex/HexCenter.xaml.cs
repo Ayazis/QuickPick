@@ -46,6 +46,7 @@ public partial class HexCenter : UserControl
     {
         _hexes[0].HexButton.AsSettingsButton();
         _hexes[1].HexButton.AsShowDesktopButton();
+        _hexes[2].HexButton.AsBrightnessControl();
     }
 
 
