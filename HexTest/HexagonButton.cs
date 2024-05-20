@@ -6,7 +6,7 @@ using System.Windows.Media;
 namespace QuickPick.UI.Views.Hex;
 public class HexagonButton : Button
 {
-    Hexagon _hexagonShape = new();
+    public Hexagon HexagonShape { get; private set; } = new();
     ImageAwesome Image;
     public Grid Grid = new Grid();
     double hexScale = 1.0;
@@ -35,7 +35,7 @@ public class HexagonButton : Button
         SetDefaultImage();
 
         // Add the Hexagon to the Grid
-        Grid.Children.Add(_hexagonShape);
+        Grid.Children.Add(HexagonShape);
 
         //Add the icon to the Grid
         Grid.Children.Add(Image);
@@ -97,8 +97,8 @@ public class HexagonButton : Button
     private void HexagonButton_SizeChanged(object sender, SizeChangedEventArgs e)
     {
         // Set the Width and Height of the Hexagon to be the same as the ActualWidth and ActualHeight of the HexagonButton
-        _hexagonShape.Width = this.ActualWidth * hexScale;
-        _hexagonShape.Height = this.ActualHeight * hexScale;
+        HexagonShape.Width = this.ActualWidth * hexScale;
+        HexagonShape.Height = this.ActualHeight * hexScale;
 
         // Update icon size
         UpdateIconSize();

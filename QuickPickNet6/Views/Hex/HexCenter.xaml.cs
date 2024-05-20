@@ -4,9 +4,11 @@ using System.Collections.Generic;
 using QuickPick.Logic;
 using QuickPick.UI.BrightnessControls;
 using QuickPick.UI.Views.Settings;
+using System;
 using System.Windows.Input;
 using System.Windows;
 using FontAwesome5;
+using System.Linq;
 
 namespace QuickPick.UI.Views.Hex;
 /// <summary>
@@ -17,25 +19,33 @@ public partial class HexCenter : UserControl
     private int _size = 35;
     private int _hexCount = 1 + 6;
     HexGridCreator _hexGridCreator = new(new HexPositionsCalculator());
+    IEnumerable<HexPosition> _hexes;
     public HexCenter()
     {
         InitializeComponent();
         HexCanvas.Children.Clear();
 
-        IEnumerable<HexPosition> hexes = _hexGridCreator.CreateHexButtonsInHoneyCombStructure(HexCanvas.Width, _size, _hexCount);
-        foreach (var hexPosition in hexes)
+        _hexes = _hexGridCreator.CreateHexButtonsInHoneyCombStructure(HexCanvas.Width, _size, _hexCount);
+        foreach (var hexPosition in _hexes)
         {
             HexCanvas.Children.Add(hexPosition.HexButton);
             Canvas.SetLeft(hexPosition.HexButton, hexPosition.Position.X);
             Canvas.SetTop(hexPosition.HexButton, hexPosition.Position.Y);
         }
 
+        SetCustomHexButtons();
     }
 
     BrightnessControl _brightnessControl = new();
     bool _brightnessButtonDown;
     Point _previousPosition;
     double _percentage;
+    void SetCustomHexButtons()
+    {
+        HexagonButton centerHex = _hexes.First().HexButton;
+        centerHex.FontIcon = EFontAwesomeIcon.
+        centerHex.HexagonShape.MouseDown += CenterHex_Click;
+    }
 
 
     private void CenterHex_Click(object sender, RoutedEventArgs e)
