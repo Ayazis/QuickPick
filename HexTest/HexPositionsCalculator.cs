@@ -16,10 +16,6 @@ public class HexPositionsCalculator : IHexPositionsCalculator
          _directions = DirectionHelper.StartRightUp;
     }
 
-
-
-
-
     public List<HexPoint> GenerateHexagonalGridFixed(int numberOfHexes)
     {
         CreateGrid(numberOfHexes);
