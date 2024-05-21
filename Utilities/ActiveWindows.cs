@@ -68,9 +68,7 @@ public class ActiveWindows
 
     // A method to deactivate the window peek effect
     public static void DeactivatePeek(IntPtr handle)
-    {
-        Debug.WriteLine("De-Activating Peek");
-        Trace.WriteLine("De-Activating Peek");
+    {        
         // Check if DWM composition is enabled
         if (DwmIsCompositionEnabled())
         {
@@ -185,7 +183,7 @@ public class ActiveWindows
             {
                 var parent = GetParent(hWnd);
                 if (parent != default)
-                    return false;  // dont show childwindows ?
+                    return true;  
 
                 if (HasIgnorableClassName(hWnd))
                     return false;
