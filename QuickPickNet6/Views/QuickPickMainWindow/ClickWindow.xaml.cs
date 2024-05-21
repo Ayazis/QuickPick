@@ -299,7 +299,9 @@ public partial class ClickWindow : Window, IClickWindow
     private void Button_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
     {
         MouseLeftTimer.StopTimer();
+        // Hide any Thumbnails from other apps.
         HideThumbnails();
+
         // todo: Move logic out of xaml.xs
         Button button = (System.Windows.Controls.Button)sender;
 
@@ -327,7 +329,7 @@ public partial class ClickWindow : Window, IClickWindow
 
         AppLink pinnedApp = button.DataContext as AppLink;
 
-        var thumbnails = CreateThumbnails(pinnedApp, button).ToList();
+        var thumbnails = CreateThumbnails(pinnedApp, button).ToList();       
 
         ShowThumbnails(thumbnails, button);
     }
