@@ -54,7 +54,7 @@ internal class Startup : IStartup
             _globalExceptions.SetupGlobalExceptionHandling();
             _trayIconService.CreateTrayIcon();
 
-            StartDesktopTracking();
+            //StartDesktopTracking();
             SubscribeToExitEventToHandleCleanup();
             StartListeningToKeyboardAndMouse();
             LoadAndApplyQuickPickSettings();

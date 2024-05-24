@@ -1,5 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 using System.Text;
+using System.Transactions;
 
 namespace QuickPick.Utilities.DesktopInterops
 {
@@ -8,6 +9,7 @@ namespace QuickPick.Utilities.DesktopInterops
         static bool VirtualDesktopManagerFailure = false;
         public static Guid GetCurrentDesktopGuid()
         {
+            return default;
             if (VirtualDesktopManagerFailure)
                 return default;
 
@@ -31,6 +33,8 @@ namespace QuickPick.Utilities.DesktopInterops
             string title = GetWindowTitle(windowHandle);
             if (string.IsNullOrWhiteSpace(title))
                 return false;
+
+            return true; // disabled.
 
             try
             {
