@@ -18,10 +18,11 @@
              WindowStyle="None" 
              WindowStartupLocation="Manual"
              Topmost="True"                   
-             BorderThickness="0"
-             UseLayoutRounding="True"
+             UseLayoutRounding="True" 
+             BorderThickness="0"     
              >
 
+    <!--NOTE: using UseLayoutRounding="True" will sharpen the AppIcons the best way. But can cause pixel-sized deviations in UI placements. Hexcenter for example, overrides this setting to false.-->
 
     <Window.DataContext>
         <local:QuickPickMainWindowModel/>
@@ -50,10 +51,8 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Grid>
-                        <Button Style="{StaticResource RoundButtonNoMouseOver}" Width="35" Height="35" />
-                        <Image Source="{Binding AppIcon}" Width="16" Height="16"                                                                   
-                               SnapsToDevicePixels="True"                            
-                               >
+                        <Button Style="{StaticResource RoundButtonNoMouseOver}" Width="37" Height="37" />
+                        <Image Source="{Binding AppIcon}" Width="20" Height="20">
                             <Image.ToolTip>
                                 <ToolTip Content="{Binding Info}" />
                             </Image.ToolTip>
@@ -80,7 +79,7 @@
                         <Rectangle Height="2" Width="16" VerticalAlignment="Bottom" Fill="LightBlue" 
                                        Visibility="{Binding HasWindowActiveOnCurrentDesktop, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                         <Button Style="{StaticResource RoundButtonNoMouseOver}" Width="35" Height="35" 
-                                    MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave" Opacity="0"                                  
+                                    MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave" Opacity="0" PreviewMouseDown="Button_PreviewMouseDown"
                                     >
                             <Button.InputBindings>
                                 <MouseBinding Gesture="LeftClick" Command="{Binding ClickCommand}" />

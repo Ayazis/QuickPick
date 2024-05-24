@@ -409,4 +409,10 @@ public partial class ClickWindow : Window, IClickWindow
         SettingsWindow.Instance.Focus();
         HideUI();
     }
+
+    private void Button_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+    {
+        var appLink = ((Button)sender).DataContext as AppLink;
+        appLink?.ClickCommand?.Execute(this);
+    }
 }
