@@ -24,7 +24,7 @@ jobs:
          if ($VERSION_ALPHA -match "^.*-alpha$") {
           echo "VERSION_ALPHA is correctly set to $VERSION_ALPHA"
           } else {
-          echo "Error: VERSION_ALPHA is not correctly set"
+          echo "Error: VERSION_ALPHA is not correctly set, it is $VERSION_ALPHA"
           exit 1
           }
         shell: pwsh
