@@ -13,21 +13,21 @@ namespace QuickPick
         public AutoUpdateSetting AutoUpdateSetting { get; set; } = AutoUpdateSetting.PreRelease;
 
         [JsonIgnore]
-        public HashSet<Keys> KeyCombination { get; set; } = new() { Keys.LControlKey, Keys.RButton };
+        public HashSet<Keys> KeyCombination { get; set; } = new() { Keys.LControlKey, Keys.RControlKey };
 
         [JsonProperty]
         private HashSet<string> KeyCombinationAsStrings;
-        public string Serialise()
+        public string Serialize()
         {
-            // Set the key combination as a string so that it can be serialised
-            // This is because the keys enum will not Deserialise properly.
+            // Set the key combination as a string so that it can be serialized
+            // This is because the keys enum will not DeSerialize properly.
             KeyCombinationAsStrings = new HashSet<string>(KeyCombination.Select(k => k.ToString()));
             return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
 
-        public static Settings Deserialize(string json)
+        public static Settings DeSerialize(string json)
         {
-            // Deserialise the key combination as string, and then convert it back to a hashset of keys.
+            // DeSerialize the key combination as string, and then convert it back to a HashSet of keys.
             var settings = JsonConvert.DeserializeObject<Settings>(json);
             if (settings.KeyCombinationAsStrings != null)
                 settings.KeyCombination = new HashSet<Keys>(settings.KeyCombinationAsStrings.Select(k => Enum.Parse<Keys>(k)));

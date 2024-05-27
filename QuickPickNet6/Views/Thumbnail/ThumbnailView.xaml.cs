@@ -72,31 +72,13 @@ public partial class ThumbnailView : UserControl
         return rect;
     }
 
-    private void ShowThumbnailView(bool fadeIn = false)
+    private void ShowThumbnailView()
     {
-        if (!fadeIn)
+        this.Dispatcher.Invoke(() =>
         {
-            this.Dispatcher.Invoke(() =>
-            {
-                // Make sure the opacity ends at 1 for full visibiblity.
-                this.Opacity = 1;
-            });
-            return;
-        }
-
-        // use dispatchers as short as possible to prevent lag.
-        // Gradually increase the opacity over time to create a fade-in effect. // Same logic as in WindowPreviewCreator
-        for (double i = 0; i <= 255; i += 25)
-        {
-            double newOpacityValue = i / 255;
-            double localOpacity = newOpacityValue;
-            this.Dispatcher.Invoke(() =>
-            {
-                this.Opacity = localOpacity;
-            });
-            // Sleep for a bit to control the speed of the fade-in. Adjust this value as needed.
-            Thread.Sleep(20);
-        }
+            // Make sure the opacity ends at 1 for full visibiblity.
+            this.Opacity = 1;
+        });
     }
 
     public void Hide()

@@ -1,23 +1,13 @@
 ﻿using System.IO;
-
 namespace Ayazis.Utilities;
-
-public static class Logs
-{
-    public static ILogger Logger;
-
-    static Logs()
-    {
-        Logger = new FileLogger();
-        Logger.CreateDirectory();
-    }
-}
-
 public class FileLogger : ILogger
 {
-    // get appdata/quickpick/logs
-    public string LogDirectory => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "QuickPick", "Logs");
-    public void CreateDirectory()
+    public FileLogger()
+    {
+        CreateDirectory();
+    }
+    private string LogDirectory => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "QuickPick", "Logs");
+    private void CreateDirectory()
     {
         if (!Directory.Exists(LogDirectory))
             Directory.CreateDirectory(LogDirectory);
@@ -55,7 +45,5 @@ public interface ILogger
 {   
     void Log(string entry);
     void Log(Exception ex);
-
-    void CreateDirectory();
 
 }

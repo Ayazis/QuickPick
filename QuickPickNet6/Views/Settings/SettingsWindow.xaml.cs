@@ -4,21 +4,30 @@ using System.Windows.Input;
 
 namespace QuickPick.UI.Views.Settings
 {
+    public interface ISettingsWindow
+    {
+        SettingsViewModel ViewModel { get; }
+
+        void InitializeComponent();
+        void ShowWindow();
+    }
+
     /// <summary>
     /// Interaction logic for SettingsWindow4.xaml
     /// </summary>
-    public partial class SettingsWindow : Window
-    {
-        static SettingsWindow _instance;
-        public static SettingsWindow Instance => _instance ??= new SettingsWindow();
-        public SettingsViewModel ViewModel { get; private set; }
+    public partial class SettingsWindow : Window, ISettingsWindow
+    {       
+        public static SettingsWindow Instance;
+        readonly ISettingsManager _settingsManager;
+        public SettingsViewModel ViewModel { get; private set; } = new();
 
-        private SettingsWindow()
+        public SettingsWindow(ISettingsManager settingsManager)
         {
-            InitializeComponent();
-            ViewModel = new SettingsViewModel();
+            _settingsManager = settingsManager;
+            InitializeComponent();           
             this.DataContext = ViewModel;
             this.MouseLeftButtonDown += SettingsWindow_MouseLeftButtonDown;
+            Instance = this;
         }
 
 
@@ -37,7 +46,7 @@ namespace QuickPick.UI.Views.Settings
         private void Apply_Click(object sender, RoutedEventArgs e)
         {
 
-            SettingsManager.Instance.ApplySettings(ViewModel);
+            _settingsManager.ApplySettings(ViewModel);
 
             this.Hide();
         }

@@ -7,23 +7,30 @@ using Utilities.Mouse_and_Keyboard;
 
 namespace QuickPick
 {
-    public class SettingsManager
+    public interface ISettingsManager
     {
-        static SettingsManager _instance;
-        public static SettingsManager Instance => _instance ??= new SettingsManager();
-        public string SettingsPath { get; private set; }
+        Settings Settings { get; }
+        string SettingsPath { get; }
 
-        private SettingsManager()
+        void ApplySettings(SettingsViewModel vm);
+        void LoadSettings();
+    }
+
+    public class SettingsManager : ISettingsManager
+    {             
+        public string SettingsPath { get; private set; }
+        public IKeyInputHandler _keyInputHandler;
+
+        public SettingsManager(IKeyInputHandler keyInputHandler)
         {
             string saveDirectory = Path.Combine(Path.GetTempPath(), "QuickPick");
             if (!Directory.Exists(saveDirectory))
             {
                 Directory.CreateDirectory(saveDirectory);
             }
-            SettingsPath = Path.Combine(saveDirectory, "QpSettings.Json");
+            SettingsPath = Path.Combine(saveDirectory, "QpSettings.Json");            
+            _keyInputHandler = keyInputHandler;
         }
-
-
         public Settings Settings { get; private set; } = new();
 
         public void ApplySettings(SettingsViewModel vm)
@@ -33,7 +40,7 @@ namespace QuickPick
             if (vm.NewKeyCombination?.Any() == true)
             {
                 Settings.KeyCombination = vm.NewKeyCombination;
-                KeyInputHandler.Instance.SetKeycombination(Settings.KeyCombination);
+                _keyInputHandler.SetKeyCombination(Settings.KeyCombination);
             }
             WriteSettingsToDisk();
         }
@@ -42,7 +49,7 @@ namespace QuickPick
         {
             try
             {
-                var json = Settings.Serialise();
+                var json = Settings.Serialize();
 
                 // Use a FileStream to ensure proper handling of the file
                 using (FileStream fileStream = new FileStream(SettingsPath, FileMode.Create, FileAccess.Write, FileShare.None))
@@ -72,7 +79,7 @@ namespace QuickPick
                 using (StreamReader streamReader = new StreamReader(fileStream))
                 {
                     var json = streamReader.ReadToEnd();
-                    Settings = Settings.Deserialize(json);
+                    Settings = Settings.DeSerialize(json);
                 }
 
                 Trace.WriteLine("Settings loaded successfully.");
@@ -82,10 +89,6 @@ namespace QuickPick
             {
                 Trace.WriteLine($"An error occurred while loading the settings: {ex.Message}");
             }
-
-
-
         }
-
     }
 }

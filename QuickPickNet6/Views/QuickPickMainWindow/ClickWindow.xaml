@@ -7,6 +7,7 @@
              xmlns:music="clr-namespace:QuickPick.UI.Views"
              xmlns:converters="clr-namespace:QuickPick.Converters"
              xmlns:custom="clr-namespace:QuickPick.Custom"
+             xmlns:hex="clr-namespace:QuickPick.UI.Views.Hex"
              mc:Ignorable="d"                           
              MinWidth="300" 
              MinHeight="300"
@@ -20,7 +21,7 @@
              BorderThickness="0"
              UseLayoutRounding="True"
              >
-    
+
 
     <Window.DataContext>
         <local:QuickPickMainWindowModel/>
@@ -32,65 +33,63 @@
             </ResourceDictionary.MergedDictionaries>
             <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         </ResourceDictionary>
-    </Window.Resources>   
+    </Window.Resources>
 
-        <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="auto"/>
-        </Grid.RowDefinitions>
+    <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
+
         <Ellipse Width="150" Height="150" Fill="#B3000000" />
-        <local:RingButtonControl/>
-         <ItemsControl x:Name="Applinks" ItemsSource="{Binding PinnedApps, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" >
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <custom:CircularPanel x:Name="AppsCircularPanel" Width="150" Height="150" />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Grid>
-                            <Button Style="{StaticResource RoundButtonNoMouseOver}" Width="35" Height="35" />
+
+        <hex:HexCenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+        <ItemsControl x:Name="Applinks" ItemsSource="{Binding PinnedApps, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" >
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <custom:CircularPanel x:Name="AppsCircularPanel" Width="175" Height="175" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Button Style="{StaticResource RoundButtonNoMouseOver}" Width="35" Height="35" />
                         <Image Source="{Binding AppIcon}" Width="16" Height="16"                                                                   
                                SnapsToDevicePixels="True"                            
                                >
                             <Image.ToolTip>
-                                    <ToolTip Content="{Binding Info}" />
-                                </Image.ToolTip>
-                                <Image.Style>
-                                    <!--Add Highlight on mouseover-->
-                                    <Style TargetType="Image">
-                                        <Setter Property="Effect">
-                                            <Setter.Value>
-                                                <DropShadowEffect ShadowDepth="0" Color="Transparent" BlurRadius="0" Opacity="0" />
-                                            </Setter.Value>
-                                        </Setter>
-                                        <Style.Triggers>
-                                            <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter Property="Effect">
-                                                    <Setter.Value>
-                                                        <DropShadowEffect ShadowDepth="0" Color="White" BlurRadius="12" Opacity="0.7" />
-                                                    </Setter.Value>
-                                                </Setter>
-                                            </Trigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Image.Style>
-                            </Image>                        
-                            <Rectangle Height="2" Width="16" VerticalAlignment="Bottom" Fill="LightBlue" 
+                                <ToolTip Content="{Binding Info}" />
+                            </Image.ToolTip>
+                            <Image.Style>
+                                <!--Add Highlight on mouseover-->
+                                <Style TargetType="Image">
+                                    <Setter Property="Effect">
+                                        <Setter.Value>
+                                            <DropShadowEffect ShadowDepth="0" Color="Transparent" BlurRadius="0" Opacity="0" />
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Effect">
+                                                <Setter.Value>
+                                                    <DropShadowEffect ShadowDepth="0" Color="White" BlurRadius="12" Opacity="0.7" />
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Image.Style>
+                        </Image>
+                        <Rectangle Height="2" Width="16" VerticalAlignment="Bottom" Fill="LightBlue" 
                                        Visibility="{Binding HasWindowActiveOnCurrentDesktop, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                            <Button Style="{StaticResource RoundButtonNoMouseOver}" Width="35" Height="35" 
+                        <Button Style="{StaticResource RoundButtonNoMouseOver}" Width="35" Height="35" 
                                     MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave" Opacity="0"                                  
                                     >
-                                <Button.InputBindings>
-                                    <MouseBinding Gesture="LeftClick" Command="{Binding ClickCommand}" />
-                                </Button.InputBindings>
-                            </Button>                        
-                            
+                            <Button.InputBindings>
+                                <MouseBinding Gesture="LeftClick" Command="{Binding ClickCommand}" />
+                            </Button.InputBindings>
+                        </Button>
+
                     </Grid>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-    </Grid>   
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </Grid>
 </Window>

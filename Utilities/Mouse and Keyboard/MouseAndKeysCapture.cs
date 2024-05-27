@@ -5,32 +5,27 @@ using Utilities.Mouse_and_Keyboard;
 
 namespace Ayazis.KeyHooks;
 
-public class MouseAndKeysCapture
+public interface IMouseAndKeysCapture
 {
-    private enum MouseMessages
-    {
-        WM_LBUTTONDOWN = 0x0201,
-        WM_LBUTTONUP = 0x0202,
-        WM_MOUSEMOVE = 0x0200,
-        WM_MOUSEWHEEL = 0x020A,
-        WM_RBUTTONDOWN = 0x0204,
-        WM_RBUTTONUP = 0x0205
-    }
-    private const int WH_MOUSE_LL = 14;
-    private const int WH_KEYBOARD_LL = 13;
-    private const int WM_KEYDOWN = 0x0100;
-    private const int WM_KEYUP = 0x101;
-    private const int WM_SYSKEYDOWN = 0x0104;
+    event EventHandler MouseButtonClicked;
 
-    internal LowLevelKeyboardProc _keyboardProc;
-    internal LowLevelMouseProc _mouseProc;
-    internal IntPtr _keyboardHookID = IntPtr.Zero;
-    internal IntPtr _mouseHookId = IntPtr.Zero;
+    void HookIntoMouseAndKeyBoard();
+}
 
-    public MouseAndKeysCapture()
+public class MouseAndKeysCapture : IMouseAndKeysCapture
+{
+    private LowLevelKeyboardProc _keyboardProc;
+    private LowLevelMouseProc _mouseProc;
+    private IntPtr _keyboardHookID = IntPtr.Zero;
+    private IntPtr _mouseHookId = IntPtr.Zero;
+    private IKeyInputHandler _keyInputHandler;
+
+    public event EventHandler MouseButtonClicked;
+    public MouseAndKeysCapture(IKeyInputHandler keyInputHandler)
     {
         _keyboardProc = KeyBoardHookCallback;
         _mouseProc = MouseHookCallBack;
+        _keyInputHandler = keyInputHandler;
     }
 
     public void HookIntoMouseAndKeyBoard()
@@ -61,6 +56,8 @@ public class MouseAndKeysCapture
                 // If a key combination is hit, prevent other software or Windows from receiving the key input
                 if (keyCombinationHit)
                     return IntPtr.Zero;
+                else
+                    MouseButtonClicked?.Invoke(this, null); // Raise the MouseButtonClicked event, we can check if the UI is active, and if not, hide it.
                 break;
 
             case MouseMessages.WM_LBUTTONUP:
@@ -104,13 +101,28 @@ public class MouseAndKeysCapture
     }
     bool KeyPressed(Keys key)
     {
-        return KeyInputHandler.Instance.IsPresetKeyCombinationHit(key);
+        return _keyInputHandler.IsPresetKeyCombinationHit(key);
     }
 
     void KeyReleased(Keys key)
     {
-        KeyInputHandler.Instance.KeyReleased(key);
+        _keyInputHandler.KeyReleased(key);
     }
+
+    private enum MouseMessages
+    {
+        WM_LBUTTONDOWN = 0x0201,
+        WM_LBUTTONUP = 0x0202,
+        WM_MOUSEMOVE = 0x0200,
+        WM_MOUSEWHEEL = 0x020A,
+        WM_RBUTTONDOWN = 0x0204,
+        WM_RBUTTONUP = 0x0205
+    }
+    private const int WH_MOUSE_LL = 14;
+    private const int WH_KEYBOARD_LL = 13;
+    private const int WM_KEYDOWN = 0x0100;
+    private const int WM_KEYUP = 0x101;
+    private const int WM_SYSKEYDOWN = 0x0104;
 
     #region dllImports
     internal delegate IntPtr LowLevelKeyboardProc(int nCode, IntPtr wParam, IntPtr lParam);

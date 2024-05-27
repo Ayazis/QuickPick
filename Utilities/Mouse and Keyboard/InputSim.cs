@@ -7,7 +7,13 @@ namespace QuickPick.Logic
 	{
 		public static InputSimulator Simulator = new InputSimulator();
 
-		public static void CtrlAltBreak()
+		public static void WinD()
+		{
+			   Simulator.Keyboard.ModifiedKeyStroke(VirtualKeyCode.LWIN, VirtualKeyCode.VK_D);
+		}
+
+
+        public static void CtrlAltBreak()
 		{
 			Simulator.Keyboard.ModifiedKeyStroke(new VirtualKeyCode[]
 			{

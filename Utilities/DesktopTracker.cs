@@ -2,10 +2,17 @@
 using System.Diagnostics;
 
 
-namespace Utilities.VirtualDesktop;
-
-public class DesktopTracker : IDisposable
+namespace QuickPick.Utilities.VirtualDesktop;
+public interface IDesktopTracker
 {
+    event EventHandler DesktopChanged;
+
+    void Dispose();
+    void StartTracking();
+    void StopTracking();
+}
+public class DesktopTracker : IDisposable, IDesktopTracker
+{    
     private Timer _timer;
     Guid _lastDesktopId = Guid.Empty;
 
