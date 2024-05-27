@@ -77,7 +77,7 @@ jobs:
           Add-Content -Path $env:GITHUB_ENV -Value "PUBLISH_DIR=$publishDir"
 
       - name: Set up -alpha suffix
-        run: echo "VERSION=${{ env.VERSION }}-alpha" >> $GITHUB_ENV
+        run: echo "VERSION_ALPHA=${{ env.VERSION }}-alpha" >> $GITHUB_ENV
         
       - name: Publish
         shell: pwsh
@@ -87,17 +87,17 @@ jobs:
       - name: Zip the published content
         shell: pwsh
         run: |
-          Compress-Archive -Path "$env:PUBLISH_DIR\*" -DestinationPath "$env:PUBLISH_DIR\QuickPick $env:VERSION.zip"
+          Compress-Archive -Path "$env:PUBLISH_DIR\*" -DestinationPath "$env:PUBLISH_DIR\QuickPick $env:VERSION_ALPHA.zip"
 
       - name: Create Release and Upload Asset
         run: |
           # Create release
-          gh release create ${{ env.VERSION }} --title "QuickPick ${{ env.VERSION }}" --notes "Release notes for ${{ env.VERSION }}" --prerelease
+          gh release create ${{ env.VERSION_ALPHA }} --title "QuickPick ${{ env.VERSION_ALPHA }}" --notes "Release notes for ${{ env.VERSION_ALPHA }}" --prerelease
         
       - name: Upload to Release
         run: |
-            gh release upload $env:VERSION "$env:PUBLISH_DIR\QuickPick $env:VERSION.zip"
+            gh release upload $env:VERSION_ALPHA "$env:PUBLISH_DIR\QuickPick $env:VERSION_ALPHA.zip"
         shell: pwsh
         env:
             PUBLISH_DIR: ${{ env.PUBLISH_DIR }}
-            VERSION: ${{ env.VERSION }}
+            VERSION: ${{ env.VERSION_ALPHA }}
