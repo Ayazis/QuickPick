@@ -15,6 +15,19 @@ jobs:
     runs-on: windows-latest
 
     steps:  
+      - name: Set up -alpha suffix
+        run: echo "VERSION_ALPHA=${{ env.VERSION }}-alpha" >> $GITHUB_ENV
+
+      - name: Verify VERSION_ALPHA
+        run: |
+          if [[ "${{ env.VERSION_ALPHA }}" =~ ^${{ env.VERSION }}-alpha$ ]]; then
+            echo "VERSION_ALPHA is correctly set to ${{ env.VERSION_ALPHA }}"
+          else
+            echo "Error: VERSION_ALPHA is not correctly set"
+            exit 1
+          fi
+
+    
       - name: Authenticate gh CLI
         run: echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
 
