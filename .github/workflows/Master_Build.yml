@@ -3,7 +3,7 @@ name: Build and Test -- MASTER
 on:
   push:
     branches:
-      - Master
+      - master
 
 env:
   REPO_NAME: QuickPick
