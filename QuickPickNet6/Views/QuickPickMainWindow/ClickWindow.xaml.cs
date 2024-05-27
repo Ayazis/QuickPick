@@ -257,6 +257,9 @@ public partial class ClickWindow : Window, IClickWindow
         // Get absolute screen coordinates for the button.
         Point buttonLocation = PointToScreen(buttonCenter);
 
+        Point previousLocation;
+        double previousWidth = 0;
+
         for (int i = 0; i < thumbnails.Count; i++)
         {
             var thumbnailView = thumbnails[i];
@@ -277,7 +280,14 @@ public partial class ClickWindow : Window, IClickWindow
 
             // Adjust the thumbnail's position according to it's relative position to the center of the window.
             var thumbnailPositionCalculator = new DpiSafeThumbnailPositioner();
-            Point adjustedPosition = thumbnailPositionCalculator.CalculatePositionForThumbnailView(buttonLocation, xToWindowCenter, yToWindowCenter, i, dpiAdjustedWidth, dpiAdjustedHeight);
+            Point adjustedPosition;
+            if (i == 0)
+                adjustedPosition = thumbnailPositionCalculator.CalculatePositionForThumbnailView(buttonLocation, xToWindowCenter, yToWindowCenter, i, dpiAdjustedWidth, dpiAdjustedHeight);
+            else
+                adjustedPosition = thumbnailPositionCalculator.CalculatePositionForThumbnailView(previousLocation, xToWindowCenter, previousWidth, dpiAdjustedWidth);
+
+            previousLocation = adjustedPosition;
+            previousWidth = dpiAdjustedWidth;
 
             // set the popups offset, taking the DPI into account.   
             popup.HorizontalOffset = adjustedPosition.X / thumbnailView.Properties.DpiScaling;
@@ -329,7 +339,7 @@ public partial class ClickWindow : Window, IClickWindow
 
         AppLink pinnedApp = button.DataContext as AppLink;
 
-        var thumbnails = CreateThumbnails(pinnedApp, button).ToList();       
+        var thumbnails = CreateThumbnails(pinnedApp, button).ToList();
 
         ShowThumbnails(thumbnails, button);
     }
@@ -398,5 +408,11 @@ public partial class ClickWindow : Window, IClickWindow
         SettingsWindow.Instance.Activate();
         SettingsWindow.Instance.Focus();
         HideUI();
+    }
+
+    private void Button_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+    {
+        var appLink = ((Button)sender).DataContext as AppLink;
+        appLink?.ClickCommand?.Execute(this);
     }
 }

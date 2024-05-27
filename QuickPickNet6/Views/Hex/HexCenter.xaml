@@ -8,7 +8,9 @@
              mc:Ignorable="d" 
              Width="auto"
              Height="auto"
+              UseLayoutRounding="False" 
              d:DesignHeight="125" d:DesignWidth="125">
+    <!--  UseLayoutRounding="False" needs to be set. On clickwindow this is set to true to enhance icon sharpness. If not overridden here, we have pixel deviation on hex placement. -->
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

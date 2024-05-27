@@ -10,7 +10,7 @@ public partial class PreviewImageProperties : ObservableObject
 {
     [ObservableProperty]
     ImageSource _icon;
-    readonly double MAX_SIZE = 200;
+    readonly double MAX_SIZE = 150;
     // todo: Set width and height according to the aspect ratio of the applicationWindow..
     [ObservableProperty]
     private double _width;
@@ -32,17 +32,32 @@ public partial class PreviewImageProperties : ObservableObject
         DpiScaling = dpiScaling;
         double aspectRatio = WindowPreviewCreator.GetWindowAspectRatio(windowHandle);
 
-        // If aspectratio is horizontal, set width to MAX_SIZE and height to MAX_SIZE/aspectratio
-        // If aspectratio is vertical, set height to MAX_SIZE and width to MAX_SIZE*aspectratio
+        // Set height to fixedHeight and width to fixedHeight*aspectratio
         const int RoomForTitle = 15;
-        Width = aspectRatio > 1 ? MAX_SIZE : MAX_SIZE * aspectRatio;
-        Height = aspectRatio > 1 ? MAX_SIZE / aspectRatio : MAX_SIZE;
-        Height += RoomForTitle; 
+        Height = MAX_SIZE;
+        Width = MAX_SIZE * aspectRatio;
+
+        Height += RoomForTitle;
 
         WindowTitle = string.IsNullOrEmpty(windowTitle) ? _windowTitle : windowTitle;
         WindowHandle = windowHandle;
-    }
-    public PreviewImageProperties()
+        //    MAX_SIZE = MAX_SIZE / dpiScaling;
+        //    _icon = icon;
+        //    DpiScaling = dpiScaling;
+        //    double aspectRatio = WindowPreviewCreator.GetWindowAspectRatio(windowHandle);
+
+        //    // If aspectratio is horizontal, set width to MAX_SIZE and height to MAX_SIZE/aspectratio
+        //    // If aspectratio is vertical, set height to MAX_SIZE and width to MAX_SIZE*aspectratio
+        //    const int RoomForTitle = 15;
+        //    Width = aspectRatio > 1 ? MAX_SIZE : MAX_SIZE * aspectRatio;
+        //    Height = aspectRatio > 1 ? MAX_SIZE / aspectRatio : MAX_SIZE;
+        //    Height += RoomForTitle; 
+
+        //    WindowTitle = string.IsNullOrEmpty(windowTitle) ? _windowTitle : windowTitle;
+        //    WindowHandle = windowHandle;
+        //
+        }
+        public PreviewImageProperties()
     {
 
     }

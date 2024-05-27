@@ -80,6 +80,24 @@ namespace QuickPick
                  });
             };
         }
+        public static void AsNextSong(this HexagonButton button)
+        {
+            button.FontIcon = EFontAwesomeIcon.Solid_Forward;
+            button.Hexagon.MouseDown += (sender, e) =>
+            {
+                InputSim.NextSong();
+
+            };
+        }
+        public static void AsPreviousSong(this HexagonButton button)
+        {
+            button.FontIcon = EFontAwesomeIcon.Solid_Backward;
+            button.Hexagon.MouseDown += (sender, e) =>
+            {
+                InputSim.PreviousSong();
+
+            };
+        }
 
         private static SliderUiControl AddSliderControl(HexagonButton button, double startValue)
         {

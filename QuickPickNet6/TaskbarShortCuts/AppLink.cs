@@ -25,15 +25,15 @@ public partial class AppLink : ObservableObject
     public string Arguments { get; set; }
     [ObservableProperty]
     bool _hasWindowActiveOnCurrentDesktop;
-  
+
     public List<IntPtr> WindowHandles { get; set; } = new();
     public string Info => $"{Name} - {TargetPath}";
 
     public void ToggleWindowOrStartApplication(AppLink appInfo)
     {
-        if (WindowHandles.Count == 1)
-            ActiveWindows.ToggleWindow(WindowHandles[0]);
-        else
+        bool ctrl_IsPressed = Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl);
+
+        if (WindowHandles.Count == 0 || ctrl_IsPressed)
         {
             Task.Run(() =>
             {
@@ -46,6 +46,9 @@ public partial class AppLink : ObservableObject
             });
             ClickWindow.Instance.HideUI();
         }
+        else
+            ActiveWindows.ToggleWindow(WindowHandles[0]);
+
     }
 
     internal void CloseThumbnail(object s, EventArgs e)
@@ -56,7 +59,7 @@ public partial class AppLink : ObservableObject
     internal void RemoveThumbnail(IntPtr windowHandle)
     {
         WindowHandles.Remove(windowHandle);
-        if(WindowHandles.Count == 0)
+        if (WindowHandles.Count == 0)
             HasWindowActiveOnCurrentDesktop = false;
     }
 }

@@ -28,7 +28,7 @@ public class AppLinkRetriever
     static List<AppLink> _allShortCuts = new List<AppLink>();
 
     public static List<AppLink> GetPinnedAppsAndActiveWindows(bool includePinnedApps)
-    {        
+    {
         _allShortCuts.Clear();
 
         if (includePinnedApps)
@@ -42,6 +42,8 @@ public class AppLinkRetriever
     }
     static void GetCustomApps()
     {
+        return;
+        string[] whatsappExecutable = Directory.GetFiles(@"C:\Program Files\WindowsApps", "WhatsApp.exe");
         string[] customExecutablePaths = new string[]
         {
             @"C:\Program Files\WindowsApps\5319275A.WhatsAppDesktop_2.2414.8.0_x64__cv1g1gvanyjgm\WhatsApp.exe"
