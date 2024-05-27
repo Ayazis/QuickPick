@@ -1,4 +1,4 @@
-name: Build and Test -- MASTER
+name: Build, Test, Publish -- MASTER
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
 env:
   REPO_NAME: QuickPick
   REPO_OWNER: ayazis
-  DOTNET_VERSION: '7.x'
+  DOTNET_VERSION: '8.x'
 
 jobs:
   build_and_test:
