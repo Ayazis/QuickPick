@@ -1,25 +1,16 @@
 ﻿using System.IO;
-
 namespace Ayazis.Utilities;
-
-public static class Logs
-{
-    public static ILogger Logger;
-
-    static Logs()
-    {
-        Logger = new FileLogger();
-        Logger.CreateDirectory();
-    }
-}
-
 public class FileLogger : ILogger
 {
-    public string LogPath { get;} = @"C:\temp\QuickPicLogs\";
-    public void CreateDirectory()
+    public FileLogger()
     {
-        if (!Directory.Exists(LogPath))
-            Directory.CreateDirectory(LogPath);
+        CreateDirectory();
+    }
+    private string LogDirectory => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "QuickPick", "Logs");
+    private void CreateDirectory()
+    {
+        if (!Directory.Exists(LogDirectory))
+            Directory.CreateDirectory(LogDirectory);
     }
     public void Log(Exception ex)
     {
@@ -35,27 +26,24 @@ public class FileLogger : ILogger
             // Run the actual logging in a seperate task so it doesn't slow down the App's main processes.
             //Task.Run(() =>
             //{
-                var dateNow = DateTime.Now.ToString("yyyyMMdd");
+            var dateNow = DateTime.Now.ToString("yyyyMMdd");
 
-                File.AppendAllText($@"{LogPath}QpLog{dateNow}.txt", Environment.NewLine+logEntry);
+            string finalPath = Path.Combine(LogDirectory, $"QpLog{dateNow}.log");
+            File.AppendAllText(finalPath, Environment.NewLine + logEntry);
             //});
 
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            
+            // do nothing.
         }
     }
 
 }
 
 public interface ILogger
-{        
-    string LogPath { get; }
-
+{   
     void Log(string entry);
     void Log(Exception ex);
-
-    void CreateDirectory();
 
 }

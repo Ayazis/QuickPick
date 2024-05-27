@@ -1,0 +1,60 @@
+﻿using System;
+using System.Windows;
+using System.Windows.Threading;
+
+namespace QuickPick.UI;
+/// <summary>
+/// Interaction logic for StartWindow.xaml
+/// </summary>
+public partial class StartWindow : Window
+{
+    public StartWindow()
+    {
+        InitializeComponent();
+        ShowDownloadStartMessage();
+    }
+
+    public void ShowDownloadStartMessage()
+    {
+        UpdateUI(() =>
+        {
+            StatusTextBlock.TextAlignment = TextAlignment.Center;
+            StatusTextBlock.Text = $"Hold for a minute while we \ndownload and install the latest verion for you...";
+            DownloadProgressBar.Visibility = Visibility.Collapsed; // can be used when UI updating is fixed.
+        });
+    }
+    public void Updater_DownloadProgressChanged(object sender, System.Net.DownloadProgressChangedEventArgs e)
+    {
+        int newPercentage = (int)(e.BytesReceived / e.TotalBytesToReceive * 100);
+
+        UpdateUI(() =>
+        {
+            DownloadProgressBar.Value = newPercentage;
+        });
+    }
+    public void _updater_DownloadCompleted(object sender, EventArgs e)
+    {
+        UpdateUI(() =>
+        {
+            DownloadProgressBar.Value = 100;
+            StatusTextBlock.Text = $"Installing version...";
+        });
+    }
+
+    private void UpdateUI(Action action)
+    {
+        try
+        {
+            Dispatcher.Invoke(() =>
+          {
+              action();
+          });
+        }
+        catch (Exception)
+        {
+
+            throw;
+        }
+    }
+}
+

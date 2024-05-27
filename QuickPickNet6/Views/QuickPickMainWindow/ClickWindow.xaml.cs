@@ -1,65 +1,90 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows;
-using QuickPick.PinnedApps;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using Ayazis.KeyHooks;
-using System.Windows.Media.Animation;
+﻿using Ayazis.Utilities;
 using MouseAndKeyBoardHooks;
-using Ayazis.Utilities;
-using ThumbnailLogic;
-using System.Linq;
-using System.Windows.Input;
-using Microsoft.VisualBasic;
-using QuickPick.UI.Views.Thumbnail;
-using System.Threading.Tasks;
-using System.Windows.Controls;
-using System.Windows.Forms;
-using System.Windows.Media.Effects;
-using System.Windows.Media;
-using System.Windows.Shapes;
-using System.Runtime.InteropServices;
-using System.Windows.Interop;
+using QuickPick.PinnedApps;
 using QuickPick.UI;
+using QuickPick.UI.Views.Settings;
+using QuickPick.UI.Views.Thumbnail;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Input;
+using System.Windows.Interop;
+using System.Windows.Media.Animation;
+using System.Windows.Xps.Serialization;
+using static QuickPick.UI.Views.Thumbnail.ThumbnailView;
 
 namespace QuickPick;
+
+public interface IClickWindow
+{
+    Storyboard HideAnimation { get; }
+    Storyboard ShowAnimation { get; }
+
+    void DisableMouseScroll();
+    void EnableMouseScroll();
+    void HandleFocusLost(object sender, EventArgs e);
+    void HideUI();
+    void InitializeComponent();
+    void SetCurrentTimeOnTimeStamp();
+    void ShowWindow();
+    void UpdateTaskbarShortCuts();
+    void HandleMouseButtonClicked(object sender, EventArgs e);
+
+}
+
 /// <summary>
 /// Interaction logic for MainWindow.xaml
 /// </summary>
-public partial class ClickWindow : Window
+public partial class ClickWindow : Window, IClickWindow
 {
-    public static ClickWindow _instance;
-    private QuickPickMainWindowModel _qpm = new QuickPickMainWindowModel();
+    public static ClickWindow Instance;
+    private QuickPickMainWindowModel _qpm = new();
     private IntPtr _quickPickWindowHandle;
-    private List<ThumbnailView> _currentThumbnails = new List<ThumbnailView>();
-    public static ThumbnailTimer ThumbnailTimer;
+    public static ThumbnailTimer MouseLeftTimer;
+    static DateTime _timeStampLastShown;
+    private Dictionary<IntPtr, Popup> _currentPopups = new();
+    readonly ILogger _logger;
+    readonly ISettingsManager _settingsManager;
 
-    private ThumbnailRectCreator _thumbnailRectCreator = new();
     public Storyboard HideAnimation { get; private set; }
     public Storyboard ShowAnimation { get; private set; }
-    public ClickWindow()
+    public ClickWindow(ILogger logger, ISettingsManager settingsManager)
     {
-        ThumbnailTimer = new(HideThumbnails);
+        _settingsManager = settingsManager;
+        _logger = logger;
+        MouseLeftTimer = new(HideThumbnails);
         InitializeComponent();
-        this.PreviewMouseWheel += ClickWindow_PreviewMouseWheel; ;
+        EnableMouseScroll();
         DataContext = _qpm;
 
         HideAnimation = TryFindResource("hideMe") as Storyboard;
         ShowAnimation = TryFindResource("showMe") as Storyboard;
 
-
         SetQuickPicksMainWindowHandle();
         UpdateLayout();
-        _instance = this;
-
-        // EnableBlur();  // The blurreffect works, but only on window level, creating a squared blurry area...
+        Instance = this;
     }
 
-    private void ClickWindow_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+    public void EnableMouseScroll()
     {
-        if (MouseIsOutsideWindow())
-            HideAnimation.Begin(this);
+#if DEBUG
+        this.PreviewMouseWheel += ClickWindow_PreviewMouseWheel;
+#endif
+    }
+    public void DisableMouseScroll()
+    {
+        this.PreviewMouseWheel -= ClickWindow_PreviewMouseWheel;
+    }
+
+
+    public void HandleFocusLost(object sender, EventArgs e)
+    {
+        if (!IsMouseOver)
+            HideUI();
     }
 
     private void ClickWindow_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
@@ -70,14 +95,10 @@ public partial class ClickWindow : Window
             if (collection.Count > 1)
             {
                 collection.Move(0, collection.Count - 1);
-                //AppLink firstItem = collection[0];
-                //collection.RemoveAt(0);
-                //collection.Add(firstItem);
             }
         }
         else
         {
-            // Scrolled down
             // Scrolled down
             if (collection.Count > 1)
             {
@@ -86,25 +107,25 @@ public partial class ClickWindow : Window
         }
     }
 
-    public bool MouseIsOutsideWindow()
-    {
-        var mouse = MousePosition.GetCursorPosition();
-
-        bool isOutside = mouse.X < Left || mouse.X > Left + ActualWidth
-                        || mouse.Y < Top || mouse.Y > Top + ActualHeight;
-
-        return isOutside;
-    }
-
     public void UpdateTaskbarShortCuts()
     {
-        List<AppLink> apps = AppLinkRetriever.GetPinnedAppsAndActiveWindows();
-
-        foreach (var app in apps)
+        bool includePinnedApps = _settingsManager.Settings.ActiveAppSetting == UI.Views.Settings.ActiveAppSetting.IncludePinnedTaskBarApps;
+        List<AppLink> apps;
+        try
         {
-            var handle = ActiveWindows.GetActiveWindowOnCurentDesktop(app.TargetPath);
-            if (handle != default)
-                app.HasWindowActiveOnCurrentDesktop = true;
+            apps = AppLinkRetriever.GetPinnedAppsAndActiveWindows(includePinnedApps);
+
+            foreach (var app in apps)
+            {
+                var handle = ActiveWindows.GetActiveWindowOnCurentDesktop(app.TargetPath);
+                if (handle != default)
+                    app.HasWindowActiveOnCurrentDesktop = true;
+            }
+        }
+        catch (InvalidOperationException)
+        {
+            // can happen when a user clicks too fast on the hotkey combination when starting the application.
+            return;
         }
 
 
@@ -119,20 +140,40 @@ public partial class ClickWindow : Window
         }
 
 
-        _qpm.PinnedApps = new ObservableCollection<AppLink>(apps);
-        _qpm.NotifyPropertyChanged(nameof(_qpm.PinnedApps));
+        Dispatcher.Invoke(() =>
+        {
+            _qpm.PinnedApps.Clear();
+            foreach (var item in apps)
+            {
+                _qpm.PinnedApps.Add(item);
+            }
+        });
+    }
+    public void SetCurrentTimeOnTimeStamp()
+    {
+        _timeStampLastShown = DateTime.Now;
     }
 
-    public static void HideWindow()
+    public void HideUI()
     {
         try
         {
-            _instance.HideAnimation.Begin(_instance);
+            // If the Ui has been shown in the last couple of millieseconds, we should not hide the window.
+            // This often happens when a user clicks the hotkey combination whilst the ui is showing.
+            TimeSpan timeSinceUIShown = DateTime.Now - _timeStampLastShown;
+            if (timeSinceUIShown < TimeSpan.FromMilliseconds(200))
+                return;
+
+
+            Deactivated -= HandleFocusLost;
+            LostFocus -= HandleFocusLost;
+            HideAnimation.Begin(this);
+            HideThumbnails();
 
         }
         catch (Exception ex)
         {
-            Logs.Logger.Log(ex);
+            _logger.Log(ex);
         }
     }
 
@@ -140,16 +181,16 @@ public partial class ClickWindow : Window
     {
         try
         {
+            _timeStampLastShown = DateTime.Now;
             Visibility = Visibility.Visible;
             var mousePosition = MousePosition.GetCursorPosition();
             Left = mousePosition.X - ActualWidth / 2;
             Top = mousePosition.Y - ActualHeight / 2;
             ShowAnimation.Begin(this);
-
         }
         catch (Exception ex)
         {
-            Logs.Logger.Log(ex);
+            _logger.Log(ex);
         }
     }
 
@@ -165,22 +206,13 @@ public partial class ClickWindow : Window
         Hide();
 
     }
-    private void Button_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
-    {
-        ThumbnailTimer.StopTimer();
-        HideThumbnails();
-        // todo: Move logic out of xaml.xs
-        var button = (System.Windows.Controls.Button)sender;
-        AppLink pinnedApp = button.DataContext as AppLink;
 
-        CreateThumbnails(pinnedApp, button);
-    }
 
-    private void CreateThumbnails(AppLink pinnedApp, System.Windows.Controls.Button button)
+    private IEnumerable<ThumbnailView> CreateThumbnails(AppLink pinnedApp, System.Windows.Controls.Button button)
     {
         // Get the center of the button relative to its container (the window)
         var buttonCenter = button.TransformToAncestor(this)
-                                .Transform(new Point(button.ActualWidth / 2, button.ActualHeight / 2));
+                                    .Transform(new Point(button.ActualWidth / 2, button.ActualHeight / 2));
 
         // Get the center of the window
         double windowCenterX = this.ActualWidth / 2;
@@ -192,111 +224,195 @@ public partial class ClickWindow : Window
 
         // Get DPI information
         PresentationSource source = PresentationSource.FromVisual(this);
-        var m = source.CompositionTarget.TransformToDevice;
-        double dpiScaling = m.M11;
+        double dpiScaling = source.CompositionTarget.TransformToDevice.M11;
 
         for (int i = 0; i < pinnedApp.WindowHandles.Count; i++)
         {
-            ProcessThumbnail(i);
+            var thumbnail = ProcessThumbnail(i);
+            if (thumbnail != null)
+                yield return thumbnail;
         };
-        
-        //local function for readability
-        void ProcessThumbnail(int i)
+
+        ThumbnailView ProcessThumbnail(int i)
         {
             IntPtr currentWindowHandle = pinnedApp.WindowHandles[i];
-
-            // Create thumbnailRelation
-            var newThumbnail = ThumbnailCreator.GetThumbnailRelations(currentWindowHandle, _quickPickWindowHandle);
-            if (newThumbnail == default)
-                return;
-
-            double aspectRatio = ThumbnailCreator.GetWindowAspectRatio(currentWindowHandle);
-            RECT rect = _thumbnailRectCreator.CreateRectForThumbnail(buttonCenter, xToWindowCenter, ytoWindowCenter, dpiScaling, i, aspectRatio);
-
             string windowTitle = ActiveWindows.GetWindowTitle(currentWindowHandle);
-            var thumbnailContext = new ThumbnailDataContext(newThumbnail, rect, currentWindowHandle, windowTitle);
-            var thumbnailView = new ThumbnailView(thumbnailContext);
+            var thumbnailProperties = new PreviewImageProperties(currentWindowHandle, windowTitle, dpiScaling, pinnedApp.AppIcon);
+            var thumbnailView = new ThumbnailView(thumbnailProperties, pinnedApp);
 
-            this.ThumbnailCanvas.Children.Add(thumbnailView);
-            _currentThumbnails.Add(thumbnailView);
-
-            // Set the position of ThumbnailView based on translated coordinates.
-            Canvas.SetLeft(thumbnailView, rect.Left / dpiScaling - 20);
-            Canvas.SetTop(thumbnailView, rect.Top / dpiScaling - 20);
-            thumbnailView.FadeIn();
+            // subscribe to close event and handle it in pinnedApp
+            thumbnailView.CloseThumbnailEvent += ThumbnailView_CloseThumbnailEvent;
+            return thumbnailView;
         }
     }
 
+
+
+    void ShowThumbnails(List<ThumbnailView> thumbnails, Button button)
+    {
+        // Get the center of the button relative to its container (the window)
+        Point buttonCenter = button.TransformToAncestor(this)
+                                    .Transform(new Point(button.ActualWidth / 2, button.ActualHeight / 2));
+
+        // Get absolute screen coordinates for the button.
+        Point buttonLocation = PointToScreen(buttonCenter);
+
+        Point previousLocation;
+        double previousWidth = 0;
+
+        for (int i = 0; i < thumbnails.Count; i++)
+        {
+            var thumbnailView = thumbnails[i];
+            Popup popup = new();
+            // store the windowhandle as key in the dictionary for this popup. This way we can find the popup later.    
+            _currentPopups[thumbnailView.Properties.WindowHandle] = popup;
+            popup.Placement = PlacementMode.AbsolutePoint;
+
+            // get x and y offset to the center            
+            double xToWindowCenter = buttonCenter.X - ActualWidth / 2;
+            double yToWindowCenter = buttonCenter.Y - ActualHeight / 2;
+
+            // Get DPI information
+            PresentationSource source = PresentationSource.FromVisual(this);
+            double dpiScaling = source.CompositionTarget.TransformToDevice.M11;
+            double dpiAdjustedWidth = thumbnailView.Properties.Width * dpiScaling;
+            double dpiAdjustedHeight = thumbnailView.Properties.Height * dpiScaling;
+
+            // Adjust the thumbnail's position according to it's relative position to the center of the window.
+            var thumbnailPositionCalculator = new DpiSafeThumbnailPositioner();
+            Point adjustedPosition;
+            if (i == 0)
+                adjustedPosition = thumbnailPositionCalculator.CalculatePositionForThumbnailView(buttonLocation, xToWindowCenter, yToWindowCenter, i, dpiAdjustedWidth, dpiAdjustedHeight);
+            else
+                adjustedPosition = thumbnailPositionCalculator.CalculatePositionForThumbnailView(previousLocation, xToWindowCenter, previousWidth, dpiAdjustedWidth);
+
+            previousLocation = adjustedPosition;
+            previousWidth = dpiAdjustedWidth;
+
+            // set the popups offset, taking the DPI into account.   
+            popup.HorizontalOffset = adjustedPosition.X / thumbnailView.Properties.DpiScaling;
+            popup.VerticalOffset = adjustedPosition.Y / thumbnailView.Properties.DpiScaling;
+
+            popup.Child = thumbnailView;
+            ShowThumbnail(thumbnailView, popup);
+        }
+    }
+
+    private static void ShowThumbnail(ThumbnailView thumbnailView, Popup popup)
+    {
+        popup.IsOpen = true;
+
+        IntPtr handle = ((HwndSource)PresentationSource.FromVisual(popup.Child)).Handle;
+
+        thumbnailView.FadeIn(handle);
+    }
+    private void Button_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+    {
+        MouseLeftTimer.StopTimer();
+        // Hide any Thumbnails from other apps.
+        HideThumbnails();
+
+        // todo: Move logic out of xaml.xs
+        Button button = (System.Windows.Controls.Button)sender;
+
+        // slightly enlarge the buttons
+        var parent = button.Parent as Grid;
+        var children = parent.Children;
+        foreach (var child in children)
+        {
+            if (child is not Button btn)
+                continue;
+
+            btn.Width += 5;
+            btn.Height += 5;
+        }
+
+
+        if (button != null)
+        {
+            var container = ItemsControl.ContainerFromElement(Applinks, button) as UIElement;
+            if (container != null)
+            {
+                Panel.SetZIndex(container, 1);
+            }
+        }
+
+        AppLink pinnedApp = button.DataContext as AppLink;
+
+        var thumbnails = CreateThumbnails(pinnedApp, button).ToList();
+
+        ShowThumbnails(thumbnails, button);
+    }
     private void Button_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
     {
-        ThumbnailTimer.StartTimer();
+        Button button = (System.Windows.Controls.Button)sender;
+
+        // reset size of the buttons
+        var parent = button.Parent as Grid;
+        var children = parent.Children;
+        foreach (var child in children)
+        {
+            if (child is not Button)
+                continue;
+
+            var userControl = child as FrameworkElement;
+            userControl.Width -= 5;
+            userControl.Height -= 5;
+        }
+
+        var container = ItemsControl.ContainerFromElement(Applinks, button) as UIElement;
+        if (container != null)
+        {
+            Panel.SetZIndex(container, 0);
+        }
+        MouseLeftTimer.StartTimer();
     }
 
 
     private void HideThumbnails()
     {
-        foreach (var thumbnailView in _currentThumbnails)
+        foreach (var item in _currentPopups)
         {
-            if (thumbnailView != default)
-                thumbnailView.Hide();
+            var popup = item.Value;
+            popup.IsOpen = false;
+            (popup.Child as ThumbnailView)?.Hide();
         }
-        _currentThumbnails.Clear();
+        _currentPopups.Clear();
     }
 
-
-    internal void EnableBlur()
+    private void ThumbnailView_CloseThumbnailEvent(object sender, ThumbnailViewEventArgs e)
     {
-        var windowHelper = new WindowInteropHelper(this);
+        var closedWindowHandle = e.ThumbnailView.Properties.WindowHandle;
+        bool popupFound = _currentPopups.TryGetValue(closedWindowHandle, out Popup popup);
+        if (!popupFound)
+            return;
 
-        var accent = new AccentPolicy();
-        accent.AccentState = AccentState.ACCENT_ENABLE_BLURBEHIND;
+        popup.IsOpen = false;
+        popup = null; // set to null to allow garbage collection
+        _currentPopups.Remove(closedWindowHandle);
 
-        var accentStructSize = Marshal.SizeOf(accent);
-
-        var accentPtr = Marshal.AllocHGlobal(accentStructSize);
-        Marshal.StructureToPtr(accent, accentPtr, false);
-
-        var data = new WindowCompositionAttributeData();
-        data.Attribute = WindowCompositionAttribute.WCA_ACCENT_POLICY;
-        data.SizeOfData = accentStructSize;
-        data.Data = accentPtr;
-
-        SetWindowCompositionAttribute(windowHelper.Handle, ref data);
-
-        Marshal.FreeHGlobal(accentPtr);
+        e.ThumbnailView.ParentApp.RemoveThumbnail(e.ThumbnailView.Properties.WindowHandle);
     }
-    internal enum AccentState
+    public void HandleMouseButtonClicked(object sender, EventArgs e)
     {
-        ACCENT_DISABLED = 1,
-        ACCENT_ENABLE_GRADIENT = 0,
-        ACCENT_ENABLE_TRANSPARENTGRADIENT = 2,
-        ACCENT_ENABLE_BLURBEHIND = 3,
-        ACCENT_INVALID_STATE = 4
+        bool mouseOverMainWindow = IsMouseOver;
+        bool mouseOverPopups = _currentPopups.Any(p => p.Value.IsMouseOver);
+
+        if (!mouseOverMainWindow && !mouseOverPopups)
+            HideUI();
     }
 
-    [StructLayout(LayoutKind.Sequential)]
-    internal struct AccentPolicy
+    private void MenuButton_Click(object sender, RoutedEventArgs e)
     {
-        public AccentState AccentState;
-        public int AccentFlags;
-        public int GradientColor;
-        public int AnimationId;
+        SettingsWindow.Instance.ShowWindow();
+        SettingsWindow.Instance.Activate();
+        SettingsWindow.Instance.Focus();
+        HideUI();
     }
 
-    [StructLayout(LayoutKind.Sequential)]
-    internal struct WindowCompositionAttributeData
+    private void Button_PreviewMouseDown(object sender, MouseButtonEventArgs e)
     {
-        public WindowCompositionAttribute Attribute;
-        public IntPtr Data;
-        public int SizeOfData;
+        var appLink = ((Button)sender).DataContext as AppLink;
+        appLink?.ClickCommand?.Execute(this);
     }
-
-    internal enum WindowCompositionAttribute
-    {
-        // ...
-        WCA_ACCENT_POLICY = 19
-        // ...
-    }
-    [DllImport("user32.dll")]
-    internal static extern int SetWindowCompositionAttribute(IntPtr hwnd, ref WindowCompositionAttributeData data);
 }

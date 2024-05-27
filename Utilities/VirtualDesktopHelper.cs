@@ -47,7 +47,7 @@ public class VirtualDesktopHelper : IVirtualDesktopHelper
             {
                 desktopIdForWindow = _virtualDesktopManager.GetWindowDesktopId(hWnd);
             }
-            catch (COMException e)
+            catch (COMException)
             {
                 // Random guid will return false.
                 desktopIdForWindow = Guid.NewGuid();

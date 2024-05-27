@@ -1,0 +1,100 @@
+name: Build and Test
+
+on:
+  push:
+    branches:
+      - Pre-Release
+
+env:
+  REPO_NAME: QuickPick
+  REPO_OWNER: ayazis
+  DOTNET_VERSION: '7.x'
+
+jobs:
+  build_and_test:
+    runs-on: windows-latest
+
+    steps:  
+      - name: Authenticate gh CLI
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+        
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Extract Version
+        id: get_version
+        shell: pwsh
+        run: |
+          $projectPath = "${{ env.REPO_NAME }}_Console/${{ env.REPO_NAME }}.csproj"
+          $projectFileContent = Get-Content $projectPath -Raw
+          $versionPattern = '<Version>(.*?)<\/Version>'
+          if ($projectFileContent -match $versionPattern) {
+            $version = $matches[1]
+            Write-Host "Extracted version: $version"
+            Add-Content -Path $env:GITHUB_ENV -Value "VERSION=$version"
+          }
+          else {
+            Write-Error "Version extraction failed."
+          }
+
+      - name: Set MSBuild Path
+        id: msbuild
+        shell: pwsh
+        run: |
+          $msbuildPath = & vswhere -latest -products * -requires Microsoft.Component.MSBuild -find MSBuild\**\Bin\MSBuild.exe
+          Add-Content -Path $env:GITHUB_ENV -Value "MSBUILD_PATH=$msbuildPath"
+          write-host $msbuildPath
+
+      - name: Locate VSTest
+        id: vstest
+        shell: pwsh
+        run: |
+          $vsTestPath = & vswhere -latest -products * -requires Microsoft.Component.MSBuild -find Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe
+          echo "VSTEST_PATH=$vsTestPath" | Out-File -FilePath $env:GITHUB_ENV -Append
+
+      - name: Restore NuGet packages
+        shell: pwsh
+        run: |
+          dotnet restore
+
+      - name: Set Publish Directory Path
+        shell: pwsh
+        run: |
+          $publishDir = Join-Path $env:GITHUB_WORKSPACE "${{ env.REPO_NAME }}_Console\out"
+          Add-Content -Path $env:GITHUB_ENV -Value "PUBLISH_DIR=$publishDir"
+
+      - name: Publish
+        shell: pwsh
+        run: |
+          & "$env:MSBUILD_PATH" "QuickPick_Console\QuickPick.csproj" -target:Publish -p:Configuration=Release -p:PublishDir="$env:PUBLISH_DIR\"
+
+      - name: Zip the published content
+        shell: pwsh
+        run: |
+          Compress-Archive -Path "$env:PUBLISH_DIR\*" -DestinationPath "$env:PUBLISH_DIR\QuickPick $env:VERSION.zip"
+
+      - name: Create Release and Upload Asset
+        run: |
+          # Create release
+          gh release create ${{ env.VERSION }} --title "QuickPick ${{ env.VERSION }}" --notes "Release notes for ${{ env.VERSION }}" --prerelease
+        
+      - name: Upload to Release
+        run: |
+            gh release upload $env:VERSION "$env:PUBLISH_DIR\QuickPick $env:VERSION.zip"
+        shell: pwsh
+        env:
+            PUBLISH_DIR: ${{ env.PUBLISH_DIR }}
+            VERSION: ${{ env.VERSION }}

@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net6.0-windows</TargetFramework>
+		
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>disable</Nullable>
 		<UseWPF>true</UseWPF>
-		<LangVersion>latest</LangVersion>
+	
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -24,20 +24,19 @@
 
 
 	<ItemGroup>
-		<PackageReference Include="InputSimulator" Version="1.0.4" />
+    <PackageReference Include="FontAwesome5" Version="2.1.11" />
+    <PackageReference Include="InputSimulator" Version="1.0.4" />
 		<PackageReference Include="System.Drawing.Common" Version="6.0.0" />
-	</ItemGroup>
+    <PackageReference Include="Microsoft.Windows.Compatibility" Version="6.0.4" />
+    <PackageReference Include="NAudio" Version="2.2.1" />
+
+  </ItemGroup>
 
 
 	<ItemGroup>
 		<PackageReference Include="System.Windows.Forms" />		
 		<PackageReference Include="WindowsAPICodePack-Core" Version="1.1.2" />
 		<PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1" />	  
-	</ItemGroup>
-
-
-	<ItemGroup>
-	  <ProjectReference Include="..\QuickPick.Tests\QuickPick.Tests.csproj" />
 	</ItemGroup>
 
 

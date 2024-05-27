@@ -1,7 +1,9 @@
-﻿using System;
-using System.Drawing;
+﻿using QuickPick.PinnedApps;
+using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using ThumbnailLogic;
@@ -11,27 +13,30 @@ namespace QuickPick.UI.Views.Thumbnail;
 
 public partial class ThumbnailView : UserControl
 {
-    ThumbnailDataContext _context;
+    Color SemiGray = (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#333333");
+    Color almostBlack = (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#202020");
+    public PreviewImageProperties Properties;
+    public readonly AppLink ParentApp;
+    public ThumbnailTimer MouseEnterTimer;
+
+    public IntPtr PreviewPointer { get; set; }
     public ThumbnailView()
     {
-
+        this.MouseLeave += UserControl_MouseLeave;
     }
-
-    public ThumbnailView(ThumbnailDataContext context)
+    public ThumbnailView(PreviewImageProperties previewImageProperties, AppLink pinnedApp)
     {
-        var size = CalculateRenderSize(context.Rect);
-        context.Width = size.Width;
-        context.Height = size.Height;
-
+        MouseEnterTimer = new ThumbnailTimer(ActivateAeroPeek);
+        ParentApp = pinnedApp;
         InitializeComponent();
-        this.DataContext = context;
-        _context = context;
-        this.Visibility = System.Windows.Visibility.Hidden;
-       
-        
+        this.DataContext = previewImageProperties;
+        Properties = previewImageProperties;
     }
-
-    public async Task FadeIn()
+    /// <summary>
+    /// Shows the thumbnailView and the previewImage.
+    /// </summary>
+    /// <param name="parentHandle">The handle of the parentWindow in which the previewImage will be shown.</param>
+    public void FadeIn(IntPtr parentHandle)
     {
         this.Dispatcher.Invoke(() =>
         {
@@ -40,89 +45,113 @@ public partial class ThumbnailView : UserControl
 
         });
 
-        Task.Run(() => { ShowThumbnailViewAsync(); });
-        Task.Run(() => { ThumbnailCreator.CreateAndFadeInThumbnail(_context.ThumbnailRelation, _context.Rect); });
+        Task.Run(() => { ShowThumbnailView(); });
 
+        PreviewPointer = WindowPreviewCreator.GetPreviewImagePointer(Properties.WindowHandle, parentHandle);
 
-        return;
+        RECT rect = GetRectForPreviewImage();
 
-        Task taskCreateAndFadeInThumbnail = new Task(() => { });
-        Task taskFadeInThisView = new Task(() => { });
-        taskFadeInThisView.Start();
-        taskCreateAndFadeInThumbnail.Start();
-        await Task.WhenAll(taskCreateAndFadeInThumbnail, taskFadeInThisView);
+        Task.Run(() => { WindowPreviewCreator.CreateAndFadeInPreviewImage(PreviewPointer, rect); });
+
     }
-    private async Task ShowThumbnailViewAsync(bool fadeIn = false)
+
+    private RECT GetRectForPreviewImage()
     {
-        if (fadeIn)
+        const int MARGIN = 15;
+        int dpiAdjustedMargin = (int)(MARGIN * Properties.DpiScaling);
+        int dpiAdjustedWidth = (int)(Properties.Width * Properties.DpiScaling);
+        int dpiAdjustedHeight = (int)(Properties.Height * Properties.DpiScaling);
+
+        var rect = new RECT()
         {
-            // use dispatchers as short as possible to prevent lag.
-            // Gradually increase the opacity over time to create a fade-in effect. // Same logic as in ThumbnailCreator
-            for (double i = 0; i <= 255; i += 25)
-            {
-                double newOpacityValue = i / 255;
-                double localOpacity = newOpacityValue;
-                this.Dispatcher.Invoke(() =>
-                {
-                    this.Opacity = localOpacity;
-                });
-                // Sleep for a bit to control the speed of the fade-in. Adjust this value as needed.
-                Thread.Sleep(20);
-            }
-        }
+            Left = dpiAdjustedMargin,
+            Top = 2 * dpiAdjustedMargin,
+            Bottom = dpiAdjustedHeight - dpiAdjustedMargin,
+            Right = dpiAdjustedWidth - dpiAdjustedMargin,
+        };
+        return rect;
+    }
+
+    private void ShowThumbnailView()
+    {
         this.Dispatcher.Invoke(() =>
         {
             // Make sure the opacity ends at 1 for full visibiblity.
             this.Opacity = 1;
         });
-
-
     }
 
     public void Hide()
     {
         this.Visibility = System.Windows.Visibility.Collapsed;
-        ThumbnailCreator.DwmUnregisterThumbnail(_context.ThumbnailRelation);
+        WindowPreviewCreator.DwmUnregisterThumbnail(PreviewPointer);
     }
 
     private void UserControl_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
     {
-        var color = (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#101010");
+        if (MouseEnterTimer == null)
+            MouseEnterTimer = new ThumbnailTimer(ActivateAeroPeek);
 
+        MouseEnterTimer.StopTimer();
+        MouseEnterTimer.StartTimer();
         // Set the fill color of the rectangle
-        SolidColorBrush fillBrush = new SolidColorBrush(color);
+        SolidColorBrush fillBrush = new SolidColorBrush(SemiGray);
 
         ThumbBackground.Background = fillBrush;
-        ClickWindow.ThumbnailTimer.StopTimer();
+        ClickWindow.MouseLeftTimer.StopTimer();
+        btnClose.Visibility = Visibility.Visible;
+        tbWindowTitle.Margin = new Thickness(tbWindowTitle.Margin.Left, tbWindowTitle.Margin.Top, tbWindowTitle.Margin.Right + 10, tbWindowTitle.Margin.Bottom);
     }
 
     private void UserControl_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
     {
-        var color = (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#202020");
-        SolidColorBrush fillBrush = new SolidColorBrush(color);
+        MouseEnterTimer.StopTimer();
+        ActiveWindows.DeactivatePeek(Properties.WindowHandle);
+        SolidColorBrush fillBrush = new SolidColorBrush(almostBlack);
 
         ThumbBackground.Background = fillBrush;
-        ClickWindow.ThumbnailTimer.StartTimer();
+        ClickWindow.MouseLeftTimer.StartTimer();
+        btnClose.Visibility = Visibility.Collapsed;
+        tbWindowTitle.Margin = new Thickness(tbWindowTitle.Margin.Left, tbWindowTitle.Margin.Top, tbWindowTitle.Margin.Right - 10, tbWindowTitle.Margin.Bottom);
         // starttimer
     }
 
     private void UserControl_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
-        ActiveWindows.ToggleWindow(_context.WindowHandle);
+        ActiveWindows.DeactivatePeek(Properties.WindowHandle); // always disactivate peek when activating a window.        
+        ActiveWindows.ActivateWindow(Properties.WindowHandle);
+        ClickWindow.Instance.HideUI();
         // Toggle.
     }
-    public static System.Windows.Size CalculateRenderSize(RECT rect)
+    private void btnClose_Click(object sender, System.Windows.RoutedEventArgs e)
     {
-        int width = rect.Right - rect.Left;
-        int height = rect.Bottom - rect.Top;
-
-        // Ensure width and height are positive
-        if (width < 0)
-            width = -width;
-
-        if (height < 0)
-            height = -height;
-
-        return new System.Windows.Size(width, height);
+        Debug.WriteLine("EVENT; Thumbnail close button clicked.");
+        ClickWindow.Instance.SetCurrentTimeOnTimeStamp();
+        ActiveWindows.CloseWindow(Properties.WindowHandle);
+        this.Visibility = System.Windows.Visibility.Collapsed;
+        CloseThumbnailEvent?.Invoke(this, new ThumbnailViewEventArgs(this));
     }
+
+
+    public void ActivateAeroPeek()
+    {
+        ActiveWindows.ActivatePeek(Properties.WindowHandle);
+    }
+
+
+    // create new eventargs with thumbnailview as parameter
+    public class ThumbnailViewEventArgs : EventArgs
+    {
+        public ThumbnailViewEventArgs(ThumbnailView thumbnailView)
+        {
+            ThumbnailView = thumbnailView;
+        }
+
+        public ThumbnailView ThumbnailView { get; set; }
+    }
+
+
+    // add ThumbnailView as parameter to eventhandler
+    public event EventHandler<ThumbnailViewEventArgs> CloseThumbnailEvent;
+
 }

@@ -3,8 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:QuickPick"    
+             xmlns:local="clr-namespace:QuickPick"       
+             xmlns:usercontrols="clr-namespace:QuickPick.UI.Views"
              mc:Ignorable="d" 
+             xmlns:fa5="http://schemas.fontawesome.com/icons/"
              d:DesignHeight="150" d:DesignWidth="150">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -14,13 +16,16 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-        <Grid Width="100" Height="100">
+
+
+        <Grid Width="100" Height="100" >
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
+
             <Grid.Clip>
                 <GeometryGroup>
                     <!-- The clipping rectangle that covers the entire area except the circle -->
@@ -45,7 +50,8 @@
                     Width="80" Height="80" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             <Grid>
                 <Path Name="BottomRight" Fill="Transparent"  Data="M0,0 L50,0 A50,50,0,0,1,0,50 Z" Stretch="Fill" Margin="50,50,12,12" RenderTransformOrigin="0.5,0.5"
-          MouseEnter="Path_MouseEnter" MouseLeave="Path_MouseLeave" MouseUp="Path_MouseUp"/>
+          MouseEnter="Path_MouseEnter" MouseLeave="Path_MouseLeave" MouseUp="Path_MouseUp"                  
+                      />
                 <Path Name="BottomLeft" Fill="Transparent" Data="M0,0 L50,0 A50,50,0,0,1,0,50 Z" Stretch="Fill" Margin="12,50,50,12" RenderTransformOrigin="0.5,0.5"
           MouseEnter="Path_MouseEnter" MouseLeave="Path_MouseLeave" MouseUp="Path_MouseUp">
                     <Path.RenderTransform>
@@ -58,7 +64,7 @@
                     </Path.RenderTransform>
                 </Path>
                 <Path Name="TopLeft" Fill="Transparent" Data="M0,0 L50,0 A50,50,0,0,1,0,50 Z" Stretch="Fill" Margin="12,12,50,50" RenderTransformOrigin="0.5,0.5"
-          MouseEnter="Path_MouseEnter" MouseLeave="Path_MouseLeave" MouseUp="Path_MouseUp">
+          MouseEnter="Path_MouseEnter" MouseLeave="Path_MouseLeave" MouseUp="TopLeft_MouseUp" MouseDown="TopLeft_MouseDown" MouseMove="TopLeft_MouseMove">
                     <Path.RenderTransform>
                         <TransformGroup>
                             <ScaleTransform/>
@@ -82,10 +88,74 @@
             </Grid>
 
         </Grid>
-
         <Button x:Name="SmallMiddleButton" Style="{StaticResource ResourceKey=RoundButton}" Click="SmallMiddleButton_Click"
+                Content="..."
             Width="30" Height="30" Margin="35" HorizontalAlignment="Center" VerticalAlignment="Center"
             Panel.ZIndex="1"/>
+
+
+
+
+        <fa5:ImageAwesome Name="BrightnessButton" Icon="Solid_Lightbulb"
+         Foreground="White" Width="10" Height="10"                           
+         Panel.ZIndex="1" Margin="-45,-40,0,0"                    
+         Visibility="Visible"
+         MouseDown="BrightnessButton_MouseDown"
+         MouseUp="BrightnessButton_MouseUp"
+         MouseMove="BrightnessButton_MouseMove"/>
+        <ProgressBar Name="BrightnessBar"
+               Orientation="Vertical"
+               Panel.ZIndex="1" 
+               Width="5" 
+               Height="50" 
+               Margin="-60,30,0,0" 
+               VerticalAlignment="Top" 
+               Background="{StaticResource BackgroundBrush}"
+               Foreground="{StaticResource ForegroundBrush}"
+               Visibility="Collapsed"  />
+
+        <fa5:ImageAwesome Name="PlayButton"  
+                          Icon="Solid_Play" 
+                          Foreground="White" 
+                          Width="8" 
+                          Height="8"
+                          MouseDown="PlayButton_MouseDown"                            
+                          Panel.ZIndex="1" Margin="55,25,0,0" />
+        <fa5:ImageAwesome Name="PauseButton"  
+                   Icon="Solid_Pause" 
+                   Foreground="White" 
+                   Width="8" 
+                   Height="8"
+                   MouseDown="PauseButton_MouseDown"                            
+                   Panel.ZIndex="1" Margin="55,25,0,0" 
+                    Visibility="Collapsed" />
+        <fa5:ImageAwesome Name="VolumeButton" Icon="Solid_VolumeUp"
+                          Foreground="White" Width="10" Height="10" 
+                          MouseEnter="VolumeButton_MouseEnter"
+                          MouseLeave="VolumeButton_MouseLeave"                          
+                          Panel.ZIndex="1" Margin="30,50,0,0"
+                          ToolTip="Scroll to adjust volume."
+                          MouseDown="VolumeButton_MouseDown"
+                          />
+        <fa5:ImageAwesome Name="VolumeOffButton" Icon="Solid_VolumeMute"
+                    Foreground="White" Width="10" Height="10" 
+                    MouseEnter="VolumeButton_MouseEnter"
+                    MouseLeave="VolumeButton_MouseLeave"                          
+                    Panel.ZIndex="1" Margin="30,50,0,0"                    
+                    Visibility="Collapsed"
+                    MouseDown="VolumeOffButton_MouseDown"/>
+
+
+        <ProgressBar Name="VolumeBar"
+                     Orientation="Vertical"
+                     Panel.ZIndex="1" 
+                     Width="5" 
+                     Height="50" 
+                     Margin="30,40,0,0" 
+                     VerticalAlignment="Top" 
+                     Background="{StaticResource BackgroundBrush}"
+                     Foreground="{StaticResource ForegroundBrush}"
+                     Visibility="Collapsed"                      />
 
 
     </Grid>

@@ -4,18 +4,50 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:QuickPick.UI.Views.Thumbnail"
-             mc:Ignorable="d"     
+             mc:Ignorable="d"                 
              Width="{Binding Width}"
              Height="{Binding Height}"
              MouseEnter="UserControl_MouseEnter"
              MouseLeave="UserControl_MouseLeave"
-             MouseUp="UserControl_MouseUp">
+             MouseUp="UserControl_MouseUp"
+             BorderBrush="Black"
+             BorderThickness="1"
+             >
     <UserControl.DataContext>
-        <local:ThumbnailDataContext/>
+        <local:PreviewImageProperties/>
     </UserControl.DataContext>
-    <Border CornerRadius="10" Background="#E6202020" Margin="-10" Name="ThumbBackground">
-        <Grid>     
-        <TextBlock Text="{Binding WindowTitle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Foreground="White"   d:Text="PlaceholderTitle" Margin="15" />
+    <UserControl.Resources>
+        <ResourceDictionary Source="../Resources.xaml"/>
+    </UserControl.Resources>
+    <Border CornerRadius="0" Background="#E6202020" Margin="0,-10,0,0" Name="ThumbBackground">
+        <Grid>
+            <Image Source="{Binding Icon, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="15" Height="15" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="8,17"/>
+            <TextBlock Name="tbWindowTitle" Text="{Binding WindowTitle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Foreground="White"   d:Text="PlaceholderTitle" Margin="30,15,15,15" TextTrimming="CharacterEllipsis" />
+            <Button Name="btnClose" 
+                  Visibility="Collapsed"
+                  Content=" X " 
+                  Width="25" 
+                  Height="25"                     
+                  Click="btnClose_Click"
+                  HorizontalAlignment="Right" 
+                  VerticalAlignment="Top"
+                  Background="Transparent" 
+                  BorderThickness="0"
+                  Foreground="{StaticResource ForegroundBrush}"
+                  Margin="0,10">
+                <Button.Template>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="border" Background="Transparent">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="DarkRed" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
         </Grid>
     </Border>
 </UserControl>

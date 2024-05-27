@@ -1,5 +1,5 @@
-﻿using System.Windows.Input;
-using System;
+﻿using System;
+using System.Windows.Input;
 
 namespace QuickPick.PinnedApps;
 

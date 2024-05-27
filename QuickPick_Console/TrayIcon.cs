@@ -1,62 +1,67 @@
-﻿using System;
+﻿using QuickPick.UI.Views.Settings;
 using System.Drawing;
-using System.IO;
+using System.Reflection;
 using System.Windows.Forms;
 
 namespace QuickPick;
-public class TrayIconManager
+public interface ITrayIconService
 {
-	private NotifyIcon _trayIcon;
-	private ContextMenuStrip _contextMenu;
+    void CreateTrayIcon();
+    void OnExitClick(object sender, EventArgs e);
+    void RemoveTrayIcon();
+}
+public class TrayIconService : ITrayIconService
+{
+    private NotifyIcon _trayIcon;
+    private ContextMenuStrip _contextMenu;
 
-	public void CreateTrayIcon()
-	{
-		_contextMenu = new ContextMenuStrip();
-		_contextMenu.Items.Add("Settings", null, OnSettingsClick);
-		_contextMenu.Items.Add(new ToolStripSeparator());
-		_contextMenu.Items.Add("Exit", null, OnExitClick);	
+    public void CreateTrayIcon()
+    {
+        _contextMenu = new ContextMenuStrip();
+        _contextMenu.Items.Add("Settings", null, OnSettingsClick);
+        _contextMenu.Items.Add(new ToolStripSeparator());
+        _contextMenu.Items.Add("Exit", null, OnExitClick);
+        Assembly assembly = Assembly.GetExecutingAssembly();
+        string currentVersion = assembly?.GetName()?.Version?.ToString() ?? string.Empty;
+        _trayIcon = new NotifyIcon
+        {
+            Icon = CreateIcon(),
+            Visible = true,
+            ContextMenuStrip = _contextMenu
+            ,
+            Text = $"QuickPick {currentVersion}"
+        };
+    }
+    private Icon CreateIcon()
+    {
+        var currentPath = AppDomain.CurrentDomain.BaseDirectory;
+        var IconPath = $@"{currentPath}\Assets\QP_Icon_32px.png";
+        if (!File.Exists(IconPath))
+            return new Icon(SystemIcons.Warning, 40, 40);
 
-		_trayIcon = new NotifyIcon
-		{
-			Icon = CreateIcon(),
-			Visible = true,
-			ContextMenuStrip = _contextMenu
-		};
-	}
-	private Icon CreateIcon()
-	{
-		var currentPath = AppDomain.CurrentDomain.BaseDirectory;
-		var IconPath = $@"{currentPath}\Assets\QP_Icon_32px.png";
-		if (!File.Exists(IconPath))
-			return new Icon(SystemIcons.Warning, 40, 40);
+        var bitmap = new Bitmap(IconPath);
+        var iconHandle = bitmap.GetHicon();
 
-		var bitmap = new Bitmap(IconPath);
-		var iconHandle = bitmap.GetHicon();
+        return Icon.FromHandle(iconHandle);
+    }
 
-		return Icon.FromHandle(iconHandle);
-	}
+    public void RemoveTrayIcon()
+    {
+        if (_trayIcon != null)
+        {
+            _trayIcon.Visible = false;
+            _trayIcon.Dispose();
+            _trayIcon = null;
+        }
+    }
+    public void OnExitClick(object sender, EventArgs e)
+    {
+        System.Windows.Application.Current.Shutdown();
+    }
 
-	public void RemoveTrayIcon()
-	{
-		if (_trayIcon != null)
-		{
-			_trayIcon.Visible = false;
-			_trayIcon.Dispose();
-			_trayIcon = null;
-		}
-	}
-	public void OnExitClick(object sender, EventArgs e)
-	{
-		Application.Exit(); // handling this event is done in program.cs
-	}
-
-	public delegate void SettingsMenuClickedEventHandler(object sender, EventArgs e);
-
-	public static event SettingsMenuClickedEventHandler SettingsMenuClicked;
-
-	private void OnSettingsClick(object sender, EventArgs e)
-	{
-		SettingsMenuClicked?.Invoke(this, e);
-	}
-
+    private void OnSettingsClick(object sender, EventArgs e)
+    {
+        SettingsWindow.Instance.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
+        SettingsWindow.Instance.Show();
+    }
 }

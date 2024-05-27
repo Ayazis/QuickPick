@@ -1,13 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net6.0-windows</TargetFramework>
+	
 		<Nullable>disable</Nullable>
 		<UseWPF>true</UseWPF>
-		<LangVersion>latest</LangVersion>
+		
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Compile Remove="Properties\**" />
+	  <EmbeddedResource Remove="Properties\**" />
+	  <None Remove="Properties\**" />
+	  <Page Remove="Properties\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Remove="Assets\qp_icon.ico" />
 		<None Remove="Assets\QP_Icon.png" />
 		<None Remove="Assets\QP_Icon_32px.png" />
 		<None Remove="Assets\Snip.png" />
@@ -36,6 +44,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<Content Include="Assets\qp_icon.ico">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
 		<Content Include="Assets\QP_Icon.png">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
@@ -51,7 +62,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Windows.Compatibility" Version="6.0.4" />
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+		<PackageReference Include="FluentWpfChromes" Version="1.0.1" />
+		<PackageReference Include="FontAwesome5" Version="2.1.11" />
+		<PackageReference Include="Microsoft.Windows.Compatibility" Version="6.0.8" />
+		<PackageReference Include="NAudio" Version="2.2.1" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="System.Drawing.Common" Version="6.0.0" />
 		<PackageReference Include="System.Windows.Forms" />
@@ -65,11 +80,15 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\HexTest\HexGrid.csproj" />
+	  <ProjectReference Include="..\UpdateInstaller\UpdateInstaller.csproj" />
 	  <ProjectReference Include="..\Utilities\QuickPick.Utilities.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Properties\" />
+	  <Compile Update="StartWindow.xaml.cs">
+	    <SubType>Code</SubType>
+	  </Compile>
 	</ItemGroup>
 
 </Project>

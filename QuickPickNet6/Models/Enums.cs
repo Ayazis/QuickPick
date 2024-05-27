@@ -1,13 +1,12 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace QuickPick.Enums
-{ 
+{
     public enum ClickAction
     {
         None,
-        [Display(Name="SQL query")]
-        RunQuery,     
+        [Display(Name = "SQL query")]
+        RunQuery,
         [Display(Name = "Launch Process")]
         RunProcess,
         [Display(Name = "Screen Snippet")]
@@ -17,5 +16,4 @@ namespace QuickPick.Enums
         [Display(Name = "Paste text")]
         PasteText,
     }
-
 }
