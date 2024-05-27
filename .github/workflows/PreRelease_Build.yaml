@@ -20,12 +20,15 @@ jobs:
 
       - name: Verify VERSION_ALPHA
         run: |
-         if ("" -match "^-alpha$") {
-          echo "VERSION_ALPHA is correctly set to "
+         $VERSION_ALPHA = "${{ env.VERSION_ALPHA }}"
+         if ($VERSION_ALPHA -match "^-alpha$") {
+          echo "VERSION_ALPHA is correctly set to $VERSION_ALPHA"
           } else {
           echo "Error: VERSION_ALPHA is not correctly set"
           exit 1
-          }        
+          }
+        shell: pwsh
+     
 
     
       - name: Authenticate gh CLI
