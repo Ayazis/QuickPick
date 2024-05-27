@@ -82,7 +82,7 @@ jobs:
       - name: Publish
         shell: pwsh
         run: |
-          & "$env:MSBUILD_PATH" "QuickPick_Console\QuickPick.csproj" -target:Publish -p:Configuration=Release -p:PublishDir="$env:PUBLISH_DIR\
+          & "$env:MSBUILD_PATH" "QuickPick_Console\QuickPick.csproj" -target:Publish -p:Configuration=Release -p:PublishDir="$env:PUBLISH_DIR\"
 
       - name: Zip the published content
         shell: pwsh
