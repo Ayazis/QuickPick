@@ -1,4 +1,4 @@
-name: Build and Test
+name: Build and Test - Pre-Release
 
 on:
   push:
@@ -76,10 +76,13 @@ jobs:
           $publishDir = Join-Path $env:GITHUB_WORKSPACE "${{ env.REPO_NAME }}_Console\out"
           Add-Content -Path $env:GITHUB_ENV -Value "PUBLISH_DIR=$publishDir"
 
+      - name: Set up -alpha suffix
+        run: echo "VERSION=${{ env.VERSION }}-alpha" >> $GITHUB_ENV
+        
       - name: Publish
         shell: pwsh
         run: |
-          & "$env:MSBUILD_PATH" "QuickPick_Console\QuickPick.csproj" -target:Publish -p:Configuration=Release -p:PublishDir="$env:PUBLISH_DIR\"
+          & "$env:MSBUILD_PATH" "QuickPick_Console\QuickPick.csproj" -target:Publish -p:Configuration=Release -p:PublishDir="$env:PUBLISH_DIR\
 
       - name: Zip the published content
         shell: pwsh
