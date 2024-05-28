@@ -53,7 +53,7 @@ namespace QuickPick
 
         public static void AsVolumeControl(this HexagonButton button)
         {
-            var volumeControl = new VolumeControl();
+            var volumeControl = new AudioControl();
 
             button.FontIcon = EFontAwesomeIcon.Solid_VolumeUp;
             var sliderControl = AddSliderControl(button, volumeControl.CurrentVolume);
@@ -66,7 +66,7 @@ namespace QuickPick
 
         public static void AsPlayPauseToggle(this HexagonButton button)
         {
-            var playBackControl = new PlayBackControl();
+            var playBackControl = new AudioControl();
             button.FontIcon = playBackControl.IsAudioPlaying ? EFontAwesomeIcon.Solid_Pause : EFontAwesomeIcon.Solid_Play;
 
             button.Hexagon.MouseDown += (sender, e) =>
