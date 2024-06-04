@@ -45,7 +45,7 @@ public partial class HexCenter : UserControl
     void SetCustomHexButtons()
     {
         _hexes[0].HexButton.AsSettingsButton();
-        _hexes[1].HexButton.AsShowDesktopButton();
+        _hexes[1].HexButton.AsConnectToBluetoothHeadset();
         _hexes[2].HexButton.AsNextSong();
         _hexes[3].HexButton.AsPlayPauseToggle();
         _hexes[4].HexButton.AsPreviousSong();

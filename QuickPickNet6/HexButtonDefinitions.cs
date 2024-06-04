@@ -109,6 +109,17 @@ namespace QuickPick
             return sliderControl;
         }
 
+        public static void AsConnectToBluetoothHeadset(this HexagonButton button)
+        {
+            var btDeviceManager = new BlueToothAudioDeviceConnector();
+            button.Hexagon.MouseDown += (sender, e) =>
+            {
+                
+                btDeviceManager.ConnectToDevice("WF-1000XM4");
+            };
+            button.FontIcon = EFontAwesomeIcon.Solid_Headset;
+        }
+
         private static ProgressBar CreateProgressbar()
         {
             // Create the ProgressBar
@@ -125,5 +136,7 @@ namespace QuickPick
 
             return progressBar;
         }
+
+
     }
 }
