@@ -17,12 +17,12 @@ namespace QuickPick.UI.Views.Settings
     public partial class SettingsWindow : Window, ISettingsWindow
     {
         public static SettingsWindow Instance;
-        readonly ISettingsSaver _settingsManager;
+        readonly ISettingsSaver _settingsSaver;
         private SettingsViewModel _viewModel;
 
-        public SettingsWindow(ISettingsSaver settingsManager, SettingsViewModel viewModel)
+        public SettingsWindow(ISettingsSaver settingsSaver, SettingsViewModel viewModel)
         {
-            _settingsManager = settingsManager;
+            _settingsSaver = settingsSaver;
             InitializeComponent();
             _viewModel = viewModel;
             this.DataContext = viewModel;
@@ -58,7 +58,7 @@ namespace QuickPick.UI.Views.Settings
 
         private void Apply_Click(object sender, RoutedEventArgs e)
         {
-            _settingsManager.ApplySettings();
+            _settingsSaver.ApplySettings();
             this.Hide();
         }
 

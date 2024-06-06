@@ -22,7 +22,7 @@ internal class Startup : IStartup
     IDesktopTracker _desktopTracker;
     IClickWindow _clickWindow;
     IMouseAndKeysCapture _mouseAndKeysCapture;
-    ISettingsSaver _settingsManager;
+    ISettingsSaver _settingsSaver;
     ISettingsWindow _settingsWindow; // Not used in this class, but this forces necessary instantiation.
     IKeyInputHandler _keyInputHandler;
     SettingsViewModel _settingsViewModel;
@@ -32,7 +32,7 @@ internal class Startup : IStartup
         IDesktopTracker desktopTracker,
         IMouseAndKeysCapture mouseAndKeysCapture,
         SettingsViewModel settingsViewModel,
-        ISettingsSaver settingsManager,
+        ISettingsSaver settingsSaver,
         ISettingsWindow settingsWindow,
         ILogger logger,
         IKeyInputHandler keyInputHandler,
@@ -43,7 +43,7 @@ internal class Startup : IStartup
         _desktopTracker = desktopTracker;
         _mouseAndKeysCapture = mouseAndKeysCapture;
         _settingsViewModel = settingsViewModel;
-        _settingsManager = settingsManager;
+        _settingsSaver = settingsSaver;
         _settingsWindow = settingsWindow;
         _logger = logger;
         _keyInputHandler = keyInputHandler;
@@ -74,13 +74,13 @@ internal class Startup : IStartup
 
     private void LoadAndApplyQuickPickSettings()
     {
-        _settingsManager.LoadSettings();
-        _settingsManager.ApplySettings();
+        _settingsSaver.LoadSettings();
+        _settingsSaver.ApplySettings();
     }
 
     private void StartListeningToKeyboardAndMouse()
     {
-        _keyInputHandler.SetKeyCombination(_settingsManager.Settings.KeyCombination);
+        _keyInputHandler.SetKeyCombination(_settingsSaver.Settings.KeyCombination);
 
         _mouseAndKeysCapture.HookIntoMouseAndKeyBoard();
         _mouseAndKeysCapture.MouseButtonClicked += _clickWindow.HandleMouseButtonClicked;

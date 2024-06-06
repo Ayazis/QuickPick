@@ -47,15 +47,15 @@ public partial class ClickWindow : Window, IClickWindow
     static DateTime _timeStampLastShown;
     private Dictionary<IntPtr, Popup> _currentPopups = new();
     readonly ILogger _logger;
-    readonly ISettingsSaver _settingsManager;
+    readonly ISettingsSaver _settingsSaver;
     readonly SettingsViewModel _settingsViewModel;
 
     public Storyboard HideAnimation { get; private set; }
     public Storyboard ShowAnimation { get; private set; }
-    public ClickWindow(ILogger logger, ISettingsSaver settingsManager, SettingsViewModel settingsViewModel)
+    public ClickWindow(ILogger logger, ISettingsSaver settingsSaver, SettingsViewModel settingsViewModel)
     {
         _settingsViewModel = settingsViewModel;
-        _settingsManager = settingsManager;
+        _settingsSaver = settingsSaver;
         _logger = logger;
         MouseLeftTimer = new(HideThumbnails);
         InitializeComponent();
@@ -110,7 +110,7 @@ public partial class ClickWindow : Window, IClickWindow
 
     public void UpdateTaskbarShortCuts()
     {
-        bool includePinnedApps = _settingsManager.Settings.ActiveAppSetting == UI.Views.Settings.ActiveAppSetting.IncludePinnedTaskBarApps;
+        bool includePinnedApps = _settingsSaver.Settings.ActiveAppSetting == UI.Views.Settings.ActiveAppSetting.IncludePinnedTaskBarApps;
         List<AppLink> apps;
         try
         {
