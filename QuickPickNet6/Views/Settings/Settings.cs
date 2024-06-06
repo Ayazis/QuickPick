@@ -8,7 +8,7 @@ using System.Windows.Forms;
 namespace QuickPick
 {
     public class Settings
-    {
+    {    
         public ActiveAppSetting ActiveAppSetting { get; set; } = ActiveAppSetting.IncludePinnedTaskBarApps;
         public AutoUpdateSetting AutoUpdateSetting { get; set; } = AutoUpdateSetting.PreRelease;
 

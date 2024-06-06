@@ -47,12 +47,14 @@ public partial class ClickWindow : Window, IClickWindow
     static DateTime _timeStampLastShown;
     private Dictionary<IntPtr, Popup> _currentPopups = new();
     readonly ILogger _logger;
-    readonly ISettingsManager _settingsManager;
+    readonly ISettingsSaver _settingsManager;
+    readonly SettingsViewModel _settingsViewModel;
 
     public Storyboard HideAnimation { get; private set; }
     public Storyboard ShowAnimation { get; private set; }
-    public ClickWindow(ILogger logger, ISettingsManager settingsManager, SettingsViewModel settingsViewModel)
+    public ClickWindow(ILogger logger, ISettingsSaver settingsManager, SettingsViewModel settingsViewModel)
     {
+        _settingsViewModel = settingsViewModel;
         _settingsManager = settingsManager;
         _logger = logger;
         MouseLeftTimer = new(HideThumbnails);

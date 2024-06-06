@@ -22,13 +22,16 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty]
     private ActiveAppSetting _activeAppSetting = ActiveAppSetting.IncludePinnedTaskBarApps;
 
-    private string _version => Assembly.GetEntryAssembly().GetName().Version.ToString();
-    private string _title => $"QuickPick {_version} - Settings";
-    public string Title { get { return _title; } }
+    private static string _version => Assembly.GetEntryAssembly().GetName().Version.ToString();
+    private static string _title => $"QuickPick {_version} - Settings";
+    public static string Title { get { return _title; } }
 
     [ObservableProperty]
     private string _currentKeyCombo = "placeholder";
-
+    
+    [ObservableProperty]
+    private string _newKeyCombo = " - ";
+    
     public HashSet<System.Windows.Forms.Keys> NewKeyCombination = new();
 
     public void AddKeyToNewCombo(System.Windows.Forms.Keys key)
@@ -37,8 +40,7 @@ public partial class SettingsViewModel : ObservableObject
         NewKeyCombo = string.Join(" + ", NewKeyCombination);
     }
 
-    [ObservableProperty]
-    private string _newKeyCombo = " - ";
+
 
     public void ApplySettings(QuickPick.Settings settings)
     {

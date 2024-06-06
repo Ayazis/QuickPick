@@ -17,13 +17,14 @@ namespace QuickPick.UI.Views.Settings
     public partial class SettingsWindow : Window, ISettingsWindow
     {
         public static SettingsWindow Instance;
-        readonly ISettingsManager _settingsManager;
+        readonly ISettingsSaver _settingsManager;
         private SettingsViewModel _viewModel;
 
-        public SettingsWindow(ISettingsManager settingsManager, SettingsViewModel viewModel)
+        public SettingsWindow(ISettingsSaver settingsManager, SettingsViewModel viewModel)
         {
             _settingsManager = settingsManager;
             InitializeComponent();
+            _viewModel = viewModel;
             this.DataContext = viewModel;
             this.MouseLeftButtonDown += SettingsWindow_MouseLeftButtonDown;
             Instance = this; 

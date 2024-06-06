@@ -22,7 +22,7 @@ internal class Startup : IStartup
     IDesktopTracker _desktopTracker;
     IClickWindow _clickWindow;
     IMouseAndKeysCapture _mouseAndKeysCapture;
-    ISettingsManager _settingsManager;
+    ISettingsSaver _settingsManager;
     ISettingsWindow _settingsWindow; // Not used in this class, but this forces necessary instantiation.
     IKeyInputHandler _keyInputHandler;
     SettingsViewModel _settingsViewModel;
@@ -32,7 +32,7 @@ internal class Startup : IStartup
         IDesktopTracker desktopTracker,
         IMouseAndKeysCapture mouseAndKeysCapture,
         SettingsViewModel settingsViewModel,
-        ISettingsManager settingsManager,
+        ISettingsSaver settingsManager,
         ISettingsWindow settingsWindow,
         ILogger logger,
         IKeyInputHandler keyInputHandler,

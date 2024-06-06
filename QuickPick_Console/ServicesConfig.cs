@@ -31,7 +31,7 @@ public static class ServicesConfig
                 services.AddSingleton<IMouseAndKeysCapture, MouseAndKeysCapture>();
                 services.AddSingleton<IKeyInputHandler, KeyInputHandler>();
                 services.AddSingleton(new SettingsViewModel());
-                services.AddSingleton<ISettingsManager, SettingsManager>();
+                services.AddSingleton<ISettingsSaver, SettingsSaver>();
                 services.AddSingleton<ISettingsWindow, SettingsWindow>();
                 services.AddSingleton<IClickWindow, ClickWindow>();
                 services.AddSingleton<IStartup, Startup>();

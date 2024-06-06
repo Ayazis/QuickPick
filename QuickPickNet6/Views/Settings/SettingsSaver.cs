@@ -7,7 +7,7 @@ using Utilities.Mouse_and_Keyboard;
 
 namespace QuickPick
 {
-    public interface ISettingsManager
+    public interface ISettingsSaver
     {
         Settings Settings { get; }
         string SettingsPath { get; }
@@ -16,13 +16,13 @@ namespace QuickPick
         void LoadSettings();
     }
 
-    public class SettingsManager : ISettingsManager
+    public class SettingsSaver : ISettingsSaver
     {
         public string SettingsPath { get; private set; }
         public IKeyInputHandler _keyInputHandler;
         readonly SettingsViewModel _settingsViewModel;
 
-        public SettingsManager(IKeyInputHandler keyInputHandler, SettingsViewModel settingsViewModel)
+        public SettingsSaver(IKeyInputHandler keyInputHandler, SettingsViewModel settingsViewModel)
         {
             _settingsViewModel = settingsViewModel;
             string saveDirectory = Path.Combine(Path.GetTempPath(), "QuickPick");
