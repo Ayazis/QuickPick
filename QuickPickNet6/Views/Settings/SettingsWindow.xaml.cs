@@ -7,8 +7,6 @@ namespace QuickPick.UI.Views.Settings
 {
     public interface ISettingsWindow
     {
-        SettingsViewModel ViewModel { get; }
-
         void InitializeComponent();
         void ShowWindow(bool showNextToUI);
     }
@@ -20,15 +18,15 @@ namespace QuickPick.UI.Views.Settings
     {
         public static SettingsWindow Instance;
         readonly ISettingsManager _settingsManager;
-        public SettingsViewModel ViewModel { get; private set; } = new();
+        private SettingsViewModel _viewModel;
 
-        public SettingsWindow(ISettingsManager settingsManager)
+        public SettingsWindow(ISettingsManager settingsManager, SettingsViewModel viewModel)
         {
             _settingsManager = settingsManager;
             InitializeComponent();
-            this.DataContext = ViewModel;
+            this.DataContext = viewModel;
             this.MouseLeftButtonDown += SettingsWindow_MouseLeftButtonDown;
-            Instance = this;
+            Instance = this; 
         }
 
 
@@ -54,17 +52,12 @@ namespace QuickPick.UI.Views.Settings
                 Top = screen.Bounds.Top + (screen.Bounds.Height - Height) / 2;
             }
 
-
-
-
             Show();
         }
 
         private void Apply_Click(object sender, RoutedEventArgs e)
         {
-
-            _settingsManager.ApplySettings(ViewModel);
-
+            _settingsManager.ApplySettings();
             this.Hide();
         }
 
@@ -75,7 +68,7 @@ namespace QuickPick.UI.Views.Settings
 
         private void btnApplyNewCombo_Click(object sender, RoutedEventArgs e)
         {
-            Instance.ViewModel.CurrentKeyCombo = ViewModel.NewKeyCombo.ToLower();
+            Instance._viewModel.CurrentKeyCombo = _viewModel.NewKeyCombo.ToLower();
             tbNewCombo.Visibility = Visibility.Collapsed;
             btnApplyNewCombo.Visibility = Visibility.Collapsed;
             btnCancelNewCombo.Visibility = Visibility.Collapsed;
@@ -86,7 +79,7 @@ namespace QuickPick.UI.Views.Settings
 
         private void btnCancelNewCombo_Click(object sender, RoutedEventArgs e)
         {
-            Instance.ViewModel.NewKeyCombo = string.Empty;
+            Instance._viewModel.NewKeyCombo = string.Empty;
             tbNewCombo.Visibility = Visibility.Collapsed;
             btnApplyNewCombo.Visibility = Visibility.Collapsed;
             btnCancelNewCombo.Visibility = Visibility.Collapsed;
@@ -97,7 +90,7 @@ namespace QuickPick.UI.Views.Settings
 
         private void btnRecordNewCombo_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.ClearNewKeyCombo();
+            _viewModel.ClearNewKeyCombo();
             this.KeyDown += SettingsWindow_KeyDown;
             this.MouseDown += SettingsWindow_MouseDown;
             tbNewCombo.Visibility = Visibility.Visible;
@@ -120,8 +113,8 @@ namespace QuickPick.UI.Views.Settings
                 formsKey = System.Windows.Forms.Keys.LMenu;
             // todo:
             // Key system translates to Keys none
-            ViewModel.AddKeyToNewCombo(formsKey);
-            tbNewCombo.Text = ViewModel.NewKeyCombo;
+            _viewModel.AddKeyToNewCombo(formsKey);
+            tbNewCombo.Text = _viewModel.NewKeyCombo;
         }
         private void SettingsWindow_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -149,7 +142,7 @@ namespace QuickPick.UI.Views.Settings
                     break;
             }
 
-            ViewModel.AddKeyToNewCombo(formsKey);
+            _viewModel.AddKeyToNewCombo(formsKey);
             //tbNewCombo.Text = ViewModel.NewKeyCombo;
             // Use formsKey as needed
         }

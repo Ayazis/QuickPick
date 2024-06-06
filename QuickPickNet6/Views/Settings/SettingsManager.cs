@@ -12,34 +12,36 @@ namespace QuickPick
         Settings Settings { get; }
         string SettingsPath { get; }
 
-        void ApplySettings(SettingsViewModel vm);
+        void ApplySettings();
         void LoadSettings();
     }
 
     public class SettingsManager : ISettingsManager
-    {             
+    {
         public string SettingsPath { get; private set; }
         public IKeyInputHandler _keyInputHandler;
+        readonly SettingsViewModel _settingsViewModel;
 
-        public SettingsManager(IKeyInputHandler keyInputHandler)
+        public SettingsManager(IKeyInputHandler keyInputHandler, SettingsViewModel settingsViewModel)
         {
+            _settingsViewModel = settingsViewModel;
             string saveDirectory = Path.Combine(Path.GetTempPath(), "QuickPick");
             if (!Directory.Exists(saveDirectory))
             {
                 Directory.CreateDirectory(saveDirectory);
             }
-            SettingsPath = Path.Combine(saveDirectory, "QpSettings.Json");            
+            SettingsPath = Path.Combine(saveDirectory, "QpSettings.Json");
             _keyInputHandler = keyInputHandler;
         }
         public Settings Settings { get; private set; } = new();
 
-        public void ApplySettings(SettingsViewModel vm)
+        public void ApplySettings()
         {
-            Settings.ActiveAppSetting = vm.ActiveAppSetting;
-            Settings.AutoUpdateSetting = vm.AutoUpdateSetting;
-            if (vm.NewKeyCombination?.Any() == true)
+            Settings.ActiveAppSetting = _settingsViewModel.ActiveAppSetting;
+            Settings.AutoUpdateSetting = _settingsViewModel.AutoUpdateSetting;
+            if (_settingsViewModel.NewKeyCombination?.Any() == true)
             {
-                Settings.KeyCombination = vm.NewKeyCombination;
+                Settings.KeyCombination = _settingsViewModel.NewKeyCombination;
                 _keyInputHandler.SetKeyCombination(Settings.KeyCombination);
             }
             WriteSettingsToDisk();

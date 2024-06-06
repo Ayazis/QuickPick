@@ -14,7 +14,6 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media.Animation;
-using System.Windows.Xps.Serialization;
 using static QuickPick.UI.Views.Thumbnail.ThumbnailView;
 
 namespace QuickPick;
@@ -52,7 +51,7 @@ public partial class ClickWindow : Window, IClickWindow
 
     public Storyboard HideAnimation { get; private set; }
     public Storyboard ShowAnimation { get; private set; }
-    public ClickWindow(ILogger logger, ISettingsManager settingsManager)
+    public ClickWindow(ILogger logger, ISettingsManager settingsManager, SettingsViewModel settingsViewModel)
     {
         _settingsManager = settingsManager;
         _logger = logger;

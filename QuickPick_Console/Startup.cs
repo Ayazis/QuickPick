@@ -23,32 +23,36 @@ internal class Startup : IStartup
     IClickWindow _clickWindow;
     IMouseAndKeysCapture _mouseAndKeysCapture;
     ISettingsManager _settingsManager;
-    ISettingsWindow _settingsWindow;
+    ISettingsWindow _settingsWindow; // Not used in this class, but this forces necessary instantiation.
     IKeyInputHandler _keyInputHandler;
+    SettingsViewModel _settingsViewModel;
 
     public Startup(IGlobalExceptions globalExceptions,
         ITrayIconService trayIconService,
-        IClickWindow clickWindow,
         IDesktopTracker desktopTracker,
         IMouseAndKeysCapture mouseAndKeysCapture,
+        SettingsViewModel settingsViewModel,
         ISettingsManager settingsManager,
         ISettingsWindow settingsWindow,
         ILogger logger,
-        IKeyInputHandler keyInputHandler)
+        IKeyInputHandler keyInputHandler,
+        IClickWindow clickWindow)
     {
         _globalExceptions = globalExceptions;
-        _trayIconService = trayIconService;
-        _clickWindow = clickWindow;
+        _trayIconService = trayIconService;       
         _desktopTracker = desktopTracker;
         _mouseAndKeysCapture = mouseAndKeysCapture;
+        _settingsViewModel = settingsViewModel;
         _settingsManager = settingsManager;
         _settingsWindow = settingsWindow;
         _logger = logger;
         _keyInputHandler = keyInputHandler;
+    
+        _clickWindow = clickWindow;
     }
     public void StartApplication()
     {
-        
+
         try
         {
             _globalExceptions.SetupGlobalExceptionHandling();
@@ -71,7 +75,7 @@ internal class Startup : IStartup
     private void LoadAndApplyQuickPickSettings()
     {
         _settingsManager.LoadSettings();
-        _settingsWindow.ViewModel.ApplySettings(_settingsManager.Settings);
+        _settingsManager.ApplySettings();
     }
 
     private void StartListeningToKeyboardAndMouse()

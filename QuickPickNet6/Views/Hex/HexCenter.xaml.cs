@@ -42,7 +42,7 @@ public partial class HexCenter : UserControl
     bool _brightnessButtonDown;
     Point _previousPosition;
     double _percentage;
-    void SetCustomHexButtons()
+    public void SetCustomHexButtons()
     {
         _hexes[0].HexButton.AsSettingsButton();
         _hexes[1].HexButton.AsConnectToBluetoothHeadset();

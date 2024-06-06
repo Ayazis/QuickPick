@@ -28,11 +28,12 @@ public static class ServicesConfig
                 services.AddSingleton<IGlobalExceptions, GlobalExceptions>();
                 services.AddSingleton<ITrayIconService, TrayIconService>();
                 services.AddSingleton<IDesktopTracker, DesktopTracker>();
-                services.AddSingleton<IClickWindow, ClickWindow>();
                 services.AddSingleton<IMouseAndKeysCapture, MouseAndKeysCapture>();
                 services.AddSingleton<IKeyInputHandler, KeyInputHandler>();
+                services.AddSingleton(new SettingsViewModel());
                 services.AddSingleton<ISettingsManager, SettingsManager>();
                 services.AddSingleton<ISettingsWindow, SettingsWindow>();
+                services.AddSingleton<IClickWindow, ClickWindow>();
                 services.AddSingleton<IStartup, Startup>();
             }
         );
