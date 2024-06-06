@@ -60,8 +60,7 @@ public class TrayIconService : ITrayIconService
     }
 
     private void OnSettingsClick(object sender, EventArgs e)
-    {
-        SettingsWindow.Instance.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
-        SettingsWindow.Instance.Show();
+    {        
+        SettingsWindow.Instance.ShowWindow();
     }
 }

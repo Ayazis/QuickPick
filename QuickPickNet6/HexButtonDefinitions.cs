@@ -23,7 +23,7 @@ namespace QuickPick
                 SettingsWindow.Instance.ShowWindow();
                 SettingsWindow.Instance.Activate();
                 SettingsWindow.Instance.Focus();
-                ClickWindow.Instance.HideUI();
+                //ClickWindow.Instance.HideUI();
             };
         }
 

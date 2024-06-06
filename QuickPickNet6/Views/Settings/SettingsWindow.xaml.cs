@@ -1,6 +1,7 @@
 ﻿using MouseAndKeyBoardHooks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media.Animation;
 
 namespace QuickPick.UI.Views.Settings
 {
@@ -9,14 +10,14 @@ namespace QuickPick.UI.Views.Settings
         SettingsViewModel ViewModel { get; }
 
         void InitializeComponent();
-        void ShowWindow();
+        void ShowWindow(bool showNextToUI);
     }
 
     /// <summary>
     /// Interaction logic for SettingsWindow4.xaml
     /// </summary>
     public partial class SettingsWindow : Window, ISettingsWindow
-    {       
+    {
         public static SettingsWindow Instance;
         readonly ISettingsManager _settingsManager;
         public SettingsViewModel ViewModel { get; private set; } = new();
@@ -24,7 +25,7 @@ namespace QuickPick.UI.Views.Settings
         public SettingsWindow(ISettingsManager settingsManager)
         {
             _settingsManager = settingsManager;
-            InitializeComponent();           
+            InitializeComponent();
             this.DataContext = ViewModel;
             this.MouseLeftButtonDown += SettingsWindow_MouseLeftButtonDown;
             Instance = this;
@@ -32,13 +33,29 @@ namespace QuickPick.UI.Views.Settings
 
 
 
-        public void ShowWindow()
+        public void ShowWindow(bool showNextToUI = true)
         {
-            WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
-            var mousePosition = MousePosition.GetCursorPosition();
-            Left = mousePosition.X - Width / 2;
-            Top = mousePosition.Y - Height / 2;
-            // get mouseposition.
+            const int uiWidth = 250; // matches width of QuickPickUI, must be refactored to fetch width.
+            double halfWidth = Width / 2;
+            double halfHeight = Height / 2;
+
+            if (showNextToUI)
+            {
+                WindowStartupLocation = WindowStartupLocation.Manual;
+                var mousePosition = MousePosition.GetCursorPosition();
+                Left = mousePosition.X - halfWidth + uiWidth;
+                Top = mousePosition.Y - halfHeight;
+            }
+            else
+            {
+                // Calculate center of the current screen
+                var screen = System.Windows.Forms.Screen.FromHandle(new System.Windows.Interop.WindowInteropHelper(this).Handle);
+                Left = screen.Bounds.Left + (screen.Bounds.Width - Width) / 2;
+                Top = screen.Bounds.Top + (screen.Bounds.Height - Height) / 2;
+            }
+
+
+
 
             Show();
         }
