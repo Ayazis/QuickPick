@@ -18,19 +18,18 @@ namespace QuickPick
         public static void AsSettingsButton(this HexagonButton button)
         {
             button.FontIcon = EFontAwesomeIcon.Solid_Tools;
-            button.Hexagon.MouseDown += (sender, e) =>
+            button.Hexagon.MouseLeftButtonUp += (sender, e) =>
             {
                 SettingsWindow.Instance.ShowWindow();
                 SettingsWindow.Instance.Activate();
                 SettingsWindow.Instance.Focus();
-                //ClickWindow.Instance.HideUI();
             };
         }
 
         public static void AsShowDesktopButton(this HexagonButton button)
         {
             button.FontIcon = EFontAwesomeIcon.Solid_Desktop;
-            button.Hexagon.MouseDown += (sender, e) =>
+            button.Hexagon.MouseLeftButtonUp += (sender, e) =>
             {
                 InputSim.WinD();
                 ClickWindow.Instance.HideUI();
@@ -69,7 +68,7 @@ namespace QuickPick
             var playBackControl = new AudioControl();
             button.FontIcon = playBackControl.IsAudioPlaying ? EFontAwesomeIcon.Solid_Pause : EFontAwesomeIcon.Solid_Play;
 
-            button.Hexagon.MouseDown += (sender, e) =>
+            button.Hexagon.MouseLeftButtonUp += (sender, e) =>
             {
                 InputSim.PlayPause();
                 Dispatcher.CurrentDispatcher.Invoke(async () =>
@@ -83,7 +82,7 @@ namespace QuickPick
         public static void AsNextSong(this HexagonButton button)
         {
             button.FontIcon = EFontAwesomeIcon.Solid_Forward;
-            button.Hexagon.MouseDown += (sender, e) =>
+            button.Hexagon.MouseLeftButtonUp += (sender, e) =>
             {
                 InputSim.NextSong();
 
@@ -92,7 +91,7 @@ namespace QuickPick
         public static void AsPreviousSong(this HexagonButton button)
         {
             button.FontIcon = EFontAwesomeIcon.Solid_Backward;
-            button.Hexagon.MouseDown += (sender, e) =>
+            button.Hexagon.MouseLeftButtonUp += (sender, e) =>
             {
                 InputSim.PreviousSong();
 
@@ -112,10 +111,9 @@ namespace QuickPick
         public static void AsConnectToBluetoothHeadset(this HexagonButton button)
         {
             var btDeviceManager = new BlueToothAudioDeviceConnector();
-            button.Hexagon.MouseDown += (sender, e) =>
+            button.Hexagon.MouseLeftButtonUp += (sender, e) =>
             {
-                
-                btDeviceManager.ConnectToDevice("WF-1000XM4");
+                Task.Run(() => { btDeviceManager.ConnectToDevice("WF-1000XM4"); });
             };
             button.FontIcon = EFontAwesomeIcon.Solid_Headset;
         }

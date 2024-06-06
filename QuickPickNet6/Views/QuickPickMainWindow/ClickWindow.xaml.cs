@@ -83,7 +83,7 @@ public partial class ClickWindow : Window, IClickWindow
 
     public void HandleFocusLost(object sender, EventArgs e)
     {
-        if (!IsMouseOver)
+        if (!IsMouseOver && !SettingsWindow.Instance.IsMouseOver)
             HideUI();
     }
 
@@ -395,10 +395,13 @@ public partial class ClickWindow : Window, IClickWindow
     }
     public void HandleMouseButtonClicked(object sender, EventArgs e)
     {
+        if (!this.IsVisible)
+            return;
+
         bool mouseOverMainWindow = IsMouseOver;
         bool mouseOverPopups = _currentPopups.Any(p => p.Value.IsMouseOver);
 
-        if (!mouseOverMainWindow && !mouseOverPopups)
+        if (!mouseOverMainWindow && !mouseOverPopups && !SettingsWindow.Instance.IsMouseOver)
             HideUI();
     }
 
