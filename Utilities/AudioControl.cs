@@ -6,9 +6,9 @@ namespace QuickPick.Utilities
     {
         public double CurrentVolume => GetCurrentVolume();
         private MMDevice _audioDevice;
-        DateTime _timeOfAudioCheck;
+        static DateTime _timeOfAudioCheck;
 
-        public bool IsAudioPlaying => Is_AudioPlaying();
+        public bool IsAudioPlaying => UpdateAudioDeviceStatus();
 
         public AudioControl()
         {
@@ -17,8 +17,10 @@ namespace QuickPick.Utilities
             _audioDevice = IsAudioPlaying ? _audioDevice : devEnum.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);
         }
 
-        public bool Is_AudioPlaying()
+        public bool UpdateAudioDeviceStatus()
         {
+            _timeOfAudioCheck = DateTime.UtcNow;
+
             if (DeviceIsAudioPlaying(_audioDevice))
                 return true;
 
@@ -64,19 +66,13 @@ namespace QuickPick.Utilities
         }
 
         public void HandleNewValue(double value)
-        {   
-            bool timeToRecheckAudioDevice = (DateTime.UtcNow - _timeOfAudioCheck).TotalMilliseconds > 500;
-            if (timeToRecheckAudioDevice)
-            {
-                _timeOfAudioCheck = DateTime.UtcNow;
-                Is_AudioPlaying();
-            }
-
-
+        {
             if (_audioDevice == null)
                 return;
 
             _audioDevice.AudioEndpointVolume.MasterVolumeLevelScalar = (float)value / 100;
+
+            _timeOfAudioCheck = DateTime.UtcNow;
         }
         private double GetCurrentVolume()
         {
@@ -87,5 +83,6 @@ namespace QuickPick.Utilities
             return (double)currentVolume;
         }
 
+        public bool IsTimeToUpdate => (DateTime.UtcNow - _timeOfAudioCheck).TotalMilliseconds > 500;
     }
 }

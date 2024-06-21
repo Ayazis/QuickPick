@@ -59,10 +59,20 @@ namespace QuickPick
             var sliderControl = AddSliderControl(button, volumeControl.CurrentVolume);
             sliderControl.ValueChanged += (value) =>
             {
-                volumeControl.HandleNewValue(value);
+                UpdateVolume(value, volumeControl, sliderControl);
             };
         }
 
+        private static void UpdateVolume(double value, AudioControl volumeControl, SliderUiControl sliderControl)
+        {
+            if (volumeControl.IsTimeToUpdate)
+            {
+                volumeControl.UpdateAudioDeviceStatus();
+                sliderControl.UpdateValue(volumeControl.CurrentVolume);
+            }
+            else
+                volumeControl.HandleNewValue(value);
+        }
 
         public static void AsPlayPauseToggle(this HexagonButton button)
         {
@@ -114,7 +124,7 @@ namespace QuickPick
             var btDeviceManager = new BlueToothAudioDeviceConnector();
             button.Hexagon.MouseDown += (sender, e) =>
             {
-                
+
                 btDeviceManager.ConnectToDevice("WF-1000XM4");
             };
             button.FontIcon = EFontAwesomeIcon.Solid_Headset;
