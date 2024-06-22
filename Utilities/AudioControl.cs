@@ -5,18 +5,25 @@ namespace QuickPick.Utilities
     public class AudioControl : IPercentageValueHandler
     {
         public double CurrentVolume => GetCurrentVolume();
-        private MMDevice _latestDevicePlayingAudio;
+        private MMDevice _audioDevice;
+        static DateTime _timeOfAudioCheck;
 
-        public bool IsAudioPlaying => Is_AudioPlaying();
+        public bool IsAudioPlaying => UpdateAudioDeviceStatus();
 
         public AudioControl()
         {
             MMDeviceEnumerator devEnum = new MMDeviceEnumerator();
-            _latestDevicePlayingAudio = devEnum.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);
+
+            _audioDevice = IsAudioPlaying ? _audioDevice : devEnum.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);
         }
 
-        public bool Is_AudioPlaying()
+        public bool UpdateAudioDeviceStatus()
         {
+            _timeOfAudioCheck = DateTime.UtcNow;
+
+            if (DeviceIsAudioPlaying(_audioDevice))
+                return true;
+
             MMDeviceEnumerator devEnum = new MMDeviceEnumerator();
             MMDeviceCollection soundDevices = devEnum.EnumerateAudioEndPoints(DataFlow.Render, DeviceState.Active);
 
@@ -25,7 +32,7 @@ namespace QuickPick.Utilities
                 bool isPlaying = DeviceIsAudioPlaying(soundDevice);
                 if (isPlaying)
                 {
-                    _latestDevicePlayingAudio = soundDevice;
+                    _audioDevice = soundDevice;
                     return true;
                 }
             }
@@ -34,33 +41,48 @@ namespace QuickPick.Utilities
 
         private bool DeviceIsAudioPlaying(MMDevice soundDevice)
         {
-            var count = soundDevice.AudioMeterInformation.PeakValues.Count;
-            for (int i = 0; i < count; i++)
+            if (_audioDevice == null)
+                return false;
+
+            try
             {
-                float peakValue = soundDevice.AudioMeterInformation.PeakValues[i];
-                if (peakValue > 0.001)
+
+                var count = soundDevice.AudioMeterInformation.PeakValues.Count;
+                for (int i = 0; i < count; i++)
                 {
-                    return true;
+                    float peakValue = soundDevice.AudioMeterInformation.PeakValues[i];
+                    if (peakValue > 0.001)
+                    {
+                        return true;
+                    }
                 }
+                return false;
             }
-            return false;
+            catch (Exception)
+            {
+
+                return false;
+            }
         }
 
         public void HandleNewValue(double value)
         {
-            if (_latestDevicePlayingAudio == null)
+            if (_audioDevice == null)
                 return;
 
-            _latestDevicePlayingAudio.AudioEndpointVolume.MasterVolumeLevelScalar = (float)value / 100;
+            _audioDevice.AudioEndpointVolume.MasterVolumeLevelScalar = (float)value / 100;
+
+            _timeOfAudioCheck = DateTime.UtcNow;
         }
         private double GetCurrentVolume()
         {
-            if (_latestDevicePlayingAudio == null)
+            if (_audioDevice == null)
                 return double.NaN;
 
-            float currentVolume = _latestDevicePlayingAudio.AudioEndpointVolume.MasterVolumeLevelScalar * 100;
+            float currentVolume = _audioDevice.AudioEndpointVolume.MasterVolumeLevelScalar * 100;
             return (double)currentVolume;
         }
 
+        public bool IsTimeToUpdate => (DateTime.UtcNow - _timeOfAudioCheck).TotalMilliseconds > 500;
     }
 }

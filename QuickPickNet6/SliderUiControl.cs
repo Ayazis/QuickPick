@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -60,6 +61,12 @@ namespace QuickPick
                 ValueChanged?.Invoke(_progressBar.Value);
                 _previousPosition = position;
             }
+        }
+
+        internal void UpdateValue(double currentVolume)
+        {
+            _percentage = currentVolume;
+            _progressBar.Value = currentVolume;
         }
 
         public delegate void IntValueChangedEventHandler(double value);
