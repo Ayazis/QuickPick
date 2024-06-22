@@ -17,7 +17,7 @@ public partial class ThumbnailView : UserControl
     Color almostBlack = (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#202020");
     public PreviewImageProperties Properties;
     public readonly AppLink ParentApp;
-    public ThumbnailTimer MouseEnterTimer;
+    public CustomTimer MouseEnterTimer;
 
     public IntPtr PreviewPointer { get; set; }
     public ThumbnailView()
@@ -26,7 +26,7 @@ public partial class ThumbnailView : UserControl
     }
     public ThumbnailView(PreviewImageProperties previewImageProperties, AppLink pinnedApp)
     {
-        MouseEnterTimer = new ThumbnailTimer(ActivateAeroPeek);
+        MouseEnterTimer = new CustomTimer(ActivateAeroPeek);
         ParentApp = pinnedApp;
         InitializeComponent();
         this.DataContext = previewImageProperties;
@@ -90,7 +90,7 @@ public partial class ThumbnailView : UserControl
     private void UserControl_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
     {
         if (MouseEnterTimer == null)
-            MouseEnterTimer = new ThumbnailTimer(ActivateAeroPeek);
+            MouseEnterTimer = new CustomTimer(ActivateAeroPeek);
 
         MouseEnterTimer.StopTimer();
         MouseEnterTimer.StartTimer();

@@ -6,13 +6,15 @@ namespace QuickPick.UI.Views.Thumbnail
     /// <summary>
     /// In charge of showing and hiding thumbnails based on a timer.
     /// </summary>
-    public class ThumbnailTimer
+    public class CustomTimer
     {
         private DispatcherTimer MouseLeaveTimer = new DispatcherTimer();
         Action _callback;
+        readonly int _milliSecondsDelay;
 
-        public ThumbnailTimer(Action callback)
+        public CustomTimer(Action callback, int milliSecondsDelay = 500)
         {
+            _milliSecondsDelay = milliSecondsDelay;
             MouseLeaveTimer.Tick += MouseLeaveTimer_Tick;
             _callback = callback;
         }
@@ -21,7 +23,7 @@ namespace QuickPick.UI.Views.Thumbnail
         public void StartTimer()
         {
             MouseLeaveTimer.Stop(); // Reset if there was one already runnning.
-            MouseLeaveTimer.Interval = TimeSpan.FromMilliseconds(500);
+            MouseLeaveTimer.Interval = TimeSpan.FromMilliseconds(_milliSecondsDelay);
             MouseLeaveTimer.IsEnabled = true;
             MouseLeaveTimer.Start();
         }

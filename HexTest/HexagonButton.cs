@@ -18,20 +18,20 @@ public class HexagonButton : Button
     public HexagonButton()
     {
         BorderThickness = new Thickness(0);
+        BorderBrush = Brushes.Transparent;
         Padding = new Thickness(-5);
         Background = Brushes.Transparent;
+        FocusVisualStyle = null; // prevent weird dotted black outline after losing focus.
 
-
-        AddHexaonShapeAndIcon();
+        AddHexagonShapeAndIcon();
 
         SizeChanged += HexagonButton_SizeChanged;
-
 
         _noHooverOverStyle = CreateStyle();
         Style = _noHooverOverStyle;
     }
 
-    private void AddHexaonShapeAndIcon()
+    private void AddHexagonShapeAndIcon()
     {
         // Create the FontAwesome icon
         SetDefaultImage();

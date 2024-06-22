@@ -21,6 +21,9 @@ public class RelayCommand : ICommand
 
     public void Execute(object parameter)
     {
+        if (parameter == null)
+            return; // Dont know why but this method is sometimes fired twice when it should be fired once. The second time the parameter is null.
+
         _execute(parameter);
     }
 

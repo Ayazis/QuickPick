@@ -68,7 +68,7 @@ public class ActiveWindows
 
     // A method to deactivate the window peek effect
     public static void DeactivatePeek(IntPtr handle)
-    {        
+    {
         // Check if DWM composition is enabled
         if (DwmIsCompositionEnabled())
         {
@@ -155,13 +155,11 @@ public class ActiveWindows
     }
     public static void ToggleWindow(IntPtr hWnd)
     {
-
-
         if (hWnd != IntPtr.Zero)
         {
             if (IsIconic(hWnd))
             {
-                // Window is currently minimized - restore it
+                // Window is currently minimized - restore it        
                 ShowWindow(hWnd, SW_SHOWNOACTIVATE);
                 SetForegroundWindow(hWnd);
             }
@@ -183,7 +181,7 @@ public class ActiveWindows
             {
                 var parent = GetParent(hWnd);
                 if (parent != default)
-                    return true;  
+                    return true;
 
                 if (HasIgnorableClassName(hWnd))
                     return false;

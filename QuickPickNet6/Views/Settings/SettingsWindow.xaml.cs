@@ -27,7 +27,7 @@ namespace QuickPick.UI.Views.Settings
             _viewModel = viewModel;
             this.DataContext = viewModel;
             this.MouseLeftButtonDown += SettingsWindow_MouseLeftButtonDown;
-            Instance = this; 
+            Instance = this;
         }
 
 
@@ -53,7 +53,8 @@ namespace QuickPick.UI.Views.Settings
                 Top = screen.Bounds.Top + (screen.Bounds.Height - Height) / 2;
             }
 
-            Show();
+            this.WindowState = WindowState.Normal; // In case the settingswindow is already shown but minimized. This will force the window to appear again.
+            Show();          
         }
 
         private void Apply_Click(object sender, RoutedEventArgs e)

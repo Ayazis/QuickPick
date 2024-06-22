@@ -8,12 +8,14 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media.Animation;
+using System.Windows.Threading;
 using static QuickPick.UI.Views.Thumbnail.ThumbnailView;
 
 namespace QuickPick;
@@ -43,12 +45,14 @@ public partial class ClickWindow : Window, IClickWindow
     public static ClickWindow Instance;
     private QuickPickMainWindowModel _qpm = new();
     private IntPtr _quickPickWindowHandle;
-    public static ThumbnailTimer MouseLeftTimer;
+    public static CustomTimer MouseLeftTimer;
     static DateTime _timeStampLastShown;
     private Dictionary<IntPtr, Popup> _currentPopups = new();
     readonly ILogger _logger;
     readonly ISettingsSaver _settingsSaver;
     readonly SettingsViewModel _settingsViewModel;
+    DispatcherTimer _showThumbnailsTimer = new() { Interval = TimeSpan.FromMilliseconds(250) };
+
 
     public Storyboard HideAnimation { get; private set; }
     public Storyboard ShowAnimation { get; private set; }
@@ -309,6 +313,20 @@ public partial class ClickWindow : Window, IClickWindow
     }
     private void Button_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
     {
+        ShowThumbnails(sender);
+        // WIP using timer, replace with CustomTimer and Custom Method.
+        //_showThumbnailsTimer.Start();
+        //_showThumbnailsTimer.Tick += ShowThumbnails;
+    }
+
+    private void ShowThumbnails(object sender, EventArgs e)
+    {
+        _showThumbnailsTimer.Stop();                
+        ShowThumbnails(sender);
+    }
+
+    private void ShowThumbnails(object sender)
+    {
         MouseLeftTimer.StopTimer();
         // Hide any Thumbnails from other apps.
         HideThumbnails();
@@ -344,9 +362,11 @@ public partial class ClickWindow : Window, IClickWindow
 
         ShowThumbnails(thumbnails, button);
     }
+
     private void Button_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
     {
-        Button button = (System.Windows.Controls.Button)sender;
+        _showThumbnailsTimer.Stop();
+        Button button = (Button)sender;
 
         // reset size of the buttons
         var parent = button.Parent as Grid;
