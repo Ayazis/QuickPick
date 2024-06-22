@@ -17,7 +17,7 @@ namespace QuickPick.UI.Views.Hex;
 public partial class HexCenter : UserControl
 {
     private int _size = 40;
-    private int _hexCount = 1 + 6;
+    private int _hexCount = 1 + 18;
     HexGridCreator _hexGridCreator = new(new HexPositionsCalculator());
     List<HexPosition> _hexes;
     public HexCenter()
@@ -49,8 +49,9 @@ public partial class HexCenter : UserControl
         _hexes[2].HexButton.AsNextSong();
         _hexes[3].HexButton.AsPlayPauseToggle();
         _hexes[4].HexButton.AsPreviousSong();
-        _hexes[5].HexButton.AsVolumeControl();        
+        _hexes[5].HexButton.AsVolumeControl();
         _hexes[6].HexButton.AsBrightnessControl();
+        _hexes[7].HexButton.AsShowDesktopButton();
     }
 
 
